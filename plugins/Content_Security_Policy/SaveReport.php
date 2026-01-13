@@ -32,7 +32,8 @@ $source_file_skip = [
 ];
 
 if ( isset( $csp_report['source-file'] )
-	&& in_array( $csp_report['source-file'], $source_file_skip ) )
+	&& ( in_array( $csp_report['source-file'], $source_file_skip )
+		|| mb_strpos( $csp_report['source-file'], 'safari-web-extension' ) === 0 ) )
 {
 	return _skipDie( 'Skip CSP violation triggered by browser extension' );
 }
@@ -62,6 +63,7 @@ foreach ( $domain_skip as $domain )
  */
 if ( $csp_report['violated-directive'] === 'script-src-elem'
 	&& $csp_report['blocked-uri'] === 'inline'
+	&& ! empty( $csp_report['script-sample'] )
 	&& $csp_report['script-sample'] === 'function yf9behvg8uwqfnuk() { if (!0 ===' )
 {
 	return _skipDie( 'Skip CSP violation triggered by script sample: "' . $csp_report['script-sample'] . '"' );
@@ -81,6 +83,24 @@ if ( $csp_report['violated-directive'] === 'script-src-elem'
 	&& $csp_report['column-number'] === 267 )
 {
 	return _skipDie( 'Skip CSP violation triggered by blob script: line 1, column 267' );
+}
+
+/**
+ * Really common violation but was not able to trace it...
+ *
+ * "violated-directive": "script-src-elem",
+ * "blocked-uri": "inline",
+ * "source-file": "sandbox eval code",
+ * "script-sample": "(function setupDetection() {\n    const d…"
+ */
+if ( $csp_report['violated-directive'] === 'script-src-elem'
+	&& $csp_report['blocked-uri'] === 'inline'
+	&& ! empty( $csp_report['source-file'] )
+	&& $csp_report['source-file'] === 'sandbox eval code'
+	&& ! empty( $csp_report['script-sample'] )
+	&& mb_strpos( $csp_report['script-sample'], '(function setupDetection() {' ) === 0 )
+{
+	return _skipDie( 'Skip CSP violation triggered by sandbox eval code: "' . $csp_report['script-sample'] . '"' );
 }
 
 $insert_columns = [

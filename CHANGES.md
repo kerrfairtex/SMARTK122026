@@ -1,12 +1,13 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
-Changes 12.8
-------------
+Changes 12.7.1
+--------------
 - Fix reassign existing Barcode to student Food Service account in Food_Service/Students/Accounts.php
 - Add `_skipDie()` function, used when skipping CSP report in SaveReport.php
 - Multilingual course title: use ParseMLField() in Schedule.inc.php
 - CSS responsive fix Schedule table, use .rbr class in Schedule.inc.php
+- Skip CSP violation triggered by safari-web-extension & sandbox eval code in SaveReport.php
 
 Changes in 12.7
 ---------------

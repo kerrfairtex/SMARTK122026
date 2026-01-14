@@ -8,6 +8,7 @@ Changes 12.7.1
 - Multilingual course title: use ParseMLField() in Schedule.inc.php
 - CSS responsive fix Schedule table, use .rbr class in Schedule.inc.php
 - Skip CSP violation triggered by safari-web-extension & sandbox eval code in SaveReport.php
+- Fix Chrome user logged out after CSP violation in SaveReport.php
 
 Changes in 12.7
 ---------------

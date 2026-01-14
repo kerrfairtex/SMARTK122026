@@ -121,14 +121,8 @@ if ( ! $csp_reported_today )
 	DBInsert( 'csp_reports', $insert_columns );
 }
 
-// Destroy session.
-session_unset();
-
-session_destroy();
-
 /**
  * JSON Error and Die.
- * Destroy session.
  *
  * Local function
  *
@@ -136,11 +130,6 @@ session_destroy();
  */
 function _errorDie( $error )
 {
-	// Destroy session.
-	session_unset();
-
-	session_destroy();
-
 	http_response_code( 500 );
 
 	header( 'Content-type: application/json; charset=utf-8' );
@@ -154,7 +143,6 @@ function _errorDie( $error )
 
 /**
  * JSON Message and Die.
- * Destroy session.
  *
  * Local function
  *
@@ -162,11 +150,6 @@ function _errorDie( $error )
  */
 function _skipDie( $msg )
 {
-	// Destroy session.
-	session_unset();
-
-	session_destroy();
-
 	// 422 Unprocessable Content
     // The request was well-formed (i.e., syntactically correct) but could not be processed.
 	http_response_code( 422 );

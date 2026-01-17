@@ -207,7 +207,7 @@ if ( ! $_REQUEST['modfunc'] )
 			}
 		}
 
-		echo '<tr><td>' . _( 'Email Referral to' ) . ':<br />';
+		echo '<tr><td><fieldset><legend>' . _( 'Email Referral to' ) . '</legend>';
 
 		$value = $allow_na = $div = false;
 
@@ -238,7 +238,7 @@ if ( ! $_REQUEST['modfunc'] )
 			$div
 		);
 
-		echo '</td></tr></table></td></tr>';
+		echo '</td></tr></table></fieldset></td></tr>';
 
 		$categories_RET = DBGet( "SELECT df.ID,df.DATA_TYPE,du.TITLE,du.SELECT_OPTIONS
 			FROM discipline_fields df,discipline_field_usage du

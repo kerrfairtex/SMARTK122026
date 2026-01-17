@@ -4,7 +4,8 @@
 Changes in 12.8
 ---------------
 - Fix Checkbox input, use `_makeCheckboxInput()` function in Schools.php
-- Fix CSS responsive header, use .rseparator class in Grades.php
+- Fix CSS responsive header, use .rseparator class in Grades.php & AnomalousGrades.php
+- Fix SQL error invalid input syntax for type date: "" in AssignOtherInfo.php
 
 Changes 12.7.1
 --------------

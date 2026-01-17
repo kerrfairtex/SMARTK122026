@@ -61,7 +61,7 @@ if ( $_REQUEST['modfunc'] === 'save'
 					FROM student_enrollment
 					WHERE STUDENT_ID='" . (int) $student_id . "'
 					AND SYEAR='" . UserSyear() . "'
-					AND '" . $_REQUEST['values']['START_DATE'] . "' BETWEEN START_DATE AND END_DATE" );
+					AND '" . $update_enrollment_col['START_DATE'] . "' BETWEEN START_DATE AND END_DATE" );
 
 				if ( $already_enrolled )
 				{

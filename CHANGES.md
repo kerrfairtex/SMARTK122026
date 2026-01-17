@@ -1,6 +1,10 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
+Changes in 12.8
+---------------
+- Fix Checkbox input, use `_makeCheckboxInput()` function in Schools.php
+
 Changes 12.7.1
 --------------
 - Fix reassign existing Barcode to student Food Service account in Food_Service/Students/Accounts.php

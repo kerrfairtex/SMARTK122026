@@ -320,14 +320,6 @@ if ( ! $_REQUEST['modfunc'] )
 
 	foreach ( (array) $fields_RET as $field )
 	{
-		$value_custom = issetVal( $value['CUSTOM_' . $field['ID']], '' );
-
-		$div = true;
-
-		$title_custom = AllowEdit() && ! $value_custom && $field['REQUIRED'] ?
-		'<span class="legend-red">' . $field['TITLE'] . '</span>' :
-		$field['TITLE'];
-
 		echo '<tr><td colspan="3">';
 
 		switch ( $field['TYPE'] )
@@ -353,23 +345,14 @@ if ( ! $_REQUEST['modfunc'] )
 
 			// Add School Field types.
 			case 'radio':
-				echo CheckboxInput(
-					$value_custom,
-					'values[CUSTOM_' . $field['ID'] . ']',
-					$title_custom,
-					'',
-					false,
-					'Yes',
-					'No',
-					$div,
-					( $field['REQUIRED'] ? ' required' : '' )
-				);
+
+				echo _makeCheckboxInput( 'CUSTOM_' . $field['ID'], $field['TITLE'], 'values' );
 
 				break;
 
 			case 'multiple':
 
-				echo _makeMultipleInput( 'CUSTOM_' . $field['ID'], $title_custom, 'values' );
+				echo _makeMultipleInput( 'CUSTOM_' . $field['ID'], $field['TITLE'], 'values' );
 
 				break;
 

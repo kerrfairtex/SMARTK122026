@@ -641,7 +641,7 @@ DrawHeader(
 	CheckBoxOnclick(
 		'include_inactive',
 		_( 'Include Inactive Students' )
-	) . ' &nbsp;' .
+	) . '<span class="rseparator"> &nbsp;</span>' .
 	CheckBoxOnclick(
 		'include_all',
 		_( 'Include Inactive Assignments' )
@@ -655,8 +655,8 @@ if ( $_REQUEST['assignment_id'] && $_REQUEST['assignment_id'] != 'all' )
 	$due = $assignments_RET[$_REQUEST['assignment_id']][1]['DUE'];
 
 	DrawHeader( _( 'Assigned Date' ) . ': ' . ( $assigned_date ? ProperDate( $assigned_date ) : _( 'N/A' ) ) .
-		' &mdash; ' . _( 'Due Date' ) . ': ' . ( $due_date ? ProperDate( $due_date ) : _( 'N/A' ) ) .
-		( $due ? ' &mdash; <b>' . _( 'Assignment is Due' ) . '</b>' : '' ) );
+		'<span class="rseparator"> &mdash; </span>' . _( 'Due Date' ) . ': ' . ( $due_date ? ProperDate( $due_date ) : _( 'N/A' ) ) .
+		( $due ? '<span class="rseparator"> &mdash; </span><b>' . _( 'Assignment is Due' ) . '</b>' : '' ) );
 }
 
 if ( empty( $_ROSARIO['allow_edit'] )

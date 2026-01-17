@@ -4,6 +4,7 @@
 Changes in 12.8
 ---------------
 - Fix Checkbox input, use `_makeCheckboxInput()` function in Schools.php
+- Fix CSS responsive header, use .rseparator class in Grades.php
 
 Changes 12.7.1
 --------------

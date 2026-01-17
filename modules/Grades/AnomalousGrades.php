@@ -53,14 +53,13 @@ if ( empty( $_REQUEST['missing'] )
 }
 
 DrawHeader(
-	_( 'Include' ) . ': <label>' .
-	CheckBoxOnclick( 'missing' ) . ' ' . _( 'Missing Grades' ) . '</label> &nbsp;<label>' .
-	CheckBoxOnclick( 'negative' ) . ' ' . _( 'Excused and Negative Grades' ) . '</label> &nbsp;<label>' .
-	CheckBoxOnclick( 'max_allowed' ) . ' ' .
-	sprintf(
+	_( 'Include' ) . ':<span class="rseparator"> &nbsp;</span>' .
+	CheckBoxOnclick( 'missing', _( 'Missing Grades' ) ) . '<span class="rseparator"> &nbsp;</span>' .
+	CheckBoxOnclick( 'negative', _( 'Excused and Negative Grades' ) ) . '<span class="rseparator"> &nbsp;</span>' .
+	CheckBoxOnclick( 'max_allowed', sprintf(
 		_( 'Exceed %d%% and Extra Credit Grades' ),
 		( $max_allowed * 100 )
-	) . '</label>'
+	) )
 );
 
 echo '</form>';

@@ -159,7 +159,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 			$course_RET = DBGet( "SELECT c.TITLE,c.COURSE_ID,cp.TEACHER_ID
 				FROM course_periods cp,courses c
 				WHERE c.COURSE_ID=cp.COURSE_ID
-				AND cp.COURSE_PERIOD_ID='" . (int) $cp_id . "'" );
+				AND cp.COURSE_PERIOD_ID='" . (int) $cp_id . "'",
+				[ 'TITLE' => 'ParseMLField' ] );
 
 			$course_id = $course_RET[1]['COURSE_ID'];
 

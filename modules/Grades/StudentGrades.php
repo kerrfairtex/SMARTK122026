@@ -1,6 +1,7 @@
 <?php
 
 require_once 'ProgramFunctions/_makeLetterGrade.fnc.php';
+require_once 'modules/Grades/includes/FinalGrades.inc.php';
 
 $do_stats = ProgramConfig( 'grades', 'GRADES_DO_STATS_STUDENTS_PARENTS' ) == 'Y'
 	|| (  ( User( 'PROFILE' ) === 'teacher'
@@ -164,27 +165,21 @@ if ( UserStudentID()
 
 				if ( ! empty( $points_RET ) )
 				{
-					$total = $total_percent = 0;
 					$ungraded = 0;
 
 					foreach ( (array) $points_RET as $partial_points )
 					{
-						if ( $partial_points['PARTIAL_TOTAL'] != 0 || $gradebook_config[$staff_id]['WEIGHT'] != 'Y' )
-						{
-							$total += $partial_points['PARTIAL_POINTS'] * ( $gradebook_config[$staff_id]['WEIGHT'] == 'Y' ? $partial_points['FINAL_GRADE_PERCENT'] / $partial_points['PARTIAL_TOTAL'] : 1 );
-							$total_percent += ( $gradebook_config[$staff_id]['WEIGHT'] == 'Y' ? $partial_points['FINAL_GRADE_PERCENT'] : $partial_points['PARTIAL_TOTAL'] );
-						}
-
 						$ungraded += $partial_points['UNGRADED'];
 					}
 
-					if ( $total_percent != 0 )
+					// @since 12.7.2 Fix Final Grade when assignments are weighted
+					$import_RET = FinalGradesQtrOrProCalculate( $course_period_id, UserMP() );
+
+					$percent = false;
+
+					if ( isset( $import_RET[ UserStudentID() ][1]['GRADE_PERCENT'] ) )
 					{
-						$percent = $total / $total_percent;
-					}
-					else
-					{
-						$percent = false;
+						$percent = $import_RET[ UserStudentID() ][1]['GRADE_PERCENT'] / 100;
 					}
 
 					if ( $do_stats && $_REQUEST['do_stats'] )

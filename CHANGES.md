@@ -4,7 +4,7 @@
 Changes in 12.7.2
 -----------------
 - Fix Checkbox input, use `_makeCheckboxInput()` function in Schools.php
-- Fix CSS responsive header, use .rseparator class in Grades.php & AnomalousGrades.php
+- Fix CSS responsive header, use .rseparator class in Grades.php, AnomalousGrades.php & Statements.php
 - Fix SQL error invalid input syntax for type date: "" in AssignOtherInfo.php
 - Fix Final Grade when assignments are weighted in StudentGrades.php
 - Fix Multilingual course title: use ParseMLField() in ProgressReports.php, thanks to @Macadoshis

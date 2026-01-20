@@ -75,7 +75,7 @@ $menus_RET = DBGet( "SELECT TITLE
 	WHERE SCHOOL_ID='" . UserSchool() . "'
 	ORDER BY SORT_ORDER IS NULL,SORT_ORDER" );
 
-$type_select = ' &mdash; <label>' . _( 'Type' ) . ': <select name=type_select>
+$type_select = '<span class="rseparator"> &mdash; </span><label>' . _( 'Type' ) . ': <select name=type_select>
 	<option value="">' . _( 'Not Specified' ) . '</option>';
 
 foreach ( (array) $types as $short_name => $type )

@@ -8,6 +8,7 @@ Changes in 12.7.2
 - Fix SQL error invalid input syntax for type date: "" in AssignOtherInfo.php
 - Fix Final Grade when assignments are weighted in StudentGrades.php
 - Fix Multilingual course title: use ParseMLField() in ProgressReports.php, thanks to @Macadoshis
+- Fix CSS responsive List width: do NOT use the .fixed-col class, use pure CSS in Schedule.inc.php
 
 Changes 12.7.1
 --------------

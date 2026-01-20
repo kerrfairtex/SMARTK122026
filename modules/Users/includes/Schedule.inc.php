@@ -58,6 +58,9 @@ if ( $current_user_profile === 'teacher' )
 	[ 'MARKING_PERIOD_ID' => 'GetMP', 'TITLE' => 'ParseMLField' ],
 	$group );
 
+	// Fix CSS responsive List width: do NOT use the .fixed-col class, use pure CSS.
+	echo '<table class="width-100p" style="table-layout: fixed;"><tr><td>';
+
 	ListOutput(
 		$schedule_RET,
 		$columns,
@@ -66,6 +69,8 @@ if ( $current_user_profile === 'teacher' )
 		false,
 		$group
 	);
+
+	echo '</td></tr></table>';
 
 	if ( $PopTable_opened )
 	{

@@ -9,6 +9,7 @@ Changes in 12.7.2
 - Fix Final Grade when assignments are weighted in StudentGrades.php
 - Fix Multilingual course title: use ParseMLField() in ProgressReports.php, thanks to @Macadoshis
 - Fix CSS responsive List width: do NOT use the .fixed-col class, use pure CSS in Schedule.inc.php
+- Fix regression since 12.5 JS update body on mobile: menu button adds #! to URL, remove hash in warehouse.js
 
 Changes 12.7.1
 --------------

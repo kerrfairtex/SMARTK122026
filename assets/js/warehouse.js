@@ -491,6 +491,9 @@ var ajaxUpdateBody = function(params) {
 		link = link.replace(paramOld, replace);
 	}
 
+	// Fix update body on mobile: menu button adds #! to URL, remove hash
+	link = link.split('#')[0];
+
 	return ajaxLink(link);
 };
 

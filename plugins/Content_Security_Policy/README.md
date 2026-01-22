@@ -45,7 +45,7 @@ Please upgrade the following [modules](https://www.rosariosis.org/modules/):
 - Hostel Premium 2.1+ (Dec. 2024)
 - Human Resources 10.4+ (Dec. 2024)
 - Jitsi Meet 11.4+ (Aug. 2024)
-- Lesson Plan 1.2+ (Dec. 2024)
+- Lesson Plan 2.0+ (Jan. 2026)
 - Lesson Plan Premium 1.4+ (Dec. 2024)
 - Library 11.3+ (Dec. 2024)
 - Library Premium 12.3+ (Dec. 2024)

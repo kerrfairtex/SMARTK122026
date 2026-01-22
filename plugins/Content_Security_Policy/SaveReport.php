@@ -33,7 +33,8 @@ $source_file_skip = [
 
 if ( isset( $csp_report['source-file'] )
 	&& ( in_array( $csp_report['source-file'], $source_file_skip )
-		|| mb_strpos( $csp_report['source-file'], 'safari-web-extension' ) === 0 ) )
+		|| mb_strpos( $csp_report['source-file'], 'safari-web-extension' ) === 0
+		|| mb_strpos( $csp_report['source-file'], 'safari-extension' ) === 0 ) )
 {
 	return _skipDie( 'Skip CSP violation triggered by browser extension' );
 }

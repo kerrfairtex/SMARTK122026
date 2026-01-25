@@ -609,6 +609,10 @@ var ajaxSuccess = function(data, target, url) {
  * @param {string} html HTML to inject into the element. May contain <script>.
  */
 var setInnerHTML = function(el, html) {
+	if (! el) {
+		return;
+	}
+
 	/**
 	 * Remove "JS not available, reload page" script: save 1 http request
 	 *

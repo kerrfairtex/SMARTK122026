@@ -10,6 +10,7 @@ Changes in 12.7.2
 - Fix Multilingual course title: use ParseMLField() in ProgressReports.php, thanks to @Macadoshis
 - Fix CSS responsive List width: do NOT use the .fixed-col class, use pure CSS in Schedule.inc.php
 - Fix regression since 12.5 JS update body on mobile: menu button adds #! to URL, remove hash in warehouse.js
+- Fix regression since 12.5 JS do not setInnerHTML if no target in warehouse.js
 - Fix CSS theme WPadmin menu loading icon height in stylesheet.css & zresponsive.css
 
 Changes 12.7.1

@@ -57,6 +57,10 @@
 	.BottomButton span {
 		display: none
 	}
+	.BottomButton.loading {
+		height: 30px;
+		width: 30px;
+	}
 	#menu .logo {
 		max-width: 64px;
 		max-height: 64px;

@@ -447,6 +447,12 @@ function bump_count( $value, $column )
 
 	if ( $types[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']] )
 	{
+		if ( ! isset( $types[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']][$value] ) )
+		{
+			// Fix PHP warning undefined array key
+			$types[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']][$value] = 0;
+		}
+
 		$types[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']][$value] += $THIS_RET['COUNT'];
 	}
 	else
@@ -454,7 +460,7 @@ function bump_count( $value, $column )
 		$types[$THIS_RET['TYPE']] += [ $THIS_RET['DISCOUNT'] => [ $value => $THIS_RET['COUNT'] ] ];
 	}
 
-	if ( ! $types_columns[$value] )
+	if ( empty( $types_columns[$value] ) )
 	{
 		$types_columns += [ $value => '<span style="color:red">' . $value . '</span>' ];
 		$types_totals['Student'][$value] = 0;

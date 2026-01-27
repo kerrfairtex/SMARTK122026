@@ -4,6 +4,7 @@
 Changes in 12.8
 ---------------
 - Fix PHP warning undefined array key when Meal Item Short Name was edited in MenuReports.php
+- Fix PHP8.5 deprecated using null as an array offset, use an empty string instead in MenuReports.php & ActivityReport.php
 
 Changes in 12.7.2
 -----------------

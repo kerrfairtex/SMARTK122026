@@ -133,7 +133,8 @@ function types_locale( $type ) {
 		'Debit' => _( 'Debit' ),
 	];
 
-	if (array_key_exists( $type, $types ) )
+	// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+	if ( array_key_exists( (string) $type, $types ) )
 	{
 		return $types[ $type ];
 	}
@@ -151,7 +152,8 @@ function options_locale( $option )
 		'Transfer' => _( 'Transfer' ),
 	];
 
-	if ( array_key_exists( $option, $options ) )
+	// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+	if ( array_key_exists( (string) $option, $options ) )
 	{
 		return $options[ $option ];
 	}

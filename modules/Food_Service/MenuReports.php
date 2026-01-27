@@ -401,6 +401,12 @@ function bump_dep( $value, $column )
 		$value = $THIS_RET['DAYS'] / $value;
 	}
 
+	if ( is_null( $THIS_RET['DISCOUNT'] ) )
+	{
+		// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+		$THIS_RET['DISCOUNT'] = '';
+	}
+
 	if ( ! $users[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']] )
 	{
 		$users[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']] = [ 'DAYS' => 0, 'ELLIGIBLE' => 0, 'PARTICIPATED' => 0 ];
@@ -444,6 +450,12 @@ function bump_dep( $value, $column )
 function bump_count( $value, $column )
 {
 	global $THIS_RET, $types, $types_columns, $types_totals;
+
+	if ( is_null( $THIS_RET['DISCOUNT'] ) )
+	{
+		// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+		$THIS_RET['DISCOUNT'] = '';
+	}
 
 	if ( $types[$THIS_RET['TYPE']][$THIS_RET['DISCOUNT']] )
 	{

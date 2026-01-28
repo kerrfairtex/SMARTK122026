@@ -141,7 +141,8 @@ if ( ! empty( $_REQUEST['field_id'] ) )
 
 		foreach ( (array) $student_RET as $student )
 		{
-			$student['TITLE'] = explode( "||", trim( $student['TITLE'], '|' ) );
+			// Fix PHP8.5 deprecated trim() Passing null to parameter #1 of type string
+			$student['TITLE'] = explode( '||', trim( (string) $student['TITLE'], '|' ) );
 
 			foreach ( (array) $student['TITLE'] as $option )
 			{

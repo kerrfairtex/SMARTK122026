@@ -170,7 +170,8 @@ if ( ! empty( $_REQUEST['field_id'] ) )
 
 		foreach ( (array) $referrals_RET as $referral )
 		{
-			$referral['TITLE'] = explode( "||", trim( $referral['TITLE'], '|' ) );
+			// Fix PHP8.5 deprecated trim() Passing null to parameter #1 of type string
+			$referral['TITLE'] = explode( '||', trim( (string) $referral['TITLE'], '|' ) );
 
 			foreach ( (array) $referral['TITLE'] as $option )
 			{

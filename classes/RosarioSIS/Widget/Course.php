@@ -100,10 +100,13 @@ class Course implements \RosarioSIS\Widget
 
 		if ( ! $is_include_inactive )
 		{
+			// Fix SQL error when no Quarters found
+			$all_mp = GetAllMP( 'QTR', UserMP() );
+
 			// Fix check students Course Status.
 			$extra['WHERE'] .= " AND '" . DBDate() . "'>=w_ss.START_DATE
 				AND ('" . DBDate() . "'<=w_ss.END_DATE OR w_ss.END_DATE IS NULL)
-				AND w_ss.MARKING_PERIOD_ID IN (" . GetAllMP( 'QTR', UserMP() ) . ")";
+				AND w_ss.MARKING_PERIOD_ID IN (" . ( $all_mp ? $all_mp : '0' ) . ")";
 		}
 
 		$extra['WHERE'] .= ")";

@@ -176,10 +176,9 @@ if ( UserStudentID() && ! $_REQUEST['modfunc'] )
 
 		ListOutput( $RET, $columns, $singular, $plural, [], false, [ 'save' => false, 'search' => false ] );
 
-		$items_RET = DBGet( "SELECT fsi.SHORT_NAME,fsi.DESCRIPTION,fsi.PRICE,fsi.PRICE_REDUCED,fsi.PRICE_FREE,fsi.ICON
+		$items_RET = DBGet( "SELECT fsi.SHORT_NAME,fsi.DESCRIPTION,fsi.PRICE,fsi.PRICE_REDUCED,fsi.PRICE_FREE,fsi.ICON,fsmi.MENU_ID
 		FROM food_service_items fsi,food_service_menu_items fsmi
-		WHERE fsmi.MENU_ID='" . (int) $_REQUEST['menu_id'] . "'
-		AND fsi.ITEM_ID=fsmi.ITEM_ID
+		WHERE fsi.ITEM_ID=fsmi.ITEM_ID
 		AND fsmi.CATEGORY_ID IS NOT NULL
 		AND fsi.SCHOOL_ID='" . UserSchool() . "'
 		ORDER BY fsi.SORT_ORDER IS NULL,fsi.SORT_ORDER", [ 'ICON' => 'makeIcon' ], [ 'SHORT_NAME' ] );
@@ -187,7 +186,10 @@ if ( UserStudentID() && ! $_REQUEST['modfunc'] )
 
 		foreach ( (array) $items_RET as $sn => $item )
 		{
-			$items += [ $sn => $item[1]['DESCRIPTION'] ];
+			if ( $item[1]['MENU_ID'] == $_REQUEST['menu_id'] )
+			{
+				$items += [ $sn => $item[1]['DESCRIPTION'] ];
+			}
 		}
 
 		$LO_ret = [ [] ];
@@ -215,7 +217,12 @@ if ( UserStudentID() && ! $_REQUEST['modfunc'] )
 					}
 				}
 
-				$LO_ret[] = [ 'SALE_ID' => $id, 'PRICE' => $price, 'DESCRIPTION' => $items_RET[$item_sn][1]['DESCRIPTION'], 'ICON' => $items_RET[$item_sn][1]['ICON'] ];
+				$LO_ret[] = [
+					'SALE_ID' => $id,
+					'PRICE' => $price,
+					'DESCRIPTION' => $items_RET[$item_sn][1]['DESCRIPTION'],
+					'ICON' => $items_RET[$item_sn][1]['ICON'],
+				];
 			}
 		}
 

@@ -9,6 +9,10 @@ Changes in 12.8
 - Fix SQL error when no Quarters found (Course widget) in Course.php
 - Fix PHP8.5 deprecated trim() Passing null to parameter 1 of type string in StudentFieldBreakdown.php & StudentBreakdown.php
 
+Changes in 12.7.3
+-----------------
+- Fix Help button not showing help, compile error in plugins.min.js
+
 Changes in 12.7.2
 -----------------
 - Fix Checkbox input, use `_makeCheckboxInput()` function in Schools.php

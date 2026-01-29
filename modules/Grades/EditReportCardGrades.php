@@ -608,7 +608,8 @@ function _makeSelectInput( $value, $name )
 	}
 
 	if ( $id !== 'new'
-		&& isset( $options[$value] ) )
+		// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+		&& isset( $options[ (string) $value ] ) )
 	{
 		// Return Course Period title, no Select input.
 		return $options[$value];

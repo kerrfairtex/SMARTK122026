@@ -889,6 +889,12 @@ function SelectInput( $values, $name, $title = '', $options = [], $allow_na = 'N
 
 		foreach ( (array) $values as $value )
 		{
+			if ( is_null( $value ) )
+			{
+				// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+				$value = '';
+			}
+
 			if ( isset( $options[ $value ] ) )
 			{
 				$display_val[] = is_array( $options[ $value ] ) ? $options[ $value ][1] : $options[ $value ];

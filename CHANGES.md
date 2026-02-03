@@ -4,7 +4,7 @@
 Changes in 12.8
 ---------------
 - Fix PHP warning undefined array key when Meal Item Short Name was edited in MenuReports.php
-- Fix PHP8.5 deprecated using null as an array offset, use an empty string instead in DBGet.fnc.php, Inputs.php, MenuReports.php, ActivityReport.php & EditReportCardGrades.php
+- Fix PHP8.5 deprecated using null as an array offset, use an empty string instead in DBGet.fnc.php, Inputs.php, MenuReports.php, ActivityReport.php, EditReportCardGrades.php & AccessLog.php
 - Fix PHP warning undefined array key when switching Meals in ServeMenus.php
 - Fix SQL error when no Quarters found (Course widget) in Course.php
 - Fix PHP8.5 deprecated trim() Passing null to parameter 1 of type string in StudentFieldBreakdown.php & StudentBreakdown.php

@@ -177,7 +177,8 @@ function _makeAccessLogProfile( $value, $column )
 		'none' => _( 'No Access' ),
 	];
 
-	if ( ! isset( $profile_options[ $value ] ) )
+	// Fix PHP8.5 deprecated using null as an array offset, use an empty string instead
+	if ( ! isset( $profile_options[ (string) $value ] ) )
 	{
 		return '';
 	}

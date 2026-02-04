@@ -715,7 +715,7 @@ var ajaxPrepare = function(target, scrollTop) {
 		openMenu();
 
 		if (isMobileMenu()) {
-			$('#menu').addClass('hide');
+			$('#menu').addClass('hide').removeClass('slide');
 
 			$('body').css('overflow', '');
 		}
@@ -974,8 +974,8 @@ var submenuOnTouch = function(e) {
 
 // Bottom.php JS.
 var toggleHelp = function() {
-	if ($('#footerhelp').css('display') !== 'block') showHelp();
-	else hideHelp();
+	if ($('#footerhelp').hasClass('slide')) hideHelp();
+	else showHelp();
 }
 
 var showHelp = function() {
@@ -988,32 +988,66 @@ var showHelp = function() {
 			showHelp.tmpdata = data;
 			$fhc.html(data);
 			$fh.scrollTop(0);
+			$fh.addClass('slide');
 		}).fail(ajaxError).always(function() {
 			$('.loading.BottomButton').css('visibility', 'hidden');
 		});
 
 		showHelp.tmp = modname;
+
+		return;
 	} else if (showHelp.tmpdata && !$fh.html()) {
 		$fhc.html(showHelp.tmpdata);
 	}
 
-	$fh.show();
+	$fh.toggleClass('slide');
 }
 
 var hideHelp = function() {
-	$('#footerhelp').hide();
+	$('#footerhelp').removeClass('slide');
 }
 
 var expandMenu = function() {
-	$('#menu').toggleClass('hide');
+	var $menu = $('#menu');
+
+	if (isMobileMenu()) {
+		if ($menu.hasClass('hide')) {
+			$menu.removeClass('hide');
+
+			setTimeout(function() {
+				$menu.addClass('slide');
+
+				// @since 5.1 Prevent scrolling body while Menu is open.
+				$('body').css('overflow', 'hidden');
+			}, 10);
+		} else {
+			$menu.removeClass('slide');
+
+			setTimeout(function() {
+				$menu.addClass('hide');
+
+				$('body').css('overflow', '');
+			},
+			// Get transition duration from CSS
+			(parseFloat(window.getComputedStyle($menu[0]).transitionDuration)) * 1000);
+		}
+
+		return;
+	}
+
+	if ($menu.hasClass('hide')) {
+		$menu.removeClass('slide hide');
+	} else {
+		$menu.addClass('slide');
+
+		setTimeout(function() {
+			$menu.addClass('hide');
+		},
+		// Get transition duration from CSS
+		(parseFloat(window.getComputedStyle($menu[0]).transitionDuration)) * 1000);
+	}
 
 	$('body').css('overflow', '');
-
-	if (isMobileMenu() &&
-		!$('#menu').hasClass('hide')) {
-		// @since 5.1 Prevent scrolling body while Menu is open.
-		$('body').css('overflow', 'hidden');
-	}
 }
 
 /**

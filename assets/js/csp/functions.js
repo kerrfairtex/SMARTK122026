@@ -7,7 +7,22 @@
  */
 
 csp.functions.onEvents = function() {
-	$('#body,#colorbox').on('focus', '.onclick', csp.functions.inputDivOnclick);
+	$('#body,#colorbox').on(
+		(isTouchDevice() ? 'click keypress' : 'focus'),
+		'.onclick',
+		csp.functions.inputDivOnclick
+	);
+
+	/**
+	 * Prevent focusing input when opening tooltip on mobile devices
+	 *
+	 * @since 12.8
+	 */
+	if (isTouchDevice()) {
+		$('#body,#colorbox').on('click', '.tooltip', function(){
+			event.preventDefault();
+		});
+	}
 
 	csp.functions.listOutput.prepare();
 
@@ -42,6 +57,16 @@ csp.functions.inputDivOnclick = function() {
 		inputHtml = document.getElementById('html' + inputId);
 
 	if (! inputHtml) {
+		return;
+	}
+
+	/**
+	 * Prevent focusing input when opening tooltip on mobile devices
+	 *
+	 * @since 12.8
+	 */
+	if (isTouchDevice()
+		&& event.target.className === 'tooltip') {
 		return;
 	}
 

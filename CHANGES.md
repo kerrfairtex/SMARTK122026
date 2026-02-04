@@ -13,6 +13,7 @@ Changes in 12.8
 - CSS themes transition slide menu & help in rtl.css, stylesheet.css & zresponsive.css
 - JS slide menu & help, use CSS class .slide in warehouse.js
 - JS fix rt2colorBox if content is InputDivOnclick in warehouse.js
+- JS Prevent focusing input when opening tooltip on mobile devices in csp/functions.js
 
 Changes in 12.7.3
 -----------------

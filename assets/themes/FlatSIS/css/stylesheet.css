@@ -1571,18 +1571,16 @@ div.st > .list-outer {
 .no-touch .calendar-minutes,
 .no-touch .calendar-newevent {
 	visibility: hidden;
-	opacity: 0;
-	transition: visibility 0s, opacity 0.15s linear;
 }
 
 .calendar-day:hover .calendar-minutes,
 .calendar-minutes input:checked,
+.calendar-minutes .calendar-block,
 /* @link https://stackoverflow.com/questions/3617020/matching-an-empty-input-box-using-css */
 
 .calendar-minutes input[type=number]:not(:placeholder-shown),
 .calendar-day:hover .calendar-newevent {
 	visibility: visible;
-	opacity: 1;
 }
 
 .calendar-event div {

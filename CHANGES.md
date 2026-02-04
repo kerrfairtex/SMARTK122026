@@ -9,6 +9,7 @@ Changes in 12.8
 - Fix SQL error when no Quarters found (Course widget) in Course.php
 - Fix PHP8.5 deprecated trim() Passing null to parameter 1 of type string in StudentFieldBreakdown.php & StudentBreakdown.php
 - Display Enrollment Calendar to Student in Calendar.php
+- CSS add .calendar-block class in CalendarDay.inc.php & stylesheet.css
 
 Changes in 12.7.3
 -----------------

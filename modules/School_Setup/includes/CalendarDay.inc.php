@@ -207,6 +207,7 @@ if ( ! function_exists( 'CalendarDayBlockHTML' ) )
  * Default function
  *
  * @since 4.5
+ * @since 12.8 CSS add .calendar-block class
  *
  * @param string $date        ISO date.
  * @param int    $minutes     Minutes.
@@ -242,7 +243,7 @@ function CalendarDayBlockHTMLDefault( $date, $minutes, $day_block )
 	if ( $day_block
 		|| ( User( 'PROFILE' ) === 'admin' && ! empty( $minutes ) && $block_options ) )
 	{
-		$html .= SelectInput(
+		$block_input = SelectInput(
 			$day_block,
 			'blocks[' . $date . ']',
 			'<span class="a11y-hidden">' . _( 'Block' ) . '</span>',
@@ -250,6 +251,10 @@ function CalendarDayBlockHTMLDefault( $date, $minutes, $day_block )
 			( isset( $_REQUEST['_ROSARIO_PDF'] ) || ! AllowEdit() ? '' : 'N/A' ),
 			'title="' . AttrEscape( _( 'Block' ) ) . '"'
 		);
+
+		// @since 12.8 CSS add .calendar-block class
+		$html .= $day_block ?
+			'<div class="calendar-block">' . $block_input . '</div>' : $block_input;
 	}
 
 	return $html;

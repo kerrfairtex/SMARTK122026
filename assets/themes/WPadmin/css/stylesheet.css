@@ -66,10 +66,6 @@
 /* https://stackoverflow.com/questions/5072526/css3-equivalent-to-jquery-slideup-and-slidedown#answer-21999526 */
 
 #footerhelp {
-	display: none;
-	max-height: 210px;
-	max-height: 33vh;
-	overflow-y: scroll;
 	height: auto;
 	width: 100%;
 	max-height: 0;
@@ -132,6 +128,10 @@ select {
 	margin-bottom: 16px;
 }
 
+#search .popTable .st label {
+	max-width: none;
+}
+
 textarea {
 	-ms-box-sizing: border-box;
 	box-sizing: border-box;
@@ -147,7 +147,7 @@ input[type=radio] {
 }
 
 input[type=number] {
-	width: 60px
+	width: 64px
 }
 
 input[type=number][name*=AMOUNT],

@@ -144,6 +144,9 @@
 	#LO_search {
 		max-width: 150px
 	}
+	#search .popTable .st td:first-child {
+		padding-bottom: 0;
+	}
 	#LO_search {
 		float: left;
 	}

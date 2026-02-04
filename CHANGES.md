@@ -10,6 +10,7 @@ Changes in 12.8
 - Fix PHP8.5 deprecated trim() Passing null to parameter 1 of type string in StudentFieldBreakdown.php & StudentBreakdown.php
 - Display Enrollment Calendar to Student in Calendar.php
 - CSS add .calendar-block class in CalendarDay.inc.php & stylesheet.css
+- CSS themes transition slide menu & help in rtl.css, stylesheet.css & zresponsive.css
 
 Changes in 12.7.3
 -----------------

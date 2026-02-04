@@ -7,6 +7,17 @@
 
 /*FixedMenu bug when menu hidden*/
 
+#menu,
+#menu.fixedmenu-fixed + div {
+	margin-left: 0;
+	transition: margin 0.5s ease-in-out;
+}
+
+#menu.slide,
+#menu.fixedmenu-fixed.slide + div {
+	margin-left: -500px;
+}
+
 #menu.fixedmenu-fixed.hide + div {
 	width: 0!important
 }
@@ -52,14 +63,26 @@
 	border-style: solid;
 }
 
+/* https://stackoverflow.com/questions/5072526/css3-equivalent-to-jquery-slideup-and-slidedown#answer-21999526 */
+
 #footerhelp {
 	display: none;
 	max-height: 210px;
 	max-height: 33vh;
 	overflow-y: scroll;
 	height: auto;
+	width: 100%;
+	max-height: 0;
+	overflow-y: hidden;
 	/* Prevent body from scrolling when help open */
 	overscroll-behavior: contain;
+	transition: max-height 0.4s ease-in-out;
+}
+
+#footerhelp.slide {
+	max-height: 210px;
+	max-height: 33vh;
+	overflow-y: scroll;
 }
 
 /* Better readability: format Help text in 3 columns max., 480px width min. (70 to 100 characters). */

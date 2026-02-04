@@ -40,10 +40,6 @@
 		height: 32px;
 		padding: 3px 12px;
 	}
-	#footerhelp {
-		border-width: 1px 0;
-		border-style: solid;
-	}
 	.BottomButton {
 		line-height: 32px;
 	}
@@ -77,6 +73,16 @@
 		overflow-y: scroll;
 		padding-bottom: 0;
 		min-height: auto;
+		height: 0;
+		transition: height 0.5s ease-in-out;
+	}
+	#menu.slide {
+		margin: 0;
+		height: calc(100% - 39px);
+	}
+	/* Fix hide upsell Premium button when mobile menu open */
+	body:has(#menu.slide) .button-upsell-premium {
+		z-index: 0;
 	}
 	.adminmenu {
 		margin-bottom: 5px;

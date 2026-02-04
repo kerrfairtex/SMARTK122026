@@ -418,12 +418,35 @@ if ( $_REQUEST['modfunc'] === 'delete_calendar'
 }
 
 // Set non admin Current Calendar.
-if ( User( 'PROFILE' ) !== 'admin'
-	&& UserCoursePeriod() )
+if ( User( 'PROFILE' ) === 'teacher' )
 {
-	$calendar_id = DBGetOne( "SELECT CALENDAR_ID
-		FROM course_periods
-		WHERE COURSE_PERIOD_ID='" . UserCoursePeriod() . "'" );
+	// Display Course Calendar to Teacher
+	$calendar_id = DBGetOne( "SELECT cp.CALENDAR_ID
+		FROM course_periods cp,attendance_calendars ac
+		WHERE cp.COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+		AND ac.SYEAR='" . UserSyear() . "'
+		AND ac.SCHOOL_ID='" . UserSchool() . "'
+		AND ac.CALENDAR_ID=cp.CALENDAR_ID" );
+
+	if ( $calendar_id )
+	{
+		$_REQUEST['calendar_id'] = $calendar_id;
+	}
+}
+
+if ( User( 'PROFILE' ) === 'student'
+	|| User( 'PROFILE' ) === 'parent' )
+{
+	// @since 12.8 Display Enrollment Calendar to Student
+	$calendar_id = DBGetOne( "SELECT e.CALENDAR_ID
+		FROM student_enrollment e,attendance_calendars ac
+		WHERE e.STUDENT_ID='" . UserStudentID() . "'
+		AND e.SYEAR='" . UserSyear() . "'
+		AND e.SCHOOL_ID='" . UserSchool() . "'
+		AND ac.SYEAR=e.SYEAR
+		AND ac.SCHOOL_ID=e.SCHOOL_ID
+		AND ac.CALENDAR_ID=e.CALENDAR_ID
+		ORDER BY e.START_DATE DESC" );
 
 	if ( $calendar_id )
 	{
@@ -432,8 +455,7 @@ if ( User( 'PROFILE' ) !== 'admin'
 }
 
 // Set Current Calendar.
-if ( ! isset( $_REQUEST['calendar_id'] )
-	|| intval( $_REQUEST['calendar_id'] ) < 1 )
+if ( empty( $_REQUEST['calendar_id'] ) )
 {
 	$default_calendar_id = DBGetOne( "SELECT CALENDAR_ID
 		FROM attendance_calendars

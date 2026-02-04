@@ -11,7 +11,8 @@ Changes in 12.8
 - Display Enrollment Calendar to Student in Calendar.php
 - CSS add .calendar-block class in CalendarDay.inc.php & stylesheet.css
 - CSS themes transition slide menu & help in rtl.css, stylesheet.css & zresponsive.css
-- JS slide menu & help, use CSS class .slide in warewhouse.js
+- JS slide menu & help, use CSS class .slide in warehouse.js
+- JS fix rt2colorBox if content is InputDivOnclick in warehouse.js
 
 Changes in 12.7.3
 -----------------

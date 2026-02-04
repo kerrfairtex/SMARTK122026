@@ -161,7 +161,7 @@ var ColorBox = function() {
 			});
 
 			// only if content > 1 line & text <= 36 chars.
-			if ($el.text().length > 36 || childrenHeight > $el.parent().height()) {
+			if ($el.has('.onclick').length || $el.text().length > 36 || childrenHeight > $el.parent().height()) {
 				return '<div class="link2colorBox"><a class="colorboxinline" href="#' + this.id + '"></a></div>';
 			}
 		}

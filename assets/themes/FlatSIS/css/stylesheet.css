@@ -1509,7 +1509,19 @@ input[type=file]::-ms-browse {
 
 div.st {
 	float: left;
-	padding: 4px
+	padding: 4px 16px 4px 0
+}
+
+div.st .list-nav {
+	margin-top: 12px;
+}
+
+div.st .list {
+	margin-bottom: 4px;
+}
+
+div.st:last-of-type .list {
+	margin-bottom: 12px;
 }
 
 /*Fix list overflow-x scroll inside div.st*/
@@ -1649,7 +1661,7 @@ td.calendar-menu {
 
 #cboxLoadedContent {
 	margin: 0 0 0 8px !important;
-	padding: 8px 12px !important;
+	padding: 8px 16px !important;
 	/* Prevent body from scrolling when colorBox open */
 	overscroll-behavior: contain;
 }

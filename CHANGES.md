@@ -15,6 +15,7 @@ Changes in 12.8
 - JS fix rt2colorBox if content is InputDivOnclick in warehouse.js
 - JS Prevent focusing input when opening tooltip on mobile devices in csp/functions.js
 - CSS themes search form adjustments & increase number input width in stylesheet.css & zresponsive.css
+- CSS FlatSIS theme adjust stackable list margin & colorBox padding in stylesheet.css & zresponsive.css
 
 Changes in 12.7.3
 -----------------

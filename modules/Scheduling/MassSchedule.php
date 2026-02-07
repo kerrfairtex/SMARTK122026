@@ -4,12 +4,6 @@ require_once 'modules/Scheduling/includes/calcSeats0.fnc.php';
 
 require_once 'modules/Scheduling/functions.inc.php';
 
-if ( ! $_REQUEST['modfunc']
-	&& $_REQUEST['search_modfunc'] !== 'list' )
-{
-	$_SESSION['MassSchedule.php'] = [];
-}
-
 if ( $_REQUEST['modfunc'] !== 'choose_course' )
 {
 	DrawHeader( ProgramTitle() );
@@ -165,6 +159,11 @@ if ( ! $_REQUEST['modfunc'] )
 		PopTable( 'header', _( 'Courses to Add' ) );
 
 		echo '<table><tr><td><div id="course_div">';
+
+		if ( ! isset( $_SESSION['MassSchedule.php'] ) )
+		{
+			$_SESSION['MassSchedule.php'] = [];
+		}
 
 		foreach ( (array) $_SESSION['MassSchedule.php'] as $course_to_add )
 		{

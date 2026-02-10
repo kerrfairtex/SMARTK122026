@@ -16,6 +16,7 @@ Changes in 12.8
 - JS Prevent focusing input when opening tooltip on mobile devices in csp/functions.js
 - CSS themes search form adjustments & increase number input width in stylesheet.css & zresponsive.css
 - CSS FlatSIS theme adjust stackable list margin & colorBox padding in stylesheet.css & zresponsive.css
+- Sanitize redirect_to: remove &delete_ok=1 in index.php
 
 Changes in 12.7.3
 -----------------

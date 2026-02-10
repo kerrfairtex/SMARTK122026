@@ -17,6 +17,7 @@ Changes in 12.8
 - CSS themes search form adjustments & increase number input width in stylesheet.css & zresponsive.css
 - CSS FlatSIS theme adjust stackable list margin & colorBox padding in stylesheet.css & zresponsive.css
 - Sanitize redirect_to: remove &delete_ok=1 in index.php
+- Fix #367 SQL do not use GetStuList() so we get all students in class in Grades.fnc.php
 
 Changes in 12.7.3
 -----------------

@@ -18,7 +18,7 @@
  *
  * Modes: 2, MODE_EMBEDDED (default) | 3, MODE_SAVE | 0, MODE_DOWNLOAD
  *
- * @example $pdf_options = array( 'css' => false, 'margins' => array( 'top' => 0, 'bottom' => 0, 'left' => 0, 'right' => 0) 'mode' => 3 );
+ * @example $pdf_options = [ 'css' => false, 'margins' => [ 'top' => 0, 'bottom' => 0, 'left' => 0, 'right' => 0 ], 'mode' => 3 ];
  *          PDFStart( $pdf_options );
  *
  * @param  array $options PDF options (optional). Defaults see $default_options.
@@ -289,8 +289,10 @@ function PDFStop( $handle )
 	 * Note: $pdf is a mikehaertl\wkhtmlto\Pdf object
 	 *
 	 * @since 11.4.1
+	 * @since 12.8 Add $html parameter
+	 * @since 12.8 Pass $pdf object by reference
 	 */
-	do_action( 'functions/PDF.php|pdf_stop_pdf', [ $pdf, $handle ] );
+	do_action( 'functions/PDF.php|pdf_stop_pdf', [ &$pdf, $handle, $html ] );
 
 	if ( $handle['mode'] === 3 ) // Save.
 	{
@@ -301,7 +303,7 @@ function PDFStop( $handle )
 		{
 			echo ErrorMessage( [ $pdf->getError() ] );
 
-			ErrorSendEmail( [ $pdf->getError() ], 'wkhtmltopdf error' );
+			ErrorSendEmail( [ $pdf->getError() ], 'htmltopdf error' );
 
 			return '';
 		}
@@ -314,7 +316,7 @@ function PDFStop( $handle )
 	{
 		echo ErrorMessage( [ $pdf->getError() ] );
 
-		ErrorSendEmail( [ $pdf->getError() ], 'wkhtmltopdf error' );
+		ErrorSendEmail( [ $pdf->getError() ], 'htmltopdf error' );
 	}
 
 	return '';

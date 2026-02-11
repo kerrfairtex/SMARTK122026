@@ -480,8 +480,10 @@ $RosarioActions = [];
 	 * Note: $pdf is a mikehaertl\wkhtmlto\Pdf object
 	 *
 	 * @since 11.4.1
+	 * @since 12.8 Add $html parameter
+	 * @since 12.8 Pass $pdf object by reference
 	 */
-	/*'functions/PDF.php|pdf_stop_pdf' => [ $pdf, $handle ],
+	/*'functions/PDF.php|pdf_stop_pdf' => [ &$pdf, $handle, $html ],
 
 	/**
 	 * PDF Stop HTML (no wkhtmltopdf)

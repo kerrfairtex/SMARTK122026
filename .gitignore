@@ -296,6 +296,8 @@ modules/IPSJ*
 modules/Seating_Chart*
 modules/Ecuador_Retake_Exam*
 modules/Liberty_Cambodia*
+modules/Slovenian_Temporary_Residence*
+modules/YessCS*
 modules/update.sh
 plugins/Email_SMTP*
 plugins/Public_Pages*
@@ -334,6 +336,7 @@ plugins/Scholarship_Expiration*
 plugins/Microsoft_Social_Login*
 plugins/Previous_Next_Student*
 plugins/Unsaved_Changes_Warning*
+plugins/Chrome_To_PDF*
 plugins/update.sh
 locale/fr_FR.utf8_ParisComSup
 functions/1GetMP.php

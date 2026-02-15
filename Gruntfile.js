@@ -99,6 +99,7 @@ module.exports = function(grunt) {
 					],
 					'assets/themes/FlatSIS/stylesheet.css': [
 						'assets/themes/FlatSIS/css/calendar-blue.css',
+						'assets/themes/FlatSIS/css/checkbox-radio.css',
 						'assets/themes/FlatSIS/css/colorbox.css',
 						'assets/themes/FlatSIS/css/colors.css',
 						'assets/themes/FlatSIS/css/font.css',

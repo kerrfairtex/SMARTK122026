@@ -74,7 +74,7 @@
 		padding-bottom: 0;
 		min-height: auto;
 		height: 0;
-		transition: height 0.5s ease-in-out;
+		transition: height 0.3s ease-in-out;
 	}
 	#menu.slide {
 		margin: 0;
@@ -237,6 +237,10 @@
 	}
 	#cboxLoadedContent {
 		padding: 8px !important;
+	}
+	select[name^="month_"],
+	.rt select[name^="month_"] {
+		max-width: 60px;
 	}
 }
 

@@ -19,6 +19,7 @@ Changes in 12.8
 - Sanitize redirect_to: remove &delete_ok=1 in index.php
 - Fix #367 SQL do not use GetStuList() so we get all students in class in Grades.fnc.php, thanks to @Macadoshis
 - Add $html parameter & pass $pdf object by reference to the functions/PDF.php|pdf_stop_pdf action hook in PDF.php & Actions.php
+- CSS FlatSIS theme style checkbox & radio inputs in checkbox-radio.css & Gruntfile.js
 
 Changes in 12.7.3
 -----------------

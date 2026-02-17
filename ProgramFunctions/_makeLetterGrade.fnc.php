@@ -70,7 +70,7 @@ function _makeLetterGrade( $percent, $course_period_id = 0, $staff_id = 0, $ret 
 
 	$does_breakoff = $_ROSARIO['_makeLetterGrade']['courses'][ $course_period_id ][1]['DOES_BREAKOFF'];
 
-	$grade_scale_id = $_ROSARIO['_makeLetterGrade']['courses'][ $course_period_id ][1]['GRADE_SCALE_ID'];
+	$grade_scale_id = (string) $_ROSARIO['_makeLetterGrade']['courses'][ $course_period_id ][1]['GRADE_SCALE_ID'];
 
 	$percent *= 100;
 

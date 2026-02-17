@@ -260,7 +260,7 @@ function GetClassAverage( $course_period_id, $marking_period_id, $letter_or_perc
  * @since 9.1
  * @since 11.0 Cache Class average percent
  * @since 12.4.2 Fix include students active as of requested MP's end date
- * @since 12.8 Fix #367 SQL do not use GetStuList() so we get all students in class
+ * @since 12.7.4 Fix #367 SQL do not use GetStuList() so we get all students in class
  *
  * @param int $course_period_id  Course Period ID.
  * @param int $marking_period_id Marking Period ID.

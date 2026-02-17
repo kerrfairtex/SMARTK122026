@@ -17,13 +17,15 @@ Changes in 12.8
 - CSS themes search form adjustments & increase number input width in stylesheet.css & zresponsive.css
 - CSS FlatSIS theme adjust stackable list margin & colorBox padding in stylesheet.css & zresponsive.css
 - Sanitize redirect_to: remove &delete_ok=1 in index.php
-- Fix #367 SQL do not use GetStuList() so we get all students in class in Grades.fnc.php, thanks to @Macadoshis
 - Add $html parameter & pass $pdf object by reference to the functions/PDF.php|pdf_stop_pdf action hook in PDF.php & Actions.php
 - CSS FlatSIS theme style checkbox & radio inputs in checkbox-radio.css & Gruntfile.js
 
 Changes in 12.7.4
 -----------------
 - CSP Skip CSP violation triggered by domain: connect.facebook.net in SaveReport.php
+- Fix #367 SQL do not use GetStuList() so we get all students in class in Grades.fnc.php, thanks to @Macadoshis
+- Fix SQL get grade when assignment applies to all periods for this course in StudentGrades.php & ProgressReports.php
+
 Changes in 12.7.3
 -----------------
 - Fix Help button not showing help, compile error in plugins.min.js

@@ -39,7 +39,7 @@ Please upgrade the following [modules](https://www.rosariosis.org/modules/):
 - Embedded Resources 1.2+ (Dec. 2024)
 - Entry and Exit 4.4+ (Dec. 2024)
 - Entry and Exit Premium 1.1+ (Dec. 2024)
-- Food Service Premium 1.8+ (Jan. 2025)
+- Food Service Premium 2.5+ (Jan. 2026)
 - Grades Import 12.5+ (Dec. 2024)
 - Hostel 1.8+ (Jan. 2025)
 - Hostel Premium 2.1+ (Dec. 2024)

@@ -42,7 +42,10 @@ if ( UserStudentID()
 		LIMIT 1))
 	AND s.STUDENT_ID='" . UserStudentID() . "'
 	AND cp.GRADE_SCALE_ID IS NOT NULL" .
-		( User( 'PROFILE' ) === 'teacher' ? ' AND cp.TEACHER_ID=\'' . User( 'STAFF_ID' ) . '\'' : '' ) . "
+	( User( 'PROFILE' ) === 'teacher' ?
+		// @since 12.8 List Courses to Secondary Teacher
+		" AND (cp.TEACHER_ID='" . User( 'STAFF_ID' ) . "'
+			OR cp.SECONDARY_TEACHER_ID='" . User( 'STAFF_ID' ) . "')" : '' ) . "
 	AND c.COURSE_ID=cp.COURSE_ID
 	ORDER BY cp.SHORT_NAME, cp.TITLE", [ 'COURSE_TITLE' => 'ParseMLField' ], [ 'COURSE_PERIOD_ID' ] );
 //echo '<pre>'; var_dump($courses_RET); echo '</pre>';

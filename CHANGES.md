@@ -20,6 +20,7 @@ Changes in 12.8
 - Add $html parameter & pass $pdf object by reference to the functions/PDF.php|pdf_stop_pdf action hook in PDF.php & Actions.php
 - CSS FlatSIS theme style checkbox & radio inputs in checkbox-radio.css & Gruntfile.js
 - List Courses to Secondary Teacher in StudentGrades.php
+- Add Secondary Teacher to Tip Message in StudentGrades.php & StudentAssignments.fnc.php
 
 Changes in 12.7.4
 -----------------

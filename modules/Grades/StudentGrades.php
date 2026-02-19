@@ -1,6 +1,7 @@
 <?php
 
 require_once 'ProgramFunctions/_makeLetterGrade.fnc.php';
+require_once 'ProgramFunctions/TipMessage.fnc.php';
 require_once 'modules/Grades/includes/FinalGrades.inc.php';
 
 $do_stats = ProgramConfig( 'grades', 'GRADES_DO_STATS_STUDENTS_PARENTS' ) == 'Y'
@@ -29,7 +30,8 @@ if ( UserStudentID()
 	/*$courses_RET = DBGet( "SELECT c.TITLE AS COURSE_TITLE,cp.TITLE,cp.COURSE_PERIOD_ID,cp.COURSE_ID,cp.TEACHER_ID AS STAFF_ID FROM schedule s,course_periods cp,courses c WHERE s.SYEAR='".UserSyear()."' AND cp.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID AND s.MARKING_PERIOD_ID IN (".GetAllMP('QTR',UserMP()).") AND ('".DBDate()."'>=s.START_DATE AND (s.END_DATE IS NULL OR '".DBDate()."'<=s.END_DATE)) AND s.STUDENT_ID='".UserStudentID()."' AND cp.GRADE_SCALE_ID IS NOT NULL".(User( 'PROFILE' ) === 'teacher'?' AND cp.TEACHER_ID=\''.User('STAFF_ID').'\'':'')." AND c.COURSE_ID=cp.COURSE_ID ORDER BY (SELECT SORT_ORDER FROM school_periods WHERE PERIOD_ID=cp.PERIOD_ID)",array(),array('COURSE_PERIOD_ID'));*/
 
 	// @since 10.9.1 SQL Show Gradebook Grades of Inactive Students (Course status, maybe dropped as of today) (Only if has grades)
-	$courses_RET = DBGet( "SELECT c.TITLE AS COURSE_TITLE,cp.TITLE,cp.COURSE_PERIOD_ID,cp.COURSE_ID,cp.TEACHER_ID AS STAFF_ID
+	$courses_RET = DBGet( "SELECT c.TITLE AS COURSE_TITLE,cp.TITLE,cp.COURSE_PERIOD_ID,cp.COURSE_ID,
+	cp.TEACHER_ID AS STAFF_ID,cp.SECONDARY_TEACHER_ID
 	FROM schedule s,course_periods cp,courses c
 	WHERE s.SYEAR='" . UserSyear() . "'
 	AND cp.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID
@@ -261,10 +263,23 @@ if ( UserStudentID()
 						$ungraded = '';
 					}
 
+					$teacher = GetTeacher( $staff_id );
+
+					if ( ! isset( $_REQUEST['_ROSARIO_PDF'] )
+						&& ! empty( $course['SECONDARY_TEACHER_ID'] ) )
+					{
+						// @since 12.8 Add Secondary Teacher to Tip Message
+						$teacher = MakeTipMessage(
+							GetTeacher( $course['SECONDARY_TEACHER_ID'] ),
+							_( 'Secondary Teacher' ),
+							$teacher
+						);
+					}
+
 					$LO_ret[] = [
 						'ID' => $course_period_id,
 						'TITLE' => $course['COURSE_TITLE'],
-						'TEACHER' => mb_substr( $course_title, mb_strrpos( str_replace( ' - ', ' ^ ', $course_title ), '^' ) + 2 ),
+						'TEACHER' => $teacher,
 						'PERCENT' => ( $percent !== false ?
 							(float) number_format( 100 * $percent, 2, '.', '' ) . '%' :
 							_( 'N/A' ) ),

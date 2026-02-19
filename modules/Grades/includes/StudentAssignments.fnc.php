@@ -607,7 +607,7 @@ function StudentAssignmentsListOutput()
 	// TODO: get Assignment type color!
 	$assignments_sql = "SELECT ga.ASSIGNMENT_ID,ga.STAFF_ID,ga.COURSE_PERIOD_ID,ga.COURSE_ID,
 		ga.ASSIGNMENT_TYPE_ID,ga.TITLE,ga.ASSIGNED_DATE,ga.DUE_DATE,ga.POINTS,ga.SUBMISSION,
-		c.TITLE AS COURSE_TITLE,
+		c.TITLE AS COURSE_TITLE,cp.SECONDARY_TEACHER_ID,
 		(SELECT 1
 			FROM student_assignments sa
 			WHERE ga.ASSIGNMENT_ID=sa.ASSIGNMENT_ID
@@ -635,7 +635,7 @@ function StudentAssignmentsListOutput()
 		[
 			'COURSE_TITLE' => 'ParseMLField',
 			'TITLE' => 'MakeAssignmentTitle',
-			'STAFF_ID' => 'GetTeacher',
+			'STAFF_ID' => 'MakeAssignmentTeacher',
 			'DUE_DATE' => 'MakeAssignmentDueDate',
 			'ASSIGNED_DATE' => 'ProperDate',
 			'SUBMITTED' => 'MakeAssignmentSubmitted',
@@ -882,4 +882,40 @@ function GetAssignmentFileLink( $file_path )
 		'"' . URLEscape( $file_path ) . '" target="_blank" title="' . AttrEscape( $file_name . ' (' . $file_size . ')' ) . '"',
 		'bigger'
 	);
+}
+
+/**
+ * Make Student Assignment Teacher
+ *
+ * DBGet callback
+ *
+ * @since 12.8
+ *
+ * @param string $value  Teacher ID.
+ * @param string $column 'STAFF_ID'.
+ *
+ * @return string Teacher Name and Tip Message with Secondary Teacher if any.
+ */
+function MakeAssignmentTeacher( $value, $column )
+{
+	global $THIS_RET;
+
+	require_once 'ProgramFunctions/TipMessage.fnc.php';
+
+	$teacher = GetTeacher( $value );
+
+	if ( isset( $_REQUEST['_ROSARIO_PDF'] )
+		|| empty( $THIS_RET['SECONDARY_TEACHER_ID'] ) )
+	{
+		return $teacher;
+	}
+
+	// @since 12.8 Add Secondary Teacher to Tip Message
+	$teacher = MakeTipMessage(
+		GetTeacher( $THIS_RET['SECONDARY_TEACHER_ID'] ),
+		_( 'Secondary Teacher' ),
+		$teacher
+	);
+
+	return $teacher;
 }

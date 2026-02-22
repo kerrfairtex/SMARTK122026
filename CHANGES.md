@@ -21,6 +21,7 @@ Changes in 12.8
 - CSS FlatSIS theme style checkbox & radio inputs in checkbox-radio.css & Gruntfile.js
 - List Courses to Secondary Teacher in StudentGrades.php
 - Add Secondary Teacher to Tip Message in StudentGrades.php & StudentAssignments.fnc.php
+- Add RosarioSIS URL to Installation Poll in FirstLogin.fnc.php
 
 Changes in 12.7.4
 -----------------

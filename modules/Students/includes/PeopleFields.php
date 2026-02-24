@@ -82,7 +82,10 @@ if ( isset( $_POST['tables'] )
 					{
 						if ( $table === 'people_fields' )
 						{
-							AddDBField( 'people', $id, $columns['TYPE'] );
+							// @since 12.8 SQL add comment to Field column
+							$comment = ParseMLField( $columns['TITLE'] );
+
+							AddDBField( 'people', $id, $columns['TYPE'], $comment );
 
 							$_REQUEST['id'] = $id;
 						}

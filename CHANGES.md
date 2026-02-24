@@ -23,6 +23,7 @@ Changes in 12.8
 - Add Secondary Teacher to Tip Message in StudentGrades.php & StudentAssignments.fnc.php
 - Add RosarioSIS URL to Installation Poll in FirstLogin.fnc.php
 - SQL add comment to Student/User Field columns in rosariosis.sql & rosariosis_mysql.sql
+- SQL add comment to Field column in Fields.fnc.php, StudentFields.php, PeopleFields.php, AddressFields.php, SchoolFields.php & UserFields.php
 
 Changes in 12.7.4
 -----------------

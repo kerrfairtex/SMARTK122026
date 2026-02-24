@@ -14,16 +14,18 @@
  * @since 5.0 SQL fix Change index suffix from '_IND' to '_IDX' to avoid collision.
  * @since 9.2.1 Change $sequence param to $field_id, adapted for use with DBLastInsertID()
  * @since 10.0 MySQL use LONGTEXT type for textarea field
+ * @since 12.8 SQL add comment to Field column
  *
  * @example AddDBField( 'schools', $school_fields_id, $columns['TYPE'] );
  *
  * @param string  $table    DB Table name.
  * @param int     $field_id Field ID (or DB Sequence name: deprecated).
  * @param string  $type     Field Type: radio|text|exports|select|autos|edits|codeds|multiple|numeric|date|textarea|files.
+ * @param string  $comment  Column comment: usually the field title (optional).
  *
  * @return string Field ID or empty string
  */
-function AddDBField( $table, $field_id, $type )
+function AddDBField( $table, $field_id, $type, $comment = '' )
 {
 	global $DatabaseType;
 
@@ -117,8 +119,25 @@ function AddDBField( $table, $field_id, $type )
 		break;
 	}
 
+	$sql_comment = '';
+
+	if ( $comment )
+	{
+		if ( $DatabaseType === 'mysql' )
+		{
+			$sql_comment = " COMMENT '" . DBEscapeString( $comment ) . "'";
+		}
+		else
+		{
+			// PostgreSQL
+			$sql_comment = "; COMMENT ON COLUMN " .
+				DBEscapeIdentifier( $table ) . "." . DBEscapeIdentifier( 'CUSTOM_' . (int) $id ) .
+				" IS '" . DBEscapeString( $comment ) . "'";
+		}
+	}
+
 	DBQuery( 'ALTER TABLE ' . DBEscapeIdentifier( $table ) . ' ADD ' .
-		DBEscapeIdentifier( 'CUSTOM_' . (int) $id ) . ' ' . $sql_type );
+		DBEscapeIdentifier( 'CUSTOM_' . (int) $id ) . ' ' . $sql_type . $sql_comment );
 
 	$max_indices_reached = false;
 

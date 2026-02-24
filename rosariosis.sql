@@ -290,6 +290,19 @@ CREATE TABLE students (
     updated_at timestamp
 );
 
+COMMENT ON COLUMN students.custom_200000000 IS 'Gender';
+COMMENT ON COLUMN students.custom_200000001 IS 'Ethnicity';
+COMMENT ON COLUMN students.custom_200000002 IS 'Common Name';
+COMMENT ON COLUMN students.custom_200000003 IS 'Identification Number';
+COMMENT ON COLUMN students.custom_200000004 IS 'Birthdate';
+COMMENT ON COLUMN students.custom_200000005 IS 'Language';
+COMMENT ON COLUMN students.custom_200000006 IS 'Physician';
+COMMENT ON COLUMN students.custom_200000007 IS 'Physician Phone';
+COMMENT ON COLUMN students.custom_200000008 IS 'Preferred Hospital';
+COMMENT ON COLUMN students.custom_200000009 IS 'Comments';
+COMMENT ON COLUMN students.custom_200000010 IS 'Has Doctor''s Note';
+COMMENT ON COLUMN students.custom_200000011 IS 'Doctor''s Note Comments';
+
 
 --
 -- Name: staff; Type: TABLE; Schema: public; Owner: rosariosis; Tablespace:
@@ -307,7 +320,7 @@ CREATE TABLE staff (
     username varchar(100),
     password varchar(106),
     email varchar(255),
-    custom_200000001 text, -- Old phone column.
+    custom_200000001 text,
     profile varchar(30),
     schools varchar(150),
     last_login timestamp,
@@ -317,6 +330,8 @@ CREATE TABLE staff (
     created_at timestamp DEFAULT current_timestamp,
     updated_at timestamp
 );
+
+COMMENT ON COLUMN staff.custom_200000001 IS 'Phone Number';
 
 
 --

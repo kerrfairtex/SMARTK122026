@@ -22,6 +22,7 @@ Changes in 12.8
 - List Courses to Secondary Teacher in StudentGrades.php
 - Add Secondary Teacher to Tip Message in StudentGrades.php & StudentAssignments.fnc.php
 - Add RosarioSIS URL to Installation Poll in FirstLogin.fnc.php
+- SQL add comment to Student/User Field columns in rosariosis.sql & rosariosis_mysql.sql
 
 Changes in 12.7.4
 -----------------

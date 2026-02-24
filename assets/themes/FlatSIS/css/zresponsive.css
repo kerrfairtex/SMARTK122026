@@ -238,7 +238,6 @@
 	#cboxLoadedContent {
 		padding: 8px !important;
 	}
-	select[name^="month_"],
 	.rt select[name^="month_"] {
 		max-width: 60px;
 	}

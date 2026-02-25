@@ -47,6 +47,7 @@ $domain_skip = [
 	'https://connect.facebook.net', // JS file injected by Facebook
 	'https://safesearchinc.com', // ??
 	'https://infird.com', // JS file injected by malware
+	'https://fonts.googleapis.com', // CSS file injected by Google Fonts
 ];
 
 foreach ( $domain_skip as $domain )

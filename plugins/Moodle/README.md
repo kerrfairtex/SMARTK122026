@@ -16,7 +16,7 @@ RosarioSIS 13.0 will remove XML-RPC support entirely. Use the REST API instead.
 
 The plugin is designed and intended for ONE school only in RosarioSIS.
 
-Users and courses can only be rolled ONCE in RosarioSIS.
+Users and courses can only be rolled ONCE in RosarioSIS (once every year).
 
 ## Content
 

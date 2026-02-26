@@ -28,7 +28,6 @@ $menu['School_Setup']['admin'] = [
 	'School_Setup/Rollover.php' => _( 'Rollover' ),
 	3 => dgettext( 'Access_Log', _( 'Security' ) ),
 	'School_Setup/AccessLog.php' => _( 'Access Log' ),
-	'School_Setup/DatabaseBackup.php' => _( 'Database Backup' ),
 ] + issetVal( $menu['School_Setup']['admin'], [] );
 
 $menu['School_Setup']['teacher'] = [

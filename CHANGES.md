@@ -24,6 +24,7 @@ Changes in 12.8
 - Add RosarioSIS URL to Installation Poll in FirstLogin.fnc.php
 - SQL add comment to Student/User Field columns in rosariosis.sql & rosariosis_mysql.sql
 - SQL add comment to Field column in Fields.fnc.php, StudentFields.php, PeopleFields.php, AddressFields.php, SchoolFields.php & UserFields.php
+- Remove Database Backup program (secure by default) in DatabaseBackup.php, School_Setup/Menu.php, rosariosis.sql, rosariosis_mysql.sql
 
 Changes in 12.7.4
 -----------------

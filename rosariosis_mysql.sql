@@ -2841,7 +2841,6 @@ INSERT INTO profile_exceptions VALUES (1, 'Discipline/ReferralForm.php', 'Y', 'Y
 INSERT INTO profile_exceptions VALUES (2, 'Discipline/MakeReferral.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
 INSERT INTO profile_exceptions VALUES (2, 'Discipline/Referrals.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
 INSERT INTO profile_exceptions VALUES (2, 'Grades/GradebookBreakdown.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
-INSERT INTO profile_exceptions VALUES (1, 'School_Setup/DatabaseBackup.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
 INSERT INTO profile_exceptions VALUES (1, 'School_Setup/PortalPolls.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
 INSERT INTO profile_exceptions VALUES (1, 'School_Setup/Configuration.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);
 INSERT INTO profile_exceptions VALUES (1, 'School_Setup/AccessLog.php', 'Y', 'Y', CURRENT_TIMESTAMP, NULL);

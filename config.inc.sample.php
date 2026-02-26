@@ -30,10 +30,6 @@ $DatabaseName = 'database_name_here';
 
 
 /**
- * Paths
- */
-
-/**
  * Full path to wkhtmltopdf binary file
  *
  * An empty string means wkhtmltopdf will not be called

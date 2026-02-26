@@ -42,7 +42,6 @@ Décompressez la [dernière version](https://www.rosariosis.org/fr/download/) de
 - `$DatabasePassword` Mot de passe pour se connecter à la base de données.
 - `$DatabaseName` Nom de la base de données.
 
-- `$DatabaseDumpPath` Chemin complet vers l'utilitaire d'export de base de donnée, pg_dump (PostgreSQL), mysqldump (MySQL) ou mariadb-dump (MariaDB).
 - `$wkhtmltopdfPath` Chemin complet vers l'utilitaire de génération de PDF, wkhtmltopdf.
 
 - `$DefaultSyear` Année scolaire par défaut. Ne changer qu'après avoir lancé le programme _Report final_. NE PAS changer à l'installation.

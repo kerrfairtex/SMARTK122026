@@ -42,7 +42,6 @@ Descomprima la [última versión](https://www.rosariosis.org/es/download/) de Ro
 - `$DatabasePassword` Contraseña para conectarse a la base de datos.
 - `$DatabaseName` Nombre de la base de datos.
 
-- `$DatabaseDumpPath` Camino completo hacia el utilitario de exportación de base de datos, pg_dump (PostgreSQL), mysqldump (MySQL) o mariadb-dump (MariaDB).
 - `$wkhtmltopdfPath` Camino completo hacia el utilitario de generación de PDF, wkhtmltopdf.
 
 - `$DefaultSyear` Año escolar por defecto. Solo cambiar después de haber corrido el programa _Transferir_. NO cambiar durante la instalación.

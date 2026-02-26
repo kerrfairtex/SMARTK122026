@@ -34,22 +34,6 @@ $DatabaseName = 'database_name_here';
  */
 
 /**
- * Full path to the database dump utility for this server
- *
- * pg_dump for PostgreSQL
- * @example /usr/bin/pg_dump
- * @example C:/Progra~1/PostgreSQL/bin/pg_dump.exe
- *
- * mysqldump for MySQL
- * @example /usr/bin/mysqldump
- * @example C:/xampp/mysql/bin/mysqldump.exe
- *
- * mariadb-dump for MariaDB
- * @example /usr/bin/mariadb-dump
- */
-$DatabaseDumpPath = '';
-
-/**
  * Full path to wkhtmltopdf binary file
  *
  * An empty string means wkhtmltopdf will not be called

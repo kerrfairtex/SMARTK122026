@@ -42,7 +42,6 @@ Unzip the [latest version](https://www.rosariosis.org/download/) of RosarioSIS, 
 - `$DatabasePassword` Password used for authenticating the database.
 - `$DatabaseName` Database name.
 
-- `$DatabaseDumpPath` Full path to the database dump utility, pg_dump (PostgreSQL), mysqldump (MySQL) or mariadb-dump (MariaDB).
 - `$wkhtmltopdfPath` Full path to the PDF generation utility, wkhtmltopdf.
 
 - `$DefaultSyear` Default school year. Only change after running the _Rollover_ program. Do NOT change during installation.

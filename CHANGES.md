@@ -25,6 +25,7 @@ Changes in 12.8
 - SQL add comment to Student/User Field columns in rosariosis.sql & rosariosis_mysql.sql
 - SQL add comment to Field column in Fields.fnc.php, StudentFields.php, PeopleFields.php, AddressFields.php, SchoolFields.php & UserFields.php
 - Remove Database Backup program (secure by default) in DatabaseBackup.php, School_Setup/Menu.php, rosariosis.sql, rosariosis_mysql.sql
+- Remove $DatabaseDumpPath global variable in diagnostic.php, config.inc.sample.php, INSTALL.md, INSTALL_es.md & INSTALL_fr.md
 
 Changes in 12.7.4
 -----------------

@@ -151,33 +151,6 @@ if ( ! empty( $wkhtmltopdfPath )
 	$error[] = 'The value for $wkhtmltopdfPath in the config.inc.php file is not correct.';
 }
 
-if ( ! empty( $pg_dumpPath )
-	&& empty( $DatabaseDumpPath )
-	&& $DatabaseType === 'postgresql' )
-{
-	// @since 10.0 Rename $pg_dumpPath configuration variable to $DatabaseDumpPath
-	$DatabaseDumpPath = $pg_dumpPath;
-}
-
-// Check pg_dump binary exists.
-if ( ! empty( $DatabaseDumpPath )
-	&& $DatabaseType === 'postgresql'
-	&& ( ! file_exists( $DatabaseDumpPath )
-		|| strpos( basename( $DatabaseDumpPath ), 'pg_dump' ) !== 0 ) )
-{
-	$error[] = 'The value for $DatabaseDumpPath in the config.inc.php file is not correct. pg_dump utility not found.';
-}
-
-// Check mysqldump or mariadb-dump binary exists.
-if ( ! empty( $DatabaseDumpPath )
-	&& $DatabaseType === 'mysql'
-	&& ( ! file_exists( $DatabaseDumpPath )
-		|| ( strpos( basename( $DatabaseDumpPath ), 'mysqldump' ) !== 0
-			&& strpos( basename( $DatabaseDumpPath ), 'mariadb-dump' ) !== 0 ) ) )
-{
-	$error[] = 'The value for $DatabaseDumpPath in the config.inc.php file is not correct. mysqldump or mariadb-dump utility not found.';
-}
-
 // Check for gd extension.
 if ( ! extension_loaded( 'gd' ) )
 {

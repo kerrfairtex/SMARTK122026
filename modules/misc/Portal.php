@@ -1072,11 +1072,6 @@ function PHPCheck()
 		$ret[] = 'RosarioSIS requires PHP 5.5.9 to run, your version is : ' . PHP_VERSION;
 	}
 
-	if ( mb_strpos( ini_get( 'disable_functions' ), 'passthru' ) !== false )
-	{
-		$ret[] = 'passthru is disabled in your PHP configuration.';
-	}
-
 	return $ret;
 }
 

@@ -31,24 +31,36 @@ if ( User( 'SCHOOLS' ) )
 	$schools_where_sql = " AND se.SCHOOL_ID IN (" . mb_substr( str_replace( ',', "','", User( 'SCHOOLS' ) ), 2, -2 ) . ") ";
 }
 
-$enrollment_RET = DBGet( "SELECT se.START_DATE AS START_DATE,NULL AS END_DATE,se.START_DATE AS DATE,
-se.STUDENT_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,sch.TITLE,se.SCHOOL_ID
-FROM student_enrollment se,students s,schools sch
-WHERE s.STUDENT_ID=se.STUDENT_ID
-AND se.START_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
-AND sch.ID=se.SCHOOL_ID" . $schools_where_sql . "
-AND se.SYEAR='" . UserSyear() . "'
-AND se.SYEAR=sch.SYEAR
-UNION
-SELECT NULL AS START_DATE,se.END_DATE AS END_DATE,se.END_DATE AS DATE,
-se.STUDENT_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,sch.TITLE,se.SCHOOL_ID
-FROM student_enrollment se,students s,schools sch
-WHERE s.STUDENT_ID=se.STUDENT_ID
-AND se.END_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
-AND sch.ID=se.SCHOOL_ID" . $schools_where_sql . "
-AND se.SYEAR='" . UserSyear() . "'
-AND se.SYEAR=sch.SYEAR
-ORDER BY DATE DESC", [
+$enrollment_sql = "SELECT se.START_DATE AS START_DATE,NULL AS END_DATE,se.START_DATE AS DATE,
+	se.STUDENT_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,sch.TITLE,se.SCHOOL_ID
+	FROM student_enrollment se,students s,schools sch
+	WHERE s.STUDENT_ID=se.STUDENT_ID
+	AND se.START_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
+	AND sch.ID=se.SCHOOL_ID" . $schools_where_sql . "
+	AND se.SYEAR='" . UserSyear() . "'
+	AND se.SYEAR=sch.SYEAR
+	UNION
+	SELECT NULL AS START_DATE,se.END_DATE AS END_DATE,se.END_DATE AS DATE,
+	se.STUDENT_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,sch.TITLE,se.SCHOOL_ID
+	FROM student_enrollment se,students s,schools sch
+	WHERE s.STUDENT_ID=se.STUDENT_ID
+	AND se.END_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
+	AND sch.ID=se.SCHOOL_ID" . $schools_where_sql . "
+	AND se.SYEAR='" . UserSyear() . "'
+	AND se.SYEAR=sch.SYEAR
+	ORDER BY DATE DESC";
+
+$sql_count = "SELECT SUM(CASE WHEN se.START_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "' THEN 1 ELSE 0 END) +
+	SUM(CASE WHEN se.END_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "' THEN 1 ELSE 0 END)
+	FROM student_enrollment se,students s,schools sch
+	WHERE s.STUDENT_ID=se.STUDENT_ID
+	AND sch.ID=se.SCHOOL_ID" . $schools_where_sql . "
+	AND se.SYEAR='" . UserSyear() . "'
+	AND se.SYEAR=sch.SYEAR";
+
+$enrollment_sql .= SQLLimitForList( $sql_count );
+
+$enrollment_RET = DBGet( $enrollment_sql, [
 	'FULL_NAME' => '_makeStudentInfoLink',
 	'START_DATE' => 'ProperDate',
 	'END_DATE' => 'ProperDate',

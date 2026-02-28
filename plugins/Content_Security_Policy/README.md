@@ -57,7 +57,6 @@ Please upgrade the following [modules](https://www.rosariosis.org/modules/):
 - Quiz 10.8+ (Jan. 2025)
 - Quiz Premium 10.4+ (Jan. 2025)
 - Reports 11.2+ (Feb. 2025)
-- Slovenian Attendance Excel Sheet OK
 - SMS 11.2+ (Jan. 2025)
 - SMS Premium 11.4+ (Aug. 2025)
 - Staff Absences 11.0+ (Jan. 2025)

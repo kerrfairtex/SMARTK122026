@@ -29,6 +29,7 @@ $source_file_skip = [
 	'moz-extension',
 	'chrome-extension',
 	'safari-extension',
+	'user-script',
 ];
 
 if ( isset( $csp_report['source-file'] )

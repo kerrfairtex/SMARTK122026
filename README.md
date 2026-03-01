@@ -40,19 +40,19 @@ rosariosis.org: [English](https://www.rosariosis.org) • [Español](https://www
 Screenshots
 -----------
 
-![Calendars](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_calendar_en_2021.png)
+![Calendars](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_calendar_en_2026.webp)
 
-![Student Info](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_students_en_2021.png)
+![Student Info](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_students_en_2026.webp)
 
-![Student Schedule](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_scheduling_en_2021.png)
+![Student Schedule](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_scheduling_en_2026.webp)
 
-![Gradebook](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_grades_en_2021.png)
+![Gradebook](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_grades_en_2026.webp)
 
-![Take Attendance](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_attendance_en_2021.png)
+![Take Attendance](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_attendance_en_2026.webp)
 
-![Discipline](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_discipline_en_2021.png)
+![Discipline](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_discipline_en_2026.webp)
 
-![Fees](https://www.rosariosis.org/wp-content/uploads/2021/08/rosariosis_student_billing_en_2021.png)
+![Fees](https://www.rosariosis.org/wp-content/uploads/2026/01/rosariosis_student_billing_en_2026.webp)
 
 
 About

@@ -681,12 +681,6 @@ textarea {
 	white-space: nowrap;
 }
 
-/* Choose checkbox, see MakeChooseCheckbox() */
-
-.list td:first-of-type label input[type="checkbox"] {
-	vertical-align: initial
-}
-
 /* Proper Date, see ProperDate() */
 
 .proper-date {

@@ -61,11 +61,15 @@ function ThemeLiveUpdate( $new_theme, $old_theme, $default = true )
 		&& Preferences( 'THEME' ) !== $new_theme )
 	{
 		// If not Forcing theme, update admin Preferred theme too.
-		DBQuery( "UPDATE program_user_config
-			SET VALUE='" . $new_theme . "'
-			WHERE USER_ID='" . User( 'STAFF_ID' ) . "'
-			AND PROGRAM='Preferences'
-			AND TITLE='THEME'" );
+		DBUpdate(
+			'program_user_config',
+			[ 'VALUE' => $new_theme ],
+			[
+				'USER_ID' => User( 'STAFF_ID' ),
+				'PROGRAM' => 'Preferences',
+				'TITLE' => 'THEME',
+			]
+		);
 	}
 
 	/**

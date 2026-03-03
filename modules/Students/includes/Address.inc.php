@@ -386,10 +386,11 @@ if ( $_REQUEST['modfunc'] === 'delete_address'
 	{
 		if ( DeletePrompt( _( 'Address' ) ) )
 		{
-			DBQuery( "UPDATE students_join_people
-				SET ADDRESS_ID='0'
-				WHERE STUDENT_ID='" . UserStudentID() . "'
-				AND ADDRESS_ID='" . (int) $_REQUEST['address_id'] . "'" );
+			DBUpdate(
+				'students_join_people',
+				[ 'ADDRESS_ID' => '0' ],
+				[ 'STUDENT_ID' => UserStudentID(), 'ADDRESS_ID' => (int) $_REQUEST['address_id'] ]
+			);
 
 			if ( ! DBGetOne( "SELECT 1
 				FROM students_join_people
@@ -400,10 +401,17 @@ if ( $_REQUEST['modfunc'] === 'delete_address'
 					WHERE ADDRESS_ID='0'
 					AND STUDENT_ID='" . UserStudentID() . "'" ) )
 			{
-				DBQuery( "UPDATE students_join_address
-					SET ADDRESS_ID='0',RESIDENCE=NULL,MAILING=NULL,BUS_PICKUP=NULL,BUS_DROPOFF=NULL
-					WHERE STUDENT_ID='" . UserStudentID() . "'
-					AND ADDRESS_ID='" . (int) $_REQUEST['address_id'] . "'" );
+				DBUpdate(
+					'students_join_address',
+					[
+						'ADDRESS_ID' => '0',
+						'RESIDENCE' => '', // NULL
+						'MAILING' => '', // NULL
+						'BUS_PICKUP' => '', // NULL
+						'BUS_DROPOFF' => '', // NULL
+					],
+					[ 'STUDENT_ID' => UserStudentID(), 'ADDRESS_ID' => (int) $_REQUEST['address_id'] ]
+				);
 			}
 			else
 			{

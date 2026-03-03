@@ -8,16 +8,13 @@ if ( $_REQUEST['modfunc'] === 'update' )
 		&& AllowEdit()
 		&& ! empty( $_REQUEST['food_service'] ) )
 	{
-		$sql = "UPDATE food_service_student_accounts SET ";
+		DBUpdate(
+			'food_service_student_accounts',
+			array_map( 'trim', $_REQUEST['food_service'] ),
+			[ 'STUDENT_ID' => UserStudentID() ]
+		);
 
-		foreach ( (array) $_REQUEST['food_service'] as $column_name => $value )
-		{
-			$sql .= DBEscapeIdentifier( $column_name ) . "='" . trim( $value ) . "',";
-		}
-
-		$sql = mb_substr( $sql, 0, -1 ) . " WHERE STUDENT_ID='" . UserStudentID() . "'";
-
-		DBQuery( $sql );
+		$note[] = button( 'check' ) . ' ' . _( 'Your changes were saved.' );
 	}
 
 	// $_REQUEST['modfunc'] = false;

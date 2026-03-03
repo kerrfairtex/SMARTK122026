@@ -102,9 +102,11 @@ if ( isset( $_REQUEST['sidefunc'] )
 			WHERE SYEAR='" . UserSyear() . "'
 			AND ID='" . (int) $_REQUEST['school'] . "'" );
 
-		DBQuery( "UPDATE staff
-			SET CURRENT_SCHOOL_ID='" . UserSchool() . "'
-			WHERE STAFF_ID='" . User( 'STAFF_ID' ) . "'" );
+		DBUpdate(
+			'staff',
+			[ 'CURRENT_SCHOOL_ID' => UserSchool() ],
+			[ 'STAFF_ID' => User( 'STAFF_ID' ) ]
+		);
 
 		// Reset current MarkingPeriod.
 		$_SESSION['UserMP'] = GetCurrentMP( 'QTR', DBDate(), false );
@@ -416,9 +418,11 @@ if ( ! isset( $_REQUEST['sidefunc'] )
 			{
 				$_SESSION['UserSchool'] = $schools_RET[1]['ID'];
 
-				DBQuery( "UPDATE staff
-					SET CURRENT_SCHOOL_ID='" . UserSchool() . "'
-					WHERE STAFF_ID='" . User( 'STAFF_ID' ) . "'" );
+				DBUpdate(
+					'staff',
+					[ 'CURRENT_SCHOOL_ID' => UserSchool() ],
+					[ 'STAFF_ID' => User( 'STAFF_ID' ) ]
+				);
 			} ?>
 
 			<span class="br-after">

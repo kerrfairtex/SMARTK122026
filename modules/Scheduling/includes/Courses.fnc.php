@@ -564,16 +564,14 @@ function CourseDeleteSQL( $course_id )
  * For example: FY to SEM.
  *
  * @since 11.1 Move local function from Courses.php & rename to CoursePeriodUpdateMP()
+ * @since 12.8 Return boolean, true if updated
  *
  * @param  string $cp_id Course Period ID.
  * @param  string $mp_id Marking Period ID.
- * @return int    Number of schedules updated.
+ * @return bool          True if updated.
  */
 function CoursePeriodUpdateMP( $cp_id, $mp_id )
 {
-	global $db_connection,
-		$DatabaseType;
-
 	// Get CP MP.
 	$cp_mp = GetMP( $mp_id, 'MP' );
 
@@ -597,20 +595,23 @@ function CoursePeriodUpdateMP( $cp_id, $mp_id )
 		return 0;
 	}
 
-	$schedule_mp_in = ( $cp_mp === 'QTR' ? "'FY','SEM'" : "'FY'" );
+	// @since 12.7 SQL allow array in $where_columns: WHERE COLUMN IN(val1,val2)
+	$schedule_mp_in = ( $cp_mp === 'QTR' ? [ 'FY', 'SEM' ] : [ 'FY' ] );
 
 	// Update Schedules for CP where MP is of greater type
 	// than the new course period marking period.
-	$update = DBQuery( "UPDATE schedule SET
-		MP='" . $cp_mp . "',
-		MARKING_PERIOD_ID='" . (int) $mp_id . "'
-		WHERE COURSE_PERIOD_ID='" . (int) $cp_id . "'
-		AND MP IN (" . $schedule_mp_in . ")" );
+	$updated = DBUpdate(
+		'schedule',
+		[ 'MP' => $cp_mp, 'MARKING_PERIOD_ID' => (int) $mp_id ],
+		[
+			'COURSE_PERIOD_ID' => (int) $cp_id,
+			'MP' => $schedule_mp_in, // MP IN()
+			'SCHOOL_ID' => UserSchool(),
+			'SYEAR' => UserSyear(),
+		]
+	);
 
-	// Return number of updated schedules.
-	return $DatabaseType === 'mysql' ?
-		mysqli_affected_rows( $db_connection ) :
-		pg_affected_rows( $update );
+	return $updated;
 }
 
 /**

@@ -68,9 +68,11 @@ if ( $_REQUEST['modfunc'] === 'save'
 			{
 				if ( User( 'PROFILE' ) === 'student' )
 				{
-					DBQuery( "UPDATE students
-						SET PASSWORD='" . encrypt_password( $new_password ) . "'
-						WHERE STUDENT_ID='" . UserStudentID() . "'" );
+					DBUpdate(
+						'students',
+						[ 'PASSWORD' => encrypt_password( $new_password ) ],
+						[ 'STUDENT_ID' => UserStudentID() ]
+					);
 				}
 				else
 				{
@@ -81,9 +83,11 @@ if ( $_REQUEST['modfunc'] === 'save'
 					 *
 					 * Handle case when a user changes password in a non default school year
 					 */
-					DBQuery( "UPDATE staff
-						SET PASSWORD='" . encrypt_password( $new_password ) . "'
-						WHERE USERNAME='" . DBEscapeString( User( 'USERNAME' ) ) . "'" );
+					DBUpdate(
+						'staff',
+						[ 'PASSWORD' => encrypt_password( $new_password ) ],
+						[ 'USERNAME' => DBEscapeString( User( 'USERNAME' ) ) ]
+					);
 				}
 
 				$note[] = _( 'Your new password was saved.' );

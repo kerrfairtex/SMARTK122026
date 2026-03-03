@@ -72,9 +72,15 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	}
 	elseif ( DeletePrompt( _( 'Comment Code Scale' ) ) )
 	{
-		DBQuery( "UPDATE report_card_comments
-			SET SCALE_ID=NULL
-			WHERE SCALE_ID='" . (int) $_REQUEST['id'] . "'" );
+		DBUpdate(
+			'report_card_comments',
+			[ 'SCALE_ID' => '' ], // NULL
+			[
+				'SCALE_ID' => (int) $_REQUEST['id'],
+				'SCHOOL_ID' => UserSchool(),
+				'SYEAR' => UserSyear(),
+			]
+		);
 
 		$delete_sql = "DELETE FROM report_card_comment_codes
 			WHERE SCALE_ID='" . (int) $_REQUEST['id'] . "';";

@@ -307,9 +307,15 @@ if ( $_REQUEST['modfunc'] === 'create'
 
 				if ( $minutes != '999' )
 				{
-					DBQuery( "UPDATE attendance_calendar
-						SET MINUTES='" . $minutes . "'
-						WHERE CALENDAR_ID='" . (int) $calendar_id . "'" );
+					DBUpdate(
+						'attendance_calendar',
+						[ 'MINUTES' => $minutes ],
+						[
+							'CALENDAR_ID' => (int) $calendar_id,
+							'SCHOOL_ID' => UserSchool(),
+							'SYEAR' => UserSyear(),
+						]
+					);
 				}
 			}
 			else
@@ -925,12 +931,16 @@ if ( ! $_REQUEST['modfunc'] )
 		{
 			if ( $calendar_RET[ $date ] )
 			{
-				DBQuery( "UPDATE attendance_calendar
-					SET BLOCK='" . $block . "'
-					WHERE SCHOOL_DATE='" . $date . "'
-					AND SYEAR='" . UserSyear() . "'
-					AND SCHOOL_ID='" . UserSchool() . "'
-					AND CALENDAR_ID='" . (int) $_REQUEST['calendar_id'] . "'" );
+				DBUpdate(
+					'attendance_calendar',
+					[ 'BLOCK' => $block ],
+					[
+						'SCHOOL_DATE' => $date,
+						'SYEAR' => UserSyear(),
+						'SCHOOL_ID' => UserSchool(),
+						'CALENDAR_ID' => (int) $_REQUEST['calendar_id'],
+					]
+				);
 
 				$update_calendar = true;
 			}

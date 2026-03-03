@@ -126,9 +126,11 @@ function PortalPollsSaveVotes( $poll_questions_RET, $votes_array )
 		$voted_array[$question['ID']] = implode( '||', $voted_array[$question['ID']] );
 
 		// Submit query.
-		DBQuery( "UPDATE portal_poll_questions
-			SET VOTES='" . $voted_array[$question['ID']] . "'
-			WHERE ID='" . (int) $question['ID'] . "'" );
+		DBUpdate(
+			'portal_poll_questions',
+			[ 'VOTES' => $voted_array[$question['ID']] ],
+			[ 'ID' => (int) $question['ID'] ]
+		);
 
 		// Update the $poll_questions_RET array with Votes.
 		$poll_questions_RET[$key]['VOTES'] = $voted_array[$question['ID']];

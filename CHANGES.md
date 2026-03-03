@@ -28,6 +28,7 @@ Changes in 12.8
 - Remove $DatabaseDumpPath global variable in diagnostic.php, config.inc.sample.php, INSTALL.md, INSTALL_es.md & INSTALL_fr.md
 - Remove check for passthru function in Portal.php
 - Use SQLLimitForList() function in AddDrop.php
+- Use DBUpdate() function, program wide
 
 Changes in 12.7.4
 -----------------

@@ -206,9 +206,11 @@ if ( ! empty( $_REQUEST['h'] )
 					 * @since 12.0
 					 */
 					// Update password.
-					DBQuery( "UPDATE staff SET PASSWORD='" .
-						encrypt_password( $new_password ) . "'
-						WHERE USERNAME='" . DBEscapeString( $staff['USERNAME'] ) . "'" );
+					DBUpdate(
+						'staff',
+						[ 'PASSWORD' => encrypt_password( $new_password ) ],
+						[ 'USERNAME' => DBEscapeString( $staff['USERNAME'] ) ]
+					);
 
 					// If admin, send notification email to server admin.
 					if ( $user_profile == 1 )
@@ -219,9 +221,11 @@ if ( ! empty( $_REQUEST['h'] )
 				elseif ( $user_type === 'student' )
 				{
 					// Update password.
-					DBQuery( "UPDATE students SET PASSWORD='" .
-						encrypt_password( $new_password ) . "'
-						WHERE STUDENT_ID='" . (int) $user_id . "'" );
+					DBUpdate(
+						'students',
+						[ 'PASSWORD' => encrypt_password( $new_password ) ],
+						[ 'STUDENT_ID' => (int) $user_id ]
+					);
 				}
 
 				unset(

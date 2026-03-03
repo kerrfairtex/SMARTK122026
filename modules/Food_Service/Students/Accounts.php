@@ -77,8 +77,17 @@ if ( $_REQUEST['modfunc'] === 'update' )
 			{
 				if ( ! empty( $_REQUEST['food_service']['BARCODE'] ) )
 				{
-					DBQuery( "UPDATE food_service_student_accounts SET BARCODE=NULL WHERE BARCODE='" . trim( $_REQUEST['food_service']['BARCODE'] ) . "'" );
-					DBQuery( "UPDATE food_service_staff_accounts SET BARCODE=NULL WHERE BARCODE='" . trim( $_REQUEST['food_service']['BARCODE'] ) . "'" );
+					DBUpdate(
+						'food_service_student_accounts',
+						[ 'BARCODE' => '' ], // NULL
+						[ 'BARCODE' => trim( $_REQUEST['food_service']['BARCODE'] ) ]
+					);
+
+					DBUpdate(
+						'food_service_staff_accounts',
+						[ 'BARCODE' => '' ], // NULL
+						[ 'BARCODE' => trim( $_REQUEST['food_service']['BARCODE'] ) ]
+					);
 				}
 
 				DBUpdate(

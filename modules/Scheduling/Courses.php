@@ -645,9 +645,15 @@ if ( ! empty( $_REQUEST['tables'] )
 								{
 									$columns['PARENT_ID'] = $id;
 
-									DBQuery( "UPDATE course_periods
-										SET PARENT_ID='" . (int) $id . "'
-										WHERE COURSE_PERIOD_ID='" . (int) $id . "'" );
+									DBUpdate(
+										'course_periods',
+										[ 'PARENT_ID' => (int) $id ],
+										[
+											'SCHOOL_ID' => UserSchool(),
+											'SYEAR' => UserSyear(),
+											'COURSE_PERIOD_ID' => (int) $id,
+										]
+									);
 								}
 
 								// Hook.

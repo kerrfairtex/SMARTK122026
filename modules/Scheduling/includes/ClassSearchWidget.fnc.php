@@ -185,6 +185,13 @@ function _classSearchWidgetCoursePeriodsListOutput( $extra = '' )
 			FROM course_periods cp" . $from . "
 			WHERE cp.SCHOOL_ID='" . UserSchool() . "'
 			AND cp.SYEAR='" . UserSyear() . "'" . $where;
+
+		$sql_count = "SELECT COUNT(1)
+			FROM course_periods cp" . $from . "
+			WHERE cp.SCHOOL_ID='" . UserSchool() . "'
+			AND cp.SYEAR='" . UserSyear() . "'" . $where;
+
+		$sql .= SQLLimitForList( $sql_count );
 	}
 	elseif ( User( 'PROFILE' ) === 'teacher' )
 	{

@@ -423,7 +423,7 @@ if ( ! $_REQUEST['modfunc'] )
 			foreach ( $fields_RET['radio'] as $field )
 			{
 				echo '<tr><td>' .
-					_makeCheckboxInput( 'CUSTOM_' . $field['ID'], ParseMLField( $field['TITLE'] ), (bool) $field['REQUIRED'] ) .
+					_makeCheckboxInput( 'CUSTOM_' . $field['ID'], ParseMLField( $field['TITLE'] ) ) .
 					'</td></tr>';
 			}
 		}
@@ -533,11 +533,10 @@ function _makeSelectInput( $column, $options, $title = '' )
  *
  * @param string $column   Column.
  * @param string $title    Field Title.
- * @param bool   $required Is field required?
  *
  * @return string Checkbox Input HTML.
  */
-function _makeCheckboxInput( $column, $title = '', $required = false )
+function _makeCheckboxInput( $column, $title = '' )
 {
 	return CheckboxInput(
 		'',
@@ -546,8 +545,6 @@ function _makeCheckboxInput( $column, $title = '', $required = false )
 		'',
 		false,
 		'Yes',
-		button( 'help' ),
-		true,
-		( $required ? 'required' : '' )
+		button( 'help' )
 	);
 }

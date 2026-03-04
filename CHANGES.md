@@ -29,6 +29,7 @@ Changes in 12.8
 - Remove check for passthru function in Portal.php
 - Use SQLLimitForList() function in AddDrop.php & ClassSearchWidget.fnc.php
 - Use DBUpdate() function, program wide
+- Allow save unchecked state when checkbox field is required in AssignOtherInfo.php
 
 Changes in 12.7.4
 -----------------

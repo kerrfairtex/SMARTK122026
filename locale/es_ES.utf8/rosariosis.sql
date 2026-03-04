@@ -499,7 +499,7 @@ WHERE id=3;
 
 UPDATE discipline_field_usage
 SET title='Violación', select_options='Faltar a Clases
-Blasfemia, vulgaridad, languaje ofensivo
+Blasfemia, vulgaridad, lenguaje ofensivo
 Insubordinación (Desobediencia, Comportamiento Irrespetuoso)
 Ebrio (Alcohol o Drogas)
 Habla fuera de Turno

@@ -551,20 +551,20 @@ Autre'
 WHERE id=4;
 
 UPDATE discipline_field_usage
-SET title='Sanction', select_options='10 Minutes
-20 Minutes
-30 Minutes
+SET title='Sanction', select_options='10 minutes
+20 minutes
+30 minutes
 Exclusion envisagée'
 WHERE id=5;
 
 UPDATE discipline_field_usage
 SET title='Exclusions (secrétariat)', select_options='Demi-journée
 Retenue à l''école
-1 Jour
-2 Jours
-3 Jours
-5 Jours
-7 Jours
+1 jour
+2 jours
+3 jours
+5 jours
+7 jours
 Expulsion'
 WHERE id=6;
 

@@ -76,8 +76,17 @@ if ( $_REQUEST['modfunc'] === 'delete_medical'
 
 	if ( DeletePrompt( $_REQUEST['title'] ) )
 	{
-		DBQuery( "DELETE FROM " . DBEscapeIdentifier( $_REQUEST['table'] ) . "
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+		$tables = [
+			'student_medical_alerts',
+			'student_medical',
+			'student_medical_visits',
+		];
+
+		if ( in_array( $_REQUEST['table'], $tables ) )
+		{
+			DBQuery( "DELETE FROM " . DBEscapeIdentifier( $_REQUEST['table'] ) . "
+				WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+		}
 
 		// Unset modfunc & ID & table & title & redirect URL.
 		RedirectURL( [ 'modfunc', 'id', 'table', 'title' ] );

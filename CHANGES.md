@@ -30,6 +30,7 @@ Changes in 12.8
 - Use SQLLimitForList() function in AddDrop.php & ClassSearchWidget.fnc.php
 - Use DBUpdate() function, program wide
 - Allow save unchecked state when checkbox field is required in AssignOtherInfo.php
+- Security fix arbitrary Table Row Deletion via `$_REQUEST['table']` in Medical.inc.php, thanks to @lighthousekeeper1212
 
 Changes in 12.7.4
 -----------------

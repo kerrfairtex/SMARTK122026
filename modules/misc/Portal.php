@@ -161,12 +161,6 @@ if ( User( 'PROFILE' ) !== 'student'
 	$events_LO_columns['SCHOOL'] = _( 'School' );
 }
 
-if ( User( 'PROFILE' ) === 'admin'
-	&& SchoolInfo( 'SCHOOLS_NB' ) > 1 )
-{
-	$missing_attendance_LO_columns['SCHOOL'] = _( 'School' );
-}
-
 $assignments_LO_columns = [
 	// 'DAY' => _( 'Day' ),
 	'DUE_DATE' => _( 'Due Date' ),
@@ -298,38 +292,42 @@ switch ( User( 'PROFILE' ) )
 					// FJ days numbered.
 					// FJ multiple school periods for a course period.
 					// @since 10.4 SQL performance: use NOT EXISTS instead of NOT IN + LIMIT 1000.
-					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,s.TITLE AS SCHOOL,
-					acc.SCHOOL_DATE,cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
-					FROM attendance_calendar acc,course_periods cp,school_periods sp,schools s,
-					staff st,course_period_school_periods cpsp
-					WHERE EXISTS(SELECT 1
+					// @since 12.9 SQL performance: use explicit JOINs & remove School column
+					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,
+					acc.SCHOOL_DATE,cp.TITLE,'" . (int) $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
+					FROM attendance_calendar acc
+					JOIN course_periods cp ON cp.SCHOOL_ID=acc.SCHOOL_ID
+					AND cp.CALENDAR_ID=acc.CALENDAR_ID
+					AND cp.SYEAR='" . UserSyear() . "'
+					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					WHERE acc.SCHOOL_ID='" . UserSchool() . "'
+					AND acc.SCHOOL_DATE<'" . DBDate() . "'
+					AND position('," . (int) $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
+					AND EXISTS(SELECT 1
 						FROM schedule se
 						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
-						AND se.SYEAR='" . UserSyear() . "'
+						AND se.SYEAR=cp.SYEAR
+						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
-						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE)
-						LIMIT 1)
-					AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND acc.MINUTES>0
-					AND st.STAFF_ID='" . User( 'STAFF_ID' ) . "'
-					AND (st.SCHOOLS IS NULL OR position(CONCAT(',', acc.SCHOOL_ID, ',') IN st.SCHOOLS)>0)
-					AND cp.SYEAR='" . UserSyear() . "'
-					AND cp.CALENDAR_ID=acc.CALENDAR_ID
-					AND acc.SCHOOL_DATE<'" . DBDate() . "'
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP<>'PRO') AND SCHOOL_ID=acc.SCHOOL_ID AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
-					AND sp.PERIOD_ID=cpsp.PERIOD_ID
+						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
+					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+						FROM school_marking_periods
+						WHERE MP<>'PRO'
+						AND SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 						(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 						FROM attendance_calendar
-						WHERE SCHOOL_DATE<=acc.SCHOOL_DATE
+						WHERE SCHOOL_ID=acc.SCHOOL_ID
+						AND CALENDAR_ID=cp.CALENDAR_ID
+						AND SCHOOL_DATE<=acc.SCHOOL_DATE
 						AND SCHOOL_DATE>=(SELECT START_DATE
 							FROM school_marking_periods
-							WHERE START_DATE<=acc.SCHOOL_DATE
-							AND END_DATE>=acc.SCHOOL_DATE
+							WHERE acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 							AND MP='QTR'
 							AND SCHOOL_ID=acc.SCHOOL_ID
-							AND SYEAR=acc.SYEAR)
-						AND CALENDAR_ID=cp.CALENDAR_ID)
+							AND SYEAR=acc.SYEAR))
 						" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
 						" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 					AND NOT EXISTS(SELECT 1
@@ -338,9 +336,6 @@ switch ( User( 'PROFILE' ) )
 						AND ac.STAFF_ID=cp.TEACHER_ID
 						AND ac.PERIOD_ID=cpsp.PERIOD_ID
 						AND TABLE_NAME='" . (int) $category['ID'] . "')
-					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
-					AND s.ID=acc.SCHOOL_ID
-					AND s.SYEAR=acc.SYEAR
 					ORDER BY cp.TITLE,acc.SCHOOL_DATE
 					LIMIT 1000", [ 'SCHOOL_DATE' => '_makeTakeAttendanceLink' ], [ 'COURSE_PERIOD_ID' ] );
 				}
@@ -348,41 +343,41 @@ switch ( User( 'PROFILE' ) )
 				{
 					// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
 					// @since 10.4 SQL performance: use NOT EXISTS instead of NOT IN + LIMIT 1000.
-					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,s.TITLE AS SCHOOL,
-					acc.SCHOOL_DATE,cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
-					FROM attendance_calendar acc,course_periods cp,school_periods sp,schools s,
-					staff st, course_period_school_periods cpsp
-					WHERE EXISTS(SELECT 1
+					// @since 12.9 SQL performance: use explicit JOINs & remove School column
+					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,
+					acc.SCHOOL_DATE,cp.TITLE,'" . (int) $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
+					FROM attendance_calendar acc
+					JOIN course_periods cp ON cp.SCHOOL_ID=acc.SCHOOL_ID
+					AND cp.CALENDAR_ID=acc.CALENDAR_ID
+					AND cp.SYEAR='" . UserSyear() . "'
+					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					WHERE acc.SCHOOL_ID='" . UserSchool() . "'
+					AND acc.SCHOOL_DATE<'" . DBDate() . "'
+					AND position('," . (int) $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
+					AND EXISTS(SELECT 1
 						FROM schedule se
 						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
-						AND se.SYEAR='" . UserSyear() . "'
+						AND se.SYEAR=cp.SYEAR
+						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
-						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE)
-						LIMIT 1)
-					AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND acc.MINUTES>0
-					AND st.STAFF_ID='" . User( 'STAFF_ID' ) . "'
-					AND (st.SCHOOLS IS NULL OR position(CONCAT(',', acc.SCHOOL_ID, ',') IN st.SCHOOLS)>0)
-					AND cp.SCHOOL_ID=acc.SCHOOL_ID
-					AND cp.SYEAR='" . UserSyear() . "'
-					AND cp.CALENDAR_ID=acc.CALENDAR_ID
-					AND acc.SCHOOL_DATE<'" . DBDate() . "'
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP<>'PRO') AND SCHOOL_ID=acc.SCHOOL_ID AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
-					AND sp.PERIOD_ID=cpsp.PERIOD_ID
+						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
+					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+						FROM school_marking_periods
+						WHERE MP<>'PRO'
+						AND SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
-					( $DatabaseType === 'mysql' ?
-						"DAYOFWEEK(acc.SCHOOL_DATE)" :
-						"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
-					" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
+						( $DatabaseType === 'mysql' ?
+							"DAYOFWEEK(acc.SCHOOL_DATE)" :
+							"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
+						" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 					AND NOT EXISTS(SELECT 1
 						FROM attendance_completed ac
 						WHERE ac.SCHOOL_DATE=acc.SCHOOL_DATE
 						AND ac.STAFF_ID=cp.TEACHER_ID
 						AND ac.PERIOD_ID=cpsp.PERIOD_ID
 						AND TABLE_NAME='" . (int) $category['ID'] . "')
-					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
-					AND s.ID=acc.SCHOOL_ID
-					AND s.SYEAR=acc.SYEAR
 					ORDER BY cp.TITLE,acc.SCHOOL_DATE
 					LIMIT 1000", [ 'SCHOOL_DATE' => '_makeTakeAttendanceLink' ], [ 'COURSE_PERIOD_ID' ] );
 				}
@@ -611,38 +606,43 @@ switch ( User( 'PROFILE' ) )
 					// FJ multiple school periods for a course period.
 					// @since 6.9 Add Secondary Teacher.
 					// @since 10.4 SQL performance: use NOT EXISTS instead of NOT IN + LIMIT 1000.
-					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,acc.SCHOOL_DATE,
-					cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
-					FROM attendance_calendar acc,course_periods cp,school_periods sp,
-					course_period_school_periods cpsp
-					WHERE EXISTS(SELECT 1
-						FROM schedule se
-						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
-						AND se.SYEAR='" . UserSyear() . "'
-						AND acc.SCHOOL_DATE>=se.START_DATE
-						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE)
-						LIMIT 1)
-					AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND acc.MINUTES>0
-					AND cp.SYEAR='" . UserSyear() . "'
-					AND acc.SCHOOL_DATE<'" . DBDate() . "'
+					// @since 12.9 SQL performance: use explicit JOINs
+					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,
+					acc.SCHOOL_DATE,cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
+					FROM attendance_calendar acc
+					JOIN course_periods cp ON cp.SCHOOL_ID=acc.SCHOOL_ID
 					AND cp.CALENDAR_ID=acc.CALENDAR_ID
+					AND cp.SYEAR='" . UserSyear() . "'
+					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					WHERE acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND (cp.TEACHER_ID='" . User( 'STAFF_ID' ) . "'
 						OR SECONDARY_TEACHER_ID='" . User( 'STAFF_ID' ) . "')
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP<>'PRO') AND SCHOOL_ID=acc.SCHOOL_ID AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
-					AND sp.PERIOD_ID=cpsp.PERIOD_ID
+					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
+					AND EXISTS(SELECT 1
+						FROM schedule se
+						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
+						AND se.SYEAR=cp.SYEAR
+						AND se.SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE>=se.START_DATE
+						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
+					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+						FROM school_marking_periods
+						WHERE MP<>'PRO'
+						AND SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 						(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 						FROM attendance_calendar
-						WHERE SCHOOL_DATE<=acc.SCHOOL_DATE
+						WHERE SCHOOL_ID=acc.SCHOOL_ID
+						AND CALENDAR_ID=cp.CALENDAR_ID
+						AND SCHOOL_DATE<=acc.SCHOOL_DATE
 						AND SCHOOL_DATE>=(SELECT START_DATE
 							FROM school_marking_periods
-							WHERE START_DATE<=acc.SCHOOL_DATE
-							AND END_DATE>=acc.SCHOOL_DATE
+							WHERE acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 							AND MP='QTR'
 							AND SCHOOL_ID=acc.SCHOOL_ID
-							AND SYEAR=acc.SYEAR)
-						AND CALENDAR_ID=acc.CALENDAR_ID)
+							AND SYEAR=acc.SYEAR))
 						" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
 						" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 					AND NOT EXISTS(SELECT 1
@@ -651,7 +651,6 @@ switch ( User( 'PROFILE' ) )
 						AND ac.STAFF_ID=cp.TEACHER_ID
 						AND ac.PERIOD_ID=cpsp.PERIOD_ID
 						AND TABLE_NAME='" . (int) $category['ID'] . "')
-					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
 					ORDER BY cp.TITLE,acc.SCHOOL_DATE
 					LIMIT 1000", [ 'SCHOOL_DATE' => '_makeTakeAttendanceLink' ], [ 'COURSE_PERIOD_ID' ] );
 				}
@@ -660,30 +659,35 @@ switch ( User( 'PROFILE' ) )
 					// @since 6.9 Add Secondary Teacher.
 					// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
 					// @since 10.4 SQL performance: use NOT EXISTS instead of NOT IN + LIMIT 1000.
-					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,acc.SCHOOL_DATE,
-					cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
-					FROM attendance_calendar acc,course_periods cp,school_periods sp,
-					course_period_school_periods cpsp
-					WHERE EXISTS(SELECT 1
-						FROM schedule se
-						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
-						AND se.SYEAR='" . UserSyear() . "'
-						AND acc.SCHOOL_DATE>=se.START_DATE
-						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE)
-						LIMIT 1)
-					AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND acc.MINUTES>0
-					AND cp.SYEAR='" . UserSyear() . "'
-					AND acc.SCHOOL_DATE<'" . DBDate() . "'
+					// @since 12.9 SQL performance: use explicit JOINs
+					$missing_attendance_RET = DBGet( "SELECT cp.COURSE_PERIOD_ID,
+					acc.SCHOOL_DATE,cp.TITLE,'" . $category['ID'] . "' AS CATEGORY_ID,sp.PERIOD_ID
+					FROM attendance_calendar acc
+					JOIN course_periods cp ON cp.SCHOOL_ID=acc.SCHOOL_ID
 					AND cp.CALENDAR_ID=acc.CALENDAR_ID
+					AND cp.SYEAR='" . UserSyear() . "'
+					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					WHERE acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND (cp.TEACHER_ID='" . User( 'STAFF_ID' ) . "'
 						OR SECONDARY_TEACHER_ID='" . User( 'STAFF_ID' ) . "')
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP<>'PRO') AND SCHOOL_ID=acc.SCHOOL_ID AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
-					AND sp.PERIOD_ID=cpsp.PERIOD_ID
+					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
+					AND EXISTS(SELECT 1
+						FROM schedule se
+						WHERE cp.COURSE_PERIOD_ID=se.COURSE_PERIOD_ID
+						AND se.SYEAR=cp.SYEAR
+						AND se.SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE>=se.START_DATE
+						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
+					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+						FROM school_marking_periods
+						WHERE MP<>'PRO'
+						AND SCHOOL_ID=acc.SCHOOL_ID
+						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
-					( $DatabaseType === 'mysql' ?
-						"DAYOFWEEK(acc.SCHOOL_DATE)" :
-						"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
+						( $DatabaseType === 'mysql' ?
+							"DAYOFWEEK(acc.SCHOOL_DATE)" :
+							"extract(ISODOW FROM acc.SCHOOL_DATE)" ) .
 					" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 					AND NOT EXISTS(SELECT 1
 						FROM attendance_completed ac
@@ -691,7 +695,6 @@ switch ( User( 'PROFILE' ) )
 						AND ac.STAFF_ID=cp.TEACHER_ID
 						AND ac.PERIOD_ID=cpsp.PERIOD_ID
 						AND TABLE_NAME='" . (int) $category['ID'] . "')
-					AND position('," . $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
 					ORDER BY cp.TITLE,acc.SCHOOL_DATE
 					LIMIT 1000", [ 'SCHOOL_DATE' => '_makeTakeAttendanceLink' ], [ 'COURSE_PERIOD_ID' ] );
 				}

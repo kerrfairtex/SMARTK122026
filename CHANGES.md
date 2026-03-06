@@ -31,6 +31,7 @@ Changes in 12.8
 - Use DBUpdate() function, program wide
 - Allow save unchecked state when checkbox field is required in AssignOtherInfo.php
 - Security fix arbitrary Table Row Deletion via `$_REQUEST['table']` in Medical.inc.php, thanks to @lighthousekeeper1212
+- SQL performance: use explicit JOINs & remove School column in Portal.php
 
 Changes in 12.7.4
 -----------------

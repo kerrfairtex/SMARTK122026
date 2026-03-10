@@ -687,7 +687,7 @@ switch ( User( 'PROFILE' ) )
 					AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 						( $DatabaseType === 'mysql' ?
 							"DAYOFWEEK(acc.SCHOOL_DATE)" :
-							"extract(ISODOW FROM acc.SCHOOL_DATE)" ) .
+							"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
 					" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 					AND NOT EXISTS(SELECT 1
 						FROM attendance_completed ac

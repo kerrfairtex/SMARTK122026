@@ -109,6 +109,21 @@ if ( $csp_report['violated-directive'] === 'script-src-elem'
 	return _skipDie( 'Skip CSP violation triggered by sandbox eval code: "' . $csp_report['script-sample'] . '"' );
 }
 
+/**
+ * Violation triggered by Facebook Click Identifier
+ *
+ * "violated-directive": "script-src-elem",
+ * "blocked-uri": "inline",
+ * "referrer": "https://rosariosis.com/Modules.php?modname=Students%2FStudent.php&fbclid=[...]"
+ */
+if ( $csp_report['violated-directive'] === 'script-src-elem'
+	&& $csp_report['blocked-uri'] === 'inline'
+	&& ! empty( $csp_report['referrer'] )
+	&& mb_strpos( $csp_report['referrer'], '&fbclid=' ) !== false )
+{
+	return _skipDie( 'Skip CSP violation triggered by Facebook Click Identifier' );
+}
+
 $insert_columns = [
 	'FULL_REPORT' => DBEscapeString( json_encode( $csp_report ) ),
 	'VIOLATED_DIRECTIVE' => DBEscapeString( str_replace( '-elem', '', $csp_report['violated-directive'] ) ),

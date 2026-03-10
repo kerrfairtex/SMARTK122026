@@ -16,6 +16,8 @@ Note: if you are experiencing issues with an add-on, please contact its develope
 
 Note 2: to receive new CSP violation reports, please set your email address in the [`config.inc.php`](https://gitlab.com/francoisjacquet/rosariosis/-/blob/mobile/config.inc.sample.php?ref_type=heads#L97) file's `$RosarioErrorsAddress` variable.
 
+Note 3: some CSP violations/reports are triggered by browser extensions or external websites such as Google, Facebook. They can be safely ignored.
+
 Warning: allow external domains as a last resort because this lowers system security.
 
 Warning 2: inline Javascript cannot be (re)allowed through means of this plugin. Please check the "Developers" section below for instructions.

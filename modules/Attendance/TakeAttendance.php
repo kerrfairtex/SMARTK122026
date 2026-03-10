@@ -85,57 +85,65 @@ if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 {
 	// FJ days numbered.
 	// FJ multiple school periods for a course period.
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$course_RET = DBGet( "SELECT 1
 	FROM attendance_calendar acc,course_periods cp,school_periods sp,course_period_school_periods cpsp
-	WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+	WHERE acc.SCHOOL_DATE='" . $date . "'
 	AND acc.SYEAR='" . UserSyear() . "'
+	AND cp.COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
 	AND cp.SCHOOL_ID=acc.SCHOOL_ID
 	AND cp.SYEAR=acc.SYEAR
-	AND acc.SCHOOL_DATE='" . $date . "'
 	AND cp.CALENDAR_ID=acc.CALENDAR_ID
-	AND cpsp.COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+	AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 	AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'
-	AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP='FY' OR MP='SEM' OR MP='QTR')
-	AND SCHOOL_ID=acc.SCHOOL_ID
-	AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
+	AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+		FROM school_marking_periods
+		WHERE MP<>'PRO'
+		AND SCHOOL_ID=acc.SCHOOL_ID
+		AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 	AND sp.PERIOD_ID=cpsp.PERIOD_ID
 	AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 		(SELECT CASE COUNT(SCHOOL_DATE)% " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)% " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 		FROM attendance_calendar
-		WHERE SCHOOL_DATE<=acc.SCHOOL_DATE
+		WHERE SCHOOL_ID=acc.SCHOOL_ID
+		AND CALENDAR_ID=cp.CALENDAR_ID
+		AND SCHOOL_DATE<=acc.SCHOOL_DATE
 		AND SCHOOL_DATE>=(SELECT START_DATE
 			FROM school_marking_periods
-			WHERE START_DATE<=acc.SCHOOL_DATE
-			AND END_DATE>=acc.SCHOOL_DATE
+			WHERE acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 			AND MP='QTR'
 			AND SCHOOL_ID=acc.SCHOOL_ID
-			AND SYEAR=acc.SYEAR)
-		AND CALENDAR_ID=cp.CALENDAR_ID)
+			AND SYEAR=acc.SYEAR))
 	" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
 	" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
-	AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0" );
+	AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0" );
 }
 else
 {
 	// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$course_RET = DBGet( "SELECT 1
 	FROM attendance_calendar acc,course_periods cp,school_periods sp, course_period_school_periods cpsp
-	WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+	WHERE acc.SCHOOL_DATE='" . $date . "'
 	AND acc.SYEAR='" . UserSyear() . "'
+	AND cp.COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
 	AND cp.SCHOOL_ID=acc.SCHOOL_ID
 	AND cp.SYEAR=acc.SYEAR
-	AND acc.SCHOOL_DATE='" . $date . "'
 	AND cp.CALENDAR_ID=acc.CALENDAR_ID
-	AND cpsp.COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+	AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 	AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'
-	AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID FROM school_marking_periods WHERE (MP='FY' OR MP='SEM' OR MP='QTR') AND SCHOOL_ID=acc.SCHOOL_ID AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
+	AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
+		FROM school_marking_periods
+		WHERE MP<>'PRO'
+		AND SCHOOL_ID=acc.SCHOOL_ID
+		AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 	AND sp.PERIOD_ID=cpsp.PERIOD_ID
 	AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 	( $DatabaseType === 'mysql' ?
 		"DAYOFWEEK(acc.SCHOOL_DATE)" :
 		"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
-	" FOR 1) IN cpsp.DAYS)>0 OR sp.BLOCK IS NOT NULL AND acc.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK)
-	AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0" );
+	" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
+	AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0" );
 }
 
 // Instead of displaying a fatal error which could confuse user, display a warning and exit.

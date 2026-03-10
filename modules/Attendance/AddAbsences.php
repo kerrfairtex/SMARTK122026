@@ -48,33 +48,34 @@ if ( $_REQUEST['modfunc'] === 'save' )
 				{
 					// FJ days numbered.
 					// FJ multiple school periods for a course period.
+					// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 					$course_periods_RET = DBGet( "SELECT s.COURSE_PERIOD_ID,cpsp.PERIOD_ID
 					FROM schedule s,course_periods cp,attendance_calendar ac,school_periods sp,course_period_school_periods cpsp
-					WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND sp.PERIOD_ID=cpsp.PERIOD_ID
+					WHERE s.STUDENT_ID='" . (int) $student_id . "'
+					AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
+					AND cp.SYEAR='" . UserSyear() . "'
+					AND cp.SCHOOL_ID='" . UserSchool() . "'
 					AND ac.SCHOOL_DATE='" . $date . "'
 					AND ac.CALENDAR_ID=cp.CALENDAR_ID
-					AND (ac.BLOCK=sp.BLOCK OR sp.BLOCK IS NULL)
-					AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
 					AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-					AND s.STUDENT_ID='" . (int) $student_id . "'
+					AND sp.PERIOD_ID=cpsp.PERIOD_ID
 					AND cpsp.PERIOD_ID IN (" . $periods_list . ")
 					AND position(',0,' IN cp.DOES_ATTENDANCE)>0
 					AND (ac.SCHOOL_DATE BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND ac.SCHOOL_DATE>=s.START_DATE))
-					AND position(substring('MTWHFSU' FROM cast(
+					AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 						(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 						FROM attendance_calendar
-						WHERE SCHOOL_DATE<=ac.SCHOOL_DATE
+						WHERE SCHOOL_ID=ac.SCHOOL_ID
+						AND CALENDAR_ID=cp.CALENDAR_ID
+						AND SCHOOL_DATE<=ac.SCHOOL_DATE
 						AND SCHOOL_DATE>=(SELECT START_DATE
 							FROM school_marking_periods
-							WHERE START_DATE<=ac.SCHOOL_DATE
-							AND END_DATE>=ac.SCHOOL_DATE
+							WHERE ac.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 							AND MP='QTR'
 							AND SCHOOL_ID=ac.SCHOOL_ID
-							AND SYEAR=ac.SYEAR)
-						AND CALENDAR_ID=cp.CALENDAR_ID)
+							AND SYEAR=ac.SYEAR))
 					" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
-					" FOR 1) IN cpsp.DAYS)>0
+					" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND ac.BLOCK=sp.BLOCK))
 					AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")
 					AND ac.SCHOOL_ID=s.SCHOOL_ID
 					AND ac.SYEAR=s.SYEAR", [], [ 'PERIOD_ID' ] );
@@ -82,23 +83,26 @@ if ( $_REQUEST['modfunc'] === 'save' )
 				else
 				{
 					// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
+					// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 					$course_periods_RET = DBGet( "SELECT s.COURSE_PERIOD_ID,cpsp.PERIOD_ID
 						FROM schedule s,course_periods cp,attendance_calendar ac,school_periods sp,course_period_school_periods cpsp
-						WHERE sp.PERIOD_ID=cpsp.PERIOD_ID
+						WHERE s.STUDENT_ID='" . (int) $student_id . "'
+						AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
+						AND cp.SCHOOL_ID='" . UserSchool() . "'
+						AND cp.SYEAR='" . UserSyear() . "'
+						AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 						AND ac.SCHOOL_DATE='" . $date . "'
 						AND ac.CALENDAR_ID=cp.CALENDAR_ID
-						AND (ac.BLOCK=sp.BLOCK OR sp.BLOCK IS NULL)
-						AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
-						AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-						AND s.STUDENT_ID='" . (int) $student_id . "'
+						AND sp.PERIOD_ID=cpsp.PERIOD_ID
 						AND cpsp.PERIOD_ID IN (" . $periods_list . ")
 						AND position(',0,' IN cp.DOES_ATTENDANCE)>0
 						AND (ac.SCHOOL_DATE BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND ac.SCHOOL_DATE>=s.START_DATE))
-						AND position(substring('UMTWHFS' FROM " .
+						AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 						( $DatabaseType === 'mysql' ?
 							"DAYOFWEEK(ac.SCHOOL_DATE)" :
 							"cast(extract(DOW FROM ac.SCHOOL_DATE)+1 AS int)" ) .
-						" FOR 1) IN cpsp.DAYS)>0 AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")", [], [ 'PERIOD_ID' ] );
+						" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND ac.BLOCK=sp.BLOCK))
+						AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")", [], [ 'PERIOD_ID' ] );
 				}
 
 				//echo '<pre>'; var_dump($course_periods_RET); echo '</pre>';

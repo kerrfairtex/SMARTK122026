@@ -62,6 +62,7 @@ echo '</form>';
 
 if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 {
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$sql = "SELECT s.STAFF_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,s.ROLLOVER_ID,
 	sp.TITLE,cpsp.PERIOD_ID,cp.TITLE AS CP_TITLE,c.TITLE AS COURSE_TITLE,
 	(SELECT 'Y'
@@ -72,33 +73,33 @@ if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 		AND TABLE_NAME='" . (int) $_REQUEST['table'] . "') AS COMPLETED
 	FROM staff s,course_periods cp,school_periods sp,attendance_calendar acc,
 		course_period_school_periods cpsp,courses c
-	WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-	AND	sp.PERIOD_ID=cpsp.PERIOD_ID AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
-	AND cp.TEACHER_ID=s.STAFF_ID
-	AND cp.MARKING_PERIOD_ID IN (" . GetAllMP( 'QTR', GetCurrentMP( 'QTR', $date ) ) . ")
+	WHERE s.PROFILE='teacher'
 	AND cp.SYEAR='" . UserSyear() . "'
 	AND cp.SCHOOL_ID='" . UserSchool() . "'
-	AND c.COURSE_ID=cp.COURSE_ID
-	AND s.PROFILE='teacher'
-	" . ( $_REQUEST['school_period'] ? " AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'" : '' ) . "
-	AND acc.CALENDAR_ID=cp.CALENDAR_ID
+	AND cp.TEACHER_ID=s.STAFF_ID
+	AND cp.MARKING_PERIOD_ID IN (" . GetAllMP( 'QTR', GetCurrentMP( 'QTR', $date ) ) . ")
+	AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 	AND acc.SCHOOL_DATE='" . $date . "'
-	AND acc.SYEAR='" . UserSyear() . "'
-	AND (acc.MINUTES IS NOT NULL AND acc.MINUTES>0)
+	AND acc.CALENDAR_ID=cp.CALENDAR_ID
+	AND acc.SYEAR=cp.SYEAR
+	AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+	" . ( $_REQUEST['school_period'] ? " AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'" : '' ) . "
+	AND	sp.PERIOD_ID=cpsp.PERIOD_ID
+	AND c.COURSE_ID=cp.COURSE_ID
 	AND (sp.BLOCK IS NULL
 		AND position(substring('MTWHFSU' FROM cast((SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . "
 			WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . "
 			ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 			FROM attendance_calendar
-			WHERE SCHOOL_DATE<=acc.SCHOOL_DATE
+			WHERE SCHOOL_ID=acc.SCHOOL_ID
+			AND CALENDAR_ID=cp.CALENDAR_ID
+			AND SCHOOL_DATE<=acc.SCHOOL_DATE
 			AND SCHOOL_DATE>=(SELECT START_DATE
 				FROM school_marking_periods
-				WHERE START_DATE<=acc.SCHOOL_DATE
-				AND END_DATE>=acc.SCHOOL_DATE
+				WHERE acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 				AND MP='QTR'
 				AND SCHOOL_ID=acc.SCHOOL_ID
-				AND SYEAR=acc.SYEAR)
-			AND CALENDAR_ID=cp.CALENDAR_ID)
+				AND SYEAR=acc.SYEAR))
 		" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
 		" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 	ORDER BY FULL_NAME";
@@ -106,6 +107,7 @@ if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 else
 {
 	// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$sql = "SELECT s.STAFF_ID," . DisplayNameSQL( 's' ) . " AS FULL_NAME,s.ROLLOVER_ID,
 		sp.TITLE,cpsp.PERIOD_ID,cp.TITLE AS CP_TITLE,c.TITLE AS COURSE_TITLE,
 		(SELECT 'Y'
@@ -116,29 +118,25 @@ else
 			AND TABLE_NAME='" . (int) $_REQUEST['table'] . "') AS COMPLETED
 		FROM staff s,course_periods cp,school_periods sp,attendance_calendar acc,
 			course_period_school_periods cpsp,courses c
-		WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-		AND	sp.PERIOD_ID=cpsp.PERIOD_ID
-		AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
-		AND cp.TEACHER_ID=s.STAFF_ID
-		AND cp.MARKING_PERIOD_ID IN (" . GetAllMP( 'QTR', GetCurrentMP( 'QTR', $date ) ) . ")
+		WHERE s.PROFILE='teacher'
 		AND cp.SYEAR='" . UserSyear() . "'
 		AND cp.SCHOOL_ID='" . UserSchool() . "'
-		AND c.COURSE_ID=cp.COURSE_ID
-		AND s.PROFILE='teacher'" .
-	( $_REQUEST['school_period'] ? " AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'" : '' ) .
-	" AND acc.CALENDAR_ID=cp.CALENDAR_ID
+		AND cp.TEACHER_ID=s.STAFF_ID
+		AND cp.MARKING_PERIOD_ID IN (" . GetAllMP( 'QTR', GetCurrentMP( 'QTR', $date ) ) . ")
+		AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 		AND acc.SCHOOL_DATE='" . $date . "'
-		AND acc.SYEAR='" . UserSyear() . "'
-		AND (acc.MINUTES IS NOT NULL AND acc.MINUTES>0)
+		AND acc.CALENDAR_ID=cp.CALENDAR_ID
+		AND acc.SYEAR=cp.SYEAR
+		AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+		" . ( $_REQUEST['school_period'] ? " AND cpsp.PERIOD_ID='" . (int) $_REQUEST['school_period'] . "'" : '' ) . "
+		AND	sp.PERIOD_ID=cpsp.PERIOD_ID
+		AND c.COURSE_ID=cp.COURSE_ID
 		AND (sp.BLOCK IS NULL
 			AND position(substring('UMTWHFS' FROM " .
 			( $DatabaseType === 'mysql' ?
 				"DAYOFWEEK(acc.SCHOOL_DATE)" :
 				"cast(extract(DOW FROM acc.SCHOOL_DATE)+1 AS int)" ) .
-			" FOR 1) IN cpsp.DAYS)>0
-			OR sp.BLOCK IS NOT NULL
-			AND acc.BLOCK IS NOT NULL
-			AND sp.BLOCK=acc.BLOCK)
+			" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))
 		ORDER BY FULL_NAME";
 }
 

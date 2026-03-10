@@ -66,49 +66,57 @@ if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 {
 	// FJ days numbered.
 	// FJ multiple school periods for a course period.
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$current_schedule_Q = "SELECT cpsp.PERIOD_ID,cp.COURSE_PERIOD_ID
-	FROM schedule s,course_periods cp,course_period_school_periods cpsp
-	WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-	AND s.STUDENT_ID='__student_id__'
+	FROM schedule s,course_periods cp,attendance_calendar ac,school_periods sp,course_period_school_periods cpsp
+	WHERE s.STUDENT_ID='__student_id__'
 	AND s.SYEAR='" . UserSyear() . "'
 	AND s.SCHOOL_ID='" . UserSchool() . "'
 	AND cp.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID
-	AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
+	AND ac.SCHOOL_DATE='" . $date . "'
+	AND ac.CALENDAR_ID=cp.CALENDAR_ID
+	AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+	AND sp.PERIOD_ID=cpsp.PERIOD_ID
+	AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 	AND ('" . $date . "' BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND '" . $date . "'>=s.START_DATE))
-	AND position(substring('MTWHFSU' FROM cast(
+	AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 		(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 		FROM attendance_calendar
-		WHERE SCHOOL_DATE<='" . $date . "'
+		WHERE SCHOOL_ID=s.SCHOOL_ID
+		AND CALENDAR_ID=cp.CALENDAR_ID
+		AND SCHOOL_DATE<='" . $date . "'
 		AND SCHOOL_DATE>=(SELECT START_DATE
 			FROM school_marking_periods
-			WHERE START_DATE<='" . $date . "'
-			AND END_DATE>='" . $date . "'
+			WHERE '" . $date . "' BETWEEN START_DATE AND END_DATE
 			AND MP='QTR'
 			AND SCHOOL_ID=s.SCHOOL_ID
-			AND SYEAR=s.SYEAR)
-		AND CALENDAR_ID=cp.CALENDAR_ID)
+			AND SYEAR=s.SYEAR))
 	" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
-	" FOR 1) IN cpsp.DAYS)>0
+	" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND ac.BLOCK=sp.BLOCK))
 	AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")
 	ORDER BY s.START_DATE ASC";
 }
 else
 {
 	// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
+	// @since 12.9 SQL performance: filter early on highly selective conditions to reduce row counts
 	$current_schedule_Q = "SELECT cpsp.PERIOD_ID,cp.COURSE_PERIOD_ID
-	FROM schedule s,course_periods cp, course_period_school_periods cpsp
-	WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
-	AND s.STUDENT_ID='__student_id__'
+	FROM schedule s,course_periods cp,attendance_calendar ac,school_periods sp,course_period_school_periods cpsp
+	WHERE s.STUDENT_ID='__student_id__'
 	AND s.SYEAR='" . UserSyear() . "'
 	AND s.SCHOOL_ID='" . UserSchool() . "'
-	AND cp.COURSE_PERIOD_ID = s.COURSE_PERIOD_ID
-	AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
+	AND cp.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID
+	AND ac.SCHOOL_DATE='" . $date . "'
+	AND ac.CALENDAR_ID=cp.CALENDAR_ID
+	AND sp.PERIOD_ID=cpsp.PERIOD_ID
+	AND cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+	AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 	AND ('" . $date . "' BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND '" . $date . "'>=s.START_DATE))
-	AND position(substring('UMTWHFS' FROM " .
+	AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 	( $DatabaseType === 'mysql' ?
 		"DAYOFWEEK(cast('" . $date . "' AS DATE))" :
 		"cast(extract(DOW FROM cast('" . $date . "' AS DATE))+1 AS int)" ) .
-	" FOR 1) IN cpsp.DAYS)>0
+	" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND ac.BLOCK=sp.BLOCK))
 	AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")
 	ORDER BY s.START_DATE ASC";
 }
@@ -209,12 +217,13 @@ $periods_RET = DBGet( "SELECT sp.PERIOD_ID,COALESCE(sp.SHORT_NAME,sp.TITLE) AS S
 	FROM school_periods sp
 	WHERE sp.SCHOOL_ID='" . UserSchool() . "'
 	AND sp.SYEAR='" . UserSyear() . "'
-	AND EXISTS (SELECT '' FROM course_periods cp,course_period_school_periods cpsp
+	AND EXISTS (SELECT 1
+		FROM course_periods cp,course_period_school_periods cpsp
 		WHERE cpsp.PERIOD_ID=sp.PERIOD_ID
 		AND cpsp.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
 		AND cp.SCHOOL_ID='" . UserSchool() . "'
 		AND cp.SYEAR='" . UserSyear() . "'
-		AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0)
+		AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0)
 	ORDER BY sp.SORT_ORDER IS NULL,sp.SORT_ORDER,sp.TITLE" );
 
 $categories_RET = DBGet( "SELECT ID,TITLE
@@ -271,30 +280,30 @@ if ( isset( $_REQUEST['student_id'] ) && $_REQUEST['student_id'] !== 'new' )
 		WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 		AND s.SYEAR='" . UserSyear() . "'
 		AND s.SCHOOL_ID='" . UserSchool() . "'
+		AND s.STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
 		AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")
 		AND s.COURSE_ID=c.COURSE_ID
 		AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
+		AND ac.CALENDAR_ID=cp.CALENDAR_ID
+		AND ac.SCHOOL_DATE='" . $date . "'
 		AND cpsp.PERIOD_ID=p.PERIOD_ID
-		AND position('," . $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
-		AND s.STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
+		AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 		AND ('" . $date . "' BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND '" . $date . "'>=s.START_DATE))
-		AND position(substring('MTWHFSU' FROM cast(
+		AND (p.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 			(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 			FROM attendance_calendar
-			WHERE SCHOOL_DATE<=ac.SCHOOL_DATE
+			WHERE SCHOOL_ID=ac.SCHOOL_ID
+			AND CALENDAR_ID=cp.CALENDAR_ID
+			AND SCHOOL_DATE<=ac.SCHOOL_DATE
 			AND SCHOOL_DATE>=(SELECT START_DATE
 				FROM school_marking_periods
 				WHERE START_DATE<=ac.SCHOOL_DATE
 				AND END_DATE>=ac.SCHOOL_DATE
 				AND MP='QTR'
 				AND SCHOOL_ID=s.SCHOOL_ID
-				AND SYEAR=s.SYEAR)
-			AND CALENDAR_ID=cp.CALENDAR_ID)
+				AND SYEAR=s.SYEAR))
 		" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
-		" FOR 1) IN cpsp.DAYS)>0
-		AND ac.CALENDAR_ID=cp.CALENDAR_ID
-		AND ac.SCHOOL_DATE='" . $date . "'
-		AND ac.MINUTES!='0'
+		" FOR 1) IN cpsp.DAYS)>0 OR (p.BLOCK IS NOT NULL AND ac.BLOCK=p.BLOCK))
 		ORDER BY p.SORT_ORDER IS NULL,p.SORT_ORDER", $functions );
 	}
 	else
@@ -304,19 +313,23 @@ if ( isset( $_REQUEST['student_id'] ) && $_REQUEST['student_id'] !== 'new' )
 		s.STUDENT_ID,c.TITLE AS COURSE,cpsp.PERIOD_ID,cp.COURSE_PERIOD_ID,p.TITLE AS PERIOD_TITLE,
 		s.STUDENT_ID AS ATTENDANCE_CODE,s.STUDENT_ID AS ATTENDANCE_TEACHER_CODE,s.STUDENT_ID AS ATTENDANCE_REASON,s.STUDENT_ID AS COMMENT
 		FROM schedule s,courses c,course_periods cp,school_periods p,attendance_calendar ac, course_period_school_periods cpsp
-		WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID AND
-		s.SYEAR='" . UserSyear() . "' AND s.SCHOOL_ID='" . UserSchool() . "'
+		WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+		AND s.SYEAR='" . UserSyear() . "'
+		AND s.SCHOOL_ID='" . UserSchool() . "'
+		AND s.STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
 		AND s.MARKING_PERIOD_ID IN (" . $all_mp . ")
 		AND s.COURSE_ID=c.COURSE_ID
-		AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID AND cpsp.PERIOD_ID=p.PERIOD_ID AND position(',$_REQUEST[table],' IN cp.DOES_ATTENDANCE)>0
-		AND s.STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
+		AND s.COURSE_PERIOD_ID=cp.COURSE_PERIOD_ID
+		AND ac.CALENDAR_ID=cp.CALENDAR_ID
+		AND ac.SCHOOL_DATE='" . $date . "'
+		AND cpsp.PERIOD_ID=p.PERIOD_ID
+		AND position('," . (int) $_REQUEST['table'] . ",' IN cp.DOES_ATTENDANCE)>0
 		AND ('" . $date . "' BETWEEN s.START_DATE AND s.END_DATE OR (s.END_DATE IS NULL AND '" . $date . "'>=s.START_DATE))
-		AND position(substring('UMTWHFS' FROM " .
+		AND (p.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 		( $DatabaseType === 'mysql' ?
 			"DAYOFWEEK(cast('" . $date . "' AS DATE))" :
 			"cast(extract(DOW FROM cast('" . $date . "' AS DATE))+1 AS int)" ) .
-		" FOR 1) IN cpsp.DAYS)>0
-		AND ac.CALENDAR_ID=cp.CALENDAR_ID AND ac.SCHOOL_DATE='" . $date . "' AND ac.MINUTES!='0'
+		" FOR 1) IN cpsp.DAYS)>0 OR (p.BLOCK IS NOT NULL AND ac.BLOCK=p.BLOCK))
 		ORDER BY p.SORT_ORDER IS NULL,p.SORT_ORDER", $functions );
 	}
 

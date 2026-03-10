@@ -215,54 +215,55 @@ function AttendanceDailyTotalMinutesSQL( $student_id, $date_or_column )
 
 		$all_mp_ids = "SELECT MARKING_PERIOD_ID
 			FROM school_marking_periods
-			WHERE SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "'
+			WHERE MP<>'PRO'
+			AND SCHOOL_ID=ac2.SCHOOL_ID
 			AND " . $date_sql . ">=START_DATE
 			AND " . $date_sql . "<=END_DATE";
 	}
 
+	// @since 12.9 SQL performance: use explicit JOINs
 	$total_sql = "SELECT SUM(sp2.LENGTH) AS TOTAL
-	FROM schedule s2,course_periods cp2,school_periods sp2,attendance_calendar ac2,course_period_school_periods cpsp2
-	WHERE cp2.COURSE_PERIOD_ID=cpsp2.COURSE_PERIOD_ID
-	AND s2.COURSE_PERIOD_ID=cp2.COURSE_PERIOD_ID
+	FROM schedule s2
+	JOIN course_periods cp2 ON s2.COURSE_PERIOD_ID=cp2.COURSE_PERIOD_ID
+		AND s2.SYEAR=cp2.SYEAR
+	JOIN course_period_school_periods cpsp2 ON cp2.COURSE_PERIOD_ID=cpsp2.COURSE_PERIOD_ID
+	JOIN school_periods sp2 ON sp2.PERIOD_ID=cpsp2.PERIOD_ID
+	JOIN attendance_calendar ac2 ON ac2.CALENDAR_ID=cp2.CALENDAR_ID
+		AND ac2.SCHOOL_ID=s2.SCHOOL_ID
+		AND ac2.SYEAR=s2.SYEAR
+	WHERE s2.STUDENT_ID='" . (int) $student_id . "'
+	AND s2.SYEAR='" . UserSyear() . "'
+	AND s2.SCHOOL_ID='" . UserSchool() . "'
 	AND position(',0,' IN cp2.DOES_ATTENDANCE)>0
 	AND ac2.SCHOOL_DATE=" . $date_sql . "
-	AND (ac2.BLOCK=sp2.BLOCK OR sp2.BLOCK IS NULL)
-	AND ac2.CALENDAR_ID=cp2.CALENDAR_ID
-	AND ac2.SCHOOL_ID=s2.SCHOOL_ID
-	AND ac2.SYEAR=s2.SYEAR
-	AND s2.SYEAR=cp2.SYEAR
-	AND sp2.PERIOD_ID=cpsp2.PERIOD_ID
-	AND s2.STUDENT_ID='" . (int) $student_id . "'
-	AND s2.SYEAR='" . UserSyear() . "'
 	AND (" . $date_sql . " BETWEEN s2.START_DATE AND s2.END_DATE OR (s2.END_DATE IS NULL AND " . $date_sql . ">=s2.START_DATE))
 	AND s2.MARKING_PERIOD_ID IN (" . $all_mp_ids . ")";
 
 	if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 	{
-		$total_sql .= " AND position(substring('MTWHFSU' FROM cast((SELECT CASE COUNT(SCHOOL_DATE)% " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0
+		$total_sql .= " AND (sp2.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast((SELECT CASE COUNT(SCHOOL_DATE)% " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0
 			THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . "
 			ELSE COUNT(SCHOOL_DATE)% " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 			FROM attendance_calendar
-			WHERE SCHOOL_DATE<=ac2.SCHOOL_DATE
+			WHERE SCHOOL_ID=ac2.SCHOOL_ID
+			AND CALENDAR_ID=cp2.CALENDAR_ID
+			AND SCHOOL_DATE<=ac2.SCHOOL_DATE
 			AND SCHOOL_DATE>=(SELECT START_DATE
 				FROM school_marking_periods
-				WHERE START_DATE<=ac2.SCHOOL_DATE
-				AND END_DATE>=ac2.SCHOOL_DATE
+				WHERE ac2.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 				AND MP='QTR'
 				AND SCHOOL_ID=ac2.SCHOOL_ID
-				AND SYEAR=ac2.SYEAR)
-			AND CALENDAR_ID=cp2.CALENDAR_ID)
+				AND SYEAR=ac2.SYEAR))
 			" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
-			" FOR 1) IN cpsp2.DAYS)>0";
+			" FOR 1) IN cpsp2.DAYS)>0 OR (sp2.BLOCK IS NOT NULL AND ac2.BLOCK=sp2.BLOCK))";
 	}
 	else
 	{
-		$total_sql .= " AND position(substring('UMTWHFS' FROM " .
+		$total_sql .= " AND (sp2.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 		( $DatabaseType === 'mysql' ?
 			"DAYOFWEEK(cast(" . $date_sql . " AS DATE))" :
 			"cast(extract(DOW FROM cast(" . $date_sql . " AS DATE))+1 AS int)" ) .
-		" FOR 1) IN cpsp2.DAYS)>0";
+		" FOR 1) IN cpsp2.DAYS)>0 OR (sp2.BLOCK IS NOT NULL AND ac2.BLOCK=sp2.BLOCK))";
 	}
 
 	return $total_sql;

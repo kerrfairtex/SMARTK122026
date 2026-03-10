@@ -655,15 +655,15 @@ function CoursePeriodUpdateTeacher( $cp_id, $old_teacher_id, $new_teacher_id )
 		$where_days_sql = " AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 			(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 			FROM attendance_calendar
-			WHERE SCHOOL_DATE<=acc.SCHOOL_DATE
+			WHERE SCHOOL_ID=acc.SCHOOL_ID
+			AND CALENDAR_ID=cp.CALENDAR_ID
+			AND SCHOOL_DATE<=acc.SCHOOL_DATE
 			AND SCHOOL_DATE>=(SELECT START_DATE
 				FROM school_marking_periods
-				WHERE START_DATE<=acc.SCHOOL_DATE
-				AND END_DATE>=acc.SCHOOL_DATE
+				WHERE acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE
 				AND MP='QTR'
 				AND SCHOOL_ID=acc.SCHOOL_ID
-				AND SYEAR=acc.SYEAR)
-			AND CALENDAR_ID=cp.CALENDAR_ID)
+				AND SYEAR=acc.SYEAR))
 			" . ( $DatabaseType === 'mysql' ? "AS UNSIGNED)" : "AS INT)" ) .
 			" FOR 1) IN cpsp.DAYS)>0 OR (sp.BLOCK IS NOT NULL AND sp.BLOCK=acc.BLOCK))";
 	}

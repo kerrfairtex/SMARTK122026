@@ -1366,7 +1366,7 @@ function RadioInput( $value, $name, $title, $options, $allow_na = 'N/A', $extra 
 		);
 	}
 
-	$display_val = ! isset( $options[ $value ] ) ? '' :
+	$display_val = ! isset( $options[ (string) $value ] ) ? '' :
 		( is_array( $options[ $value ] ) ? $options[ $value ][1] : $options[ $value ] );
 
 	if ( $display_val == '' )

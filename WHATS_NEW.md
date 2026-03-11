@@ -2,6 +2,23 @@
 
 ## RosarioSIS Student Information System
 
+New in 12.8
+-----------
+
+School
+- Database Backup: removed (secure by default)
+
+[Backup](https://gitlab.com/francoisjacquet/Backup) module (now provides the _Database Backup_ program)
+
+PHP8.5 compatibility
+
+Add slide effect when opening or closing left menu and help
+
+Please update the [CoolAdmin](https://www.rosariosis.org/themes/cooladmin/) theme to version 3+
+
+[Unsaved Changes Warning](https://gitlab.com/francoisjacquet/Unsaved_Changes_Warning) plugin, sponsored by International Philippine School in Jeddah
+
+
 New in 12.7
 -----------
 

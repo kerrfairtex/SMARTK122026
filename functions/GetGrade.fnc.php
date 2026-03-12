@@ -34,7 +34,7 @@ function GetGrade( $grade, $column = 'TITLE' )
 			FROM school_gradelevels", [], [ 'ID' ] );
 	}
 
-	if ( ! isset( $grades[ $grade ] ) )
+	if ( ! isset( $grades[ (string) $grade ] ) )
 	{
 		return '';
 	}

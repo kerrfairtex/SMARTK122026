@@ -555,7 +555,7 @@ function Rollover( $table, $mode = 'delete' )
 				SELECT SYEAR+1,CURRENT_SCHOOL_ID,TITLE,
 				FIRST_NAME,LAST_NAME,MIDDLE_NAME,NAME_SUFFIX,USERNAME,PASSWORD,EMAIL,
 				PROFILE,NULL,SCHOOLS,PROFILE_ID,STAFF_ID" . $user_custom . "
-				FROM staff
+				FROM staff s
 				WHERE SYEAR='" . UserSyear() . "'
 				AND STAFF_ID NOT IN(SELECT s2.ROLLOVER_ID
 					FROM staff s2

@@ -35,6 +35,7 @@ Changes in 12.8
 - SQL performance + harmonize SQL logic for Block Periods in AddAbsences.phph, Administration.php, TakeAttendance.php, TeacherCompletion.php, UpdateAttendanceDaily.fnc.php & Courses.fnc.php
 - Skip CSP violation triggered by Facebook Click Identifier in SaveReport.php
 - Fix SQL error when staff is manually created in next school year in Rollover.php
+- Fix SQL error when school was created after Rollover and not rolling schools in Rollover.php
 
 Changes in 12.7.5
 -----------------

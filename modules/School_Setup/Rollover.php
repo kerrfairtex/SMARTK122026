@@ -1195,10 +1195,14 @@ function Rollover( $table, $mode = 'delete' )
 				break;
 			}
 
+			// @since 12.8 Fix SQL error when school was created after Rollover and not rolling schools
 			DBQuery( "INSERT INTO program_config (SYEAR,SCHOOL_ID,PROGRAM,TITLE,VALUE)
 				SELECT SYEAR+1,SCHOOL_ID,PROGRAM,TITLE,VALUE
 				FROM program_config
-				WHERE SYEAR='" . UserSyear() . "'" );
+				WHERE SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID IN (SELECT ID
+					FROM schools
+					WHERE SYEAR='" . $next_syear . "')" );
 
 			break;
 	}

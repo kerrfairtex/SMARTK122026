@@ -548,6 +548,7 @@ function Rollover( $table, $mode = 'delete' )
 			// Roll Users again: update users which could not be deleted.
 			DBQuery( $update_users_sql );
 
+			// @since 12.8 Fix SQL error when staff is manually created in next school year
 			DBQuery( "INSERT INTO staff (SYEAR,CURRENT_SCHOOL_ID,TITLE,FIRST_NAME,
 				LAST_NAME,MIDDLE_NAME,NAME_SUFFIX,USERNAME,PASSWORD,EMAIL,PROFILE,
 				LAST_LOGIN,SCHOOLS,PROFILE_ID,ROLLOVER_ID" . $user_custom . ")
@@ -556,7 +557,13 @@ function Rollover( $table, $mode = 'delete' )
 				PROFILE,NULL,SCHOOLS,PROFILE_ID,STAFF_ID" . $user_custom . "
 				FROM staff
 				WHERE SYEAR='" . UserSyear() . "'
-				AND STAFF_ID NOT IN(SELECT s2.ROLLOVER_ID FROM staff s2 WHERE s2.SYEAR='" . $next_syear . "')" );
+				AND STAFF_ID NOT IN(SELECT s2.ROLLOVER_ID
+					FROM staff s2
+					WHERE s2.SYEAR='" . $next_syear . "')
+				AND NOT EXISTS(SELECT 1
+					FROM staff s3
+					WHERE s3.SYEAR='" . $next_syear . "'
+					AND s3.USERNAME=s.USERNAME)" );
 
 			DBQuery( "INSERT INTO program_user_config (USER_ID,PROGRAM,TITLE,VALUE)
 				SELECT s.STAFF_ID,puc.PROGRAM,puc.TITLE,puc.VALUE

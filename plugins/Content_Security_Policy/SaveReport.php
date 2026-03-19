@@ -124,6 +124,21 @@ if ( $csp_report['violated-directive'] === 'script-src-elem'
 	return _skipDie( 'Skip CSP violation triggered by Facebook Click Identifier' );
 }
 
+/**
+ * Common violation but was not able to trace it...
+ *
+ * "violated-directive": "script-src-elem",
+ * "blocked-uri": "inline",
+ * "script-sample": "(function() {'use strict';function shuff"
+ */
+if ( $csp_report['violated-directive'] === 'script-src-elem'
+	&& $csp_report['blocked-uri'] === 'inline'
+	&& ! empty( $csp_report['script-sample'] )
+	&& mb_strpos( $csp_report['script-sample'], "(function() {'use strict';function shuff" ) === 0 )
+{
+	return _skipDie( 'Skip CSP violation triggered by inline code: "' . $csp_report['script-sample'] . '"' );
+}
+
 $insert_columns = [
 	'FULL_REPORT' => DBEscapeString( json_encode( $csp_report ) ),
 	'VIOLATED_DIRECTIVE' => DBEscapeString( str_replace( '-elem', '', $csp_report['violated-directive'] ) ),

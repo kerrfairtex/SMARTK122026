@@ -2966,6 +2966,7 @@ INSERT INTO resources VALUES (NULL, 1, 'Quick Setup Guide', 'https://www.rosario
 INSERT INTO resources VALUES (NULL, 1, 'Forum', 'https://www.rosariosis.org/forum/', ',1,2,', NULL, CURRENT_TIMESTAMP, NULL);
 INSERT INTO resources VALUES (NULL, 1, 'Contribute', 'https://www.rosariosis.org/contribute/', NULL, NULL, CURRENT_TIMESTAMP, NULL);
 INSERT INTO resources VALUES (NULL, 1, 'Report a bug', 'https://gitlab.com/francoisjacquet/rosariosis/-/issues', NULL, NULL, CURRENT_TIMESTAMP, NULL);
+INSERT INTO resources VALUES (NULL, 1, 'Review RosarioSIS', 'https://www.rosariosis.org/reviews/', ',1,2,', NULL, CURRENT_TIMESTAMP, NULL);
 
 
 --

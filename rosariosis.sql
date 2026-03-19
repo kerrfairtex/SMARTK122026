@@ -2941,6 +2941,7 @@ INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Quick Setup Guide
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Forum', 'https://www.rosariosis.org/forum/', ',1,2,');
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Contribute', 'https://www.rosariosis.org/contribute/');
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Report a bug', 'https://gitlab.com/francoisjacquet/rosariosis/-/issues');
+INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Review RosarioSIS', 'https://www.rosariosis.org/reviews/', ',1,2,');
 
 
 --

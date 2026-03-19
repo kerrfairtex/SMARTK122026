@@ -607,3 +607,7 @@ WHERE id=4;
 UPDATE resources
 SET title='Reportar un error'
 WHERE id=5;
+
+UPDATE resources
+SET title='Opinión sobre RosarioSIS', link='https://www.rosariosis.org/es/reviews/'
+WHERE id=6;

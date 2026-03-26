@@ -337,6 +337,7 @@ plugins/Microsoft_Social_Login*
 plugins/Previous_Next_Student*
 plugins/Unsaved_Changes_Warning*
 plugins/Chrome_To_PDF*
+plugins/Two_Factor_Authentication*
 plugins/update.sh
 locale/fr_FR.utf8_ParisComSup
 functions/1GetMP.php

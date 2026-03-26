@@ -37,6 +37,7 @@ Changes in 12.8
 - Fix SQL error when staff is manually created in next school year in Rollover.php
 - Fix SQL error when school was created after Rollover and not rolling schools in Rollover.php
 - SQL add "Review RosarioSIS" link to Resources in rosariosis.sql & rosariosis_mysql.sql
+- Spanish translation: do not capitalize words & use "tú" instead of "usted" in rosariosis.po & help.po
 
 Changes in 12.7.5
 -----------------

@@ -11,7 +11,7 @@
 --
 
 UPDATE schools
-SET title='Institución Ejemplo', address='Calle 13', city='Madrid', state=NULL, zipcode='28037', principal='Sr. Principal', www_address='www.rosariosis.org/es', reporting_gp_scale=5
+SET title='Institución ejemplo', address='Calle 13', city='Madrid', state=NULL, zipcode='28037', principal='Sr. Principal', www_address='www.rosariosis.org/es', reporting_gp_scale=5
 WHERE id=1;
 
 
@@ -37,7 +37,7 @@ WHERE title='TITLE';
 --
 
 UPDATE student_enrollment_codes
-SET title='Cambió de Locación', short_name='CAMB'
+SET title='Cambió de locación', short_name='CAMB'
 WHERE id=1;
 
 UPDATE student_enrollment_codes
@@ -45,11 +45,11 @@ SET title='Expulsado', short_name='EXP'
 WHERE id=2;
 
 UPDATE student_enrollment_codes
-SET title='Comienzo de Año', short_name='ANO'
+SET title='Comienzo de año', short_name='ANO'
 WHERE id=3;
 
 UPDATE student_enrollment_codes
-SET title='De otra Locación', short_name='OTRA'
+SET title='De otra locación', short_name='OTRA'
 WHERE id=4;
 
 UPDATE student_enrollment_codes
@@ -135,7 +135,7 @@ DELETE FROM report_card_grades WHERE id IN(14,15);
 --
 
 UPDATE school_marking_periods
-SET title='Año Completo', short_name='Año'
+SET title='Año completo', short_name='Año'
 WHERE marking_period_id=1;
 
 UPDATE school_marking_periods
@@ -168,7 +168,7 @@ WHERE marking_period_id=7;
 --
 
 UPDATE school_periods
-SET title='Día Completo', short_name='DIA'
+SET title='Día completo', short_name='DIA'
 WHERE period_id=1;
 
 UPDATE school_periods
@@ -220,20 +220,20 @@ UPDATE templates
 SET template='<br /><br /><br />
 <div style="text-align: center;"><span style="font-size: xx-large;"><strong>__SCHOOL_ID__</strong><br /></span><br /><span style="font-size: xx-large;">Nosotros por medio de la presente reconocimos<br /><br /></span></div>
 <div style="text-align: center;"><span style="font-size: xx-large;"><strong>__FIRST_NAME__ __LAST_NAME__</strong><br /><br /></span></div>
-<div style="text-align: center;"><span style="font-size: xx-large;">Quien ha completado todos los requisitos acad&eacute;micos para el <br />Cuadro de Honor</span></div>'
+<div style="text-align: center;"><span style="font-size: xx-large;">Quien ha completado todos los requisitos acad&eacute;micos para el <br />Cuadro de honor</span></div>'
 WHERE modname='Grades/HonorRoll.php';
 
 UPDATE templates
-SET template='<div style="text-align: center;">__CLIPART__<br /><br /><strong><span style="font-size: xx-large;">__SCHOOL_ID__<br /></span></strong><br /><span style="font-size: xx-large;">Teniendo en Cuenta que<br /><br /></span></div>
+SET template='<div style="text-align: center;">__CLIPART__<br /><br /><strong><span style="font-size: xx-large;">__SCHOOL_ID__<br /></span></strong><br /><span style="font-size: xx-large;">Teniendo en cuenta que<br /><br /></span></div>
 <div style="text-align: center;"><strong><span style="font-size: xx-large;">__FIRST_NAME__ __LAST_NAME__<br /><br /></span></strong></div>
-<div style="text-align: center;"><span style="font-size: xx-large;">Obtuvo la Excelencia Acad&eacute;mica en<br />__SUBJECT__</span></div>'
+<div style="text-align: center;"><span style="font-size: xx-large;">Obtuvo la excelencia acad&eacute;mica en<br />__SUBJECT__</span></div>'
 WHERE modname='Grades/HonorRollSubject.php';
 
 UPDATE templates
-SET template='<h2 style="text-align: center;">Certificado de Estudios</h2>
-<p>La suscrita Rectora y Secretaria certifican:</p>
+SET template='<h2 style="text-align: center;">Certificado de estudios</h2>
+<p>La suscrita rectora y secretaria certifican:</p>
 <p>Que __FIRST_NAME__ __LAST_NAME__ identificada con D.I. __SSECURITY__ cursó en este plantel los estudios correspondientes al grado __GRADE_ID__ durante el año __YEAR__ con las calificaciones e intensidad horaria que a continuación detallamos.</p>
-<p>El Estudiante es promovido a grado __NEXT_GRADE_ID__.</p>
+<p>El estudiante es promovido a grado __NEXT_GRADE_ID__.</p>
 <p>__BLOCK2__</p>
 <p>&nbsp;</p>
 <table style="border-collapse: collapse; width: 100%;" border="0" cellpadding="10"><tbody><tr>
@@ -253,13 +253,13 @@ SET template='Estimado __PARENT_NAME__,
 Una cuenta de padres para el __SCHOOL_ID__ ha sido creada para acceder a la información de la institución y de los siguientes estudiantes:
 __ASSOCIATED_STUDENTS__
 
-Sus datos de cuenta son:
+Tus datos de cuenta son:
 Nombre de usuario: __USERNAME__
 Contraseña: __PASSWORD__
 
 Un enlace hacia el Sistema de Información Académica e instrucciones para el acceso están disponibles en el sitio de la institución.__BLOCK2__Estimado __PARENT_NAME__,
 
-Los siguientes estudiantes han sido adicionados a su cuenta de padres en el Sistema de Información Académica:
+Los siguientes estudiantes han sido adicionados a tu cuenta de padres en el Sistema de Información Académica:
 __ASSOCIATED_STUDENTS__'
 WHERE modname='Custom/CreateParents.php';
 
@@ -269,7 +269,7 @@ SET template='Estimado __PARENT_NAME__,
 Una cuenta de padres para el __SCHOOL_ID__ ha sido creada para acceder a la información de la institución y de los siguientes estudiantes:
 __ASSOCIATED_STUDENTS__
 
-Sus datos de cuenta son:
+Tus datos de cuenta son:
 Nombre de usuario: __USERNAME__
 Contraseña: __PASSWORD__
 
@@ -282,7 +282,7 @@ WHERE modname='Custom/NotifyParents.php';
 --
 
 UPDATE student_field_categories
-SET title='General Info|es_ES.utf8:Datos Personales'
+SET title='General Info|es_ES.utf8:Datos personales'
 WHERE id=1;
 
 UPDATE student_field_categories
@@ -290,7 +290,7 @@ SET title='Medical|es_ES.utf8:Médico'
 WHERE id=2;
 
 UPDATE student_field_categories
-SET title='Addresses & Contacts|es_ES.utf8:Direcciones & Contactos'
+SET title='Addresses & Contacts|es_ES.utf8:Direcciones y contactos'
 WHERE id=3;
 
 UPDATE student_field_categories
@@ -298,7 +298,7 @@ SET title='Comments|es_ES.utf8:Comentarios'
 WHERE id=4;
 
 UPDATE student_field_categories
-SET title='Food Service|es_ES.utf8:Servicio de Comida'
+SET title='Food Service|es_ES.utf8:Servicio de comida'
 WHERE id=5;
 
 
@@ -307,7 +307,7 @@ WHERE id=5;
 --
 
 UPDATE staff_field_categories
-SET title='General Info|es_ES.utf8:Datos Personales'
+SET title='General Info|es_ES.utf8:Datos personales'
 WHERE id=1;
 
 UPDATE staff_field_categories
@@ -315,7 +315,7 @@ SET title='Schedule|es_ES.utf8:Horario'
 WHERE id=2;
 
 UPDATE staff_field_categories
-SET title='Food Service|es_ES.utf8:Servicio de Comida'
+SET title='Food Service|es_ES.utf8:Servicio de comida'
 WHERE id=3;
 
 
@@ -329,10 +329,10 @@ Femenino'
 WHERE id=200000000;
 
 UPDATE custom_fields
-SET title='Ethnicity|es_ES.utf8:Origen étnico', select_options='Blanco, No Hispano
-Negro, No Hispano
-Indio Americano o Nativo de Alaska
-Asiático o de las Islas del Pacífico
+SET title='Ethnicity|es_ES.utf8:Origen étnico', select_options='Blanco, No hispano
+Negro, No hispano
+Indio americano o nativo de Alaska
+Asiático o de las islas del pacífico
 Hispano
 Otro'
 WHERE id=200000001;
@@ -342,7 +342,7 @@ SET title='Common Name|es_ES.utf8:Apodo'
 WHERE id=200000002;
 
 UPDATE custom_fields
-SET title='Identification Number|es_ES.utf8:Numero de Identificación'
+SET title='Identification Number|es_ES.utf8:Numero de identificación'
 WHERE id=200000003;
 
 UPDATE custom_fields
@@ -359,11 +359,11 @@ SET title='Physician|es_ES.utf8:Médico'
 WHERE id=200000006;
 
 UPDATE custom_fields
-SET title='Physician Phone|es_ES.utf8:Teléfono Médico'
+SET title='Physician Phone|es_ES.utf8:Teléfono médico'
 WHERE id=200000007;
 
 UPDATE custom_fields
-SET title='Preferred Hospital|es_ES.utf8:Hospital Preferido'
+SET title='Preferred Hospital|es_ES.utf8:Hospital preferido'
 WHERE id=200000008;
 
 UPDATE custom_fields
@@ -371,11 +371,11 @@ SET title='Comments|es_ES.utf8:Comentarios'
 WHERE id=200000009;
 
 UPDATE custom_fields
-SET title='Has Doctor''s Note|es_ES.utf8:Tiene una Nota del Doctor'
+SET title='Has Doctor''s Note|es_ES.utf8:Tiene una nota del doctor'
 WHERE id=200000010;
 
 UPDATE custom_fields
-SET title='Doctor''s Note Comments|es_ES.utf8:Comentarios de la Nota del Doctor'
+SET title='Doctor''s Note Comments|es_ES.utf8:Comentarios de la nota del doctor'
 WHERE id=200000011;
 
 
@@ -388,7 +388,7 @@ SET title='Email Address|es_ES.utf8:Email'
 WHERE id=200000000;
 
 UPDATE staff_fields
-SET title='Phone Number|es_ES.utf8:Número de Teléfono'
+SET title='Phone Number|es_ES.utf8:Número de teléfono'
 WHERE id=200000001;
 
 
@@ -477,7 +477,7 @@ SET title='Tarde', short_name='T'
 WHERE id=3;
 
 UPDATE attendance_codes
-SET title='Ausencia Justificada', short_name='AJ'
+SET title='Ausencia justificada', short_name='AJ'
 WHERE id=4;
 
 
@@ -486,11 +486,11 @@ WHERE id=4;
 --
 
 UPDATE discipline_field_usage
-SET title='Padres contactados por el Docente'
+SET title='Padres contactados por el docente'
 WHERE id=1;
 
 UPDATE discipline_field_usage
-SET title='Padres contactados por el Administrador'
+SET title='Padres contactados por el administrador'
 WHERE id=2;
 
 UPDATE discipline_field_usage
@@ -498,32 +498,32 @@ SET title='Comentarios'
 WHERE id=3;
 
 UPDATE discipline_field_usage
-SET title='Violación', select_options='Faltar a Clases
+SET title='Violación', select_options='Faltar a clases
 Blasfemia, vulgaridad, lenguaje ofensivo
-Insubordinación (Desobediencia, Comportamiento Irrespetuoso)
-Ebrio (Alcohol o Drogas)
-Habla fuera de Turno
+Insubordinación (desobediencia, comportamiento irrespetuoso)
+Ebrio (alcohol o drogas)
+Habla fuera de turno
 Acoso
 Se pelea
-Demostracion Publica de Afecto
+Demostración publica de afecto
 Otra'
 WHERE id=4;
 
 UPDATE discipline_field_usage
-SET title='Castigo Asignado', select_options='10 Minutos
-20 Minutos
-30 Minutos
-Discutir Suspensión'
+SET title='Castigo asignado', select_options='10 minutos
+20 minutos
+30 minutos
+Discutir suspensión'
 WHERE id=5;
 
 UPDATE discipline_field_usage
-SET title='Suspensiones (Oficina Solamente)', select_options='Media Jornada
-Suspensión en la Escuela
-1 Día
-2 Días
-3 Días
-5 Días
-7 Días
+SET title='Suspensiones (oficina solamente)', select_options='Media jornada
+Suspensión en la escuela
+1 día
+2 días
+3 días
+5 días
+7 días
 Expulsión'
 WHERE id=6;
 
@@ -533,15 +533,15 @@ WHERE id=6;
 --
 
 UPDATE report_card_comments
-SET title='^n falla en conocer los Requerimientos de la Clase'
+SET title='^n falla en conocer los requerimientos de la clase'
 WHERE id=1;
 
 UPDATE report_card_comments
-SET title='^n viene a ^s Clase sin Preparar'
+SET title='^n viene a ^s clase sin preparar'
 WHERE id=2;
 
 UPDATE report_card_comments
-SET title='^n tiene Influencia Positiva en Clase'
+SET title='^n tiene influencia positiva en clase'
 WHERE id=3;
 
 
@@ -550,7 +550,7 @@ WHERE id=3;
 --
 
 UPDATE food_service_categories
-SET title='Elementos del Almuerzo'
+SET title='Elementos del almuerzo'
 WHERE category_id=1;
 
 
@@ -559,7 +559,7 @@ WHERE category_id=1;
 --
 
 UPDATE food_service_items
-SET description='Almuerzo Estudiante'
+SET description='Almuerzo estudiante'
 WHERE item_id=1;
 
 UPDATE food_service_items
@@ -571,7 +571,7 @@ SET description='Sanduche'
 WHERE item_id=3;
 
 UPDATE food_service_items
-SET description='Pizza Extra'
+SET description='Pizza extra'
 WHERE item_id=4;
 
 
@@ -589,11 +589,11 @@ WHERE menu_id=1;
 --
 
 UPDATE resources
-SET title='Imprimir Manual de Usuario', link='Help.php'
+SET title='Imprimir manual de usuario', link='Help.php'
 WHERE id=1;
 
 UPDATE resources
-SET title='Guía de Configuración Rápida', link='https://www.rosariosis.org/es/quick-setup-guide/'
+SET title='Guía de configuración rápida', link='https://www.rosariosis.org/es/quick-setup-guide/'
 WHERE id=2;
 
 UPDATE resources

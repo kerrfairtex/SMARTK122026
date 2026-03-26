@@ -10,9 +10,11 @@ School
 
 [Backup](https://gitlab.com/francoisjacquet/Backup) module (now provides the _Database Backup_ program)
 
-PHP8.5 compatibility
+Spanish translation: do not capitalize words & use "tú" instead of "usted"
 
 Add slide effect when opening or closing left menu and help
+
+PHP8.5 compatibility
 
 Please update the [CoolAdmin](https://www.rosariosis.org/themes/cooladmin/) theme to version 3+
 

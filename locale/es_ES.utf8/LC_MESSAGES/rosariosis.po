@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: RosarioSIS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-19 18:48+0100\n"
-"PO-Revision-Date: 2026-03-23 14:51+0100\n"
+"PO-Revision-Date: 2026-03-29 14:55+0200\n"
 "Last-Translator: François Jacquet <info@rosariosis.org>\n"
 "Language-Team: RosarioSIS\n"
 "Language: es\n"
@@ -2732,7 +2732,7 @@ msgstr ""
 #: modules/School_Setup/PortalPolls.php:150
 #: modules/Students/EnrollmentCodes.php:36
 msgid "Please enter a valid Sort Order."
-msgstr "Entra una orden valida por favor."
+msgstr "Entra una orden válida por favor."
 
 #: modules/Accounting/Categories.php:49 modules/Food_Service/Menus.php:183
 #: modules/Food_Service/Menus.php:203
@@ -3712,7 +3712,7 @@ msgstr "Mi reporte"
 
 #: modules/Custom/Menu.php:19
 msgid "Create Parent Users"
-msgstr "Crear usuarios padre"
+msgstr "Crear usuarios padres"
 
 #: modules/Custom/Menu.php:21 modules/Custom/Menu.php:27
 #: modules/Custom/Registration.php:47 modules/Custom/Registration.php:182
@@ -4907,7 +4907,7 @@ msgstr "Vendedor"
 #: modules/Food_Service/Students/Transactions.php:74
 #: modules/Food_Service/Users/Transactions.php:64
 msgid "Please enter valid Type and Amount."
-msgstr "Entra un tipo y una cantidad valida por favor."
+msgstr "Entra un tipo y una cantidad válida por favor."
 
 #: modules/Food_Service/Students/Transactions.php:200
 #: modules/Food_Service/Users/Transactions.php:185
@@ -6999,7 +6999,7 @@ msgstr "Seguridad"
 
 #: modules/School_Setup/Configuration.php:426
 msgid "Failed Login Attempts Limit"
-msgstr "Limite de intentos fallidos de entrada"
+msgstr "Límite de intentos fallidos de entrada"
 
 #: modules/School_Setup/Configuration.php:428
 #: modules/School_Setup/Configuration.php:773
@@ -7143,7 +7143,7 @@ msgid ""
 "Set to 0 for dynamic Daily Attendance calculation based on total course "
 "period minutes."
 msgstr ""
-"Dejar en 0 para que el calculo de la asistencia diaria sea dinámico y basado "
+"Dejar en 0 para que el cálculo de la asistencia diaria sea dinámico y basado "
 "en el total de minutos de los periodos de cursos."
 
 #: modules/School_Setup/Configuration.php:764
@@ -8290,7 +8290,7 @@ msgstr "Agregar los estudiantes seleccionados"
 #: modules/Users/Exceptions.php:169
 msgid "Select the programs with which this user can use and save information."
 msgstr ""
-"Seleccionar los programas con los cuales este usuario puede usar y editar "
+"Seleccionar los programas con los cuáles este usuario puede usar y editar "
 "información."
 
 #: modules/Users/Exceptions.php:208 modules/Users/Profiles.php:363
@@ -8507,7 +8507,7 @@ msgid ""
 "Select the programs that users of this profile can use and which programs "
 "those users can use to save information."
 msgstr ""
-"Seleccionar los programas con los cuales los usuarios de este perfil pueden "
+"Seleccionar los programas con los cuáles los usuarios de este perfil pueden "
 "usar y editar información."
 
 #: modules/Users/Profiles.php:317
@@ -8845,7 +8845,7 @@ msgstr "Crear el estudiante en Moodle"
 #: plugins/Moodle/functions.php:145 plugins/Moodle/functions.php:186
 #: plugins/Moodle/functions.php:310 plugins/Moodle/functions.php:345
 msgid "Please enter a valid password"
-msgstr "Entra una contraseña valida por favor"
+msgstr "Entra una contraseña válida por favor"
 
 #: plugins/Moodle/functions.php:299
 msgid "Create User in Moodle"

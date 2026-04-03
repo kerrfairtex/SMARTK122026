@@ -14,9 +14,9 @@ Spanish translation: do not capitalize words & use "tú" instead of "usted"
 
 Add slide effect when opening or closing left menu and help
 
-PHP8.5 compatibility
-
 Please update the [CoolAdmin](https://www.rosariosis.org/themes/cooladmin/) theme to version 3+
+
+PHP8.5 compatibility
 
 [Unsaved Changes Warning](https://gitlab.com/francoisjacquet/Unsaved_Changes_Warning) plugin, sponsored by International Philippine School in Jeddah
 

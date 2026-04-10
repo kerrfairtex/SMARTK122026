@@ -1,7 +1,7 @@
 Content Security Policy plugin
 ==============================
 
-![screenshot](plugins/Content_Security_Policy/screenshot.webp)
+![screenshot](https://gitlab.com/francoisjacquet/rosariosis/-/blob/mobile/plugins/Content_Security_Policy/screenshot.webp)
 
 This plugin is part of [RosarioSIS](https://www.rosariosis.org)
 

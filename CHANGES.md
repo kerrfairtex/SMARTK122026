@@ -1,6 +1,10 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
+Changes in 12.8.1
+-----------------
+- Multilingual course title: use ParseMLField() in StudentList.php
+
 Changes in 12.8
 ---------------
 - Fix PHP warning undefined array key when Meal Item Short Name was edited in MenuReports.php

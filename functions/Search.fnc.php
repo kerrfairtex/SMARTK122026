@@ -167,33 +167,72 @@ function Search( $type, $extra = null )
 				<td>&nbsp;<label class="nobr"><input type="checkbox" name="grades_not" value="Y">&nbsp;' .
 					_( 'Not' ) . '</label> &nbsp;';
 
-				// @since 12.5 CSP remove unsafe-inline Javascript
-				echo '<label class="nobr"><input type="checkbox" value="Y" name="controller" class="onclick-checkall" data-name-like="grades[">&nbsp;' .
-					_( 'Check All' ) . '</label></td></tr>';
-
-				echo '<tr><td></td><td><table class="cellpadding-5"><tr>';
-
-				$i = 0;
-
-				foreach ( $grade_levels_RET as $grade_level )
+				if ( count( $grade_levels_RET ) <= 12 )
 				{
-					$id = $grade_level['ID'];
-
-					$checked = ! empty( $extra[ $id ] ) || $extra == $id ? ' checked' : '';
-
-					echo '<td><label class="nobr">
-					<input type="checkbox" name="' . AttrEscape( 'grades[' . $id . ']' ) . '" value="Y"' . $checked . '>&nbsp;' .
-						$grade_level['SHORT_NAME'] . '</label></td>';
-
-					$i++;
-
-					if ( $i%4 === 0 )
-					{
-						echo '</tr><tr>';
-					}
+					// @since 12.5 CSP remove unsafe-inline Javascript
+					echo '<label class="nobr"><input type="checkbox" value="Y" name="controller" class="onclick-checkall" data-name-like="grades[">&nbsp;' .
+						_( 'Check All' ) . '</label>';
 				}
 
-				echo '</tr></table></td></tr>';
+				echo '</td></tr><tr><td></td><td>';
+
+				if ( count( $grade_levels_RET ) <= 12 )
+				{
+					echo '<table class="cellpadding-5"><tr>';
+
+					$i = 0;
+
+					foreach ( $grade_levels_RET as $grade_level )
+					{
+						$id = $grade_level['ID'];
+
+						$checked = ! empty( $extra[ $id ] ) || $extra == $id ? ' checked' : '';
+
+						echo '<td><label class="nobr">
+						<input type="checkbox" name="grades[]" value="' . AttrEscape( $id ) . '"' . $checked . '>&nbsp;' .
+							$grade_level['SHORT_NAME'] . '</label></td>';
+
+						$i++;
+
+						if ( $i%4 === 0 )
+						{
+							echo '</tr><tr>';
+						}
+					}
+
+					echo '</tr></table>';
+				}
+				else
+				{
+					// @since 12.9 Use Select2 input when more than 12 Grade Levels
+					$options = [];
+
+					$values = [];
+
+					foreach ( $grade_levels_RET as $grade_level )
+					{
+						$id = $grade_level['ID'];
+
+						if ( ! empty( $extra[ $id ] ) || $extra == $id )
+						{
+							$values[] = $id;
+						}
+
+						$options[ $id ] = $grade_level['SHORT_NAME'];
+					}
+
+					echo Select2Input(
+						$values,
+						'grades[]',
+						'<span class="a11y-hidden">' . _( 'Grade Levels' ) . '</span>',
+						$options,
+						false,
+						'multiple',
+						false
+					);
+				}
+
+				echo '</td></tr>';
 			}
 			else
 			{

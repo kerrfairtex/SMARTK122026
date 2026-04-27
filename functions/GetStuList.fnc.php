@@ -1245,7 +1245,8 @@ function appendSQL( $sql, $extra = [] )
 
 		$grade_list = $sep = '';
 
-		foreach ( (array) $_REQUEST['grades'] as $grade_id => $y )
+		// @since 12.9 Use Select2 input when more than 12 Grade Levels
+		foreach ( (array) $_REQUEST['grades'] as $grade_id )
 		{
 			$grade_list .= $sep . "'" . $grade_id . "'";
 

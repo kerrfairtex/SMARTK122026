@@ -404,13 +404,6 @@ if ( ! function_exists( 'TranscriptsGenerate' ) )
 
 							$grades_RET[$i]['CREDIT_EARNED'] += (float) $grade['CREDIT_EARNED'];
 
-							if ( $mp_id === $last_mp
-								&& mb_strlen( $grades_RET[$i]['CREDIT_EARNED'] ) > 7 )
-							{
-								// Format Credit Earned, display 0.33 instead of 0.333333333333333
-								$grades_RET[$i]['CREDIT_EARNED'] = number_format( $grades_RET[$i]['CREDIT_EARNED'], 2, '.', '' );
-							}
-
 							$total_credit_earned += $grade['CREDIT_EARNED'];
 							$total_credit_attempted += $grade['CREDIT_ATTEMPTED'];
 							$total_gpa += $grade['WEIGHTED_GP'] * $grade['CREDIT_ATTEMPTED'];
@@ -438,6 +431,16 @@ if ( ! function_exists( 'TranscriptsGenerate' ) )
 
 				if ( $show['credits'] )
 				{
+					foreach ( (array) $grades_RET as $j => $grade_tmp )
+					{
+						if ( isset( $grade_tmp['CREDIT_EARNED'] )
+							&& mb_strlen( $grade_tmp['CREDIT_EARNED'] ) > 7 )
+						{
+							// Format Credit Earned, display 0.33 instead of 0.333333333333333
+							$grades_RET[$j]['CREDIT_EARNED'] = number_format( $grade_tmp['CREDIT_EARNED'], 2, '.', '' );
+						}
+					}
+
 					$columns['CREDIT_EARNED'] = _( 'Credit' );
 				}
 

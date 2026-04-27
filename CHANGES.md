@@ -9,6 +9,7 @@ Changes in 12.9
 - Performance: do not sort `functions/*.php` files in Warehouse.php
 - SQL performance: replace subqueries with LEFT JOINs in StaffWidget/StaffBalance.php, Widget/Absences.php, Widget/Balance.php, Widget/CpAbsences.php, StaffBalances.php, StudentSummary.php, StudentBalances.php & Export.php
 - Use Select2 input when more than 12 Grade Levels in GetStuList.fnc.php & Search.fnc.php
+- Fix Format Credit Earned, display 0.33 instead of 0.333333333333333 in Transcripts.fnc.php
 
 Changes in 12.8
 ---------------

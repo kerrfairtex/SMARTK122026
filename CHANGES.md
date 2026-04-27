@@ -6,6 +6,7 @@ Changes in 12.9
 - Multilingual course title: use ParseMLField() in StudentList.php
 - Fix PHP warning undefined index when school was deleted in School.php & Schools.php
 - Security fix Request Forgery: remove modfunc= in links in Modules.php & MarkDownHTML.fnc.php
+- Performance: do not sort `functions/*.php` files in Warehouse.php
 
 Changes in 12.8
 ---------------

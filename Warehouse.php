@@ -122,7 +122,7 @@ spl_autoload_register(
 /**
  * Load functions
  */
-$functions = glob( 'functions/*.php' );
+$functions = glob( 'functions/*.php', GLOB_NOSORT );
 
 foreach ( $functions as $function )
 {

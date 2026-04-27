@@ -73,7 +73,10 @@ if ( ! empty( $_REQUEST['category_id'] ) )
 
 if ( ! empty( $category_RET ) )
 {
-	$category_RET[1]['SELECT_OPTIONS'] = explode( "\r", str_replace( [ "\r\n", "\n" ], "\r", $category_RET[1]['SELECT_OPTIONS'] ) );
+	$category_RET[1]['SELECT_OPTIONS'] = explode(
+		"\r",
+		str_replace( [ "\r\n", "\n" ], "\r", (string) $category_RET[1]['SELECT_OPTIONS'] )
+	);
 
 	$extra = [];
 

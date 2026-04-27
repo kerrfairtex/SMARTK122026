@@ -203,7 +203,11 @@ if ( ! $_REQUEST['modfunc'] )
 		FROM school_periods
 		WHERE SYEAR='" . UserSyear() . "'
 		AND SCHOOL_ID='" . UserSchool() . "'
-		AND EXISTS (SELECT '' FROM course_period_school_periods cpsp, course_periods cp WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID AND cpsp.PERIOD_ID=school_periods.PERIOD_ID AND position(',0,' IN cp.DOES_ATTENDANCE)>0)
+		AND EXISTS (SELECT 1
+			FROM course_period_school_periods cpsp,course_periods cp
+			WHERE cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
+			AND cpsp.PERIOD_ID=school_periods.PERIOD_ID
+			AND position(',0,' IN cp.DOES_ATTENDANCE)>0)
 		ORDER BY SORT_ORDER IS NULL,SORT_ORDER,TITLE" );
 
 		$period_options = [];

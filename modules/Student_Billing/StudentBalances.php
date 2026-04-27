@@ -4,12 +4,27 @@ DrawHeader( ProgramTitle() );
 
 $_REQUEST['cumulative_balance'] = issetVal( $_REQUEST['cumulative_balance'] );
 
-$extra['SELECT'] = ',(COALESCE((SELECT SUM(f.AMOUNT) FROM billing_fees f WHERE f.STUDENT_ID=ssm.STUDENT_ID AND f.SYEAR=ssm.SYEAR),0)-COALESCE((SELECT SUM(p.AMOUNT) FROM billing_payments p WHERE p.STUDENT_ID=ssm.STUDENT_ID AND p.SYEAR=ssm.SYEAR),0)) AS BALANCE';
+// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+$extra['SELECT'] = ',COALESCE(f.TOTAL,0)-COALESCE(p.TOTAL,0) AS BALANCE';
+
+$extra['FROM'] = ' LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+	FROM billing_fees
+	GROUP BY STUDENT_ID,SYEAR) f ON f.STUDENT_ID=ssm.STUDENT_ID
+	AND f.SYEAR=ssm.SYEAR
+LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+	FROM billing_payments
+	GROUP BY STUDENT_ID,SYEAR) p ON p.STUDENT_ID=ssm.STUDENT_ID
+	AND p.SYEAR=ssm.SYEAR';
 
 if ( $_REQUEST['cumulative_balance'] === 'Y' )
 {
 	// @since 10.3 Add "Cumulative Balance over school years" checkbox.
-	$extra['SELECT'] = ',(COALESCE((SELECT SUM(f.AMOUNT) FROM billing_fees f WHERE f.STUDENT_ID=ssm.STUDENT_ID),0)-COALESCE((SELECT SUM(p.AMOUNT) FROM billing_payments p WHERE p.STUDENT_ID=ssm.STUDENT_ID),0)) AS BALANCE';
+	$extra['FROM'] = ' LEFT JOIN (SELECT STUDENT_ID,SUM(AMOUNT) AS TOTAL
+		FROM billing_fees
+		GROUP BY STUDENT_ID) f ON f.STUDENT_ID=ssm.STUDENT_ID
+	LEFT JOIN (SELECT STUDENT_ID,SUM(AMOUNT) AS TOTAL
+		FROM billing_payments
+		GROUP BY STUDENT_ID) p ON p.STUDENT_ID=ssm.STUDENT_ID';
 }
 
 $extra['columns_after'] = [ 'BALANCE' => _( 'Balance' ) ];

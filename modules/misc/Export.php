@@ -410,15 +410,18 @@ if ( isset( $_REQUEST['search_modfunc'] )
 	{
 		if ( ! empty( $_REQUEST['fields']['SB_BALANCE'] ) )
 		{
+			// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+			$extra['FROM'] .= ' LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+				FROM billing_fees
+				GROUP BY STUDENT_ID,SYEAR) f ON f.STUDENT_ID=ssm.STUDENT_ID
+				AND f.SYEAR=ssm.SYEAR
+			LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+				FROM billing_payments
+				GROUP BY STUDENT_ID,SYEAR) p ON p.STUDENT_ID=ssm.STUDENT_ID
+				AND p.SYEAR=ssm.SYEAR';
+
 			// Add Balance field to Advanced Report.
-			$extra['SELECT'] .= ",(coalesce((SELECT sum(p.AMOUNT)
-				FROM billing_payments p
-				WHERE p.STUDENT_ID=ssm.STUDENT_ID
-				AND p.SYEAR=ssm.SYEAR), 0)
-				- coalesce((SELECT sum(f.AMOUNT)
-				FROM billing_fees f
-				WHERE f.STUDENT_ID=ssm.STUDENT_ID
-				AND f.SYEAR=ssm.SYEAR), 0)) AS SB_BALANCE";
+			$extra['SELECT'] .= ',COALESCE(p.TOTAL,0)-COALESCE(f.TOTAL,0) AS SB_BALANCE';
 
 			$extra['functions'] += [ 'SB_BALANCE' => 'Currency' ];
 
@@ -428,10 +431,16 @@ if ( isset( $_REQUEST['search_modfunc'] )
 		// @since 8.0 Add Total from Payments & Total from Fees fields to Advanced Report.
 		if ( ! empty( $_REQUEST['fields']['SB_PAYMENTS'] ) )
 		{
-			$extra['SELECT'] .= ",coalesce((SELECT sum(p.AMOUNT)
-				FROM billing_payments p
-				WHERE p.STUDENT_ID=ssm.STUDENT_ID
-				AND p.SYEAR=ssm.SYEAR), 0) AS SB_PAYMENTS";
+			if ( empty( $_REQUEST['fields']['SB_BALANCE'] ) )
+			{
+				// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+				$extra['FROM'] .= ' LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+					FROM billing_payments
+					GROUP BY STUDENT_ID,SYEAR) p ON p.STUDENT_ID=ssm.STUDENT_ID
+					AND p.SYEAR=ssm.SYEAR';
+			}
+
+			$extra['SELECT'] .= ',COALESCE(p.TOTAL,0) AS SB_PAYMENTS';
 
 			$extra['functions'] += [ 'SB_PAYMENTS' => 'Currency' ];
 
@@ -440,10 +449,16 @@ if ( isset( $_REQUEST['search_modfunc'] )
 
 		if ( ! empty( $_REQUEST['fields']['SB_FEES'] ) )
 		{
-			$extra['SELECT'] .= ",coalesce((SELECT sum(f.AMOUNT)
-				FROM billing_fees f
-				WHERE f.STUDENT_ID=ssm.STUDENT_ID
-				AND f.SYEAR=ssm.SYEAR), 0) AS SB_FEES";
+			if ( empty( $_REQUEST['fields']['SB_BALANCE'] ) )
+			{
+				// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+				$extra['FROM'] .= ' LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
+					FROM billing_fees
+					GROUP BY STUDENT_ID,SYEAR) f ON f.STUDENT_ID=ssm.STUDENT_ID
+					AND f.SYEAR=ssm.SYEAR';
+			}
+
+			$extra['SELECT'] .= ',COALESCE(f.TOTAL,0) AS SB_FEES';
 
 			$extra['functions'] += [ 'SB_FEES' => 'Currency' ];
 

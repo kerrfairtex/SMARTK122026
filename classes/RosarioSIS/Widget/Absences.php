@@ -41,11 +41,14 @@ class Absences implements \RosarioSIS\Widget
 			" BETWEEN '" . $_REQUEST['absences_low'] . "'
 				AND '" . $_REQUEST['absences_high'] . "'";
 
-		$extra['WHERE'] .= " AND (SELECT sum(1-STATE_VALUE) AS STATE_VALUE
-			FROM attendance_day ad
-			WHERE ssm.STUDENT_ID=ad.STUDENT_ID
-			AND ad.SYEAR=ssm.SYEAR
-			AND ad.MARKING_PERIOD_ID IN (" . GetChildrenMP( $_REQUEST['absences_term'], UserMP() ) . "))" .
+		// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+		$extra['FROM'] .= " LEFT JOIN (SELECT STUDENT_ID,SYEAR,sum(1-STATE_VALUE) AS TOTAL
+			FROM attendance_day
+			WHERE MARKING_PERIOD_ID IN (" . GetChildrenMP( $_REQUEST['absences_term'], UserMP() ) . ")
+			GROUP BY STUDENT_ID,SYEAR) ad ON ad.STUDENT_ID=ssm.STUDENT_ID
+			AND ad.SYEAR=ssm.SYEAR";
+
+		$extra['WHERE'] .= " AND COALESCE(ad.TOTAL,0)" .
 			$absences_sql;
 
 		switch ( $_REQUEST['absences_term'] )

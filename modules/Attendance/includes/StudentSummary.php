@@ -118,11 +118,19 @@ if ( ! empty( $_REQUEST['period_id'] ) )
 		$period_ids_list = $_REQUEST['period_id'];
 	}
 
-	$extra['SELECT'] = issetVal( $extra['SELECT'], '' );
-	$extra['SELECT'] .= ",(SELECT count(*) FROM attendance_period ap,attendance_codes ac
-		WHERE ac.ID=ap.ATTENDANCE_CODE AND (ac.STATE_CODE='A' OR ac.STATE_CODE='H') AND ap.STUDENT_ID=ssm.STUDENT_ID
+	// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+	$extra['FROM'] = issetVal( $extra['FROM'], '' );
+	$extra['FROM'] .= " LEFT JOIN (SELECT ap.STUDENT_ID,ac.SYEAR,count(*) AS TOTAL
+		FROM attendance_period ap,attendance_codes ac
+		WHERE ac.ID=ap.ATTENDANCE_CODE
+		AND ac.STATE_CODE='A'
 		AND ap.PERIOD_ID IN (" . $period_ids_list . ")
-		AND ap.SCHOOL_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "' AND ac.SYEAR=ssm.SYEAR) AS STATE_ABS";
+		AND ap.SCHOOL_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
+		GROUP BY ap.STUDENT_ID,ac.SYEAR) ap ON ap.STUDENT_ID=ssm.STUDENT_ID
+		AND ap.SYEAR=ssm.SYEAR";
+
+	$extra['SELECT'] = issetVal( $extra['SELECT'], '' );
+	$extra['SELECT'] .= ",COALESCE(ap.TOTAL,0) AS STATE_ABS";
 
 	$extra['columns_after']['STATE_ABS'] = _( 'State Abs' );
 
@@ -150,10 +158,16 @@ if ( ! empty( $_REQUEST['period_id'] ) )
 }
 else
 {
+	// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
+	$extra['FROM'] = issetVal( $extra['FROM'], '' );
+	$extra['FROM'] .= " LEFT JOIN (SELECT STUDENT_ID,SYEAR,sum(1-STATE_VALUE) AS TOTAL
+		FROM attendance_day
+		WHERE SCHOOL_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
+		GROUP BY STUDENT_ID,SYEAR) ad ON ad.STUDENT_ID=ssm.STUDENT_ID
+		AND ad.SYEAR=ssm.SYEAR";
+
 	$extra['SELECT'] = issetVal( $extra['SELECT'], '' );
-	$extra['SELECT'] .= ",(SELECT COALESCE((sum(STATE_VALUE-1)*-1),0.0) FROM attendance_day ad
-		WHERE ad.STUDENT_ID=ssm.STUDENT_ID
-		AND ad.SCHOOL_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "' AND ad.SYEAR=ssm.SYEAR) AS STATE_ABS";
+	$extra['SELECT'] .= ",COALESCE(ad.TOTAL,0.0) AS STATE_ABS";
 
 	$extra['columns_after']['STATE_ABS'] = _( 'Days Absent' );
 }

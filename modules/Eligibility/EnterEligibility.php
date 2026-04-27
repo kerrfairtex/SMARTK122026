@@ -153,7 +153,8 @@ if ( $_REQUEST['modfunc'] == 'gradebook' )
 					SET ELIGIBILITY_CODE='" . $code . "'
 					WHERE SCHOOL_DATE BETWEEN '" . $start_date . "' AND '" . $end_date . "'
 					AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
-					AND STUDENT_ID='" . (int) $student_id . "'" );
+					AND STUDENT_ID='" . (int) $student_id . "'
+					AND SYEAR='" . UserSyear() . "'" );
 			}
 			else
 			{

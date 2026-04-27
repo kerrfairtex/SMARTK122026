@@ -22,7 +22,9 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 		 */
 		$staff_id = DBGetOne( "SELECT STAFF_ID
 			FROM food_service_staff_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		$sql1 = "UPDATE food_service_staff_transactions
 		SET BALANCE=BALANCE-(SELECT AMOUNT
@@ -30,7 +32,9 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
 			AND ITEM_ID='" . (int) $item_id . "')
 		WHERE TRANSACTION_ID>='" . (int) $transaction_id . "'
-		AND STAFF_ID='" . (int) $staff_id . "'";
+		AND STAFF_ID='" . (int) $staff_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "'";
 
 		$sql2 = "UPDATE food_service_staff_accounts
 		SET BALANCE=BALANCE-(SELECT AMOUNT
@@ -40,7 +44,11 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 		WHERE STAFF_ID='" . (int) $staff_id . "'";
 
 		$sql3 = "DELETE FROM food_service_staff_transaction_items
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			WHERE TRANSACTION_ID=(SELECT TRANSACTION_ID
+				FROM food_service_staff_transactions
+				WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND SYEAR='" . UserSyear() . "')
 			AND ITEM_ID='" . (int) $item_id . "'";
 	}
 	else
@@ -52,7 +60,9 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 		 */
 		$account_id = DBGetOne( "SELECT ACCOUNT_ID
 			FROM food_service_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		$sql1 = "UPDATE food_service_transactions
 		SET BALANCE=BALANCE-(SELECT AMOUNT
@@ -60,7 +70,9 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
 			AND ITEM_ID='" . (int) $item_id . "')
 		WHERE TRANSACTION_ID>='" . (int) $transaction_id . "'
-		AND ACCOUNT_ID='" . (int) $account_id . "'";
+		AND ACCOUNT_ID='" . (int) $account_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "'";
 
 		$sql2 = "UPDATE food_service_accounts
 		SET BALANCE=BALANCE-(SELECT AMOUNT
@@ -70,7 +82,11 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 		WHERE ACCOUNT_ID='" . (int) $account_id . "'";
 
 		$sql3 = "DELETE FROM food_service_transaction_items
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			WHERE TRANSACTION_ID=(SELECT TRANSACTION_ID
+				FROM food_service_transactions
+				WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND SYEAR='" . UserSyear() . "')
 			AND ITEM_ID='" . (int) $item_id . "'";
 	}
 
@@ -80,12 +96,15 @@ function DeleteTransactionItem( $transaction_id, $item_id, $type = 'student' )
 
 	db_trans_commit();
 
-	//FJ if no more transaction items, delete transaction
-	$trans_items_RET = DBGet( "SELECT ITEM_ID FROM " . ( $type == 'staff' ? "food_service_staff_transaction_items" : "food_service_transaction_items" ) . " WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
+	// If no more transaction items, delete transaction
+	$trans_items_RET = DBGet( "SELECT ITEM_ID
+		FROM " . ( $type == 'staff' ? "food_service_staff_transaction_items" : "food_service_transaction_items" ) . "
+		WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
 
 	if ( empty( $trans_items_RET ) )
 	{
 		require_once 'modules/Food_Service/includes/DeleteTransaction.fnc.php';
+
 		DeleteTransaction( $transaction_id, $type );
 	}
 }

@@ -51,7 +51,11 @@ if ( $_REQUEST['modfunc'] === 'update'
 				DBUpdate(
 					'portal_notes',
 					$columns,
-					[ 'ID' => (int) $id ]
+					[
+						'ID' => (int) $id,
+						'SCHOOL_ID' => UserSchool(),
+						'SYEAR' => UserSyear(),
+					]
 				);
 
 				//hook
@@ -127,12 +131,17 @@ if ( $_REQUEST['modfunc'] === 'remove'
 		// FJ file attached to portal notes.
 		$file_to_remove = DBGetOne( "SELECT FILE_ATTACHED
 			FROM portal_notes
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Security: use FileDelete() instead of unlink()
 		FileDelete( $file_to_remove );
 
-		DBQuery( "DELETE FROM portal_notes WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+		DBQuery( "DELETE FROM portal_notes
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		//hook
 		do_action( 'School_Setup/PortalNotes.php|delete_portal_note' );

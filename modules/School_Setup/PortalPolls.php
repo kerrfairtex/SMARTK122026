@@ -71,7 +71,11 @@ if ( $_REQUEST['modfunc'] === 'update'
 				DBUpdate(
 					'portal_polls',
 					$update_columns,
-					[ 'ID' => (int) $id ]
+					[
+						'ID' => (int) $id,
+						'SCHOOL_ID' => UserSchool(),
+						'SYEAR' => UserSyear(),
+					]
 				);
 
 				foreach ( (array) $update_questions_columns as $id_question => $update_question_columns )
@@ -79,7 +83,10 @@ if ( $_REQUEST['modfunc'] === 'update'
 					DBUpdate(
 						'portal_poll_questions',
 						$update_question_columns,
-						[ 'ID' => (int) $id_question ]
+						[
+							'ID' => (int) $id_question,
+							'PORTAL_POLL_ID' => (int) $id,
+						]
 					);
 				}
 			}
@@ -160,8 +167,17 @@ if ( $_REQUEST['modfunc'] === 'remove'
 {
 	if ( DeletePrompt( _( 'Poll' ) ) )
 	{
-		$delete_sql = "DELETE FROM portal_polls WHERE ID='" . (int) $_REQUEST['id'] . "';";
-		$delete_sql .= "DELETE FROM portal_poll_questions WHERE PORTAL_POLL_ID='" . (int) $_REQUEST['id'] . "';";
+		$delete_sql = "DELETE FROM portal_poll_questions
+			WHERE PORTAL_POLL_ID=(SELECT ID
+				FROM portal_polls
+				WHERE ID='" . (int) $_REQUEST['id'] . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "');";
+
+		$delete_sql .= "DELETE FROM portal_polls
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 

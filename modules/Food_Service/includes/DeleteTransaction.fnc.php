@@ -19,14 +19,18 @@ function DeleteTransaction( $transaction_id, $type = 'student' )
 		 */
 		$staff_id = DBGetOne( "SELECT STAFF_ID
 			FROM food_service_staff_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		$sql1 = "UPDATE food_service_staff_transactions
 		SET BALANCE=BALANCE-(SELECT coalesce(sum(AMOUNT),0)
 			FROM food_service_staff_transaction_items
 			WHERE TRANSACTION_ID='" . (int) $transaction_id . "')
 		WHERE TRANSACTION_ID>='" . (int) $transaction_id . "'
-		AND STAFF_ID='" . (int) $staff_id . "'";
+		AND STAFF_ID='" . (int) $staff_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "'";
 
 		$sql2 = "UPDATE food_service_staff_accounts
 		SET BALANCE=BALANCE-(SELECT coalesce(sum(AMOUNT),0)
@@ -35,10 +39,16 @@ function DeleteTransaction( $transaction_id, $type = 'student' )
 		WHERE STAFF_ID='" . (int) $staff_id . "'";
 
 		$sql3 = "DELETE FROM food_service_staff_transaction_items
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'";
+			WHERE TRANSACTION_ID=(SELECT TRANSACTION_ID
+				FROM food_service_staff_transactions
+				WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND SYEAR='" . UserSyear() . "')";
 
 		$sql4 = "DELETE FROM food_service_staff_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'";
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'";
 	}
 	else
 	{
@@ -49,14 +59,18 @@ function DeleteTransaction( $transaction_id, $type = 'student' )
 		 */
 		$account_id = DBGetOne( "SELECT ACCOUNT_ID
 			FROM food_service_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'" );
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		$sql1 = "UPDATE food_service_transactions
 			SET BALANCE=BALANCE-(SELECT coalesce(sum(AMOUNT),0)
 				FROM food_service_transaction_items
 				WHERE TRANSACTION_ID='" . (int) $transaction_id . "')
 			WHERE TRANSACTION_ID>='" . (int) $transaction_id . "'
-			AND ACCOUNT_ID='" . (int) $account_id . "'";
+			AND ACCOUNT_ID='" . (int) $account_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'";
 
 		$sql2 = "UPDATE food_service_accounts
 		SET BALANCE=BALANCE-(SELECT coalesce(sum(AMOUNT),0)
@@ -65,10 +79,16 @@ function DeleteTransaction( $transaction_id, $type = 'student' )
 		WHERE ACCOUNT_ID='" . (int) $account_id . "'";
 
 		$sql3 = "DELETE FROM food_service_transaction_items
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'";
+			WHERE TRANSACTION_ID=(SELECT TRANSACTION_ID
+				FROM food_service_transactions
+				WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND SYEAR='" . UserSyear() . "')";
 
 		$sql4 = "DELETE FROM food_service_transactions
-			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'";
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'";
 	}
 
 	db_trans_start();

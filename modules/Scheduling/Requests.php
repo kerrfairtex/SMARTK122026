@@ -60,7 +60,10 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	if ( DeletePrompt( _( 'Request' ) ) )
 	{
 		DBQuery( "DELETE FROM schedule_requests
-			WHERE REQUEST_ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE REQUEST_ID='" . (int) $_REQUEST['id'] . "'
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );
@@ -82,6 +85,8 @@ if ( $_REQUEST['modfunc'] === 'update' )
 				[
 					'STUDENT_ID' => UserStudentID(),
 					'REQUEST_ID' => (int) $request_id,
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
 				]
 			);
 		}

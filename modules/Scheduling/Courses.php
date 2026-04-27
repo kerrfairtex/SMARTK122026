@@ -432,7 +432,11 @@ if ( ! empty( $_REQUEST['tables'] )
 							DBUpdate(
 								'course_periods',
 								[ 'TITLE' => DBEscapeString( $title ) ],
-								[ 'COURSE_PERIOD_ID' => (int) $_REQUEST['course_period_id'] ]
+								[
+									'COURSE_PERIOD_ID' => (int) $_REQUEST['course_period_id'],
+									'SYEAR' => UserSyear(),
+									'SCHOOL_ID' => UserSchool(),
+								]
 							);
 
 							if ( empty( $columns['DAYS'] ) ) //delete school period
@@ -448,10 +452,20 @@ if ( ! empty( $_REQUEST['tables'] )
 							}
 						}
 
+						$where_columns = [
+							'SYEAR' => UserSyear(),
+							'SCHOOL_ID' => UserSchool(),
+						];
+
+						if ( $table_name === 'course_period_school_periods' )
+						{
+							$where_columns = [ 'COURSE_PERIOD_ID' => $_REQUEST['course_period_id'] ];
+						}
+
 						DBUpdate(
 							$table_name,
 							$update_columns + $columns,
-							[ $where[$table_name] => (int) $id ]
+							[ $where[$table_name] => (int) $id ] + $where_columns
 						);
 
 						if ( $table_name === 'course_subjects' )
@@ -714,7 +728,9 @@ if ( $_REQUEST['modfunc'] === 'delete'
 		$table = _( 'Subject' );
 
 		$delete_sql = "DELETE FROM course_subjects
-			WHERE SUBJECT_ID='" . (int) $_REQUEST['subject_id'] . "';";
+			WHERE SUBJECT_ID='" . (int) $_REQUEST['subject_id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$unset_get = 'subject_id';
 	}

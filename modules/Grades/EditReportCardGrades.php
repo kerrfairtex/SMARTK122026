@@ -83,7 +83,11 @@ if ( UserStudentID() )
 					$go = DBUpdate(
 						'student_report_card_grades',
 						$columns,
-						[ 'ID' => (int) $id ]
+						[
+							'ID' => (int) $id,
+							'SCHOOL_ID' => UserSchool(),
+							'STUDENT_ID' => (int) $student_id,
+						]
 					);
 				}
 
@@ -157,7 +161,9 @@ if ( UserStudentID() )
 		if ( DeletePrompt( _( 'Student Grade' ) ) )
 		{
 			DBQuery( "DELETE FROM student_report_card_grades
-				WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+				WHERE ID='" . (int) $_REQUEST['id'] . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND STUDENT_ID='" . (int) $student_id . "'" );
 
 			if ( $mp_id )
 			{

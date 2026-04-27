@@ -46,7 +46,11 @@ if ( $_REQUEST['modfunc'] === 'save'
 			DBUpdate(
 				'accounting_payments',
 				$columns,
-				[ 'ID' => (int) $id ]
+				[
+					'ID' => (int) $id,
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
+				]
 			);
 		}
 		elseif ( isset( $columns['AMOUNT'] )
@@ -77,14 +81,19 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	{
 		$file_attached = DBGetOne( "SELECT FILE_ATTACHED
 			FROM accounting_payments
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Delete File Attached.
 		// Security: use FileDelete() instead of unlink()
 		FileDelete( $file_attached );
 
 		DBQuery( "DELETE FROM accounting_payments
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
+
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

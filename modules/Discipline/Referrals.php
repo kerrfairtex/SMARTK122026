@@ -64,7 +64,11 @@ if ( $_REQUEST['modfunc'] === 'save'
 	DBUpdate(
 		'discipline_referrals',
 		$update_columns,
-		[ 'ID' => (int) $_REQUEST['referral_id'] ]
+		[
+			'ID' => (int) $_REQUEST['referral_id'],
+			'SYEAR' => UserSyear(),
+			'SCHOOL_ID' => UserSchool(),
+		]
 	);
 
 	// Unset modfunc, values & redirect URL.
@@ -79,7 +83,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	if ( DeletePrompt( _( 'Referral' ) ) )
 	{
 		DBQuery( "DELETE FROM discipline_referrals
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

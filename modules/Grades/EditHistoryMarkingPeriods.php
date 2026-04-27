@@ -14,7 +14,7 @@ if ( $_REQUEST['modfunc'] === 'update' )
 			DBUpdate(
 				'history_marking_periods',
 				$columns,
-				[ 'MARKING_PERIOD_ID' => (int) $id ]
+				[ 'MARKING_PERIOD_ID' => (int) $id, 'SCHOOL_ID' => UserSchool() ]
 			);
 		}
 
@@ -53,10 +53,12 @@ if ( $_REQUEST['modfunc'] === 'remove' )
 	if ( DeletePrompt( _( 'History Marking Period' ) ) )
 	{
 		$delete_sql = "DELETE FROM history_marking_periods
-			WHERE MARKING_PERIOD_ID='" . (int) $_REQUEST['id'] . "';";
+			WHERE MARKING_PERIOD_ID='" . (int) $_REQUEST['id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM student_report_card_grades
-			WHERE MARKING_PERIOD_ID='" . (int) $_REQUEST['id'] . "';";
+			WHERE MARKING_PERIOD_ID='" . (int) $_REQUEST['id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 

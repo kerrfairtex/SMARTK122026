@@ -45,7 +45,11 @@ if ( $_REQUEST['modfunc'] === 'update'
 				DBUpdate(
 					'school_periods',
 					$columns,
-					[ 'PERIOD_ID' => (int) $id ]
+					[
+						'PERIOD_ID' => (int) $id,
+						'SCHOOL_ID' => UserSchool(),
+						'SYEAR' => UserSyear(),
+					]
 				);
 			}
 			// New: check for Title.
@@ -73,7 +77,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	if ( DeletePrompt( _( 'Period' ) ) )
 	{
 		DBQuery( "DELETE FROM school_periods
-			WHERE PERIOD_ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE PERIOD_ID='" . (int) $_REQUEST['id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		// Unset modfunc & ID & redirect.
 		RedirectURL( [ 'modfunc', 'id' ] );

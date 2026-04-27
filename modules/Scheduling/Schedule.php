@@ -76,6 +76,8 @@ if ( $_REQUEST['modfunc'] === 'modify'
 					'STUDENT_ID' => UserStudentID(),
 					'COURSE_PERIOD_ID' => (int) $course_period_id,
 					'START_DATE' => $start_date,
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
 				]
 			);
 
@@ -108,11 +110,15 @@ if ( $_REQUEST['modfunc'] === 'modify'
 
 							$delete_sql .= "DELETE FROM student_report_card_grades
 								WHERE STUDENT_ID='" . UserStudentID() . "'
-								AND COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+								AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+								AND SYEAR='" . UserSyear() . "'
+								AND SCHOOL_ID='" . UserSchool() . "';";
 
 							$delete_sql .= "DELETE FROM student_report_card_comments
 								WHERE STUDENT_ID='" . UserStudentID() . "'
-								AND COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+								AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+								AND SYEAR='" . UserSyear() . "'
+								AND SCHOOL_ID='" . UserSchool() . "';";
 
 							$delete_sql .= "DELETE FROM attendance_period
 								WHERE STUDENT_ID='" . UserStudentID() . "'
@@ -124,7 +130,9 @@ if ( $_REQUEST['modfunc'] === 'modify'
 						// Else simply delete schedule entry.
 						DBQuery( "DELETE FROM schedule
 							WHERE STUDENT_ID='" . UserStudentID() . "'
-							AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'" );
+							AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+							AND SYEAR='" . UserSyear() . "'
+							AND SCHOOL_ID='" . UserSchool() . "'" );
 
 						// Hook.
 						do_action( 'Scheduling/Schedule.php|drop_student' );

@@ -17,7 +17,10 @@ if ( $_REQUEST['modfunc'] === 'update'
 				DBUpdate(
 					'school_gradelevels',
 					$columns,
-					[ 'ID' => (int) $id ]
+					[
+						'ID' => (int) $id,
+						'SCHOOL_ID' => UserSchool(),
+					]
 				);
 			}
 
@@ -46,7 +49,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 {
 	if ( DeletePrompt( _( 'Grade Level' ) ) )
 	{
-		DBQuery( "DELETE FROM school_gradelevels WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+		DBQuery( "DELETE FROM school_gradelevels
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

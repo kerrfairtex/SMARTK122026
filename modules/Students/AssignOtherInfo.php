@@ -93,7 +93,10 @@ if ( $_REQUEST['modfunc'] === 'save'
 			DBUpdate(
 				'student_enrollment',
 				$update_enrollment_col_final,
-				[ 'ID' => (int) $last_enrollment_id ]
+				[
+					'ID' => (int) $last_enrollment_id,
+					'SYEAR' => UserSyear(),
+				]
 			);
 		}
 

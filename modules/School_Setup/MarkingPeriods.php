@@ -188,7 +188,11 @@ if ( ! empty( $_POST['tables'] )
 			$updated = DBUpdate(
 				'school_marking_periods',
 				$columns,
-				[ 'MARKING_PERIOD_ID' => (int) $id ]
+				[
+					'MARKING_PERIOD_ID' => (int) $id,
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
+				]
 			);
 		}
 

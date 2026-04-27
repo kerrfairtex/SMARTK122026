@@ -105,7 +105,11 @@ if ( $confirm_ok )
 		DBUpdate(
 			'course_periods',
 			[ 'FILLED_SEATS' => $seats ],
-			[ 'COURSE_PERIOD_ID' => (int) $period['COURSE_PERIOD_ID'] ]
+			[
+				'COURSE_PERIOD_ID' => (int) $period['COURSE_PERIOD_ID'],
+				'SYEAR' => UserSyear(),
+				'SCHOOL_ID' => UserSchool(),
+			]
 		);
 	}
 

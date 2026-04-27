@@ -37,7 +37,12 @@ if ( $_REQUEST['modfunc'] === 'save'
 			DBUpdate(
 				'billing_payments',
 				$columns,
-				[ 'STUDENT_ID' => UserStudentID(), 'ID' => (int) $id ]
+				[
+					'ID' => (int) $id,
+					'STUDENT_ID' => UserStudentID(),
+					'SCHOOL_ID' => UserSchool(),
+					'SYEAR' => UserSyear(),
+				]
 			);
 		}
 		elseif ( isset( $columns['AMOUNT'] )
@@ -74,15 +79,21 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	{
 		$file_attached = DBGetOne( "SELECT FILE_ATTACHED
 			FROM billing_payments
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Delete File Attached.
 		// Security: use FileDelete() instead of unlink()
 		FileDelete( $file_attached );
 
 		DBQuery( "DELETE FROM billing_payments
-			WHERE ID='" . (int) $_REQUEST['id'] . "'
-			OR REFUNDED_PAYMENT_ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE (ID='" . (int) $_REQUEST['id'] . "'
+			OR REFUNDED_PAYMENT_ID='" . (int) $_REQUEST['id'] . "')
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

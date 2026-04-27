@@ -91,20 +91,28 @@ if ( $_REQUEST['modfunc'] === 'save'
 
 	foreach ( (array) $_REQUEST['food_service'] as $school_date => $description )
 	{
-		if ( ! empty( $events_RET[$school_date] ) )
+		if ( ! empty( $events_RET[$school_date][1]['ID'] ) )
 		{
+			$id = $events_RET[$school_date][1]['ID'];
+
 			if ( ! empty( $description['text'] ) || ! empty( $description['select'] ) )
 			{
 				DBUpdate(
 					'calendar_events',
 					[ 'DESCRIPTION' => $description['text'] . issetVal( $description['select'], '' ) ],
-					[ 'ID' => (int) $events_RET[$school_date][1]['ID'] ]
+					[
+						'ID' => (int) $id,
+						'SYEAR' => UserSyear(),
+						'SCHOOL_ID' => UserSchool(),
+					]
 				);
 			}
 			else
 			{
 				DBQuery( "DELETE FROM calendar_events
-					WHERE ID='" . (int) $events_RET[$school_date][1]['ID'] . "'" );
+					WHERE ID='" . (int) $id . "'
+					AND SYEAR='" . UserSyear() . "'
+					AND SCHOOL_ID='" . UserSchool() . "'" );
 			}
 		}
 		elseif ( ! empty( $description['text'] ) || ! empty( $description['select'] ) )

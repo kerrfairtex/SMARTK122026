@@ -17,7 +17,11 @@ if ( $_REQUEST['modfunc'] === 'update'
 			DBUpdate(
 				'eligibility_activities',
 				$columns,
-				[ 'ID' => (int) $id ]
+				[
+					'ID' => (int) $id,
+					'SCHOOL_ID' => UserSchool(),
+					'SYEAR' => UserSyear(),
+				]
 			);
 		}
 
@@ -43,7 +47,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	if ( DeletePrompt( _( 'Activity' ) ) )
 	{
 		DBQuery( "DELETE FROM eligibility_activities
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );
@@ -59,7 +65,7 @@ if ( ! $_REQUEST['modfunc'] )
 	ORDER BY TITLE";
 
 	$activities_RET = DBGet(
-		DBQuery( $sql ),
+		$sql,
 		[
 			'TITLE' => '_makeTextInput',
 			'START_DATE' => '_makeDateInput',

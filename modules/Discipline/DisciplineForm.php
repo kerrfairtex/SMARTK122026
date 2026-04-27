@@ -16,7 +16,11 @@ if ( $_REQUEST['modfunc'] === 'save'
 				DBUpdate(
 					'discipline_field_usage',
 					$columns,
-					[ 'ID' => (int) $id ]
+					[
+						'ID' => (int) $id,
+						'SYEAR' => UserSyear(),
+						'SCHOOL_ID' => UserSchool(),
+					]
 				);
 			}
 
@@ -184,7 +188,9 @@ if ( $_REQUEST['modfunc'] === 'delete'
 			WHERE ID='" . (int) $id . "';";
 
 		$delete_sql .= "DELETE FROM discipline_field_usage
-			WHERE DISCIPLINE_FIELD_ID='" . (int) $id . "';";
+			WHERE DISCIPLINE_FIELD_ID='" . (int) $id . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 
@@ -204,7 +210,11 @@ if ( $_REQUEST['modfunc'] === 'delete_usage'
 	if ( DeletePrompt( _( 'Category' ), _( 'Don\'t use' ) ) )
 	{
 		$id = issetVal( $_REQUEST['id'] );
-		DBQuery( "DELETE FROM discipline_field_usage WHERE ID='" . (int) $id . "'" );
+
+		DBQuery( "DELETE FROM discipline_field_usage
+			WHERE ID='" . (int) $id . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

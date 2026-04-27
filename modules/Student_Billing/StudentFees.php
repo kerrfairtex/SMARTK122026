@@ -37,7 +37,12 @@ if ( $_REQUEST['modfunc'] === 'save'
 			DBUpdate(
 				'billing_fees',
 				$columns,
-				[ 'STUDENT_ID' => UserStudentID(), 'ID' => (int) $id ]
+				[
+					'ID' => (int) $id,
+					'STUDENT_ID' => UserStudentID(),
+					'SCHOOL_ID' => UserSchool(),
+					'SYEAR' => UserSyear(),
+				]
 			);
 		}
 
@@ -76,17 +81,26 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	{
 		$file_attached = DBGetOne( "SELECT FILE_ATTACHED
 			FROM billing_fees
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Delete File Attached.
 		// Security: use FileDelete() instead of unlink()
 		FileDelete( $file_attached );
 
 		$delete_sql = "DELETE FROM billing_fees
-			WHERE ID='" . (int) $_REQUEST['id'] . "';";
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM billing_fees
-			WHERE WAIVED_FEE_ID='" . (int) $_REQUEST['id'] . "';";
+			WHERE WAIVED_FEE_ID='" . (int) $_REQUEST['id'] . "'
+			AND STUDENT_ID='" . UserStudentID() . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 

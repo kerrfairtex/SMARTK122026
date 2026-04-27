@@ -33,7 +33,9 @@ function MarkingPeriodDeleteSQL( $mp_id, $mp_term )
 						WHERE PARENT_ID IN
 							(SELECT MARKING_PERIOD_ID
 								FROM school_marking_periods
-								WHERE PARENT_ID='" . (int) $mp_id . "'));";
+								WHERE PARENT_ID='" . (int) $mp_id . "'))
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "';";
 
 		case 'SEM':
 
@@ -41,19 +43,25 @@ function MarkingPeriodDeleteSQL( $mp_id, $mp_term )
 				WHERE PARENT_ID IN
 					(SELECT MARKING_PERIOD_ID
 						FROM school_marking_periods
-						WHERE PARENT_ID='" . (int) $mp_id . "');";
+						WHERE PARENT_ID='" . (int) $mp_id . "')
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "';";
 
 		case 'QTR':
 
 			$delete_sql .= "DELETE FROM school_marking_periods
-				WHERE PARENT_ID='" . (int) $mp_id . "';";
+				WHERE PARENT_ID='" . (int) $mp_id . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "';";
 
 		case 'PRO':
 		break;
 	}
 
 	$delete_sql .= "DELETE FROM school_marking_periods
-		WHERE MARKING_PERIOD_ID='" . (int) $mp_id . "';";
+		WHERE MARKING_PERIOD_ID='" . (int) $mp_id . "'
+		AND SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "';";
 
 	return $delete_sql;
 }

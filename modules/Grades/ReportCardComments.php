@@ -34,7 +34,11 @@ if ( $_REQUEST['modfunc'] === 'update' )
 						DBUpdate(
 							$table,
 							$columns,
-							[ 'ID' => (int) $id ]
+							[
+								'ID' => (int) $id,
+								'SCHOOL_ID' => UserSchool(),
+								'SYEAR' => UserSyear(),
+							]
 						);
 					}
 
@@ -86,10 +90,14 @@ if ( $_REQUEST['modfunc'] === 'remove'
 		if ( DeletePrompt( _( 'Report Card Comment Category' ) ) )
 		{
 			$delete_sql = "DELETE FROM report_card_comments
-				WHERE CATEGORY_ID='" . (int) $_REQUEST['id'] . "';";
+				WHERE CATEGORY_ID='" . (int) $_REQUEST['id'] . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "';";
 
 			$delete_sql .= "DELETE FROM report_card_comment_categories
-				WHERE ID='" . (int) $_REQUEST['id'] . "';";
+				WHERE ID='" . (int) $_REQUEST['id'] . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "';";
 
 			DBQuery( $delete_sql );
 
@@ -102,7 +110,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 		if ( DeletePrompt( _( 'Report Card Comment' ) ) )
 		{
 			DBQuery( "DELETE FROM report_card_comments
-				WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+				WHERE ID='" . (int) $_REQUEST['id'] . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "'" );
 
 			// Unset modfunc & ID & redirect URL.
 			RedirectURL( [ 'modfunc', 'id' ] );
@@ -111,7 +121,9 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	elseif ( DeletePrompt( _( 'Report Card Comment' ) ) )
 	{
 		DBQuery( "DELETE FROM report_card_comments
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

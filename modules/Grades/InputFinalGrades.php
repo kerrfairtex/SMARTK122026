@@ -524,6 +524,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 						'STUDENT_ID' => (int) $student_id,
 						'COURSE_PERIOD_ID' => (int) $course_period_id,
 						'MARKING_PERIOD_ID' => (int) $_REQUEST['mp'],
+						'SYEAR' => UserSyear(),
+						'SCHOOL_ID' => UserSchool(),
 					]
 				);
 			}
@@ -685,6 +687,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 								'COURSE_PERIOD_ID' => (int) $course_period_id,
 								'MARKING_PERIOD_ID' => (int) $_REQUEST['mp'],
 								'REPORT_CARD_COMMENT_ID' => (int) $id,
+								'SYEAR' => UserSyear(),
+								'SCHOOL_ID' => UserSchool(),
 							]
 						);
 					}
@@ -694,7 +698,9 @@ if ( $_REQUEST['modfunc'] === 'save' )
 							WHERE STUDENT_ID='" . (int) $student_id . "'
 							AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
 							AND MARKING_PERIOD_ID='" . (int) $_REQUEST['mp'] . "'
-							AND REPORT_CARD_COMMENT_ID='" . (int) $id . "'" );
+							AND REPORT_CARD_COMMENT_ID='" . (int) $id . "'
+							AND SYEAR='" . UserSyear() . "'
+							AND SCHOOL_ID='" . UserSchool() . "'" );
 					}
 				}
 				elseif ( $comment )
@@ -819,6 +825,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 								'COURSE_PERIOD_ID' => (int) $course_period_id,
 								'MARKING_PERIOD_ID' => (int) $_REQUEST['mp'],
 								'REPORT_CARD_COMMENT_ID' => (int) $current_commentsB_RET[$student_id][$i]['REPORT_CARD_COMMENT_ID'],
+								'SYEAR' => UserSyear(),
+								'SCHOOL_ID' => UserSchool(),
 							]
 						);
 					}
@@ -829,7 +837,9 @@ if ( $_REQUEST['modfunc'] === 'save' )
 					WHERE STUDENT_ID='" . (int) $student_id . "'
 					AND COURSE_PERIOD_ID='" . (int) $course_period_id . "'
 					AND MARKING_PERIOD_ID='" . (int) $_REQUEST['mp'] . "'
-					AND REPORT_CARD_COMMENT_ID='" . (int) $current_commentsB_RET[$student_id][$i]['REPORT_CARD_COMMENT_ID'] . "'" );
+					AND REPORT_CARD_COMMENT_ID='" . (int) $current_commentsB_RET[$student_id][$i]['REPORT_CARD_COMMENT_ID'] . "'
+					AND SYEAR='" . UserSyear() . "'
+					AND SCHOOL_ID='" . UserSchool() . "'" );
 				}
 			}
 			elseif ( $comment['REPORT_CARD_COMMENT_ID'] )

@@ -39,7 +39,7 @@ if ( $_REQUEST['modfunc'] === 'update' )
 						DBUpdate(
 							$table,
 							$columns,
-							$where_columns
+							$where_columns + [ 'SCHOOL_ID' => UserSchool() ]
 						);
 					}
 
@@ -78,12 +78,15 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	{
 		if ( DeletePrompt( _( 'Category' ) ) )
 		{
-			DBQuery( "UPDATE food_service_menu_items
-				SET CATEGORY_ID=NULL
-				WHERE CATEGORY_ID='" . (int) $_REQUEST['category_id'] . "'" );
+			DBUpdate(
+				'food_service_menu_items',
+				[ 'CATEGORY_ID' => '' ], // NULL
+				[ 'CATEGORY_ID' => (int) $_REQUEST['category_id'], 'SCHOOL_ID' => UserSchool() ]
+			);
 
 			DBQuery( "DELETE FROM food_service_categories
-				WHERE CATEGORY_ID='" . (int) $_REQUEST['category_id'] . "'" );
+				WHERE CATEGORY_ID='" . (int) $_REQUEST['category_id'] . "'
+				AND SCHOOL_ID='" . UserSchool() . "'" );
 
 			// Unset modfunc & category ID & redirect URL.
 			RedirectURL( [ 'modfunc', 'category_id' ] );
@@ -92,13 +95,16 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	elseif ( DeletePrompt( _( 'Meal' ) ) )
 	{
 		$delete_sql = "DELETE FROM food_service_menu_items
-			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "';";
+			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM food_service_categories
-			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "';";
+			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM food_service_menus
-			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "';";
+			WHERE MENU_ID='" . (int) $_REQUEST['menu_id'] . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 

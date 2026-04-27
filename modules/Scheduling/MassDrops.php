@@ -45,6 +45,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 								[
 									'STUDENT_ID' => (int) $student_id,
 									'COURSE_PERIOD_ID' => (int) $_SESSION['MassDrops.php']['course_period_id'],
+									'SYEAR' => UserSyear(),
+									'SCHOOL_ID' => UserSchool(),
 								]
 							);
 
@@ -83,11 +85,15 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 										$delete_sql .= "DELETE FROM student_report_card_grades
 											WHERE STUDENT_ID='" . (int) $student_id . "'
-											AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "';";
+											AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "'
+											AND SYEAR='" . UserSyear() . "'
+											AND SCHOOL_ID='" . UserSchool() . "';";
 
 										$delete_sql .= "DELETE FROM student_report_card_comments
 											WHERE STUDENT_ID='" . (int) $student_id . "'
-											AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "';";
+											AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "'
+											AND SYEAR='" . UserSyear() . "'
+											AND SCHOOL_ID='" . UserSchool() . "';";
 
 										$delete_sql .= "DELETE FROM attendance_period
 											WHERE STUDENT_ID='" . (int) $student_id . "'
@@ -97,7 +103,9 @@ if ( $_REQUEST['modfunc'] === 'save' )
 									// Else simply delete schedule entry.
 									$delete_sql .= "DELETE FROM schedule
 										WHERE STUDENT_ID='" . (int) $student_id . "'
-										AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "';";
+										AND COURSE_PERIOD_ID='" . (int) $_SESSION['MassDrops.php']['course_period_id'] . "'
+										AND SYEAR='" . UserSyear() . "'
+										AND SCHOOL_ID='" . UserSchool() . "';";
 
 									DBQuery( $delete_sql );
 

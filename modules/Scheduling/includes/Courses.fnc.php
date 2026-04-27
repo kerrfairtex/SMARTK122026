@@ -80,7 +80,8 @@ function CoursePeriodTeacherConflictCheck( $teacher_id, $course_period_id )
 		{
 			$days_array = str_split( $this_school_periods[ $school_period['PERIOD_ID'] ] );
 
-			$days_array2 = str_split( $school_period['DAYS'] );
+			// Fix PHP8.5 deprecated str_split() passing null to parameter 1 of type string
+			$days_array2 = str_split( (string) $school_period['DAYS'] );
 
 			$common_days = array_intersect( $days_array, $days_array2 );
 
@@ -502,19 +503,33 @@ function CoursePeriodDeleteSQL( $course_period_id )
 
 	$delete_sql = "UPDATE course_periods
 		SET PARENT_ID=NULL
-		WHERE PARENT_ID='" . (int) $course_period_id . "';";
+		WHERE PARENT_ID='" . (int) $course_period_id . "'
+		AND SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "';";
 
 	$delete_sql .= "DELETE FROM schedule
-		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+		AND SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "';";
 
 	$delete_sql .= "DELETE FROM gradebook_assignments
-		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+		WHERE COURSE_PERIOD_ID=(SELECT COURSE_PERIOD_ID
+			FROM course_periods
+			WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "');";
 
 	$delete_sql .= "DELETE FROM course_period_school_periods
-		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+		WHERE COURSE_PERIOD_ID=(SELECT COURSE_PERIOD_ID
+			FROM course_periods
+			WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "');";
 
 	$delete_sql .= "DELETE FROM course_periods
-		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "';";
+		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "'
+		AND SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "';";
 
 	return $delete_sql;
 }
@@ -536,22 +551,36 @@ function CourseDeleteSQL( $course_id )
 		SET PARENT_ID=NULL
 		WHERE PARENT_ID IN (SELECT COURSE_PERIOD_ID
 			FROM course_periods
-			WHERE COURSE_ID='" . (int) $course_id . "');";
+			WHERE COURSE_ID='" . (int) $course_id . "')
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "';";
 
 	$delete_sql .= "DELETE FROM course_periods
-		WHERE COURSE_ID='" . (int) $course_id . "';";
+		WHERE COURSE_ID='" . (int) $course_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "';";
 
 	$delete_sql .= "DELETE FROM schedule
-		WHERE COURSE_ID='" . (int) $course_id . "';";
+		WHERE COURSE_ID='" . (int) $course_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "';";
 
 	$delete_sql .= "DELETE FROM schedule_requests
-		WHERE COURSE_ID='" . (int) $course_id . "';";
+		WHERE COURSE_ID='" . (int) $course_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "';";
 
 	$delete_sql .= "DELETE FROM gradebook_assignment_types
-		WHERE COURSE_ID='" . (int) $course_id . "';";
+		WHERE COURSE_ID=(SELECT COURSE_ID
+			FROM courses
+			WHERE COURSE_ID='" . (int) $course_id . "'
+			AND SCHOOL_ID='" . UserSchool() . "'
+			AND SYEAR='" . UserSyear() . "');";
 
 	$delete_sql .= "DELETE FROM courses
-		WHERE COURSE_ID='" . (int) $course_id . "';";
+		WHERE COURSE_ID='" . (int) $course_id . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND SYEAR='" . UserSyear() . "';";
 
 	return $delete_sql;
 }

@@ -18,7 +18,10 @@ if ( $_REQUEST['modfunc'] === 'update'
 				DBUpdate(
 					'student_enrollment_codes',
 					$columns,
-					[ 'ID' => (int) $id ]
+					[
+						'ID' => (int) $id,
+						'SYEAR' => UserSyear(),
+					]
 				);
 			}
 
@@ -47,7 +50,8 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	if ( DeletePrompt( _( 'Enrollment Code' ) ) )
 	{
 		DBQuery( "DELETE FROM student_enrollment_codes
-			WHERE ID='" . (int) $_REQUEST['id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
+			AND SYEAR='" . UserSyear() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

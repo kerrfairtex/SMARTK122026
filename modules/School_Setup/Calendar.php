@@ -242,7 +242,11 @@ if ( $_REQUEST['modfunc'] === 'create'
 					'TITLE' => $_REQUEST['title'],
 					'DEFAULT_CALENDAR' => $_REQUEST['default'],
 				],
-				[ 'CALENDAR_ID' => (int) $calendar_id ]
+				[
+					'CALENDAR_ID' => (int) $calendar_id,
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
+				]
 			);
 		}
 		// Create
@@ -297,6 +301,8 @@ if ( $_REQUEST['modfunc'] === 'create'
 				// @since 10.0 SQL use DAYOFWEEK() for MySQL or cast(extract(DOW)+1 AS int) for PostrgeSQL
 				DBQuery( "DELETE FROM attendance_calendar
 					WHERE CALENDAR_ID='" . (int) $calendar_id . "'
+					AND SCHOOL_ID='" . UserSchool() . "'
+					AND SYEAR='" . UserSyear() . "'
 					AND (SCHOOL_DATE NOT BETWEEN '" . $date_min . "' AND '" . $date_max . "'" .
 					( $weekdays_list ?
 						" OR " . ( $DatabaseType === 'mysql' ?
@@ -323,7 +329,9 @@ if ( $_REQUEST['modfunc'] === 'create'
 				if ( ! empty( $_REQUEST['calendar_id'] ) )
 				{
 					DBQuery( "DELETE FROM attendance_calendar
-						WHERE CALENDAR_ID='" . (int) $calendar_id . "'" );
+						WHERE CALENDAR_ID='" . (int) $calendar_id . "'
+						AND SCHOOL_ID='" . UserSchool() . "'
+						AND SYEAR='" . UserSyear() . "'" );
 				}
 
 				// Insert Days.
@@ -509,7 +517,11 @@ if ( $_REQUEST['modfunc'] === 'detail_save'
 			DBUpdate(
 				'calendar_events',
 				$_REQUEST['values'],
-				[ 'ID' => (int) $_REQUEST['event_id'] ]
+				[
+					'ID' => (int) $_REQUEST['event_id'],
+					'SYEAR' => UserSyear(),
+					'SCHOOL_ID' => UserSchool(),
+				]
 			);
 
 			// Hook.

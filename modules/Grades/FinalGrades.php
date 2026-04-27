@@ -12,16 +12,18 @@ if ( $_REQUEST['modfunc'] === 'delete'
 	if ( DeletePrompt( _( 'Final Grade' ) ) )
 	{
 		$delete_sql = "DELETE FROM student_report_card_grades
-			WHERE SYEAR='" . UserSyear() . "'
-			AND STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
+			WHERE STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
 			AND COURSE_PERIOD_ID='" . (int) $_REQUEST['course_period_id'] . "'
-			AND MARKING_PERIOD_ID='" . (int) $_REQUEST['marking_period_id'] . "';";
+			AND MARKING_PERIOD_ID='" . (int) $_REQUEST['marking_period_id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM student_report_card_comments
-			WHERE SYEAR='" . UserSyear() . "'
-			AND STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
+			WHERE STUDENT_ID='" . (int) $_REQUEST['student_id'] . "'
 			AND COURSE_PERIOD_ID='" . (int) $_REQUEST['course_period_id'] . "'
-			AND MARKING_PERIOD_ID='" . (int) $_REQUEST['marking_period_id'] . "';";
+			AND MARKING_PERIOD_ID='" . (int) $_REQUEST['marking_period_id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );
 

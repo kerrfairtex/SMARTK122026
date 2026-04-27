@@ -1,9 +1,10 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
-Changes in 12.8.1
------------------
+Changes in 12.9
+---------------
 - Multilingual course title: use ParseMLField() in StudentList.php
+- Fix PHP warning undefined index when school was deleted in School.php & Schools.php
 
 Changes in 12.8
 ---------------

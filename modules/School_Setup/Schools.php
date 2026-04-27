@@ -316,7 +316,8 @@ if ( ! $_REQUEST['modfunc'] )
 		WHERE ID='" . UserSchool() . "'
 		AND SYEAR='" . UserSyear() . "'" );
 
-	$value = $custom_RET[1];
+	// Fix PHP warning undefined index when school was deleted
+	$value = empty( $custom_RET[1] ) ? [] : $custom_RET[1];
 
 	foreach ( (array) $fields_RET as $field )
 	{

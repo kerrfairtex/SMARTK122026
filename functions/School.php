@@ -60,7 +60,8 @@ function SchoolInfo( $field = '' )
 
 	if ( $field )
 	{
-		return $_ROSARIO['SchoolData'][ (string) $field ];
+		// Fix PHP warning undefined index when school was deleted
+		return issetVal( $_ROSARIO['SchoolData'][ (string) $field ] );
 	}
 
 	return $_ROSARIO['SchoolData'];

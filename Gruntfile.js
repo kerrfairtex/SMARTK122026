@@ -31,12 +31,10 @@ module.exports = function(grunt) {
 				},
 			},
 			livereload: {
-				// Reload page when css, js, images or php files change.
+				// Reload page when css or js files change.
 				files: [
 					'assets/themes/**/css/*.css',
-					'assets/js/**/*.js',
-					'assets/**/*.{png,jpg,jpeg,gif,webp,svg}',
-					'**/*.php'
+					'assets/js/**/*.js'
 				]
 			},
 		},

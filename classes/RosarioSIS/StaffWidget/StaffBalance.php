@@ -35,19 +35,16 @@ class StaffBalance implements \RosarioSIS\StaffWidget
 			$_REQUEST['balance_low'] = $temp;
 		}
 
-		// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
-		$extra['FROM'] .= ' LEFT JOIN (SELECT STAFF_ID,SYEAR,SUM(AMOUNT) AS TOTAL
-			FROM accounting_salaries
-			GROUP BY STAFF_ID,SYEAR) f ON f.STAFF_ID=s.STAFF_ID
-			AND f.SYEAR=s.SYEAR
-		LEFT JOIN (SELECT STAFF_ID,SYEAR,SUM(AMOUNT) AS TOTAL
-			FROM accounting_payments
-			GROUP BY STAFF_ID,SYEAR) p ON p.STAFF_ID=s.STAFF_ID
-			AND p.SYEAR=s.SYEAR';
-
-		$extra['WHERE'] .= " AND COALESCE(p.TOTAL,0)-COALESCE(f.TOTAL,0)
+		$extra['WHERE'] .= " AND (coalesce((SELECT sum(p.AMOUNT)
+				FROM accounting_payments p
+				WHERE p.STAFF_ID=s.STAFF_ID
+				AND p.SYEAR=s.SYEAR),0)
+			-coalesce((SELECT sum(f.AMOUNT)
+				FROM accounting_salaries f
+				WHERE f.STAFF_ID=s.STAFF_ID
+				AND f.SYEAR=s.SYEAR),0))
 			BETWEEN '" . $_REQUEST['balance_low'] . "'
-			AND '" . $_REQUEST['balance_high'] . "'";
+			AND '" . $_REQUEST['balance_high'] . "' ";
 
 		if ( ! $extra['NoSearchTerms'] )
 		{

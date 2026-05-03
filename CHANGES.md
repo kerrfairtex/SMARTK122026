@@ -7,7 +7,7 @@ Changes in 12.9
 - Fix PHP warning undefined index when school was deleted in School.php & Schools.php
 - Security fix Request Forgery: remove modfunc= in links in Modules.php & MarkDownHTML.fnc.php
 - Performance: do not sort `functions/*.php` files in Warehouse.php
-- SQL performance: replace subqueries with LEFT JOINs in StaffWidget/StaffBalance.php, Widget/Absences.php, Widget/Balance.php, Widget/CpAbsences.php, StaffBalances.php, StudentSummary.php, StudentBalances.php & Export.php
+- SQL performance: replace subqueries with LEFT JOINs in StaffBalances.php, StudentSummary.php, StudentBalances.php & Export.php
 - Use Select2 input when more than 12 Grade Levels in GetStuList.fnc.php & Search.fnc.php
 - Fix Format Credit Earned, display 0.33 instead of 0.333333333333333 in Transcripts.fnc.php
 - Security fix GitHub issue 301 IDOR in save/delete operations, program wide, thanks to @lighthousekeeper1212

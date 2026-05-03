@@ -55,16 +55,13 @@ class CpAbsences implements \RosarioSIS\Widget
 			" BETWEEN '" . $_REQUEST['cp_absences_low'] . "'
 				AND '" . $_REQUEST['cp_absences_high'] . "'";
 
-		// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
-		$extra['FROM'] .= " LEFT JOIN (SELECT ap.STUDENT_ID,count(*) AS TOTAL
+		$extra['WHERE'] .= " AND (SELECT count(*)
 			FROM attendance_period ap,attendance_codes ac
 			WHERE ac.ID=ap.ATTENDANCE_CODE
 			AND ac.STATE_CODE='A'
 			AND ap.COURSE_PERIOD_ID='" . (int) $_REQUEST['w_course_period_id'] . "'" .
 			$term_sql .
-			" GROUP BY ap.STUDENT_ID) ap ON ap.STUDENT_ID=ssm.STUDENT_ID";
-
-		$extra['WHERE'] .= " AND COALESCE(ap.TOTAL,0)" .
+			" AND ap.STUDENT_ID=ssm.STUDENT_ID)" .
 			$absences_sql;
 
 		switch ( $_REQUEST['cp_absences_term'] )

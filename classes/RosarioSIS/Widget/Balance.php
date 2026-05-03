@@ -34,19 +34,17 @@ class Balance implements \RosarioSIS\Widget
 			$_REQUEST['balance_low'] = $temp;
 		}
 
-		// @since 12.9 SQL performance: replace subqueries with LEFT JOINs
-		$extra['FROM'] .= ' LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
-			FROM billing_fees
-			GROUP BY STUDENT_ID,SYEAR) f ON f.STUDENT_ID=ssm.STUDENT_ID
-			AND f.SYEAR=ssm.SYEAR
-		LEFT JOIN (SELECT STUDENT_ID,SYEAR,SUM(AMOUNT) AS TOTAL
-			FROM billing_payments
-			GROUP BY STUDENT_ID,SYEAR) p ON p.STUDENT_ID=ssm.STUDENT_ID
-			AND p.SYEAR=ssm.SYEAR';
-
-		$extra['WHERE'] .= " AND COALESCE(p.TOTAL,0)-COALESCE(f.TOTAL,0)
+		$extra['WHERE'] .= " AND (
+			coalesce((SELECT sum(p.AMOUNT)
+				FROM billing_payments p
+				WHERE p.STUDENT_ID=ssm.STUDENT_ID
+				AND p.SYEAR=ssm.SYEAR),0) -
+			coalesce((SELECT sum(f.AMOUNT)
+				FROM billing_fees f
+				WHERE f.STUDENT_ID=ssm.STUDENT_ID
+				AND f.SYEAR=ssm.SYEAR),0))
 			BETWEEN '" . $_REQUEST['balance_low'] . "'
-			AND '" . $_REQUEST['balance_high'] . "'";
+			AND '" . $_REQUEST['balance_high'] . "' ";
 
 		if ( ! $extra['NoSearchTerms'] )
 		{

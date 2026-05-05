@@ -13,6 +13,9 @@ if ( empty( $_REQUEST['marking_period_id'] ) )
 	$_REQUEST['mp_term'] = 'FY';
 }
 
+// Fix PHP warning undefined variable: title
+$title = '';
+
 if ( $_REQUEST['marking_period_id'] === 'new' )
 {
 	switch ( $_REQUEST['mp_term'] )
@@ -112,13 +115,11 @@ if ( ! empty( $_POST['tables'] )
 
 		if ( ! empty( $posting_RET ) )
 		{
-			$error[] = sprintf(
+			// @since 12.9 Change "only 1 grading period open at any given time" check from error to warning
+			$warning[] = sprintf(
 				_( 'The grade posting dates you specified for this marking period overlap with those of "%s".' ),
 				GetMP( $posting_RET[1]['MARKING_PERIOD_ID'] )
-			) . ' ' .
-			_( 'Only one grade posting period can be open at any time.' );
-
-			continue;
+			);
 		}
 
 		// UPDATE

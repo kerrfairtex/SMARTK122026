@@ -547,14 +547,13 @@ function Search( $type, $extra = null )
 				// Numeric.
 				foreach ( (array) $category['numeric'] as $col )
 				{
-					echo '<tr class="' . AttrEscape( $TR_classes ) . '"><td>' . $col['TITLE'] . '</td><td>
-					<span class="sizep2">&ge;</span>
-					<input type="text" name="' . AttrEscape( 'cust_begin[' . $col['COLUMN_NAME'] . ']' ) . '" size="3" maxlength="11">
-					<span class="sizep2">&le;</span>
-					<input type="text" name="' . AttrEscape( 'cust_end[' . $col['COLUMN_NAME'] . ']' ) . '" size="3" maxlength="11">
-					<label><input type="checkbox" name="' . AttrEscape( 'cust_null[' . $col['COLUMN_NAME'] . ']' ) . '"> ' . _( 'No Value' ) .
-					'</label>&nbsp;
-					</td></tr>';
+					echo '<tr class="' . AttrEscape( $TR_classes ) . '"><td>' . $col['TITLE'] . '<br>
+					<label><input type="checkbox" name="' . AttrEscape( 'cust_null[' . $col['COLUMN_NAME'] . ']' ) . '"> ' .
+					_( 'No Value' ) . '</label></td><td>
+					<label><span class="sizep2">&ge;</span>&nbsp;
+					<input type="number" name="' . AttrEscape( 'cust_begin[' . $col['COLUMN_NAME'] . ']' ) . '" min="-999999999999999999" max="999999999999999999"></label>&nbsp;
+					<label><span class="sizep2">&le;</span>&nbsp;
+					<input type="number" name="' . AttrEscape( 'cust_end[' . $col['COLUMN_NAME'] . ']' ) . '" min="-999999999999999999" max="999999999999999999"></label></td></tr>';
 				}
 
 				// Merge select, autos, edits, exports & codeds
@@ -656,18 +655,18 @@ function Search( $type, $extra = null )
 				foreach ( (array) $category['date'] as $col )
 				{
 					echo '<tr class="' . AttrEscape( $TR_classes ) . '"><td>' . $col['TITLE'] . '<br>
-					<label>&nbsp;<input type="checkbox" name="' . AttrEscape( 'cust_null[' . $col['COLUMN_NAME'] . ']' ) . '"> ' .
+					<label><input type="checkbox" name="' . AttrEscape( 'cust_null[' . $col['COLUMN_NAME'] . ']' ) . '"> ' .
 					_( 'No Value' ) . '</label>
 					</td>
 					<td><table class="cellspacing-0 valign-middle">
-					<tr><td><span class="sizep2">&ge;</span>&nbsp;</td>
+					<tr><td><span class="sizep2">&ge;</span></td>
 					<td>' . PrepareDate(
 						'',
 						'_cust_begin[' . $col['COLUMN_NAME'] . ']',
 						true,
 						[ 'short' => true ]
 					) . '</td></tr>
-					<tr><td><span class="sizep2">&le;</span>&nbsp;</td>
+					<tr><td><span class="sizep2">&le;</span></td>
 					<td>' . PrepareDate(
 						'',
 						'_cust_end[' . $col['COLUMN_NAME'] . ']',
@@ -904,7 +903,7 @@ function SearchField( $field, $type = 'student', $extra = [] )
 				$_ROSARIO['SearchTerms'] .= '<br />';
 			}
 
-			return ' AND ' . $sql_col . " " . $part['operator'] . " '" . $value . "' ";
+			return ' AND ' . $sql_col . $part['operator'] . "'" . $value . "'";
 
 		// Export Pull-Down.
 		case 'exports':

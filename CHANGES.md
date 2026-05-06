@@ -14,6 +14,7 @@ Changes in 12.9
 - Change "only 1 grading period open at any given time" check from error to warning in MarkingPeriods.php
 - CSS theme FlatSIS fix "Prevent body from scrolling when submenu open" in stylesheet.css
 - CSP Do not save violations triggered by "sandbox eval code" in SaveReport.php
+- First login, prefill form inputs with default "admin" username & password in index.php
 
 Changes in 12.8
 ---------------

@@ -507,12 +507,26 @@ if ( empty( $_SESSION['STAFF_ID'] )
 			</td>
 		</tr>
 
-	<?php endif; ?>
+	<?php endif;
+
+	$default_username = $default_password = '';
+
+	if ( Config( 'LOGIN' ) === 'No'
+		&& DBGetOne( "SELECT 1 FROM staff
+			WHERE USERNAME='admin'
+			AND PASSWORD='$6\$dc51290a001671c6$97VSmw.Qu9sL6vpctFh62/YIbbR6b3DstJJxPXal2OndrtFszsxmVhdQaV2mJvb6Z38sPACXqDDQ7/uquwadd.'" ) )
+	{
+		// @since 12.9 First login, prefill form inputs with default "admin" username & password
+		$default_username = $default_password = 'admin';
+	}
+	?>
 
 		<tr>
 			<td>
 				<label>
-					<input type="text" name="USERNAME" id="USERNAME" size="20" maxlength="100" required autofocus />
+					<input type="text" name="USERNAME" id="USERNAME" value="<?php
+						echo AttrEscape( $default_username );
+					?>" size="20" maxlength="100" required <?php echo $default_username ? '' : 'autofocus'; ?> />
 					<?php echo _( 'Username' ); ?>
 				</label>
 			</td>
@@ -520,7 +534,9 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		<tr>
 			<td>
 				<label>
-					<input type="password" name="PASSWORD" id="PASSWORD" size="20" maxlength="42" required />
+					<input type="password" name="PASSWORD" id="PASSWORD" value="<?php
+						echo AttrEscape( $default_password );
+					?>" size="20" maxlength="42" required />
 					<?php echo _( 'Password' ); ?>
 				</label>
 				<div class="align-right">

@@ -15,6 +15,7 @@ Changes in 12.9
 - CSS theme FlatSIS fix "Prevent body from scrolling when submenu open" in stylesheet.css
 - CSP Do not save violations triggered by "sandbox eval code" in SaveReport.php
 - First login, prefill form inputs with default "admin" username & password in index.php
+- HTML use number type for Days Absent and Course Period Absences widgets inputs in Absences.php & CpAbsences.php
 
 Changes in 12.8
 ---------------

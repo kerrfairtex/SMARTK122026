@@ -90,9 +90,9 @@ class Absences implements \RosarioSIS\Widget
 			GetMP( UserMP(), 'SHORT_NAME' ) .
 		'</label>
 		</td><td><label>' . _( 'Between' ) .
-		' <input type="text" name="absences_low" size="3" maxlength="3"></label>' .
+		' <input type="number" name="absences_low" min="0" max="999" step="0.5"></label>' .
 		' <label>&amp; ' .
-		'<input type="text" name="absences_high" size="3" maxlength="3"><label>
+		'<input type="number" name="absences_high" min="0" max="999" step="0.5"><label>
 		</td></tr>';
 	}
 }

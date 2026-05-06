@@ -116,9 +116,9 @@ class CpAbsences implements \RosarioSIS\Widget
 			GetMP( UserMP(), 'SHORT_NAME' ) .
 		'</label>
 		</td><td><label>' . _( 'Between' ) .
-		' <input type="text" name="cp_absences_low" size="3" maxlength="3"></label>' .
+		' <input type="number" name="cp_absences_low" min="0" max="999" step="1"></label>' .
 		' <label>&amp;' .
-		' <input type="text" name="cp_absences_high" size="3" maxlength="3"></label>
+		' <input type="number" name="cp_absences_high" min="0" max="999" step="1"></label>
 		</td></tr>';
 	}
 }

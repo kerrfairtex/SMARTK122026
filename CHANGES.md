@@ -18,6 +18,10 @@ Changes in 12.9
 - HTML use number type for Days Absent and Course Period Absences widgets inputs in Absences.php & CpAbsences.php
 - HTML use number type for custom Number field inputs in Search.fnc.php
 
+Changes in 12.8.1
+-----------------
+- Fix Advanced Search "No Value" for custom date and number fields in CustomFields.fnc.php
+
 Changes in 12.8
 ---------------
 - Fix PHP warning undefined array key when Meal Item Short Name was edited in MenuReports.php

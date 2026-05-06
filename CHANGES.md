@@ -3,7 +3,6 @@
 
 Changes in 12.9
 ---------------
-- Multilingual course title: use ParseMLField() in StudentList.php
 - Fix PHP warning undefined index when school was deleted in School.php & Schools.php
 - Security fix Request Forgery: remove modfunc= in links in Modules.php & MarkDownHTML.fnc.php
 - Performance: do not sort `functions/*.php` files in Warehouse.php
@@ -21,6 +20,8 @@ Changes in 12.9
 Changes in 12.8.1
 -----------------
 - Fix Advanced Search "No Value" for custom date and number fields in CustomFields.fnc.php
+- Fix SQL error escape CSP string in Content_Security_Policy/includes/common.fnc.php
+- Multilingual course title: use ParseMLField() in StudentList.php
 
 Changes in 12.8
 ---------------

@@ -30,6 +30,8 @@ $source_file_skip = [
 	'chrome-extension',
 	'safari-extension',
 	'user-script',
+	// @link https://bugzilla.mozilla.org/show_bug.cgi?id=1707107
+	'sandbox eval code',
 ];
 
 if ( isset( $csp_report['source-file'] )

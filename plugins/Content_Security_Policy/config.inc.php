@@ -174,7 +174,10 @@ if ( empty( $_REQUEST['save'] ) )
 			$reports_RET,
 			$columns,
 			'Report',
-			'Reports'
+			'Reports',
+			[],
+			[],
+			[ 'valign-middle' => true ]
 		);
 
 		echo '</td></tr></table>';

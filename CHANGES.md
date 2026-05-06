@@ -13,6 +13,7 @@ Changes in 12.9
 - Security fix GitHub issue 301 IDOR in save/delete operations, program wide, thanks to @lighthousekeeper1212
 - Change "only 1 grading period open at any given time" check from error to warning in MarkingPeriods.php
 - CSS theme FlatSIS fix "Prevent body from scrolling when submenu open" in stylesheet.css
+- CSP Do not save violations triggered by "sandbox eval code" in SaveReport.php
 
 Changes in 12.8
 ---------------

@@ -236,7 +236,7 @@
 		margin-left: -0.5%;
 	}
 	#cboxLoadedContent {
-		padding: 8px !important;
+		padding: 8px 12px !important;
 	}
 	.rt select[name^="month_"] {
 		max-width: 60px;

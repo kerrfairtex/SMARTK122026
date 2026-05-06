@@ -12,6 +12,7 @@ Changes in 12.9
 - Fix Format Credit Earned, display 0.33 instead of 0.333333333333333 in Transcripts.fnc.php
 - Security fix GitHub issue 301 IDOR in save/delete operations, program wide, thanks to @lighthousekeeper1212
 - Change "only 1 grading period open at any given time" check from error to warning in MarkingPeriods.php
+- CSS theme FlatSIS fix "Prevent body from scrolling when submenu open" in stylesheet.css
 
 Changes in 12.8
 ---------------

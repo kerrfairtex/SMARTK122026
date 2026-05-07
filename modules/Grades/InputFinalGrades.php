@@ -1178,42 +1178,40 @@ if ( ! isset( $_REQUEST['_ROSARIO_PDF'] ) )
 			'&modfunc=clearall&tab_id=' . $_REQUEST['tab_id'] . '&mp=' . $_REQUEST['mp'] ) . '">' .
 			_( 'Clear All' ) . '</a>';
 
-		if ( $_REQUEST['tab_id'] === '-1' )
+		// @since 12.9 Fix show "Use Grade Scale Comments" checkbox for every tab
+		$grade_scale_has_comments = DBGetOne( "SELECT 1
+			FROM report_card_grades rcg,report_card_grade_scales gs
+			WHERE rcg.GRADE_SCALE_ID=gs.ID
+			AND rcg.SYEAR='" . UserSyear() . "'
+			AND rcg.SCHOOL_ID='" . UserSchool() . "'
+			AND rcg.GRADE_SCALE_ID='" . (int) $grade_scale_id . "'
+			AND rcg.COMMENT IS NOT NULL" );
+
+		if ( $grade_scale_has_comments )
 		{
-			$grade_scale_has_comments = DBGetOne( "SELECT 1
-				FROM report_card_grades rcg,report_card_grade_scales gs
-				WHERE rcg.GRADE_SCALE_ID=gs.ID
-				AND rcg.SYEAR='" . UserSyear() . "'
-				AND rcg.SCHOOL_ID='" . UserSchool() . "'
-				AND rcg.GRADE_SCALE_ID='" . (int) $grade_scale_id . "'
-				AND rcg.COMMENT IS NOT NULL" );
+			$grade_scale_title = DBGetOne( "SELECT TITLE
+				FROM report_card_grade_scales
+				WHERE ID='" . (int) $grade_scale_id . "'" );
 
-			if ( $grade_scale_has_comments )
+			if ( AllowUse( 'Grades/ReportCardGrades.php' ) )
 			{
-				$grade_scale_title = DBGetOne( "SELECT TITLE
-					FROM report_card_grade_scales
-					WHERE ID='" . (int) $grade_scale_id . "'" );
+				$grade_scale_link = 'Modules.php?modname=Grades/ReportCardGrades.php&tab_id=' . $grade_scale_id;
 
-				if ( AllowUse( 'Grades/ReportCardGrades.php' ) )
-				{
-					$grade_scale_link = 'Modules.php?modname=Grades/ReportCardGrades.php&tab_id=' . $grade_scale_id;
-
-					$grade_scale_title = '<a href="' . URLEscape( $grade_scale_link ) . '">' .
-						$grade_scale_title . '</a>';
-				}
-
-				// @since 11.4 Add "Use Grade Scale Comments" option.
-				$ugsc_header = CheckboxInput(
-					issetVal( $_REQUEST['use_grade_scale_comments'], '' ),
-					'use_grade_scale_comments',
-					sprintf(
-						_( 'Use the "%s" Grade Scale Comments' ),
-						$grade_scale_title
-					),
-					'',
-					true
-				);
+				$grade_scale_title = '<a href="' . URLEscape( $grade_scale_link ) . '">' .
+					$grade_scale_title . '</a>';
 			}
+
+			// @since 11.4 Add "Use Grade Scale Comments" option.
+			$ugsc_header = CheckboxInput(
+				issetVal( $_REQUEST['use_grade_scale_comments'], '' ),
+				'use_grade_scale_comments',
+				sprintf(
+					_( 'Use the "%s" Grade Scale Comments' ),
+					$grade_scale_title
+				),
+				'',
+				true
+			);
 		}
 	}
 

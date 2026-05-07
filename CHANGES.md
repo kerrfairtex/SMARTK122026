@@ -15,6 +15,7 @@ Changes in 12.9
 - First login, prefill form inputs with default "admin" username & password in index.php
 - HTML use number type for Days Absent and Course Period Absences widgets inputs in Absences.php & CpAbsences.php
 - HTML use number type for custom Number field inputs in Search.fnc.php
+- Fix show "Use Grade Scale Comments" checkbox for every tab in InputFinalGrades.php
 
 Changes in 12.8.1
 -----------------

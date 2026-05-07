@@ -158,7 +158,7 @@ if ( empty( $_REQUEST['school_period'] ) )
 }
 else
 {
-	$period_title = $periods_RET[$_REQUEST['school_period']][1]['TITLE'];
+	$period_title = issetVal( $periods_RET[$_REQUEST['school_period']][1]['TITLE'], '' );
 
 	foreach ( (array) $RET as $staff_id => $periods )
 	{

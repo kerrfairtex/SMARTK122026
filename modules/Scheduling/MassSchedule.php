@@ -174,8 +174,13 @@ if ( ! $_REQUEST['modfunc'] )
 		$popup_url = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=choose_course';
 
 		// @since 12.0 Use colorBox instead of popup window
-		echo '</div><a href="' . URLEscape( $popup_url ) . '" class="colorbox">' .
-			_( 'Choose a Course' ) . '</a></td></tr>';
+		// @since 12.9 Use button() with "+" icon instead of text link
+		echo '</div>' . button(
+			'add',
+			_( 'Choose a Course' ),
+			URLEscape( $popup_url ),
+			'colorbox'
+		) . '</td></tr>';
 
 		echo '<tr><td><br />' . DateInput(
 			DBDate(),

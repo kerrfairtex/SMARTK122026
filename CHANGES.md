@@ -16,6 +16,7 @@ Changes in 12.9
 - HTML use number type for Days Absent and Course Period Absences widgets inputs in Absences.php & CpAbsences.php
 - HTML use number type for custom Number field inputs in Search.fnc.php
 - Fix show "Use Grade Scale Comments" checkbox for every tab in InputFinalGrades.php
+- Use button() with "+" icon instead of text link in MassDrops.php, MassRequests.php & MassSchedule.php
 
 Changes in 12.8.1
 -----------------

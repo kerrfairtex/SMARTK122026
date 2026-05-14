@@ -127,7 +127,9 @@ function CustomFields( $location, $type = 'student', $extra = [] )
 	// Begin Dates / Number.
 	foreach ( (array) $cust_begin as $column => $value )
 	{
-		if ( ! isset( $fields[ $column ] ) )
+		if ( ! isset( $fields[ $column ] )
+			// Skip begin dates / number if "No Value" checked
+			|| isset( $_REQUEST['cust_null'][ $column ] ) )
 		{
 			continue;
 		}
@@ -149,7 +151,9 @@ function CustomFields( $location, $type = 'student', $extra = [] )
 	// End Dates / Number.
 	foreach ( (array) $cust_end as $column => $value )
 	{
-		if ( ! isset( $fields[ $column ] ) )
+		if ( ! isset( $fields[ $column ] )
+			// Skip end dates / number if "No Value" checked
+			|| isset( $_REQUEST['cust_null'][ $column ] ) )
 		{
 			continue;
 		}

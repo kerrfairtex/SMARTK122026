@@ -17,6 +17,7 @@ Changes in 12.9
 - HTML use number type for custom Number field inputs in Search.fnc.php
 - Fix show "Use Grade Scale Comments" checkbox for every tab in InputFinalGrades.php
 - Use button() with "+" icon instead of text link in MassDrops.php, MassRequests.php & MassSchedule.php
+- Fix skip begin / end dates / number if "No Value" checked in CustomFields.fnc.php
 
 Changes in 12.8.1
 -----------------

@@ -18,6 +18,7 @@ Changes in 12.9
 - Fix show "Use Grade Scale Comments" checkbox for every tab in InputFinalGrades.php
 - Use button() with "+" icon instead of text link in MassDrops.php, MassRequests.php & MassSchedule.php
 - Fix skip begin / end dates / number if "No Value" checked in CustomFields.fnc.php
+- Security fix #372 forbid path traversal sequences in FileUpload.fnc.php, thanks to @kazisabu
 
 Changes in 12.8.1
 -----------------

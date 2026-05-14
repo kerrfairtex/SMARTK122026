@@ -978,7 +978,7 @@ function FileExtensionWhiteList() {
  * Use instead of directly using unlink()
  * Check if file extension is white listed
  * Check for Hacking Attempt:
- * file is outside RosarioSIS, not in one of the global path variables & not in system temp dir
+ * path traversal or file is outside the global path variables & not in system temp dir
  *
  * @since 12.0
  *
@@ -989,8 +989,7 @@ function FileExtensionWhiteList() {
  */
 function FileDelete( $file_path, $ext_white_list = [] )
 {
-	global $RosarioPath,
-		$StudentPicturesPath,
+	global $StudentPicturesPath,
 		$UserPicturesPath,
 		$PortalNotesFilesPath,
 		$AssignmentsFilesPath,
@@ -1002,6 +1001,15 @@ function FileDelete( $file_path, $ext_white_list = [] )
 		|| ! is_writable( dirname( $file_path ) ) )
 	{
 		return false;
+	}
+
+	if ( strpos( $file_path, '../' ) !== false
+		|| strpos( $file_path, '..\\' ) !== false )
+	{
+		// Security fix #372 forbid path traversal sequences
+		require_once 'ProgramFunctions/HackingLog.fnc.php';
+
+		HackingLog();
 	}
 
 	if ( ! $ext_white_list )
@@ -1018,10 +1026,8 @@ function FileDelete( $file_path, $ext_white_list = [] )
 
 	$real_path = realpath( $file_path );
 
-	// Check if file is inside RosarioSIS
-	if ( strpos( $real_path, realpath( $RosarioPath ) ) !== 0
-		// Check if file is in tmp dir
-		&& strpos( $real_path, sys_get_temp_dir() ) !== 0
+	if ( // Check if file is in tmp dir
+		strpos( $real_path, sys_get_temp_dir() ) !== 0
 		// Check if file is inside one of the file paths
 		&& strpos( $real_path, realpath( $FileUploadsPath ) ) !== 0
 		&& strpos( $real_path, realpath( $StudentPicturesPath ) ) !== 0

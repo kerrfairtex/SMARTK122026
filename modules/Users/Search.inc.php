@@ -21,7 +21,7 @@ if ( empty( $_REQUEST['search_modfunc'] ) )
 			);
 
 			echo '<form name="search" id="search" action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
-				'&modfunc=' . $_REQUEST['modfunc'] .
+				( $_REQUEST['modfunc'] ? '&modfunc=' . $_REQUEST['modfunc'] : '' ) .
 				'&search_modfunc=list' .
 				'&advanced=' . issetVal( $_REQUEST['advanced'], '' ) .
 				issetVal( $extra['action'], '' )  ) . '" method="GET">';

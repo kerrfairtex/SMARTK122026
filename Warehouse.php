@@ -324,7 +324,9 @@ if ( ! empty( $_REQUEST['modfunc'] )
 		|| $_REQUEST['token'] !== $_SESSION['token'] ) )
 {
 	// Security fix #371 check CSRF token for modfunc requests
-	(new RosarioSIS\Functions\Hacking)->log();
+	require_once 'ProgramFunctions/HackingLog.fnc.php';
+
+	HackingLog();
 }
 
 /**

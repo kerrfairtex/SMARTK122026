@@ -138,6 +138,7 @@ function PreparePHP_SELF( $tmp_REQUEST = [], $remove = [], $add = [] )
  * @since 11.2 Add $add_post argument, POST parameters to add to the URL (optional)
  * @since 11.4 Add XRedirectUrl JS global var for soft redirection when not an AJAX request
  * @since 12.5 CSP remove unsafe-inline Javascript: use #x_redirect_url value instead of XRedirectUrl JS global var
+ * @since 12.9 Security fix #371 remove token param from URL
  *
  * @example RedirectURL( [ 'modfunc', 'id' ] );
  *
@@ -170,6 +171,15 @@ function RedirectURL( $remove, $add_post = [] )
 		}
 
 		$_REQUEST[ $request_key ] = false;
+
+		if ( $request_key === 'modfunc'
+			&& isset( $_REQUEST['token'] ) )
+		{
+			// Security fix #371 remove CSRF token param from URL
+			$_REQUEST['token'] = false;
+
+			$remove_all[] = 'token';
+		}
 
 		$remove_all[] = $request_key;
 	}

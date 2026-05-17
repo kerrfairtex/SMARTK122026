@@ -296,9 +296,14 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	 * Redirect to Modules.php URL after login.
 	 *
 	 * @since 3.8
+	 * @since 12.9 Remove modfunc & token params from redirect URL
 	 */
+	$get = $_GET;
+
+	unset( $get['modfunc'], $get['token'] );
+
 	$redirect_to = basename( $_SERVER['SCRIPT_NAME'] ) === 'Modules.php' ?
-		'&redirect_to=' . urlencode( $_SERVER['QUERY_STRING'] ) : '';
+		'&redirect_to=' . urlencode( http_build_query( $get ) ) : '';
 
 	// Redirection is done in HTML in case current request is AJAX.
 	$redirect_url = 'index.php?modfunc=logout' . $redirect_to . '&token=' . $_SESSION['token'];
@@ -311,6 +316,16 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	</html>
 	<?php
 	exit;
+}
+
+if ( ! empty( $_REQUEST['modfunc'] )
+	&& ( empty( $_REQUEST['token'] )
+		|| $_REQUEST['token'] !== $_SESSION['token'] ) )
+{
+	// Security fix #371 check CSRF token for modfunc requests
+	require_once 'ProgramFunctions/HackingLog.fnc.php';
+
+	HackingLog();
 }
 
 /**
@@ -917,6 +932,7 @@ function isAJAX()
  *
  * @global $ETagCache ETag cache system.
  * @since  3.1
+ * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
  *
  * @param  string  $mode Mode: start|stop. Optional, defaults to ''.
  * @return boolean True if ETagCache activated, else false.
@@ -926,11 +942,6 @@ function ETagCache( $mode = '' )
 	global $ETagCache;
 
 	static $ob_started = false;
-
-	if ( ! $ETagCache )
-	{
-		return false;
-	}
 
 	if ( $mode === 'start'
 		&& ! $ob_started )
@@ -943,6 +954,23 @@ function ETagCache( $mode = '' )
 	{
 		// Stop & get buffer buffer (to generate ETag).
 		$etag_buffer = ob_get_clean();
+
+		// Add CSRF token to links/forms containing `modfunc=`
+		$etag_buffer = str_replace(
+			[ '&modfunc=', '?modfunc=' ],
+			[
+				'&token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
+				'?token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
+			],
+			$etag_buffer
+		);
+
+		if ( ! $ETagCache )
+		{
+			echo $etag_buffer;
+
+			return false;
+		}
 
 		/**
 		 * Generate ETag
@@ -986,7 +1014,7 @@ function ETagCache( $mode = '' )
 		}
 	}
 
-	return true;
+	return $ETagCache;
 }
 
 

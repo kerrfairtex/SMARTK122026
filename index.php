@@ -24,13 +24,9 @@ if ( isset( $_REQUEST['modfunc'] )
 			'&redirect_to=' . urlencode( $_REQUEST['redirect_to'] ) :
 			'' ) ) );
 
-	if ( ! empty( $_REQUEST['token'] )
-		&& $_SESSION['token'] === $_REQUEST['token'] )
-	{
-		session_unset();
+	session_unset();
 
-		session_destroy();
-	}
+	session_destroy();
 
 	exit;
 }
@@ -311,7 +307,9 @@ elseif ( isset( $_POST['USERNAME'] )
 	if ( HasFirstLoginForm() )
 	{
 		// First Login.
-		header( 'Location: index.php?locale=' . $_SESSION['locale'] . '&modfunc=first-login' );
+		header( 'Location: ' . URLEscape(
+			'index.php?locale=' . $_SESSION['locale'] . '&modfunc=first-login&token=' . $_SESSION['token']
+		) );
 
 		exit;
 	}

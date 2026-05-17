@@ -144,6 +144,9 @@ function ErrorSendEmail( $error = [], $title = 'PHP Fatal error' )
 		{
 			print_r( $error );
 		}
+
+		// Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
+		ETagCache( 'stop' );
 	}
 
 	// Send email to $RosarioErrorsAddress if set {@see config.inc.php}.

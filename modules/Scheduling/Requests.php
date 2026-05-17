@@ -6,7 +6,7 @@ if ( $_REQUEST['modfunc'] === 'XMLHttpRequest' )
 
 	$courses_RET = DBGet( "SELECT c.COURSE_ID,c.TITLE FROM courses c WHERE " .
 		( $_REQUEST['subject_id'] ? "c.SUBJECT_ID='" . (int) $_REQUEST['subject_id'] . "' AND " : '' ) .
-		"UPPER(c.TITLE) LIKE '" . mb_strtoupper( $_REQUEST['course_title'] ) .
+		"UPPER(c.TITLE) LIKE '%" . mb_strtoupper( $_REQUEST['course_title'] ) .
 		"%' AND c.SYEAR='" . UserSyear() .
 		"' AND c.SCHOOL_ID='" . UserSchool() . "'
 		ORDER BY c.TITLE", [ 'TITLE' => 'ParseMLField' ] );
@@ -136,7 +136,8 @@ if ( ! $_REQUEST['modfunc']
 	// @since 12.5 CSP remove unsafe-inline Javascript
 	?>
 	<input type="hidden" disabled id="no_courses_found" value="<?php echo AttrEscape( _( 'No courses found' ) ); ?>" />
-	<script src="assets/js/csp/modules/scheduling/Requests.js?v=12.5"></script>
+	<input type="hidden" disabled id="csrf_token" value="<?php echo AttrEscape( $_SESSION['token'] ); ?>" />
+	<script src="assets/js/csp/modules/scheduling/Requests.js?v=12.9"></script>
 	<?php
 
 	$functions = [

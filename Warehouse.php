@@ -319,13 +319,12 @@ if ( empty( $_SESSION['STAFF_ID'] )
 }
 
 if ( ! empty( $_REQUEST['modfunc'] )
+	&& $_REQUEST['modfunc'] !== 'logout'
 	&& ( empty( $_REQUEST['token'] )
 		|| $_REQUEST['token'] !== $_SESSION['token'] ) )
 {
 	// Security fix #371 check CSRF token for modfunc requests
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-	HackingLog();
+	(new RosarioSIS\Functions\Hacking)->log();
 }
 
 /**
@@ -726,7 +725,7 @@ function Warehouse( $mode )
 			do_action( 'Warehouse.php|header_head' );
 		?>
 	<noscript>
-		<meta http-equiv="REFRESH" content="0; url=<?php echo URLEscape( 'index.php?modfunc=logout&amp;reason=javascript&amp;token=' . $_SESSION['token'] ); ?>">
+		<meta http-equiv="REFRESH" content="0; url=index.php?modfunc=logout&reason=javascript">
 	</noscript>
 </head>
 <body class="<?php echo AttrEscape( $_ROSARIO['page'] ); ?>">

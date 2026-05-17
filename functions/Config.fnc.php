@@ -202,7 +202,7 @@ function ProgramUserConfig( $program, $staff_id = 0, $values = null )
 		return [];
 	}
 
-	$staff_id = $staff_id ? (int) $staff_id : User( 'STAFF_ID' );
+	$staff_id = $staff_id ? (int) $staff_id : (int) User( 'STAFF_ID' );
 
 	if ( ! isset( $program_config[ $program ][ $staff_id ] ) )
 	{

@@ -596,7 +596,7 @@ if ( ! $_REQUEST['modfunc'] )
 
 	$link = [];
 
-	$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'] . '&mp_term=FY';
+	$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&mp_term=FY';
 
 	$link['TITLE']['variables'] = [ 'marking_period_id' => 'MARKING_PERIOD_ID' ];
 
@@ -651,7 +651,7 @@ if ( ! $_REQUEST['modfunc'] )
 
 		$link = [];
 
-		$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'] . '&mp_term=SEM&year_id=' . $_REQUEST['year_id'];
+		$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&mp_term=SEM&year_id=' . $_REQUEST['year_id'];
 
 		$link['TITLE']['variables'] = [ 'marking_period_id' => 'MARKING_PERIOD_ID' ];
 
@@ -703,7 +703,7 @@ if ( ! $_REQUEST['modfunc'] )
 
 			$link = [];
 
-			$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'] . '&mp_term=QTR&year_id=' . $_REQUEST['year_id'] . '&semester_id=' . $_REQUEST['semester_id'];
+			$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&mp_term=QTR&year_id=' . $_REQUEST['year_id'] . '&semester_id=' . $_REQUEST['semester_id'];
 
 			$link['TITLE']['variables'] = [ 'marking_period_id' => 'MARKING_PERIOD_ID' ];
 
@@ -750,7 +750,8 @@ if ( ! $_REQUEST['modfunc'] )
 
 				$link = [];
 
-				$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'] . '&mp_term=PRO&year_id=' . $_REQUEST['year_id'] . '&semester_id=' . $_REQUEST['semester_id'] . '&quarter_id=' . $_REQUEST['quarter_id'];
+				$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&mp_term=PRO&year_id=' . $_REQUEST['year_id'] .
+					'&semester_id=' . $_REQUEST['semester_id'] . '&quarter_id=' . $_REQUEST['quarter_id'];
 
 				$link['TITLE']['variables'] = [ 'marking_period_id' => 'MARKING_PERIOD_ID' ];
 

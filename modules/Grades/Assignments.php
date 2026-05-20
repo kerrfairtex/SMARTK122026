@@ -1006,7 +1006,7 @@ if ( ! $_REQUEST['modfunc'] )
 
 	$link = [];
 
-	$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'];
+	$link['TITLE']['link'] = 'Modules.php?modname=' . $_REQUEST['modname'];
 
 	$link['TITLE']['variables'] = [ 'assignment_type_id' => 'ASSIGNMENT_TYPE_ID' ];
 

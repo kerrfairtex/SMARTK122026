@@ -75,7 +75,7 @@ if ( isset( $_REQUEST['course_modfunc'] )
 	PopTable( 'header', _( 'Search' ) );
 
 	echo '<form name="search" action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
-		'&modfunc=' . $_REQUEST['modfunc'] . '&course_modfunc=search&last_year=' .
+		'&course_modfunc=search&last_year=' .
 		$_REQUEST['last_year']  ) . '" method="POST">'; // Fix Search: Use POST for Public Pages plugin compatibility.
 
 	echo '<input type="search" name="search_term" id="search_term" value="' .
@@ -1607,7 +1607,7 @@ if (  ( ! $_REQUEST['modfunc']
 
 	DrawHeader(
 		'',
-		'<a href="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] . '&modfunc=' . $_REQUEST['modfunc'] .
+		'<a href="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
 		'&course_modfunc=search&last_year=' . $_REQUEST['last_year'] .
 		( $_REQUEST['modfunc'] == 'choose_course' && $_REQUEST['modname'] == 'Scheduling/Schedule.php' ?
 			'&include_child_mps=' . issetVal( $_REQUEST['include_child_mps'], '' ) .

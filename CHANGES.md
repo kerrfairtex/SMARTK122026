@@ -22,6 +22,7 @@ Changes in 12.9
 - Remove `modfunc=` from Find a Student/User form URL if no modfunc set in Search.inc.php
 - Fix PHP8.5 deprecated using null as an array offset in Config.fnc.php
 - Multilingual course title: SQL fix search Course Title add wildcard in Requests.php
+- Remove `&modfunc=` from link, never actually used in Assignments.php, MassCreateAssignments.php, Courses.php & MarkingPeriods.php
 
 Changes in 12.8.1
 -----------------

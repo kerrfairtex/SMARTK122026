@@ -23,6 +23,7 @@ Changes in 12.9
 - Fix PHP8.5 deprecated using null as an array offset in Config.fnc.php
 - Multilingual course title: SQL fix search Course Title add wildcard in Requests.php
 - Remove `&modfunc=` from link, never actually used in Assignments.php, MassCreateAssignments.php, Courses.php & MarkingPeriods.php
+- Skip CSP violation triggered by domain: overbridgenet.com, .goguardian, tl.ytlogs.ru, mainf.global-cache.online & wallet.binance.com in SaveReport.php
 
 Changes in 12.8.1
 -----------------

@@ -51,6 +51,11 @@ $domain_skip = [
 	'https://safesearchinc.com', // ??
 	'https://infird.com', // JS file injected by malware
 	'googleapis.com', // CSS file injected by Google Fonts / Page translation
+	'https://overbridgenet.com', // JS malware
+	'.goguardian', // GoGuardian
+	'https://tl.ytlogs.ru', // Russian YouTube logs?
+	'https://mainf.global-cache.online', // JS file injected by ??
+	'https://wallet.binance.com', // Binance
 ];
 
 foreach ( $domain_skip as $domain )

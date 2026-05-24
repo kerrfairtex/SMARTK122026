@@ -25,6 +25,7 @@ Changes in 12.9
 - Remove `&modfunc=` from link, never actually used in Assignments.php, MassCreateAssignments.php, Courses.php & MarkingPeriods.php
 - Skip CSP violation triggered by domain: overbridgenet.com, .goguardian, tl.ytlogs.ru, mainf.global-cache.online & wallet.binance.com in SaveReport.php
 - Remove duplicate GET params from form URL (start & end date, others) in Percent.php, CategoryBreakdown.php, CategoryBreakdownTime.php, StudentFieldBreakdown.php, TransactionsReport.php, AddDrop.php, Calendar.php, StudentBreakdown.php & AddDropBreakdownTime.php
+- Security fix #375 Authenticated Time-based SQL Injection (non-student roles) in StudentSumary.php
 
 Changes in 12.8.1
 -----------------

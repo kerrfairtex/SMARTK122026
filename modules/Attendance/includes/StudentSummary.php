@@ -115,7 +115,8 @@ if ( ! empty( $_REQUEST['period_id'] ) )
 	}
 	else
 	{
-		$period_ids_list = $_REQUEST['period_id'];
+		// Security fix #375 Authenticated Time-based SQL Injection (non-student roles)
+		$period_ids_list = (int) $_REQUEST['period_id'];
 	}
 
 	// @since 12.9 SQL performance: replace subqueries with LEFT JOINs

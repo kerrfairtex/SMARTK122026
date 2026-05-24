@@ -43,12 +43,21 @@ $types_columns = [
 ];
 
 
-echo '<form action="' . PreparePHP_SELF() . '" method="GET">';
+echo '<form action="' . PreparePHP_SELF( [], [
+	'month_start',
+	'day_start',
+	'year_start',
+	'month_end',
+	'day_end',
+	'year_end',
+] ) . '" method="GET">';
+
 DrawHeader(
 	_( 'Timeframe' ) . ': ' . PrepareDate( $start_date, '_start' ) . ' ' .
 	_( 'to' ) . ' ' . PrepareDate( $end_date, '_end' ) .
 	SubmitButton( _( 'Go' ) )
 );
+
 echo '</form>';
 
 $RET = DBGet( "SELECT 'Student' AS TYPE,fst.SHORT_NAME,fsti.SHORT_NAME AS ITEM_SHORT_NAME,sum(fsti.AMOUNT) AS AMOUNT

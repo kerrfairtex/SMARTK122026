@@ -188,7 +188,14 @@ else // Enrolled / Dropped
 
 if ( ! $_REQUEST['modfunc'] )
 {
-	echo '<form action="' . PreparePHP_SELF( $_REQUEST ) . '" method="GET">';
+	echo '<form action="' . PreparePHP_SELF( [], [
+		'month_start',
+		'day_start',
+		'year_start',
+		'month_end',
+		'day_end',
+		'year_end',
+	] ) . '" method="GET">';
 
 	AllowEditTemporary( 'start' );
 

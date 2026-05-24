@@ -263,7 +263,15 @@ if ( ! empty( $_REQUEST['field_id'] ) )
 
 if ( ! $_REQUEST['modfunc'] )
 {
-	echo '<form action="' . PreparePHP_SELF( $_REQUEST ) . '" method="GET">';
+	echo '<form action="' . PreparePHP_SELF( [], [
+		'field_id',
+		'month_start',
+		'day_start',
+		'year_start',
+		'month_end',
+		'day_end',
+		'year_end',
+	] ) . '" method="GET">';
 
 	$fields_RET = DBGet( "SELECT ID,TITLE,SELECT_OPTIONS AS OPTIONS,CATEGORY_ID
 		FROM custom_fields

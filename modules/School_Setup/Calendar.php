@@ -758,7 +758,15 @@ if ( $_REQUEST['modfunc'] === 'list_events' )
 	// Last day of the month.
 	$end_date = RequestedDate( 'end', date( 'Y-m-t', strtotime( $start_date_default ) ) );
 
-	echo '<form action="' . PreparePHP_SELF() . '" method="GET">';
+	echo '<form action="' . PreparePHP_SELF( [], [
+		'token',
+		'month_start',
+		'day_start',
+		'year_start',
+		'month_end',
+		'day_end',
+		'year_end',
+	] ) . '" method="GET">';
 
 	DrawHeader( '<a href="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] . '&month=' . $_REQUEST['month'] . '&year=' . $_REQUEST['year'] ) . '" >' . _( 'Back to Calendar' ) . '</a>' );
 

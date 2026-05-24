@@ -209,7 +209,15 @@ if ( ! empty( $category_RET ) )
 
 if ( ! $_REQUEST['modfunc'] )
 {
-	echo '<form action="' . PreparePHP_SELF( $_REQUEST ) . '" method="GET">';
+	echo '<form action="' . PreparePHP_SELF( [], [
+		'category_id',
+		'month_start',
+		'day_start',
+		'year_start',
+		'month_end',
+		'day_end',
+		'year_end',
+	] ) . '" method="GET">';
 
 	$categories_RET = DBGet( "SELECT df.ID,du.TITLE,du.SELECT_OPTIONS
 		FROM discipline_fields df,discipline_field_usage du

@@ -68,7 +68,14 @@ if ( ! $_REQUEST['modfunc'] )
 	// Use GetStuList() instead of appendSQL() + CustomFields()
 	GetStuList( $extra );
 
-	echo '<form action="' . PreparePHP_SELF( $_REQUEST ) . '" method="GET">';
+	echo '<form action="' . PreparePHP_SELF( [], [
+		'month_start',
+		'day_start',
+		'year_start',
+		'month_end',
+		'day_end',
+		'year_end',
+	] ) . '" method="GET">';
 
 	DrawHeader(
 		_( 'Timeframe' ) . ': ' . PrepareDate( $start_date, '_start', false ) .

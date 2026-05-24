@@ -877,11 +877,34 @@ window.onload = function() {
 	}
 
 	/**
-	 * Add X-CSRF-Token header to $.ajax() requests containing `modfunc=`
+	 * Add X-CSRF-Token header to $.ajax() or fetch requests containing `modfunc=`
 	 *
 	 * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
+	 *
+	 * @link https://stackoverflow.com/questions/44820568/set-default-header-for-every-fetch-request#answer-72621331
 	 */
 	$.ajaxSetup({ headers: { 'X-CSRF-Token': $('meta[name=token]').attr('content') } });
+
+	const originalFetch = window.fetch;
+
+	window.fetch = function (input, init) {
+		if (!init) init = {};
+
+		if (!init.headers) init.headers = new Headers();
+
+		var token = $('meta[name=token]').attr('content');
+
+		if (init.headers instanceof Headers) {
+			init.headers.append('X-CSRF-Token', token);
+		} else if (init.headers instanceof Array) {
+			init.headers.push(['X-CSRF-Token', token]);
+		} else {
+			// object ?
+			init.headers['X-CSRF-Token'] = token;
+		}
+
+		return originalFetch(input, init);
+	};
 };
 
 var ajaxPopState = function() {

@@ -882,17 +882,18 @@ window.onload = function() {
 	 * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
 	 *
 	 * @link https://stackoverflow.com/questions/44820568/set-default-header-for-every-fetch-request#answer-72621331
+	 * @link https://stackoverflow.com/questions/37963758/how-do-i-set-a-default-header-for-all-xmlhttprequests
 	 */
-	$.ajaxSetup({ headers: { 'X-CSRF-Token': $('meta[name=token]').attr('content') } });
+	var token = $('meta[name=token]').attr('content');
+
+	$.ajaxSetup({ headers: { 'X-CSRF-Token': token } });
 
 	const originalFetch = window.fetch;
 
-	window.fetch = function (input, init) {
+	window.fetch = function(input, init) {
 		if (!init) init = {};
 
 		if (!init.headers) init.headers = new Headers();
-
-		var token = $('meta[name=token]').attr('content');
 
 		if (init.headers instanceof Headers) {
 			init.headers.append('X-CSRF-Token', token);
@@ -904,6 +905,12 @@ window.onload = function() {
 		}
 
 		return originalFetch(input, init);
+	};
+
+	XMLHttpRequest.prototype.origOpen = XMLHttpRequest.prototype.open;
+	XMLHttpRequest.prototype.open = function() {
+		this.origOpen.apply(this, arguments);
+		this.setRequestHeader('X-CSRF-Token', token);
 	};
 };
 

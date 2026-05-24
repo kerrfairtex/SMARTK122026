@@ -16,9 +16,7 @@ csp.modules.scheduling.requests = {
 		csp.modules.scheduling.requests.connection.open(
 			'GET',
 			'Modules.php?modname=Scheduling/Requests.php&_ROSARIO_PDF=true&modfunc=XMLHttpRequest&subject_id=' + subjectId +
-				'&course_title=' + encodeURIComponent(course) +
-				// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
-				'&token=' + document.querySelector('meta[name="token"]').content,
+				'&course_title=' + encodeURIComponent(course),
 			true
 		);
 

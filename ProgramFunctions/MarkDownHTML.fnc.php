@@ -123,8 +123,10 @@ function SanitizeMarkDown( $md )
 	 * replace empty strings ('') with NULL values
 	 *
 	 * @see DBQuery()
+	 *
+	 * @since 12.9 Security fix Request Forgery: remove modfunc= in links
 	 */
-	return str_replace( "'", '&#039;', $return );
+	return str_replace( [ "'", 'modfunc=' ], [ '&#039;', 'modfunc =' ], $return );
 }
 
 
@@ -216,8 +218,10 @@ function SanitizeHTML( $html, $image_path = '', $add_url_to_image_path = false )
 	 * replace empty strings ('') with NULL values
 	 *
 	 * @see DBQuery()
+	 *
+	 * @since 12.9 Security fix Request Forgery: remove modfunc= in links
 	 */
-	$sanitized_html_quotes = str_replace( "'", '&#039;', $sanitized_html );
+	$sanitized_html_quotes = str_replace( [ "'", 'modfunc=' ], [ '&#039;', 'modfunc =' ], $sanitized_html );
 
 	if ( ! $has_base64_images )
 	{

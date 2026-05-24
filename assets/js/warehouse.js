@@ -455,29 +455,6 @@ var ajaxLink = function(link) {
 		target = link.target;
 	}
 
-	// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
-	if (href.indexOf('token=') == -1) {
-		if (href.indexOf('&modfunc=') > 0) {
-			href = href.replace(
-				'&modfunc=',
-				'&token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
-			);
-
-			if (link.href) {
-				link.href = href;
-			}
-		} else if (href.indexOf('?modfunc=') > 0) {
-			href = href.replace(
-				'?modfunc=',
-				'?token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
-			);
-
-			if (link.href) {
-				link.href = href;
-			}
-		}
-	}
-
 	if (href.indexOf('#') != -1 || target.indexOf('_') == 0) // Internal/external/top anchor.
 		return true;
 
@@ -507,6 +484,7 @@ var ajaxUpdateBody = function(params) {
 	var link = document.URL;
 
 	for(var key in params) {
+		// TODO use url.searchParams.set() in version 13.0 but do not remove getURLParam(), used elsewhere
 		var paramOld = '&' + key + '=' + getURLParam(link, key),
 			replace = params[key] ? '&' + key + '=' + params[key] : '';
 
@@ -577,21 +555,6 @@ var ajaxPostForm = function(form, event) {
 
 	if (error) {
 		return false;
-	}
-
-	// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
-	if (form.action.indexOf('token=') == -1) {
-		if (form.action.indexOf('&modfunc=') > 0) {
-			form.action = form.action.replace(
-				'&modfunc=',
-				'&token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
-			);
-		} else if (form.action.indexOf('?modfunc=') > 0) {
-			form.action = form.action.replace(
-				'?modfunc=',
-				'?token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
-			);
-		}
 	}
 
 	if (form.action.indexOf('_ROSARIO_PDF') != -1) // Print PDF.

@@ -18,16 +18,14 @@ csp.modules.scheduling.requests = {
 			'Modules.php?modname=Scheduling/Requests.php&_ROSARIO_PDF=true&modfunc=XMLHttpRequest&subject_id=' + subjectId +
 				'&course_title=' + encodeURIComponent(course) +
 				// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
-				'&token=' + document.getElementById('csrf_token').value,
+				'&token=' + document.querySelector('meta[name="token"]').content,
 			true
 		);
 
 		csp.modules.scheduling.requests.connection.send(null);
 	},
 	addCourse: function(course) {
-		ajaxLink('Modules.php?modname=Scheduling/Requests.php&modfunc=add&course=' + course +
-			// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
-			'&token=' + document.getElementById('csrf_token').value );
+		ajaxLink('Modules.php?modname=Scheduling/Requests.php&modfunc=add&course=' + course);
 	},
 	processRequest: function() {
 		// LOADED && ACCEPTED

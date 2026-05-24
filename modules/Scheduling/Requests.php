@@ -136,8 +136,7 @@ if ( ! $_REQUEST['modfunc']
 	// @since 12.5 CSP remove unsafe-inline Javascript
 	?>
 	<input type="hidden" disabled id="no_courses_found" value="<?php echo AttrEscape( _( 'No courses found' ) ); ?>" />
-	<input type="hidden" disabled id="csrf_token" value="<?php echo AttrEscape( $_SESSION['token'] ); ?>" />
-	<script src="assets/js/csp/modules/scheduling/Requests.js?v=12.9"></script>
+	<script src="assets/js/csp/modules/scheduling/Requests.js?v=12.9.1"></script>
 	<?php
 
 	$functions = [

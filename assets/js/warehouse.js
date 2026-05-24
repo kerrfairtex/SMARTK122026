@@ -175,7 +175,7 @@ var ColorBox = function() {
 			$.colorbox.resize();
 		},
 		title: '',
-		maxWidth: '95%',
+		maxWidth: '98%',
 		maxHeight: '85%',
 		minWidth: 306,
 		minHeight: 153,
@@ -196,7 +196,7 @@ var ColorBox = function() {
 			});
 		},
 		inline: true,
-		maxWidth: '95%',
+		maxWidth: '98%',
 		maxHeight: '85%',
 		minWidth: 306,
 		minHeight: 153,
@@ -455,6 +455,29 @@ var ajaxLink = function(link) {
 		target = link.target;
 	}
 
+	// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
+	if (href.indexOf('token=') == -1) {
+		if (href.indexOf('&modfunc=') > 0) {
+			href = href.replace(
+				'&modfunc=',
+				'&token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
+			);
+
+			if (link.href) {
+				link.href = href;
+			}
+		} else if (href.indexOf('?modfunc=') > 0) {
+			href = href.replace(
+				'?modfunc=',
+				'?token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
+			);
+
+			if (link.href) {
+				link.href = href;
+			}
+		}
+	}
+
 	if (href.indexOf('#') != -1 || target.indexOf('_') == 0) // Internal/external/top anchor.
 		return true;
 
@@ -515,6 +538,7 @@ function getURLParam(url, name) {
  *
  * @since 12.5 Prevent submitting form if no checkboxes are checked
  * @see PHP MakeChooseCheckbox() function
+ * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
  *
  * @deprecated submit param since 12.0, still set it to `true` if your are developing an add-on.
  *
@@ -553,6 +577,21 @@ var ajaxPostForm = function(form, event) {
 
 	if (error) {
 		return false;
+	}
+
+	// @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
+	if (form.action.indexOf('token=') == -1) {
+		if (form.action.indexOf('&modfunc=') > 0) {
+			form.action = form.action.replace(
+				'&modfunc=',
+				'&token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
+			);
+		} else if (form.action.indexOf('?modfunc=') > 0) {
+			form.action = form.action.replace(
+				'?modfunc=',
+				'?token=' + encodeURIComponent($('meta[name=token]').attr('content')) + '&modfunc='
+			);
+		}
 	}
 
 	if (form.action.indexOf('_ROSARIO_PDF') != -1) // Print PDF.
@@ -836,6 +875,13 @@ window.onload = function() {
 		 */
 		history.replaceState({}, document.title, $('#x_redirect_url').val());
 	}
+
+	/**
+	 * Add X-CSRF-Token header to $.ajax() requests containing `modfunc=`
+	 *
+	 * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
+	 */
+	$.ajaxSetup({ headers: { 'X-CSRF-Token': $('meta[name=token]').attr('content') } });
 };
 
 var ajaxPopState = function() {

@@ -320,13 +320,18 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 if ( ! empty( $_REQUEST['modfunc'] )
 	&& $_REQUEST['modfunc'] !== 'logout'
-	&& ( empty( $_REQUEST['token'] )
+	&& ( ! isset( $_REQUEST['token'] )
 		|| $_REQUEST['token'] !== $_SESSION['token'] ) )
 {
-	// Security fix #371 check CSRF token for modfunc requests
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
+	// Add X-CSRF-Token header to $.ajax() requests containing `modfunc=`
+	if ( ! isset( $_SERVER['HTTP_X_CSRF_TOKEN'] )
+		|| $_SERVER['HTTP_X_CSRF_TOKEN'] !== $_SESSION['token'] )
+	{
+		// Security fix #371 check CSRF token for modfunc requests
+		require_once 'ProgramFunctions/HackingLog.fnc.php';
 
-	HackingLog();
+		HackingLog();
+	}
 }
 
 /**
@@ -637,6 +642,7 @@ function _LoadAddons( $addons, $folder )
  * @since 3.8 Warehouse footer hook
  * @since 4.4 Warehouse header hook
  * @since 6.0 Warehouse Header Javascripts
+ * @since 12.9 Security fix #371 Request Forgery add CSRF token to header
  *
  * @global $_ROSARIO  Use $_ROSARIO['page']
  *
@@ -702,6 +708,7 @@ function Warehouse( $mode )
 	<link rel="icon" href="apple-touch-icon.png" sizes="128x128">
 	<meta name="apple-mobile-web-app-capable" content="yes">
 	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="token" content="<?php echo AttrEscape( $_SESSION['token'] ); ?>">
 	<link rel="stylesheet" href="<?php echo $stylesheet_css; ?>?<?php echo $stylesheet_css_hash; ?>">
 	<style>.highlight,.highlight-hover:hover{background-color:<?php echo Preferences( 'HIGHLIGHT' ); ?> !important;}</style>
 	<?php
@@ -727,7 +734,9 @@ function Warehouse( $mode )
 			do_action( 'Warehouse.php|header_head' );
 		?>
 	<noscript>
-		<meta http-equiv="REFRESH" content="0; url=index.php?modfunc=logout&reason=javascript">
+		<meta http-equiv="REFRESH" content="0; url=<?php echo URLEscape(
+			'index.php?modfunc=logout&reason=javascript&token=' . $_SESSION['token']
+		); ?>">
 	</noscript>
 </head>
 <body class="<?php echo AttrEscape( $_ROSARIO['page'] ); ?>">
@@ -933,7 +942,6 @@ function isAJAX()
  *
  * @global $ETagCache ETag cache system.
  * @since  3.1
- * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
  *
  * @param  string  $mode Mode: start|stop. Optional, defaults to ''.
  * @return boolean True if ETagCache activated, else false.
@@ -943,6 +951,11 @@ function ETagCache( $mode = '' )
 	global $ETagCache;
 
 	static $ob_started = false;
+
+	if ( ! $ETagCache )
+	{
+		return false;
+	}
 
 	if ( $mode === 'start'
 		&& ! $ob_started )
@@ -955,16 +968,6 @@ function ETagCache( $mode = '' )
 	{
 		// Stop & get buffer buffer (to generate ETag).
 		$etag_buffer = ob_get_clean();
-
-		// Add CSRF token to links/forms containing `modfunc=`
-		$etag_buffer = str_replace(
-			[ '&modfunc=', '?modfunc=' ],
-			[
-				'&token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
-				'?token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
-			],
-			$etag_buffer
-		);
 
 		if ( ! $ETagCache )
 		{
@@ -1015,7 +1018,7 @@ function ETagCache( $mode = '' )
 		}
 	}
 
-	return $ETagCache;
+	return true;
 }
 
 

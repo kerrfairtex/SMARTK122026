@@ -18,7 +18,7 @@ Changes in 12.9
 - Use button() with "+" icon instead of text link in MassDrops.php, MassRequests.php & MassSchedule.php
 - Fix skip begin / end dates / number if "No Value" checked in CustomFields.fnc.php
 - Security fix #372 forbid path traversal sequences in FileUpload.fnc.php, thanks to @kazisabu
-- Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=` in PreparePHP_SELF.fnc.php, Warehouse.php, index.php & Requests.js, thanks to @kazisabu
+- Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=` in PreparePHP_SELF.fnc.php, Warehouse.php, index.php, warehouse.js & Requests.js, thanks to @kazisabu
 - Remove `modfunc=` from Find a Student/User form URL if no modfunc set in Search.inc.php
 - Fix PHP8.5 deprecated using null as an array offset in Config.fnc.php
 - Multilingual course title: SQL fix search Course Title add wildcard in Requests.php

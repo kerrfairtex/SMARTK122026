@@ -734,9 +734,7 @@ function Warehouse( $mode )
 			do_action( 'Warehouse.php|header_head' );
 		?>
 	<noscript>
-		<meta http-equiv="REFRESH" content="0; url=<?php echo URLEscape(
-			'index.php?modfunc=logout&reason=javascript&token=' . $_SESSION['token']
-		); ?>">
+		<meta http-equiv="REFRESH" content="0; url=index.php?modfunc=logout&reason=javascript">
 	</noscript>
 </head>
 <body class="<?php echo AttrEscape( $_ROSARIO['page'] ); ?>">
@@ -952,11 +950,6 @@ function ETagCache( $mode = '' )
 
 	static $ob_started = false;
 
-	if ( ! $ETagCache )
-	{
-		return false;
-	}
-
 	if ( $mode === 'start'
 		&& ! $ob_started )
 	{
@@ -968,6 +961,16 @@ function ETagCache( $mode = '' )
 	{
 		// Stop & get buffer buffer (to generate ETag).
 		$etag_buffer = ob_get_clean();
+
+		// Add CSRF token to links/forms containing `modfunc=`
+		$etag_buffer = str_replace(
+			[ '&modfunc=', '?modfunc=' ],
+			[
+				'&token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
+				'?token=' . urlencode( $_SESSION['token'] ) . '&modfunc=',
+			],
+			$etag_buffer
+		);
 
 		if ( ! $ETagCache )
 		{
@@ -1018,7 +1021,7 @@ function ETagCache( $mode = '' )
 		}
 	}
 
-	return true;
+	return $ETagCache;
 }
 
 

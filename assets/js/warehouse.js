@@ -516,7 +516,6 @@ function getURLParam(url, name) {
  *
  * @since 12.5 Prevent submitting form if no checkboxes are checked
  * @see PHP MakeChooseCheckbox() function
- * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
  *
  * @deprecated submit param since 12.0, still set it to `true` if your are developing an add-on.
  *
@@ -848,8 +847,6 @@ window.onload = function() {
 	 * @link https://stackoverflow.com/questions/37963758/how-do-i-set-a-default-header-for-all-xmlhttprequests
 	 */
 	var token = $('meta[name=token]').attr('content');
-
-	$.ajaxSetup({ headers: { 'X-CSRF-Token': token } });
 
 	const originalFetch = window.fetch;
 

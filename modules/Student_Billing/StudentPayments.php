@@ -81,8 +81,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 			FROM billing_payments
 			WHERE ID='" . (int) $_REQUEST['id'] . "'
 			AND STUDENT_ID='" . UserStudentID() . "'
-			AND SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "'" );
+			AND SYEAR='" . UserSyear() . "'" );
 
 		// Delete File Attached.
 		// Security: use FileDelete() instead of unlink()
@@ -92,8 +91,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 			WHERE (ID='" . (int) $_REQUEST['id'] . "'
 			OR REFUNDED_PAYMENT_ID='" . (int) $_REQUEST['id'] . "')
 			AND STUDENT_ID='" . UserStudentID() . "'
-			AND SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "'" );
+			AND SYEAR='" . UserSyear() . "'" );
 
 		// Unset modfunc & ID & redirect URL.
 		RedirectURL( [ 'modfunc', 'id' ] );

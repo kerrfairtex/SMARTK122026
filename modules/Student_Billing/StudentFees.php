@@ -83,8 +83,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 			FROM billing_fees
 			WHERE ID='" . (int) $_REQUEST['id'] . "'
 			AND STUDENT_ID='" . UserStudentID() . "'
-			AND SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "'" );
+			AND SYEAR='" . UserSyear() . "'" );
 
 		// Delete File Attached.
 		// Security: use FileDelete() instead of unlink()
@@ -93,14 +92,12 @@ if ( $_REQUEST['modfunc'] === 'remove'
 		$delete_sql = "DELETE FROM billing_fees
 			WHERE ID='" . (int) $_REQUEST['id'] . "'
 			AND STUDENT_ID='" . UserStudentID() . "'
-			AND SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "';";
+			AND SYEAR='" . UserSyear() . "';";
 
 		$delete_sql .= "DELETE FROM billing_fees
 			WHERE WAIVED_FEE_ID='" . (int) $_REQUEST['id'] . "'
 			AND STUDENT_ID='" . UserStudentID() . "'
-			AND SYEAR='" . UserSyear() . "'
-			AND SCHOOL_ID='" . UserSchool() . "';";
+			AND SYEAR='" . UserSyear() . "';";
 
 		DBQuery( $delete_sql );
 

@@ -141,6 +141,8 @@ function AllowEditTemporary( $mode = 'start' )
 		{
 			// Remove temporary AllowEdit for non admin users for input display.
 			$_ROSARIO['allow_edit'] = false;
+
+			$allow_edit_tmp = false;
 		}
 
 		return true;

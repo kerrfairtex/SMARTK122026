@@ -24,9 +24,26 @@ if ( $_REQUEST['modfunc'] === 'save' )
 		&& ! empty( $_REQUEST['student'] )
 		&& ! empty( $_REQUEST['dates'] ) )
 	{
-		$periods_list = implode( ',', array_map( 'intval', $_REQUEST['period'] ) );
+		$student_ids = $_REQUEST['student'];
 
-		$students_list = implode( ',', array_map( 'intval', $_REQUEST['student'] ) );
+		if ( User( 'SCHOOLS' ) )
+		{
+			// @since 12.9 Security fix #376 IDOR: Unauthorized Cross-School Data Assignment
+			$students_list = implode( ',', array_map( 'intval', $_REQUEST['student'] ) );
+
+			$students_RET = DBGet( "SELECT DISTINCT STUDENT_ID
+				FROM student_enrollment
+				WHERE SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID IN(" . mb_substr( str_replace( ',', "','", User( 'SCHOOLS' ) ), 2, -2 ) . ")
+				AND STUDENT_ID IN(" . $students_list . ")",
+				[], [ 'STUDENT_ID' ] );
+
+			$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );
+		}
+
+		$students_list = $student_ids ? implode( ',', array_map( 'intval', $student_ids ) ) : '0';
+
+		$periods_list = implode( ',', array_map( 'intval', $_REQUEST['period'] ) );
 
 		$current_RET = DBGet( "SELECT STUDENT_ID,PERIOD_ID,SCHOOL_DATE
 		FROM attendance_period
@@ -37,7 +54,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 		$go = false;
 
-		foreach ( (array) $_REQUEST['student'] as $student_id )
+		foreach ( (array) $student_ids as $student_id )
 		{
 			foreach ( (array) $_REQUEST['dates'] as $date => $yes )
 			{

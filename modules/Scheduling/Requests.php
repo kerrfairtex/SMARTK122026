@@ -145,12 +145,16 @@ if ( ! $_REQUEST['modfunc']
 		'WITH_PERIOD_ID' => '_makePeriod',
 	];
 
+	// @since 12.9 Security fix #376 IDOR: Unauthorized Cross-School Data Assignment
 	$requests_RET = DBGet( "SELECT r.REQUEST_ID,c.TITLE as COURSE,r.COURSE_ID,
 		r.MARKING_PERIOD_ID,r.WITH_TEACHER_ID,r.NOT_TEACHER_ID,r.WITH_PERIOD_ID,r.NOT_PERIOD_ID
 		FROM schedule_requests r,courses c
 		WHERE r.COURSE_ID=c.COURSE_ID
 		AND r.SYEAR='" . UserSyear() . "'
 		AND r.STUDENT_ID='" . UserStudentID() . "'
+		AND r.SCHOOL_ID='" . UserSchool() . "'
+		AND c.SYEAR=r.SYEAR
+		AND c.SCHOOL_ID=r.SCHOOL_ID
 		ORDER BY c.TITLE", $functions );
 
 	$columns = [

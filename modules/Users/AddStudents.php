@@ -13,7 +13,24 @@ if ( $_REQUEST['modfunc'] === 'save'
 			FROM students_join_users
 			WHERE STAFF_ID='" . UserStaffID() . "'", [], [ 'STUDENT_ID' ] );
 
-		foreach ( (array) $_REQUEST['student'] as $student_id )
+		$student_ids = $_REQUEST['student'];
+
+		if ( User( 'SCHOOLS' ) )
+		{
+			// @since 12.9 Security fix #376 IDOR: Unauthorized Cross-School Data Assignment
+			$students_list = implode( ',', array_map( 'intval', $_REQUEST['student'] ) );
+
+			$students_RET = DBGet( "SELECT DISTINCT STUDENT_ID
+				FROM student_enrollment
+				WHERE SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID IN(" . mb_substr( str_replace( ',', "','", User( 'SCHOOLS' ) ), 2, -2 ) . ")
+				AND STUDENT_ID IN(" . $students_list . ")",
+				[], [ 'STUDENT_ID' ] );
+
+			$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );
+		}
+
+		foreach ( (array) $student_ids as $student_id )
 		{
 			if ( empty( $current_RET[$student_id] ) )
 			{

@@ -620,7 +620,8 @@ if ( ! $_REQUEST['modfunc'] )
 		echo '<a href="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
 			'&category_id=' . $_REQUEST['category_id'] .
 			'&address_id=' . $address['ADDRESS_ID'] ) . '">' .
-			$address['ADDRESS'] .
+			( $address['ADDRESS'] === 'No Address' ?
+				_( 'No Address' ) : $address['ADDRESS'] ) .
 			'<br />' . ( $address['CITY'] ? $address['CITY'] . ', ' : '' ) .
 			$address['STATE'] . ( $address['ZIPCODE'] ? ' ' . $address['ZIPCODE'] : '' ) . '</a>';
 

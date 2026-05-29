@@ -370,27 +370,27 @@ if ( ! $_REQUEST['modfunc'] )
 
 		$extra['header_right'] = Buttons( _( 'Create Progress Reports for Selected Students' ) );
 
-		$extra['extra_header_left'] = '<table class="cellpadding-5 align-right">';
+		$extra['extra_header_left'] = '<table class="cellpadding-5">';
 
 		$extra['extra_header_left'] .= '<tr class="st"><td colspan="2">
-			<label>' . _( 'Assigned Date' ) .
-			'&nbsp;<input type="checkbox" value="Y" name="assigned_date" /></label></td>';
+			<label><input type="checkbox" value="Y" name="assigned_date" />&nbsp;' .
+			_( 'Assigned Date' ) . '</label></td>';
 
 		$extra['extra_header_left'] .= '<td>
-			<label>' . _( 'Exclude Ungraded E/C Assignments' ) .
-			'&nbsp;<input type="checkbox" value="Y" name="exclude_ec" checked /></label></td></tr>';
+			<label><input type="checkbox" value="Y" name="exclude_ec" checked />&nbsp;' .
+			_( 'Exclude Ungraded E/C Assignments' ) . '</label></td></tr>';
 
 		$extra['extra_header_left'] .= '<tr class="st"><td colspan="2">
-			<label>' . _( 'Due Date' ) .
-			'&nbsp;<input type="checkbox" value="Y" name="due_date" checked /></label></td>';
+			<label><input type="checkbox" value="Y" name="due_date" checked />&nbsp;' .
+			_( 'Due Date' ) . '</label></td>';
 
 		$extra['extra_header_left'] .= '<td>
-			<label>' . _( 'Exclude Ungraded Assignments Not Due' ) .
-			'&nbsp;<input type="checkbox" value="Y" name="exclude_notdue" /></label></td></tr>';
+			<label><input type="checkbox" value="Y" name="exclude_notdue" />&nbsp;' .
+			_( 'Exclude Ungraded Assignments Not Due' ) . '</label></td></tr>';
 
 		$extra['extra_header_left'] .= '<tr class="st"><td colspan="2">
-			<label>' . _( 'Group by Assignment Category' ) .
-			'&nbsp;<input type="checkbox" value="Y" name="by_category" /></label></td>';
+			<label><input type="checkbox" value="Y" name="by_category" />&nbsp;' .
+			_( 'Group by Assignment Category' ) . '</label></td>';
 
 		Widgets( 'mailing_labels' );
 

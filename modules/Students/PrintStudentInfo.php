@@ -324,17 +324,18 @@ if ( ! $_REQUEST['modfunc'] )
 			FROM student_field_categories
 			ORDER BY SORT_ORDER IS NULL,SORT_ORDER,TITLE" );
 
-		$extra['extra_header_right'] = '<table>';
+		$extra['extra_header_left'] .= '<table class="cellpadding-5">';
 
 		foreach ( (array) $categories_RET as $category )
 		{
 			if ( ! empty( $can_use_RET['Students/Student.php&category_id=' . $category['ID']] ) )
 			{
-				$extra['extra_header_right'] .= '<tr><td><label>' . ParseMLField( $category['TITLE'] ) . '&nbsp;<input type="checkbox" name="category[' . $category['ID'] . ']" value="Y" checked /></label></td></tr>';
+				$extra['extra_header_left'] .= '<tr><td><label><input type="checkbox" name="category[' . $category['ID'] . ']" value="Y" checked />&nbsp;' .
+					ParseMLField( $category['TITLE'] ) . '</label></td></tr>';
 			}
 		}
 
-		$extra['extra_header_right'] .= '</table>';
+		$extra['extra_header_left'] .= '</table>';
 	}
 
 	$extra['link'] = [ 'FULL_NAME' => false ];

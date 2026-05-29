@@ -42,6 +42,13 @@ class MailingLabels implements \RosarioSIS\Widget
 
 	function html()
 	{
+		if ( ! empty( $_REQUEST['search_modfunc'] ) )
+		{
+			return '<tr class="st"><td colspan="2">' .
+			'<label><input type="checkbox" id="mailing_labels" name="mailing_labels" value="Y">&nbsp;' .
+				_( 'Mailing Labels' ) . '</label></td>';
+		}
+
 		return '<tr class="st"><td>' .
 			'<label for="mailing_labels">' . _( 'Mailing Labels' ) . '</label>' .
 			'</td><td>' .

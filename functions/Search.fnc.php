@@ -61,6 +61,10 @@ function Search( $type, $extra = null )
 							$_SESSION['UserSchool'] = DBGetOne( "SELECT ID FROM schools
 								WHERE SYEAR='" . UserSyear() . "'
 								AND ID='" . (int) $_REQUEST['school_id'] . "'" );
+
+							// Fix SQL error when "Search All Schools" checked: update UserMP()
+							// Reset current MarkingPeriod.
+							$_SESSION['UserMP'] = GetCurrentMP( 'QTR', DBDate(), false );
 						}
 					}
 

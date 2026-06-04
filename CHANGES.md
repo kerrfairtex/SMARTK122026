@@ -31,6 +31,7 @@ Changes in 12.9
 - HTML display checkbox before its label in MailingLabels.php, ProgressReports.php & PrintStudentInfo.php
 - Fix SQL error when "Search All Schools" checked: update UserMP() in Search.fnc.php
 - Default School Year: 2026 (2026-2027) in config.inc.sample.php, rosariosis.sql & rosariosis_mysql.sql
+- Add Italian translation in locale/it_IT.utf8/, thanks to Stefania Binda
 
 Changes in 12.8.1
 -----------------

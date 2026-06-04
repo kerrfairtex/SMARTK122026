@@ -2,6 +2,28 @@
 
 ## RosarioSIS Student Information System
 
+New in 12.9
+-----------
+
+Default School Year: 2026 (2026-2027)
+
+Security and SQL performance improvements
+
+**Breaking change**, please upgrade the following add-ons:
+- [Reports](https://www.rosariosis.org/modules/reports/) module 12.1+ (May 2026)
+- [Parent Agreement](https://gitlab.com/francoisjacquet/Parent_Agreement/) plugin 10.5+ (May 2026)
+
+Add Italian translation, thanks to Stefania Binda
+
+[Chrome To PDF](https://gitlab.com/francoisjacquet/Chrome_To_PDF) plugin, sponsored by École Saint-Martin, France
+
+[Student Import Premium](https://www.rosariosis.org/modules/students-import/)
+- Delete existing students before import (optional, only if all students can be deleted)
+
+[Billing Elements](https://www.rosariosis.org/modules/billing-elements/)
+- Monthly Elements, sponsored by École Sainte Marie, France
+
+
 New in 12.8
 -----------
 

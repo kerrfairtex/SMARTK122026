@@ -30,6 +30,7 @@ Changes in 12.9
 - Security fix #376 IDOR: Unauthorized Cross-School Data Assignment in AddAbsences.php, AddActivity.php, Requests.php, MassAssignFees.php, MassAssignPayments.php, AssignOtherInfo.php & AddStudents.php, thanks to @Cresp0
 - HTML display checkbox before its label in MailingLabels.php, ProgressReports.php & PrintStudentInfo.php
 - Fix SQL error when "Search All Schools" checked: update UserMP() in Search.fnc.php
+- Default School Year: 2026 (2026-2027) in config.inc.sample.php, rosariosis.sql & rosariosis_mysql.sql
 
 Changes in 12.8.1
 -----------------

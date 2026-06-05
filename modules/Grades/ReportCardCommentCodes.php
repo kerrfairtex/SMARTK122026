@@ -91,7 +91,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		$delete_sql .= "DELETE FROM report_card_comment_code_scales
-			WHERE ID='" . (int) $_REQUEST['id'] . "';
+			WHERE ID='" . (int) $_REQUEST['id'] . "'
 			AND SCHOOL_ID='" . UserSchool() . "';";
 
 		DBQuery( $delete_sql );

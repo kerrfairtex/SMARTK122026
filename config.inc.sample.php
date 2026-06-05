@@ -52,7 +52,7 @@ $wkhtmltopdfPath = '';
  *
  * @see School > Rollover program
  */
-$DefaultSyear = '2025';
+$DefaultSyear = '2026';
 
 
 /**

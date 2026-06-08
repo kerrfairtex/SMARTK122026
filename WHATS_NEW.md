@@ -11,6 +11,7 @@ Security and SQL performance improvements
 
 **Breaking change**, please upgrade the following add-ons:
 - [Reports](https://www.rosariosis.org/modules/reports/) module 12.1+ (May 2026)
+- [NFC/QR Actions](https://www.rosariosis.org/modules/nfc-qr-actions/) module 2.6+ (June 2026)
 - [Parent Agreement](https://gitlab.com/francoisjacquet/Parent_Agreement/) plugin 10.5+ (May 2026)
 
 Add Italian translation, thanks to Stefania Binda

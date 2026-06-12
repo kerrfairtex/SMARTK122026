@@ -1,6 +1,9 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
+Changes in 12.9.1
+-----------------
+- Fix double escaping Course Period Short Name in Courses.php & Courses.fnc.php
 Changes in 12.9
 ---------------
 - Fix PHP warning undefined index when school was deleted in School.php & Schools.php

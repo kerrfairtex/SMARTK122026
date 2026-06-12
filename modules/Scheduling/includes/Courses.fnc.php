@@ -327,7 +327,7 @@ function CoursePeriodTitleGenerate( $cp_id, $columns )
 
 	if ( isset( $columns['SHORT_NAME'] ) )
 	{
-		$short_name = $columns['SHORT_NAME'];
+		$short_name = DBUnescapeString( $columns['SHORT_NAME'] );
 	}
 	else
 	{

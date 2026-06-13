@@ -4,6 +4,8 @@
 Changes in 12.9.1
 -----------------
 - Fix double escaping Course Period Short Name in Courses.php & Courses.fnc.php
+- Fix SQL error unknown column 'ssm.STUDENT_ID' in 'on clause', use explicit JOIN in Export.php
+
 Changes in 12.9
 ---------------
 - Fix PHP warning undefined index when school was deleted in School.php & Schools.php

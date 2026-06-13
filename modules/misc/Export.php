@@ -279,9 +279,9 @@ if ( isset( $_REQUEST['search_modfunc'] )
 					AND xse.STUDENT_ID=s.STUDENT_ID
 					LIMIT 1) as drop_short';
 
-        	$extra['FROM'] .= ',student_enrollment xse';
-
-			$extra['WHERE'] .= " AND xse.STUDENT_ID=s.STUDENT_ID AND xse.SYEAR='" . UserSyear() . "'";
+			// Fix SQL error unknown column 'ssm.STUDENT_ID' in 'on clause', use explicit JOIN
+        	$extra['FROM'] .= " LEFT JOIN student_enrollment xse
+        		ON (xse.STUDENT_ID=s.STUDENT_ID AND xse.SYEAR='" . UserSyear() . "')";
 
 			$extra['functions']['START_DATE'] = 'ProperDate';
 			$extra['functions']['END_DATE'] = 'ProperDate';
@@ -366,8 +366,8 @@ if ( isset( $_REQUEST['search_modfunc'] )
 			|| isset( $_REQUEST['fields']['FS_BARCODE'] ) && $_REQUEST['fields']['FS_BARCODE'] == 'Y'
 			|| isset( $_REQUEST['fields']['FS_BALANCE'] ) && $_REQUEST['fields']['FS_BALANCE'] == 'Y' ) )
 	{
-		$extra['FROM'] .= ',food_service_student_accounts fssa';
-		$extra['WHERE'] .= ' AND fssa.STUDENT_ID=ssm.STUDENT_ID';
+		// Fix SQL error unknown column 'ssm.STUDENT_ID' in 'on clause', use explicit JOIN
+		$extra['FROM'] .= ' LEFT JOIN food_service_student_accounts fssa ON fssa.STUDENT_ID=ssm.STUDENT_ID';
 
 		if ( isset( $_REQUEST['fields']['FS_ACCOUNT_ID'] ) && $_REQUEST['fields']['FS_ACCOUNT_ID'] == 'Y' )
 		{

@@ -619,16 +619,47 @@ if ( $_REQUEST['modfunc'] === 'detail' )
 	// Assignment
 	elseif ( ! empty( $_REQUEST['assignment_id'] ) )
 	{
-		//FJ add assigned date
-		$RET = DBGet( "SELECT a.TITLE,a.STAFF_ID,a.DUE_DATE AS SCHOOL_DATE,
-			a.DESCRIPTION,a.ASSIGNED_DATE,c.TITLE AS COURSE,a.SUBMISSION
-			FROM gradebook_assignments a,courses c
-			WHERE (a.COURSE_ID=c.COURSE_ID
-				OR c.COURSE_ID=(SELECT cp.COURSE_ID
-					FROM course_periods cp
-					WHERE cp.COURSE_PERIOD_ID=a.COURSE_PERIOD_ID))
-			AND a.ASSIGNMENT_ID='" . (int) $_REQUEST['assignment_id'] . "'",
-			[ 'COURSE' => 'ParseMLField' ] );
+		if ( User( 'PROFILE' ) === 'student'
+			|| User( 'PROFILE' ) === 'parent' )
+		{
+			// Security fix #379 BOLA: Any authenticated user can read assignment details outside their enrolled courses
+			$assignment_sql = "SELECT a.TITLE,a.STAFF_ID,a.DUE_DATE AS SCHOOL_DATE,
+				a.DESCRIPTION,a.ASSIGNED_DATE,c.TITLE AS COURSE,a.SUBMISSION
+				FROM gradebook_assignments a,courses c,schedule s
+				WHERE a.ASSIGNMENT_ID='" . (int) $_REQUEST['assignment_id'] . "'
+				AND c.SYEAR='" . UserSyear() . "'
+				AND c.SCHOOL_ID='" . UserSchool() . "'
+				AND (a.COURSE_ID=c.COURSE_ID
+					OR c.COURSE_ID=(SELECT cp.COURSE_ID
+						FROM course_periods cp
+						WHERE cp.COURSE_PERIOD_ID=a.COURSE_PERIOD_ID))
+				AND (a.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID OR a.COURSE_ID=s.COURSE_ID)
+				AND s.STUDENT_ID='" . UserStudentID() . "'
+				AND s.SYEAR=c.SYEAR
+				AND s.SCHOOL_ID=c.SCHOOL_ID";
+		}
+		else
+		{
+			// Teacher (admin do not see Assignments on the Calendar)
+			$assignment_sql = "SELECT a.TITLE,a.STAFF_ID,a.DUE_DATE AS SCHOOL_DATE,
+				a.DESCRIPTION,a.ASSIGNED_DATE,c.TITLE AS COURSE,a.SUBMISSION
+				FROM gradebook_assignments a,courses c
+				WHERE a.ASSIGNMENT_ID='" . (int) $_REQUEST['assignment_id'] . "'
+				AND c.SYEAR='" . UserSyear() . "'
+				AND c.SCHOOL_ID='" . UserSchool() . "'
+				AND (a.COURSE_ID=c.COURSE_ID
+					OR c.COURSE_ID=(SELECT cp.COURSE_ID
+						FROM course_periods cp
+						WHERE cp.COURSE_PERIOD_ID=a.COURSE_PERIOD_ID))
+				AND a.STAFF_ID='" . User( 'STAFF_ID' ) . "'";
+		}
+
+		$RET = DBGet( $assignment_sql, [ 'COURSE' => 'ParseMLField' ] );
+
+		if ( ! $RET )
+		{
+			return;
+		}
 
 		$title = $RET[1]['TITLE'];
 
@@ -1092,6 +1123,8 @@ if ( ! $_REQUEST['modfunc'] )
 			FROM gradebook_assignments a,schedule s
 			WHERE (a.COURSE_PERIOD_ID=s.COURSE_PERIOD_ID OR a.COURSE_ID=s.COURSE_ID)
 			AND s.STUDENT_ID='" . UserStudentID() . "'
+			AND s.SYEAR='" . UserSyear() . "'
+			AND s.SCHOOL_ID='" . UserSchool() . "'
 			AND (a.DUE_DATE BETWEEN s.START_DATE AND s.END_DATE OR s.END_DATE IS NULL)
 			AND (a.ASSIGNED_DATE<=CURRENT_DATE OR a.ASSIGNED_DATE IS NULL)
 			AND a.DUE_DATE BETWEEN '" . $first_day_month . "' AND '" . $last_day_month . "'";

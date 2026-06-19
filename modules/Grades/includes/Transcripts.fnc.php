@@ -225,13 +225,17 @@ if ( ! function_exists( 'TranscriptsGenerate' ) )
 
 		if ( User( 'PROFILE' ) !== 'admin' )
 		{
-			// FJ prevent student ID hacking.
+			// Prevent student ID hacking.
 			$extra['WHERE'] = " AND s.STUDENT_ID IN (" . $st_list . ")";
 
 			// Parent: associated students.
 			$extra['ASSOCIATED'] = User( 'STAFF_ID' );
 
 			$RET = GetStuList( $extra );
+
+			// Security fix #378 BOLA: Students and parents can read other students' transcripts via `st_arr[]` bypass
+			// Rebuild st_list from the authorized result only
+			$st_list = implode( ',', array_map( 'intval', array_keys( (array) $RET ) ) );
 		}
 
 		$t_grades = DBGet( "SELECT *

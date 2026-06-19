@@ -99,6 +99,13 @@ if ( $_REQUEST['modfunc'] === 'save' )
 		BackPrompt( _( 'No Students were found.' ) );
 	}
 
+	if ( User( 'PROFILE' ) !== 'admin' )
+	{
+		// Security fix #378 BOLA: Students and parents can read other students' schedules via `st_arr[]` bypass
+		// Rebuild st_list from the authorized result only
+		$st_list = implode( ',', array_map( 'intval', array_keys( (array) $RET ) ) );
+	}
+
 	$handle = PDFStart();
 
 	if ( $_REQUEST['schedule_table'] === 'No' )

@@ -6,6 +6,7 @@ Changes in 12.9.1
 - Fix double escaping Course Period Short Name in Courses.php & Courses.fnc.php
 - Fix SQL error unknown column 'ssm.STUDENT_ID' in 'on clause', use explicit JOIN in Export.php
 - Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment in TakeAttendance.php, MakeReferral.php, EnterEligibility.php & InputFinalGrades.php
+- Security fix #378 BOLA: Students and parents can read other students' transcripts and schedules via `st_arr[]` bypass in Transcripts.fnc.php & PrintSchedules.php, thanks to @weilai-8
 
 Changes in 12.9
 ---------------

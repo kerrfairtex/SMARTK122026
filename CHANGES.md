@@ -5,6 +5,7 @@ Changes in 12.9.1
 -----------------
 - Fix double escaping Course Period Short Name in Courses.php & Courses.fnc.php
 - Fix SQL error unknown column 'ssm.STUDENT_ID' in 'on clause', use explicit JOIN in Export.php
+- Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment in TakeAttendance.php, MakeReferral.php, EnterEligibility.php & InputFinalGrades.php
 
 Changes in 12.9
 ---------------

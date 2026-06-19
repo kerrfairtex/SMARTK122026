@@ -359,10 +359,29 @@ if ( $_REQUEST['modfunc'] === 'save' )
 		FROM course_periods
 		WHERE COURSE_PERIOD_ID='" . (int) $course_period_id . "'" );
 
-	$_REQUEST['values'] = issetVal( $_REQUEST['values'] );
+	$_REQUEST['values'] = issetVal( $_REQUEST['values'], [] );
+
+	// Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment
+	$st_list = implode( ',', array_map( 'intval', array_keys( $_REQUEST['values'] ) ) );
+
+	$students_RET = DBGet( "SELECT DISTINCT STUDENT_ID
+		FROM schedule
+		WHERE SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+		AND STUDENT_ID IN(" . $st_list . ")",
+		[], [ 'STUDENT_ID' ] );
+
+	$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );
 
 	foreach ( (array) $_REQUEST['values'] as $student_id => $columns )
 	{
+		if ( ! in_array( $student_id, $student_ids ) )
+		{
+			// Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment
+			continue;
+		}
+
 		if ( ! empty( $current_RET[$student_id] ) )
 		{
 			$update_columns = [];

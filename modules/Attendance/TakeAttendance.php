@@ -228,8 +228,27 @@ $current_RET = DBGet( $current_Q, [], [ 'STUDENT_ID' ] );
 if ( ! empty( $_REQUEST['attendance'] )
 	&& ! empty( $_POST['attendance'] ) )
 {
+	// Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment
+	$st_list = implode( ',', array_map( 'intval', array_keys( $_REQUEST['attendance'] ) ) );
+
+	$students_RET = DBGet( "SELECT DISTINCT STUDENT_ID
+		FROM schedule
+		WHERE SYEAR='" . UserSyear() . "'
+		AND SCHOOL_ID='" . UserSchool() . "'
+		AND COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+		AND STUDENT_ID IN(" . $st_list . ")",
+		[], [ 'STUDENT_ID' ] );
+
+	$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );
+
 	foreach ( (array) $_REQUEST['attendance'] as $student_id => $value )
 	{
+		if ( ! in_array( $student_id, $student_ids ) )
+		{
+			// Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment
+			continue;
+		}
+
 		$student_attendance_code = (int) mb_substr( $value, 5 );
 
 		if ( ! empty( $current_RET[$student_id] ) )

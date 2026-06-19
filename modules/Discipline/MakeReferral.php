@@ -27,7 +27,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 		if ( User( 'PROFILE' ) === 'teacher' )
 		{
 			// Limit relator to Teacher.
-			$_REQUEST['values']['STAFF_ID'] = $_POST['values']['STAFF_ID'] = User( 'STAFF_ID' );
+			$_REQUEST['values']['STAFF_ID'] = User( 'STAFF_ID' );
 		}
 
 		foreach ( (array) $_REQUEST['values'] as $column => $value )
@@ -72,7 +72,25 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 		$email_sent = false;
 
-		foreach ( $_REQUEST['st_arr'] as $student_id )
+		$student_ids = $_REQUEST['st_arr'];
+
+		if ( User( 'PROFILE' ) === 'teacher' )
+		{
+			// Security fix #377 IDOR: Unauthorized Cross-Roster Data Assignment
+			$st_list = implode( ',', array_map( 'intval', $_REQUEST['st_arr'] ) );
+
+			$students_RET = DBGet( "SELECT DISTINCT STUDENT_ID
+				FROM schedule
+				WHERE SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "'
+				AND COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
+				AND STUDENT_ID IN(" . $st_list . ")",
+				[], [ 'STUDENT_ID' ] );
+
+			$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );
+		}
+
+		foreach ( (array) $student_ids as $student_id )
 		{
 			$referral_id = DBInsert(
 				'discipline_referrals',

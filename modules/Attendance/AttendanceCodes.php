@@ -24,7 +24,7 @@ if ( $_REQUEST['modfunc'] === 'update'
 				{
 					DBUpdate(
 						'attendance_codes',
-						[ 'DEFAULT_CODE' => '' ], // NULL
+						[ 'DEFAULT_CODE' => null ],
 						[
 							'SYEAR' => UserSyear(),
 							'SCHOOL_ID' => UserSchool(),
@@ -116,7 +116,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 
 		DBUpdate(
 			'course_periods',
-			[ 'DOES_ATTENDANCE' => '' ], // NULL
+			[ 'DOES_ATTENDANCE' => null ],
 			[
 				'DOES_ATTENDANCE' => ',',
 				'SYEAR' => UserSyear(),

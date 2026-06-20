@@ -405,10 +405,10 @@ if ( $_REQUEST['modfunc'] === 'delete_address'
 					'students_join_address',
 					[
 						'ADDRESS_ID' => '0',
-						'RESIDENCE' => '', // NULL
-						'MAILING' => '', // NULL
-						'BUS_PICKUP' => '', // NULL
-						'BUS_DROPOFF' => '', // NULL
+						'RESIDENCE' => null,
+						'MAILING' => null,
+						'BUS_PICKUP' => null,
+						'BUS_DROPOFF' => null,
 					],
 					[ 'STUDENT_ID' => UserStudentID(), 'ADDRESS_ID' => (int) $_REQUEST['address_id'] ]
 				);

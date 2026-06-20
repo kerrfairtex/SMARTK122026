@@ -78,7 +78,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 	{
 		DBUpdate(
 			'report_card_comments',
-			[ 'SCALE_ID' => '' ], // NULL
+			[ 'SCALE_ID' => null ],
 			[
 				'SCALE_ID' => (int) $_REQUEST['id'],
 				'SCHOOL_ID' => UserSchool(),

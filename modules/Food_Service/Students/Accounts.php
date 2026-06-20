@@ -79,13 +79,13 @@ if ( $_REQUEST['modfunc'] === 'update' )
 				{
 					DBUpdate(
 						'food_service_student_accounts',
-						[ 'BARCODE' => '' ], // NULL
+						[ 'BARCODE' => null ],
 						[ 'BARCODE' => trim( $_REQUEST['food_service']['BARCODE'] ) ]
 					);
 
 					DBUpdate(
 						'food_service_staff_accounts',
-						[ 'BARCODE' => '' ], // NULL
+						[ 'BARCODE' => null ],
 						[ 'BARCODE' => trim( $_REQUEST['food_service']['BARCODE'] ) ]
 					);
 				}

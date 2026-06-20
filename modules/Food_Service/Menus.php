@@ -80,7 +80,7 @@ if ( $_REQUEST['modfunc'] === 'remove'
 		{
 			DBUpdate(
 				'food_service_menu_items',
-				[ 'CATEGORY_ID' => '' ], // NULL
+				[ 'CATEGORY_ID' => null ],
 				[ 'CATEGORY_ID' => (int) $_REQUEST['category_id'], 'SCHOOL_ID' => UserSchool() ]
 			);
 

@@ -231,6 +231,9 @@ if ( ! function_exists( 'TranscriptsGenerate' ) )
 			// Parent: associated students.
 			$extra['ASSOCIATED'] = User( 'STAFF_ID' );
 
+			// Group results by STUDENT_ID.
+			$extra['group'] = [ 'STUDENT_ID' ];
+
 			$RET = GetStuList( $extra );
 
 			// Security fix #378 BOLA: Students and parents can read other students' transcripts via `st_arr[]` bypass

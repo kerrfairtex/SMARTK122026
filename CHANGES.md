@@ -9,6 +9,7 @@ Changes in 12.9.1
 - Security fix #378 BOLA: Students and parents can read other students' transcripts and schedules via `st_arr[]` bypass in Transcripts.fnc.php & PrintSchedules.php, thanks to @weilai-8
 - Security fix #379 BOLA: Any authenticated user can read assignment details outside their enrolled courses via `assignment_id` parameter in Calendar.php, thanks to @weilai-8
 - SQL use actual null value in DBUpdate() $columns param in AttendanceCodes.php, Menus.php, Accounts.php, ReportCardCommentCodes.php & Address.inc.php
+- CSP Do not save violations triggered by AdBlock360 in SaveReport.php
 
 Changes in 12.9
 ---------------

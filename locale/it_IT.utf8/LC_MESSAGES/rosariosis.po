@@ -1,17 +1,17 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: RosarioSIS\n"
+"Project-Id-Version: RosarioSis\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-19 13:37+0000\n"
-"PO-Revision-Date: 2026-05-21 14:33+0200\n"
+"POT-Creation-Date: 2026-06-23 18:42+0000\n"
+"PO-Revision-Date: 2026-06-23 20:47+0200\n"
 "Last-Translator: \n"
 "Language-Team: Stefania Binda\n"
-"Language: it@formal\n"
+"Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Poedit 3.6\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
 
 #: Bottom.php:23
 msgid "Skip to main content"
@@ -344,7 +344,7 @@ msgstr "Testo esteso"
 #: ProgramFunctions/Fields.fnc.php:403 ProgramFunctions/Fields.fnc.php:720
 #: modules/Discipline/DisciplineForm.php:318
 msgid "Checkbox"
-msgstr "Casella di controllo"
+msgstr "Casella di selezione"
 
 #: ProgramFunctions/Fields.fnc.php:404 ProgramFunctions/Fields.fnc.php:721
 #: modules/Discipline/DisciplineForm.php:319
@@ -1791,7 +1791,7 @@ msgstr "Media ponderata"
 #: classes/core/Widget.php:532 classes/core/Widget.php:553
 #: modules/Grades/GPARankList.php:66
 msgid "Unweighted GPA"
-msgstr "Media dei voti non ponderata"
+msgstr "Media non ponderata"
 
 #: classes/RosarioSIS/Widget/Gpa.php:72 classes/core/Widget.php:563
 #: modules/Grades/EditReportCardGrades.php:269
@@ -3082,7 +3082,7 @@ msgstr[1] "Periodi"
 #: modules/Attendance/Administration_fast.old.php:106
 #: modules/Attendance/AttendanceCodes.php:83
 msgid "Attendance Code"
-msgstr "Codice presenze"
+msgstr "Codice presenza"
 
 #: modules/Attendance/Administration.php:327
 #: modules/Attendance/Administration_fast.old.php:106
@@ -3093,12 +3093,12 @@ msgstr "Riservato ai docenti"
 #: modules/Attendance/TakeAttendance.php:372
 #: modules/Attendance/includes/StudentSummary.php:252
 msgid "Office Comment"
-msgstr "Annotazione segreteria"
+msgstr "Commenti segreteria"
 
 #: modules/Attendance/Administration.php:329
 #: modules/Attendance/TakeAttendance.php:348
 msgid "Teacher Comment"
-msgstr "Commento docente"
+msgstr "Commenti docente"
 
 #: modules/Attendance/Administration.php:336
 #: modules/Attendance/Administration.php:533
@@ -3106,7 +3106,7 @@ msgstr "Commento docente"
 #: modules/Attendance/Administration_fast.old.php:108
 #: modules/Attendance/Administration_fast.old.php:195
 msgid "Update"
-msgstr "Aggiorna"
+msgstr "Aggiornare"
 
 #: modules/Attendance/Administration.php:467
 #: modules/Attendance/AttendanceCodes.php:316 modules/Attendance/Percent.php:137
@@ -3122,7 +3122,7 @@ msgstr "Presente"
 #: modules/Attendance/Administration.php:468
 #: modules/Attendance/TakeAttendance.php:381
 msgid "Day Comment"
-msgstr "Annotazione giornaliera"
+msgstr "Commenti giornalieri"
 
 #: modules/Attendance/Administration.php:542
 #: modules/Attendance/Administration_fast.old.php:217
@@ -3260,12 +3260,12 @@ msgstr "Quando desidera ricalcolare le presenze giornaliere?"
 
 #: modules/Attendance/FixDailyAttendance.php:59 modules/Attendance/Menu.php:23
 msgid "Recalculate Daily Attendance"
-msgstr "Ricalcolare la presenza giornaliera"
+msgstr "Ricalcolare le presenze giornaliere"
 
 #: modules/Attendance/FixDailyAttendance.php:61
 msgid "The Daily Attendance for that timeframe has been recalculated."
 msgstr ""
-"La presenza giornaliera per quell'intervallo di date è stata ricalcolata."
+"Le presenze giornaliere per quell'intervallo di date sono state ricalcolate."
 
 #: modules/Attendance/FixDailyAttendance.php:64
 msgid "Calculating ..."
@@ -3301,11 +3301,11 @@ msgstr "Elimina le presenze duplicate"
 #: modules/Grades/includes/ReportCards.fnc.php:132
 #: modules/School_Setup/CopySchool.php:11 modules/School_Setup/Rollover.php:121
 msgid "Attendance Codes"
-msgstr "Codici presenze"
+msgstr "Codici presenza"
 
 #: modules/Attendance/Menu.php:32 modules/Attendance/Menu.php:44
 msgid "Take Attendance"
-msgstr "Registra presenza"
+msgstr "Registrare presenza"
 
 #: modules/Attendance/Percent.php:20
 msgid "Average Attendance by Day"
@@ -3321,7 +3321,7 @@ msgstr "Presenze medie per giorno"
 #: modules/Students/StudentBreakdown.php:27
 #: modules/Students/StudentBreakdown.php:287
 msgid "Advanced"
-msgstr "Avanzato"
+msgstr "Avanzate"
 
 #: modules/Attendance/Percent.php:136 modules/Attendance/Percent.php:200
 #: modules/Food_Service/MenuReports.php:62
@@ -3454,7 +3454,7 @@ msgstr "Totali dall'inizio dell'anno"
 #: modules/Custom/AttendanceSummary.php:306
 #: modules/Custom/AttendanceSummary.php:330
 msgid "Create Attendance Report for Selected Students"
-msgstr "Crea report presenze per gli alunni selezionati"
+msgstr "Creare report presenze per gli alunni selezionati"
 
 #: modules/Custom/CreateParents.php:59 modules/Custom/CreateParents.php:79
 msgid "Select Parents email field"
@@ -3540,7 +3540,7 @@ msgstr "Modalità test"
 #: modules/Custom/CreateParents.php:458
 #: modules/Students/includes/Address.inc.php:353
 msgid "Contact"
-msgstr "Contatti"
+msgstr "Contatto"
 
 #: modules/Custom/CreateParents.php:466
 msgid "Students having Contacts"
@@ -4121,7 +4121,7 @@ msgstr "Scheda alunno"
 
 #: modules/Eligibility/Menu.php:23
 msgid "Entry Times"
-msgstr "Orari di ingresso"
+msgstr "Periodi di accesso"
 
 #: modules/Eligibility/Menu.php:29 modules/Eligibility/Menu.php:41
 msgid "Enter Eligibility"
@@ -5102,7 +5102,7 @@ msgstr "File"
 
 #: modules/Grades/Assignments.php:842
 msgid "Apply to all Periods for this Course"
-msgstr "Applica a tutto il perido di questo corso"
+msgstr "Applica a tutti i periodi di questo corso"
 
 #: modules/Grades/Assignments.php:861
 #: modules/Grades/MassCreateAssignments.php:416
@@ -5176,11 +5176,11 @@ msgstr ""
 
 #: modules/Grades/Configuration.php:157
 msgid "Weight Assignment Categories"
-msgstr "Pondera le categorie di compiti"
+msgstr "Ponderare le categorie di compiti"
 
 #: modules/Grades/Configuration.php:166
 msgid "Weight Assignments"
-msgstr "Pondera i compiti"
+msgstr "Assegnazione dei pesi"
 
 #: modules/Grades/Configuration.php:174
 msgid "Assigned Date defaults to today"
@@ -5222,7 +5222,7 @@ msgstr "Voti finali"
 #: modules/Grades/Configuration.php:278
 #, php-format
 msgid "Default %s comment code"
-msgstr "Codice annotazione predefinito %s"
+msgstr "Codice commento predefinito %s"
 
 #: modules/Grades/Configuration.php:302
 msgid "Score Breakoff Points"
@@ -5241,8 +5241,8 @@ msgstr ""
 #: modules/Grades/EditHistoryMarkingPeriods.php:112
 msgid "History Marking Period"
 msgid_plural "History Marking Periods"
-msgstr[0] "Storico periodo di valutazione"
-msgstr[1] "Storico periodi di valutazione"
+msgstr[0] "Periodo di valutazione storico"
+msgstr[1] "Periodi di valutazione storici"
 
 #: modules/Grades/EditHistoryMarkingPeriods.php:89
 msgid "Grade Post Date"
@@ -5350,7 +5350,7 @@ msgstr "Ass.<br />Anno / Per."
 #: modules/Grades/FinalGrades.php:407
 #: modules/Grades/includes/ReportCards.fnc.php:1766
 msgid "General Comments"
-msgstr "Annotazioni generali"
+msgstr "Commenti generali"
 
 #: modules/Grades/FinalGrades.php:410 modules/Grades/FinalGrades.php:411
 #: modules/Grades/FinalGrades.php:464 modules/Grades/InputFinalGrades.php:1048
@@ -5361,12 +5361,12 @@ msgstr "Codici commento"
 
 #: modules/Grades/FinalGrades.php:469
 msgid "Comment Scales"
-msgstr "Scale di annotazione"
+msgstr "Scale di commento"
 
 #: modules/Grades/FinalGrades.php:519
 #: modules/Grades/includes/ReportCards.fnc.php:1072
 msgid "Course-specific Comments"
-msgstr "Annotazioni specifiche dei corsi"
+msgstr "Commenti specifici per il corso"
 
 #: modules/Grades/FinalGrades.php:540 modules/Grades/ReportCards.php:68
 #: modules/Grades/Transcripts.php:65
@@ -5415,7 +5415,7 @@ msgstr[1] "Consegne"
 #: modules/Grades/ProgressReports.php:67 modules/Grades/StudentGrades.php:80
 #: modules/Grades/StudentGrades.php:441
 msgid "Letter"
-msgstr "Lettera"
+msgstr "Alfabetico"
 
 #: modules/Grades/Grades.php:542
 msgid "Assignment Types"
@@ -5441,7 +5441,7 @@ msgstr "Cr. E."
 
 #: modules/Grades/HonorRoll.php:46 modules/Grades/HonorRoll.php:119
 msgid "Create Honor Roll for Selected Students"
-msgstr "Crea un albo d'onore per gli alunni selezionati"
+msgstr "Crea Albo d'Onore per gli alunni selezionati"
 
 #: modules/Grades/HonorRoll.php:53
 msgid "Certificates"
@@ -5485,7 +5485,7 @@ msgstr "Scale di valutazione"
 #: modules/Grades/InputFinalGrades.php:1047 modules/Grades/Menu.php:29
 #: modules/Grades/Menu.php:57 modules/School_Setup/Rollover.php:125
 msgid "Report Card Comments"
-msgstr "Annotazioni della pagella"
+msgstr "Commenti della pagella"
 
 #: modules/Grades/InputFinalGrades.php:1110
 #, php-format
@@ -5582,7 +5582,7 @@ msgstr "Albo d'Onore"
 
 #: modules/Grades/Menu.php:18 modules/Grades/Menu.php:69
 msgid "Transcripts"
-msgstr "Trascrizioni"
+msgstr "Storico scolastico"
 
 #: modules/Grades/Menu.php:20 modules/Grades/Menu.php:51
 #: modules/School_Setup/Configuration.php:728
@@ -5600,7 +5600,7 @@ msgstr "Elenco media / graduatoria di classe"
 
 #: modules/Grades/Menu.php:31
 msgid "History Marking Periods"
-msgstr "Storico periodi di valutazione"
+msgstr "Periodi di valutazione storici"
 
 #: modules/Grades/Menu.php:33
 msgid "Historical Grades"
@@ -5680,11 +5680,11 @@ msgstr "Non è ancora stato configurato alcun corso."
 
 #: modules/Grades/ReportCardComments.php:86
 msgid "Report Card Comment Category"
-msgstr "Categoria commento pagella"
+msgstr "Categoria commenti pagella"
 
 #: modules/Grades/ReportCardComments.php:297
 msgid "Comment Category"
-msgstr "Categoria del commento"
+msgstr "Categoria commenti"
 
 #: modules/Grades/ReportCardComments.php:374
 msgid "Code Scale"
@@ -5792,7 +5792,7 @@ msgstr "Docenti che inseriscono i voti per %s"
 
 #: modules/Grades/Transcripts.php:79 modules/Grades/Transcripts.php:107
 msgid "Create Transcripts for Selected Students"
-msgstr "Crea pagelle per gli alunni selezionati"
+msgstr "Crea Storico scolastico per gli alunni selezionati"
 
 #: modules/Grades/includes/FinalGrades.inc.php:452
 msgid "Final Grading Percentages are not configured."
@@ -6213,7 +6213,7 @@ msgstr "La data inserita non è valida"
 
 #: modules/Scheduling/MassDrops.php:165 modules/Scheduling/MassDrops.php:257
 msgid "Drop Course for Selected Students"
-msgstr "Rimuovi corso per gli alunni selezionati"
+msgstr "Rimuovere dal corso gli alunni selezionati"
 
 #: modules/Scheduling/MassDrops.php:169
 msgid "Course to Drop"
@@ -6222,7 +6222,7 @@ msgstr "Corso da rimuovere"
 #: modules/Scheduling/MassDrops.php:190 modules/Scheduling/MassRequests.php:105
 #: modules/Scheduling/MassSchedule.php:179
 msgid "Choose a Course"
-msgstr "Scegli un corso"
+msgstr "Scegliere un corso"
 
 #: modules/Scheduling/MassDrops.php:195
 msgid "Drop Date"
@@ -6534,7 +6534,7 @@ msgstr "Ripristina"
 
 #: modules/Scheduling/includes/Courses.fnc.php:151
 msgid "Takes Attendance"
-msgstr "Registra presenze"
+msgstr "Registrare presenze"
 
 #: modules/Scheduling/includes/Courses.fnc.php:212
 msgid "Grading Scale"
@@ -6554,7 +6554,7 @@ msgstr "Incide sull'Albo d'Onore"
 
 #: modules/Scheduling/includes/Courses.fnc.php:261
 msgid "Gender Restriction"
-msgstr "Limitazione per sesso"
+msgstr "Limitazione per genere"
 
 #: modules/Scheduling/includes/Courses.fnc.php:264
 msgid "Male"
@@ -6574,15 +6574,15 @@ msgstr "Mostra dettagli periodi di valutazione secondari"
 
 #: modules/Scheduling/includes/ScheduleReport.php:45
 msgid "Top"
-msgstr "Inizio pagina"
+msgstr "Parte superiore"
 
 #: modules/Scheduling/includes/ScheduleReport.php:67
 msgid "List Students"
-msgstr "Elenco degli alunni"
+msgstr "Elenco alunni"
 
 #: modules/Scheduling/includes/ScheduleReport.php:76
 msgid "List Unscheduled Students"
-msgstr "Elenca alunni senza orario"
+msgstr "Elenco alunni non iscritti"
 
 #: modules/Scheduling/includes/ScheduleReport.php:181
 msgid "Requests"
@@ -6895,15 +6895,15 @@ msgstr "Limita contatti e indirizzi esistenti alla scuola corrente"
 
 #: modules/School_Setup/Configuration.php:661
 msgid "Use Semester Comments instead of Quarter Comments"
-msgstr "Utilizzare annotazioni semestrali invece che quadrimestrali"
+msgstr "Utilizzare commenti semestrali invece che quadrimestrali"
 
 #: modules/School_Setup/Configuration.php:674
 msgid "Use letter grades only"
-msgstr "Usare solo voti letterali"
+msgstr "Usare solo voti in lettere"
 
 #: modules/School_Setup/Configuration.php:675
 msgid "Use letter and percent grades"
-msgstr "Usare voti letterali e percentuali"
+msgstr "Usare voti in lettere e percentuali"
 
 #: modules/School_Setup/Configuration.php:676
 msgid "Use percent grades only"
@@ -6912,7 +6912,7 @@ msgstr "Usare solo voti percentuali"
 #: modules/School_Setup/Configuration.php:693
 msgid "Hide grade comment except for attendance period courses"
 msgstr ""
-"Nascondi l'annotazione del voto tranne che per i corsi con registro presenze"
+"Nascondi il commento del voto tranne che per i corsi con registro presenze"
 
 #: modules/School_Setup/Configuration.php:703
 msgid "Allow Teachers to edit grades after grade posting period"
@@ -6937,7 +6937,7 @@ msgid ""
 "Set to 0 for dynamic Daily Attendance calculation based on total course "
 "period minutes."
 msgstr ""
-"Impostare su 0 per il calcolo dinamico della frequenza giornaliera in base al "
+"Impostare su 0 per il calcolo dinamico delle presenze giornaliere in base al "
 "numero totale di minuti del corso."
 
 #: modules/School_Setup/Configuration.php:764
@@ -6982,7 +6982,7 @@ msgstr "Codici voto pagella"
 
 #: modules/School_Setup/CopySchool.php:9
 msgid "Report Card Comment Codes"
-msgstr "Codici annotazione pagella"
+msgstr "Codici commenti pagella"
 
 #: modules/School_Setup/CopySchool.php:10 modules/School_Setup/Rollover.php:139
 msgid "Eligibility Activities"
@@ -7072,8 +7072,8 @@ msgstr "Non tutte le date sono state inserite correttamente."
 #: modules/School_Setup/MarkingPeriods.php:754
 msgid "Progress Period"
 msgid_plural "Progress Periods"
-msgstr[0] "Periodo di valutazione intermedia"
-msgstr[1] "Periodi di valutazione intermedia"
+msgstr[0] "Periodo di valutazione intermedio"
+msgstr[1] "Periodi di valutazione intermedi"
 
 #: modules/School_Setup/MarkingPeriods.php:368
 msgid ""
@@ -7395,8 +7395,8 @@ msgstr ""
 #, php-format
 msgid "Do not forget to update the default school year to '%s' when ready."
 msgstr ""
-"Non dimenticare di aggiornare l'anno scolastico predefinito a '%s' quando si "
-"è pronti."
+"Non dimentichi di aggiornare l'anno scolastico predefinito a '%s' quando è "
+"pronto."
 
 #: modules/School_Setup/includes/Rollover.fnc.php:223
 msgid "OK, I am ready"
@@ -8084,7 +8084,7 @@ msgstr ""
 
 #: modules/Users/Exceptions.php:208 modules/Users/Profiles.php:363
 msgid "Can Use"
-msgstr "Può utilizzare"
+msgstr "Può consultare"
 
 #: modules/Users/Exceptions.php:222 modules/Users/Profiles.php:378
 msgid "Can Edit"
@@ -8300,11 +8300,11 @@ msgstr ""
 
 #: modules/Users/Profiles.php:317
 msgid "Add a User Profile"
-msgstr "Aggiungere un profilo utente"
+msgstr "Aggiungere un Profilo utente"
 
 #: modules/Users/Search.inc.php:20
 msgid "Find a User"
-msgstr "Trova un utente"
+msgstr "Trovare un utente"
 
 #: modules/Users/Search.inc.php:69
 msgid "Include Parents of Inactive Students"
@@ -8426,7 +8426,7 @@ msgstr "Buon pomeriggio, %s."
 #: modules/misc/Portal.php:62
 #, php-format
 msgid "Your last login was <b>%s</b>."
-msgstr "I suoi ultimi accessi sono stati effettuati il <b>, il %s e il </b>."
+msgstr "I suoi ultimo accesso è stato effettuato il <b>%s</b>."
 
 #: modules/misc/Portal.php:71
 #, php-format
@@ -8466,13 +8466,13 @@ msgstr[1] "Giorni con eventi imminenti"
 
 #: modules/misc/Portal.php:439
 msgid "Teachers have missing attendance data"
-msgstr "I docenti hanno dati di presenze mancanti"
+msgstr "I docenti hanno dati sulle presenze mancanti"
 
 #: modules/misc/Portal.php:444 modules/misc/Portal.php:753
 msgid "Course Period with missing attendance data"
 msgid_plural "Course Periods with missing attendance data"
-msgstr[0] "Periodo del corso con dati di presenza mancanti"
-msgstr[1] "Periodi del corso con dati di presenza mancanti"
+msgstr[0] "Periodo del corso con dati sulle presenze mancanti"
+msgstr[1] "Periodi del corso con dati sulle presenze mancanti"
 
 #: modules/misc/Portal.php:475 modules/misc/Portal.php:774
 #: modules/misc/Portal.php:964

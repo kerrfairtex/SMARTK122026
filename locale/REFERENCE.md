@@ -29,7 +29,7 @@ Do not forget to add the `.utf8` suffix to the locale code.
 | hu_HU | Hungarian (Hungary)           | 33%       |                     |
 | id_ID | Indonesian (Indonesia)        | 33%       |                     |
 | is_IS | Icelandic (Iceland)           | 33%       |                     |
-| it_IT | Italian (Italy)               | **99%**   | Stefania Binda      |
+| it_IT | Italian (Italy)               | **99%***  | Stefania Binda      |
 | ja_JP | Japanese (Japan)              | 32%       |                     |
 | km_KH | Khmer (Cambodia)              | 85%       | Lyle Kozloff        |
 | ko_KR | Korean (South Korea)          | 31%       |                     |

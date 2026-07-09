@@ -194,7 +194,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 		WHERE SYEAR='" . UserSyear() . "'
 		AND SCHOOL_ID='" . UserSchool() . "'
 		AND COURSE_PERIOD_ID='" . UserCoursePeriod() . "'
-		AND STUDENT_ID IN(" . $st_list . ")",
+		AND STUDENT_ID IN(" . ( $st_list ? $st_list : '0' ) . ")",
 		[], [ 'STUDENT_ID' ] );
 
 	$student_ids = empty( $students_RET ) ? [] : array_keys( $students_RET );

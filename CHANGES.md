@@ -1,6 +1,9 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
+Changes in 12.9.2
+-----------------
+- Fix SQL syntax error "AND STUDENT_ID IN()" when nothing to save in InputFinalGrades.php & EnterEligibility.php
 Changes in 12.9.1
 -----------------
 - Fix double escaping Course Period Short Name in Courses.php & Courses.fnc.php

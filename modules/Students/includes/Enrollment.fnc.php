@@ -83,6 +83,7 @@ function StudentCanEnrollNextSchoolYear( $student_id )
  * SQL code adapted from Rollover.php
  *
  * @since 10.2 Add "Enroll student for next school year"
+ * @since 12.9.2 SQL fix "Enroll student for next school year" when student is inactive
  *
  * @param int $student_id Student ID.
  *
@@ -121,14 +122,14 @@ function StudentEnrollNextSchoolYear( $student_id )
 		FROM student_enrollment e
 		WHERE e.SYEAR='" . UserSyear() . "'
 		AND e.SCHOOL_ID='" . UserSchool() . "'
-		AND ( ('" . DBDate() . "' BETWEEN e.START_DATE AND e.END_DATE OR e.END_DATE IS NULL)
-			AND '" . DBDate() . "'>=e.START_DATE )
 		AND e.NEXT_SCHOOL='" . UserSchool() . "'
 		AND (SELECT NEXT_GRADE_ID
 			FROM school_gradelevels g
 			WHERE g.ID=e.GRADE_ID
 			LIMIT 1) IS NOT NULL
-		AND e.STUDENT_ID='" . (int) $student_id . "'" );
+		AND e.STUDENT_ID='" . (int) $student_id . "'
+		ORDER BY e.START_DATE DESC
+		LIMIT 1" );
 
 	// ROLL STUDENTS WHO ARE TO BE RETAINED.
 	DBQuery( "INSERT INTO student_enrollment
@@ -150,10 +151,10 @@ function StudentEnrollNextSchoolYear( $student_id )
 		FROM student_enrollment e
 		WHERE e.SYEAR='" . UserSyear() . "'
 		AND e.SCHOOL_ID='" . UserSchool() . "'
-		AND ( ('" . DBDate() . "' BETWEEN e.START_DATE AND e.END_DATE OR e.END_DATE IS NULL)
-			AND '" . DBDate() . "'>=e.START_DATE)
 		AND e.NEXT_SCHOOL='0'
-		AND e.STUDENT_ID='" . (int) $student_id . "'" );
+		AND e.STUDENT_ID='" . (int) $student_id . "'
+		ORDER BY e.START_DATE DESC
+		LIMIT 1" );
 
 	// ROLL STUDENTS TO NEXT SCHOOL.
 	// @since 6.4 SQL Roll students to next school: match Grade Level on Title.
@@ -188,10 +189,10 @@ function StudentEnrollNextSchoolYear( $student_id )
 		FROM student_enrollment e
 		WHERE e.SYEAR='" . UserSyear() . "'
 		AND e.SCHOOL_ID='" . UserSchool() . "'
-		AND ( ('" . DBDate() . "' BETWEEN e.START_DATE AND e.END_DATE OR e.END_DATE IS NULL)
-			AND '" . DBDate() . "'>=e.START_DATE)
 		AND e.NEXT_SCHOOL NOT IN ('" . UserSchool() . "','0','-1')
-		AND e.STUDENT_ID='" . (int) $student_id . "'" );
+		AND e.STUDENT_ID='" . (int) $student_id . "'
+		ORDER BY e.START_DATE DESC
+		LIMIT 1" );
 
 	return true;
 }

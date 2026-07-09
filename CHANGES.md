@@ -5,6 +5,7 @@ Changes in 12.9.2
 -----------------
 - Fix SQL syntax error "AND STUDENT_ID IN()" when nothing to save in InputFinalGrades.php & EnterEligibility.php
 - SQL fix "Enroll student for next school year" when student is inactive in Enrollment.fnc.php
+- Fix saving new user when current Staff ID set (in other browser tab) & user has no permission to edit User Profile in User.php
 
 Changes in 12.9.1
 -----------------

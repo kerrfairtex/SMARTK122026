@@ -153,7 +153,8 @@ if ( $_REQUEST['modfunc'] === 'update'
 		&& isset( $_REQUEST['staff']['PROFILE'] ) )
 		|| User( 'PROFILE' ) !== 'admin' )
 	{
-		if ( UserStaffID() )
+		if ( UserStaffID()
+			&& $_REQUEST['staff_id'] )
 		{
 			// Restricted!
 			unset( $_REQUEST['staff']['PROFILE'] );

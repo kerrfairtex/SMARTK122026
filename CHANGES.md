@@ -7,6 +7,7 @@ Changes in 12.9.2
 - SQL fix "Enroll student for next school year" when student is inactive in Enrollment.fnc.php
 - Fix saving new user when current Staff ID set (in other browser tab) & user has no permission to edit User Profile in User.php
 - CSP Do not save violations triggered by VisualSPHost in SaveReport.php
+- No user in session yet, send 403 Forbidden (99% chances its a bot) in Warehouse.php
 
 Changes in 12.9.1
 -----------------

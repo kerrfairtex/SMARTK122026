@@ -57,6 +57,7 @@ $domain_skip = [
 	'https://mainf.global-cache.online', // JS file injected by ??
 	'https://wallet.binance.com', // Binance
 	'https://filtering.adblock360.com', // AdBlock360
+	'https://static.contextall.com', // VisualSPHost
 ];
 
 foreach ( $domain_skip as $domain )

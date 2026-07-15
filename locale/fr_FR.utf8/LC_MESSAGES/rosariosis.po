@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: RosarioSIS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-11-19 18:40+0100\n"
-"PO-Revision-Date: 2025-11-19 18:46+0100\n"
+"PO-Revision-Date: 2026-07-15 17:52+0200\n"
 "Last-Translator: François Jacquet <info@rosariosis.org>\n"
 "Language-Team: RosarioSIS\n"
 "Language: fr\n"
@@ -456,7 +456,7 @@ msgstr "Menu déroulant exportable"
 #: modules/Discipline/DisciplineForm.php:315
 #: modules/School_Setup/PortalPolls.php:286
 msgid "Select Multiple from Options"
-msgstr "Option à choix multiples"
+msgstr "Options à choix multiples"
 
 #: ProgramFunctions/Fields.fnc.php:401 ProgramFunctions/Fields.fnc.php:424
 #: ProgramFunctions/Fields.fnc.php:718
@@ -4363,7 +4363,7 @@ msgstr "Carte de crédit"
 #: modules/Food_Service/Users/Transactions.php:131
 #: modules/Food_Service/Users/Transactions.php:161
 msgid "Debit Card"
-msgstr "Carte de débitDevoir et notes associéesDevoir et notes associées"
+msgstr "Carte de débit"
 
 #: modules/Food_Service/ActivityReport.php:70
 #: modules/Food_Service/ActivityReport.php:151

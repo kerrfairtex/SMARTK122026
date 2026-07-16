@@ -312,7 +312,7 @@ else
 	$LO_columns = [ 'TYPE' => _( 'Type' ), 'DISCOUNT' => _( 'Discount' ) ] + $users_columns + $types_columns;
 }
 
-echo '<form action="Modules.php?modname=' . $_REQUEST['modname'] . '&menu_id=' . $_REQUEST['menu_id'] . '" method="GET">';
+echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] . '&menu_id=' . $_REQUEST['menu_id'] ) . '" method="GET">';
 
 DrawHeader(
 	_( 'Timeframe' ) . ': ' .

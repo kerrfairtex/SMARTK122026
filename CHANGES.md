@@ -10,6 +10,7 @@ Changes in 12.9.2
 - No user in session yet, send 403 Forbidden (99% chances its a bot) in Warehouse.php
 - Fix SQL error retro-compatibility with old Grade Level inputs in GetStuList.fnc.php
 - Corrections to the Spanish help texts translation in help.mo
+- Security fix #390 Reflected XSS - unescaped reflection into `<form action>` in MenuReports.php, thanks to @MDnyn
 
 Changes in 12.9.1
 -----------------

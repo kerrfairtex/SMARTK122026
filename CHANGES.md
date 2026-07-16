@@ -9,6 +9,7 @@ Changes in 12.9.2
 - CSP Do not save violations triggered by VisualSPHost in SaveReport.php
 - No user in session yet, send 403 Forbidden (99% chances its a bot) in Warehouse.php
 - Fix SQL error retro-compatibility with old Grade Level inputs in GetStuList.fnc.php
+- Corrections to the Spanish help texts translation in help.mo
 
 Changes in 12.9.1
 -----------------

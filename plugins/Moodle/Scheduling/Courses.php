@@ -159,7 +159,7 @@ function core_course_update_categories_object()
 		return null;
 	}
 
-	if ( is_null( $columns['TITLE'] ) )
+	if ( empty( $columns['TITLE'] ) )
 	{
 		return null;
 	}

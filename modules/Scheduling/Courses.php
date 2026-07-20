@@ -270,10 +270,12 @@ if ( SchoolInfo( 'NUMBER_DAYS_ROTATION' ) !== null )
 
 // UPDATING.
 
-if ( ! empty( $_REQUEST['tables'] )
-	&& $_POST['tables']
+// @since 13.0 Add `&modfunc=save` to form
+if ( $_REQUEST['modfunc'] === 'save'
 	&& AllowEdit() )
 {
+	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
+
 	$where = [
 		'course_subjects' => 'SUBJECT_ID',
 		'courses' => 'COURSE_ID',
@@ -698,8 +700,8 @@ if ( ! empty( $_REQUEST['tables'] )
 		}
 	}
 
-	// Unset tables, ML_tables & redirect URL.
-	RedirectURL( [ 'tables', 'ML_tables' ] );
+	// Unset modfunc, tables, ML_tables & redirect URL.
+	RedirectURL( [ 'modfunc', 'tables', 'ML_tables' ] );
 }
 
 if ( $_REQUEST['modfunc'] === 'delete'
@@ -1019,7 +1021,8 @@ if (  ( ! $_REQUEST['modfunc']
 			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
 				'&subject_id=' . $_REQUEST['subject_id'] .
 				'&course_id=' . $_REQUEST['course_id'] .
-				'&course_period_id=' . $_REQUEST['course_period_id']  ) . '" method="POST">';
+				'&course_period_id=' . $_REQUEST['course_period_id'] .
+				'&modfunc=save' ) . '" method="POST">';
 
 			DrawHeader( $title, $delete_button . SubmitButton() );
 
@@ -1453,7 +1456,10 @@ if (  ( ! $_REQUEST['modfunc']
 				$RET = [];
 			}
 
-			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] . '&subject_id=' . $_REQUEST['subject_id'] . '&course_id=' . $_REQUEST['course_id']  ) . '" method="POST">';
+			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
+				'&subject_id=' . $_REQUEST['subject_id'] .
+				'&course_id=' . $_REQUEST['course_id'] .
+				'&modfunc=save' ) . '" method="POST">';
 
 			DrawHeader( $title, $delete_button . SubmitButton() );
 
@@ -1528,7 +1534,9 @@ if (  ( ! $_REQUEST['modfunc']
 				$title = _( 'New Subject' );
 			}
 
-			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] . '&subject_id=' . $_REQUEST['subject_id']  ) . '" method="POST">';
+			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
+				'&subject_id=' . $_REQUEST['subject_id'] .
+				'&modfunc=save' ) . '" method="POST">';
 
 			DrawHeader( $title, $delete_button . SubmitButton() );
 

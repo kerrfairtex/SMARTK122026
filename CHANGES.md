@@ -1,6 +1,10 @@
 # CHANGES
 ## RosarioSIS Student Information System
 
+Changes in 13.0
+---------------
+- Add `&modfunc=save` to form in Courses.php
+
 Changes in 12.9.2
 -----------------
 - Fix SQL syntax error "AND STUDENT_ID IN()" when nothing to save in InputFinalGrades.php & EnterEligibility.php

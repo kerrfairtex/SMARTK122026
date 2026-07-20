@@ -2026,24 +2026,3 @@ function calcSeats1( &$periods, $date )
 		}
 	}
 }
-
-/**
- * Automatically update schedules marking period.
- *
- * On the condition scheduled marking period is of greater type
- * than the new course period marking period.
- * For example: FY to SEM.
- *
- * Local function.
- *
- * @since 3.7.1
- * @deprecated since 11.1 Move _updateSchedulesCPMP() to includes/Courses.fnc.php & rename CoursePeriodUpdateMP()
- *
- * @param  string $cp_id Course Period ID.
- * @param  string $mp_id Marking Period ID.
- * @return int    Number of schedules updated.
- */
-function _updateSchedulesCPMP( $cp_id, $mp_id )
-{
-	return CoursePeriodUpdateMP( $cp_id, $mp_id );
-}

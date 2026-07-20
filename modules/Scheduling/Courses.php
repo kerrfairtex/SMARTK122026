@@ -1112,7 +1112,7 @@ if (  ( ! $_REQUEST['modfunc']
 					( $_REQUEST['course_period_id'] === 'new' ? ' size="6"' : '' )
 			) . '</td>';
 
-			$periods_RET = DBGet( "SELECT PERIOD_ID,TITLE
+			$periods_RET = DBGet( "SELECT PERIOD_ID,TITLE,BLOCK
 				FROM school_periods
 				WHERE SCHOOL_ID='" . UserSchool() . "'
 				AND SYEAR='" . UserSyear() . "'
@@ -1123,6 +1123,12 @@ if (  ( ! $_REQUEST['modfunc']
 			foreach ( (array) $periods_RET as $period )
 			{
 				$periods[$period['PERIOD_ID']] = $period['TITLE'];
+
+				if ( ! empty( $period['BLOCK'] ) )
+				{
+					// @since 13.0 Add "Block" mention after Period title
+					$periods[$period['PERIOD_ID']] .= ' (' . _( 'Block' ) . ')';
+				}
 			}
 
 			//$header .= '<td>' . SelectInput($RET['MP'],'tables[course_periods]['.$_REQUEST['course_period_id'].'][MP]','Length',array('FY' => 'Full Year','SEM' => 'Semester','QTR' => 'Marking Period')) . '</td>';

@@ -5,6 +5,7 @@ Changes in 13.0
 ---------------
 - Add `&modfunc=save` to form in Courses.php
 - Security: SQL prevent INSERT or UPDATE on any table in Courses.php
+- Add "Block" mention after Period title in Courses.php
 
 Changes in 12.9.2
 -----------------

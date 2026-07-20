@@ -547,6 +547,14 @@ $RosarioActions = [];
 	 * @since 12.2
 	 */
 	/*'Scheduling/includes/Courses.fnc.php|course_period_update_teacher' => [ $cp_id, $old_teacher_id, $new_teacher_id ],
+
+	/**
+	 * Course Period Form inputs action hook
+	 * Plugins or modules can add their own fields to `&$header` or modify the `&cp_inputs` var
+	 *
+	 * @since 13.0
+	 */
+	/*'Scheduling/Courses.php|cp_inputs' => [ &$header, &$cp_inputs ],
 );*/
 
 /**

@@ -1335,6 +1335,14 @@ if (  ( ! $_REQUEST['modfunc']
 				$new
 			);
 
+			/**
+			 * Course Period Form inputs action hook
+			 * Plugins or modules can add their own fields to `&$header` or modify the `&cp_inputs` var
+			 *
+			 * @since 13.0
+			 */
+			do_action( 'Scheduling/Courses.php|cp_inputs', [ &$header, &$cp_inputs ] );
+
 			$header .= '<tr><td colspan="3"><hr></td></tr>';
 
 			// Takes Attendance.

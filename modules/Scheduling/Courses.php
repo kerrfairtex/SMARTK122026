@@ -283,6 +283,8 @@ if ( $_REQUEST['modfunc'] === 'save'
 		'course_period_school_periods' => 'COURSE_PERIOD_SCHOOL_PERIODS_ID',
 	];
 
+	$allowed_tables = array_keys( $where );
+
 	if ( isset( $_REQUEST['tables']['parent_id'] ) )
 	{
 		$_REQUEST['tables']['course_periods'][$_REQUEST['course_period_id']]['PARENT_ID'] = $_REQUEST['tables']['parent_id'];
@@ -313,6 +315,12 @@ if ( $_REQUEST['modfunc'] === 'save'
 
 	foreach ( (array) $_REQUEST['tables'] as $table_name => $tables )
 	{
+		if ( ! in_array( $table_name, $allowed_tables ) )
+		{
+			// Security: SQL prevent INSERT or UPDATE on any table
+			continue;
+		}
+
 		foreach ( (array) $tables as $id => $columns )
 		{
 			// FJ fix SQL bug invalid numeric data.

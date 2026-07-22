@@ -466,7 +466,8 @@ if ( ! empty( $_REQUEST['locale'] )
 {
 	$_SESSION['locale'] = $_REQUEST['locale'];
 }
-elseif ( empty( $_SESSION['locale'] ) )
+
+if ( empty( $_SESSION['locale'] ) )
 {
 	$_SESSION['locale'] = $RosarioLocales[0]; // English?
 }

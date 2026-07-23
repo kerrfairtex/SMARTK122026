@@ -577,8 +577,11 @@ if ( $_REQUEST['modfunc'] === 'detail_delete'
 {
 	if ( DeletePrompt( _( 'Event' ) ) )
 	{
+		// Security fix #391 IDOR/BOLA: cross-school calendar event access via event_id
 		DBQuery( "DELETE FROM calendar_events
-			WHERE ID='" . (int) $_REQUEST['event_id'] . "'" );
+			WHERE ID='" . (int) $_REQUEST['event_id'] . "'
+			AND SYEAR='" . UserSyear() . "'
+			AND SCHOOL_ID='" . UserSchool() . "'" );
 
 		//hook
 		do_action( 'School_Setup/Calendar.php|delete_calendar_event' );
@@ -596,11 +599,14 @@ if ( $_REQUEST['modfunc'] === 'detail' )
 	{
 		if ( $_REQUEST['event_id'] !== 'new' )
 		{
+			// Security fix #391 IDOR/BOLA: cross-school calendar event access via event_id
 			$RET = DBGet( "SELECT TITLE,DESCRIPTION,SCHOOL_DATE
 				FROM calendar_events
-				WHERE ID='" . (int) $_REQUEST['event_id'] . "'" );
+				WHERE ID='" . (int) $_REQUEST['event_id'] . "'
+				AND SYEAR='" . UserSyear() . "'
+				AND SCHOOL_ID='" . UserSchool() . "'" );
 
-			$title = $RET[1]['TITLE'];
+			$title = issetVal( $RET[1]['TITLE'], '' );
 		}
 		else
 		{
@@ -677,7 +683,7 @@ if ( $_REQUEST['modfunc'] === 'detail' )
 
 	// @since 12.0 CSS add .calendar-event-poptable class
 	echo '<table class="cellpadding-5 width-100p calendar-event-poptable"><tr><td>'  . DateInput(
-		$RET[1]['SCHOOL_DATE'],
+		issetVal( $RET[1]['SCHOOL_DATE'] ),
 		'values[SCHOOL_DATE]',
 		( empty( $_REQUEST['assignment_id'] ) ? _( 'Date' ) : _( 'Due Date' ) ),
 		false

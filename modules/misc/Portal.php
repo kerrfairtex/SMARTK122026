@@ -301,6 +301,10 @@ switch ( User( 'PROFILE' ) )
 					AND cp.SYEAR='" . UserSyear() . "'
 					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					JOIN school_marking_periods mp ON cp.MARKING_PERIOD_ID=mp.MARKING_PERIOD_ID
+					AND mp.MP<>'PRO'
+					AND mp.SCHOOL_ID=acc.SCHOOL_ID
+					AND acc.SCHOOL_DATE BETWEEN mp.START_DATE AND mp.END_DATE
 					WHERE acc.SCHOOL_ID='" . UserSchool() . "'
 					AND acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND position('," . (int) $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
@@ -311,11 +315,6 @@ switch ( User( 'PROFILE' ) )
 						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
 						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
-						FROM school_marking_periods
-						WHERE MP<>'PRO'
-						AND SCHOOL_ID=acc.SCHOOL_ID
-						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 						(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 						FROM attendance_calendar
@@ -352,6 +351,10 @@ switch ( User( 'PROFILE' ) )
 					AND cp.SYEAR='" . UserSyear() . "'
 					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					JOIN school_marking_periods mp ON cp.MARKING_PERIOD_ID=mp.MARKING_PERIOD_ID
+					AND mp.MP<>'PRO'
+					AND mp.SCHOOL_ID=acc.SCHOOL_ID
+					AND acc.SCHOOL_DATE BETWEEN mp.START_DATE AND mp.END_DATE
 					WHERE acc.SCHOOL_ID='" . UserSchool() . "'
 					AND acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND position('," . (int) $category['ID'] . ",' IN cp.DOES_ATTENDANCE)>0
@@ -362,11 +365,6 @@ switch ( User( 'PROFILE' ) )
 						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
 						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
-						FROM school_marking_periods
-						WHERE MP<>'PRO'
-						AND SCHOOL_ID=acc.SCHOOL_ID
-						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 						( $DatabaseType === 'mysql' ?
 							"DAYOFWEEK(acc.SCHOOL_DATE)" :
@@ -615,6 +613,10 @@ switch ( User( 'PROFILE' ) )
 					AND cp.SYEAR='" . UserSyear() . "'
 					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					JOIN school_marking_periods mp ON cp.MARKING_PERIOD_ID=mp.MARKING_PERIOD_ID
+					AND mp.MP<>'PRO'
+					AND mp.SCHOOL_ID=acc.SCHOOL_ID
+					AND acc.SCHOOL_DATE BETWEEN mp.START_DATE AND mp.END_DATE
 					WHERE acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND (cp.TEACHER_ID='" . User( 'STAFF_ID' ) . "'
 						OR SECONDARY_TEACHER_ID='" . User( 'STAFF_ID' ) . "')
@@ -626,11 +628,6 @@ switch ( User( 'PROFILE' ) )
 						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
 						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
-						FROM school_marking_periods
-						WHERE MP<>'PRO'
-						AND SCHOOL_ID=acc.SCHOOL_ID
-						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('MTWHFSU' FROM cast(
 						(SELECT CASE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " WHEN 0 THEN " . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " ELSE COUNT(SCHOOL_DATE)%" . SchoolInfo( 'NUMBER_DAYS_ROTATION' ) . " END AS day_number
 						FROM attendance_calendar
@@ -668,6 +665,10 @@ switch ( User( 'PROFILE' ) )
 					AND cp.SYEAR='" . UserSyear() . "'
 					JOIN course_period_school_periods cpsp ON cp.COURSE_PERIOD_ID=cpsp.COURSE_PERIOD_ID
 					JOIN school_periods sp ON sp.PERIOD_ID=cpsp.PERIOD_ID
+					JOIN school_marking_periods mp ON cp.MARKING_PERIOD_ID=mp.MARKING_PERIOD_ID
+					AND mp.MP<>'PRO'
+					AND mp.SCHOOL_ID=acc.SCHOOL_ID
+					AND acc.SCHOOL_DATE BETWEEN mp.START_DATE AND mp.END_DATE
 					WHERE acc.SCHOOL_DATE<'" . DBDate() . "'
 					AND (cp.TEACHER_ID='" . User( 'STAFF_ID' ) . "'
 						OR SECONDARY_TEACHER_ID='" . User( 'STAFF_ID' ) . "')
@@ -679,11 +680,6 @@ switch ( User( 'PROFILE' ) )
 						AND se.SCHOOL_ID=acc.SCHOOL_ID
 						AND acc.SCHOOL_DATE>=se.START_DATE
 						AND (se.END_DATE IS NULL OR acc.SCHOOL_DATE<=se.END_DATE))
-					AND cp.MARKING_PERIOD_ID IN (SELECT MARKING_PERIOD_ID
-						FROM school_marking_periods
-						WHERE MP<>'PRO'
-						AND SCHOOL_ID=acc.SCHOOL_ID
-						AND acc.SCHOOL_DATE BETWEEN START_DATE AND END_DATE)
 					AND (sp.BLOCK IS NULL AND position(substring('UMTWHFS' FROM " .
 						( $DatabaseType === 'mysql' ?
 							"DAYOFWEEK(acc.SCHOOL_DATE)" :

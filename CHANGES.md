@@ -9,6 +9,7 @@ Changes in 13.0
 - Add Course Period Form inputs action hook in Courses.php & Actions.php
 - Remove deprecated `_updateSchedulesCPMP()` function in Courses.php
 - Security fix #391 IDOR/BOLA: cross-school calendar event access via event_id in Calendar.php, thanks to @P1oNerd
+- SQL performance: use explicit JOIN (4x faster) in Portal.php
 
 Changes in 12.9.2
 -----------------

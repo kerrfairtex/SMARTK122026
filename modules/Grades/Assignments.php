@@ -52,9 +52,12 @@ AllowEditTeacher();
 // Add eventual Dates to $_REQUEST['tables'].
 AddRequestedDates( 'tables', 'post' );
 
-if ( ! empty( $_POST['tables'] ) )
+// @since 13.0 Add `&modfunc=save` to form
+if ( $_REQUEST['modfunc'] === 'save' )
 {
-	$table = $_REQUEST['table'];
+	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
+
+	$table = issetVal( $_REQUEST['table'], '' );
 
 	foreach ( (array) $_REQUEST['tables'] as $id => $columns )
 	{
@@ -334,8 +337,8 @@ if ( ! empty( $_POST['tables'] ) )
 		}
 	}
 
-	// Unset tables + related dates & redirect URL.
-	RedirectURL( [ 'tables', 'day_tables', 'month_tables', 'year_tables' ] );
+	// Unset modfunc, tables + related dates & redirect URL.
+	RedirectURL( [ 'modfunc', 'tables', 'day_tables', 'month_tables', 'year_tables' ] );
 }
 
 // DELETE
@@ -701,8 +704,10 @@ if ( ! $_REQUEST['modfunc'] )
 		 *
 		 * Must be used in combination with
 		 * `if ( ! empty( $_REQUEST['period'] ) ) SetUserCoursePeriod( $_REQUEST['period'] );`
+		 *
+		 * @since 13.0 Add `&modfunc=save` to form
 		 */
-		$action = 'Modules.php?modname=' . $_REQUEST['modname'] . '&table=gradebook_assignments&assignment_type_id=' . $_REQUEST['assignment_type_id'] . '&period=' . UserCoursePeriod();
+		$action = 'Modules.php?modname=' . $_REQUEST['modname'] . '&table=gradebook_assignments&assignment_type_id=' . $_REQUEST['assignment_type_id'] . '&period=' . UserCoursePeriod() . '&modfunc=save';
 
 		if ( $_REQUEST['assignment_id'] !== 'new' )
 		{
@@ -895,9 +900,11 @@ if ( ! $_REQUEST['modfunc'] )
 		 *
 		 * Must be used in combination with
 		 * `if ( ! empty( $_REQUEST['period'] ) ) SetUserCoursePeriod( $_REQUEST['period'] );`
+		 *
+		 * @since 13.0 Add `&modfunc=save` to form
 		 */
 		$action = 'Modules.php?modname=' . $_REQUEST['modname'] .
-			'&table=gradebook_assignment_types&period=' . UserCoursePeriod();
+			'&table=gradebook_assignment_types&period=' . UserCoursePeriod() . '&modfunc=save';
 
 		if ( $_REQUEST['assignment_type_id'] !== 'new' )
 		{

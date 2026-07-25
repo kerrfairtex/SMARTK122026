@@ -165,7 +165,7 @@ if ( empty( $_REQUEST['search_modfunc'] ) )
 			PopTable( 'header', _( 'Search' ) );
 
 			echo '<form action="' . URLEscape( 'Modules.php?modname=' . $_REQUEST['modname'] .
-				'&modfunc=' . $_REQUEST['modfunc'] .
+				( $_REQUEST['modfunc'] ? '&modfunc=' . $_REQUEST['modfunc'] : '' ) .
 				'&search_modfunc=list' .
 				( ! empty( $extra['action'] ) ? $extra['action'] : '' )  ) . '" method="POST">';
 
@@ -314,6 +314,16 @@ else
 			DrawHeader( mb_substr( $_ROSARIO['SearchTerms'], 0, -6 ) );
 		}
 
+		if ( ! $students_RET
+			&& ( User( 'PROFILE' ) === 'admin' || User( 'PROFILE' ) === 'teacher' )
+			&& empty( $_REQUEST['include_inactive'] ) )
+		{
+			// @since 13.0 Add "Include Inactive Students" checkbox when no students were found
+			DrawHeader(
+				CheckBoxOnclick( 'include_inactive', _( 'Include Inactive Students' ) )
+			);
+		}
+
 		if ( empty( $_REQUEST['LO_save'] ) && empty( $extra['suppress_save'] ) )
 		{
 			if ( User( 'PROFILE' ) === 'admin'
@@ -428,6 +438,15 @@ else
 		}
 
 		DrawHeader( mb_substr( $_ROSARIO['SearchTerms'], 0, -6 ) );
+
+		if ( ( User( 'PROFILE' ) === 'admin' || User( 'PROFILE' ) === 'teacher' )
+			&& empty( $_REQUEST['include_inactive'] ) )
+		{
+			// @since 13.0 Add "Include Inactive Students" checkbox when no students were found
+			DrawHeader(
+				CheckBoxOnclick( 'include_inactive', _( 'Include Inactive Students' ) )
+			);
+		}
 
 		echo ErrorMessage( [ _( 'No Students were found.' ) ] );
 	}

@@ -49,15 +49,23 @@ $course_id = DBGetOne( "SELECT COURSE_ID
 
 AllowEditTeacher();
 
-// Add eventual Dates to $_REQUEST['tables'].
-AddRequestedDates( 'tables', 'post' );
-
 // @since 13.0 Add `&modfunc=save` to form
 if ( $_REQUEST['modfunc'] === 'save' )
 {
 	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
 
+	// Add eventual Dates to $_REQUEST['tables'].
+	AddRequestedDates( 'tables' );
+
 	$table = issetVal( $_REQUEST['table'], '' );
+
+	if ( ! in_array( $table, [ 'gradebook_assignment_types', 'gradebook_assignments' ] ) )
+	{
+		// Security fix #393 SQL prevent INSERT or UPDATE on any table
+		$table = '';
+
+		$_REQUEST['tables'] = [];
+	}
 
 	foreach ( (array) $_REQUEST['tables'] as $id => $columns )
 	{

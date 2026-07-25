@@ -12,6 +12,7 @@ Changes in 13.0
 - SQL performance: use explicit JOIN (4x faster) in Portal.php
 - Add "Include Inactive Students" checkbox when no students were found in Search.inc.php
 - Use DBInsert() & DBUpdate() functions in Assignments.php
+- Security fix #393 SQL prevent INSERT or UPDATE on any table in Assignments.php, thanks to @c3mc3f
 
 Changes in 12.9.2
 -----------------

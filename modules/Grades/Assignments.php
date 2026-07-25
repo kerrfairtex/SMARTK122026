@@ -98,6 +98,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 			$error[] = _( 'Please enter a valid Sort Order.' );
 		}
 
+		$is_update = $id !== 'new';
+
 		if ( $id !== 'new' )
 		{
 			if ( ! empty( $columns['ASSIGNMENT_TYPE_ID'] )
@@ -106,10 +108,10 @@ if ( $_REQUEST['modfunc'] === 'save' )
 				$_REQUEST['assignment_type_id'] = $columns['ASSIGNMENT_TYPE_ID'];
 			}
 
-			$sql = "UPDATE " . DBEscapeIdentifier( $table ) . " SET ";
-
 			//if ( ! $columns['COURSE_ID'] && $table=='gradebook_assignments')
 			//	$columns['COURSE_ID'] = 'N';
+
+			$update_columns = [];
 
 			foreach ( (array) $columns as $column => $value )
 			{
@@ -122,22 +124,24 @@ if ( $_REQUEST['modfunc'] === 'save' )
 						$error[] = _( 'Some dates were not entered correctly.' );
 					}
 				}
-				elseif ( $column == 'COURSE_ID'
-					&& $value == 'Y'
-					&& $table == 'gradebook_assignments' )
+				elseif ( $column === 'COURSE_ID'
+					&& $value === 'Y'
+					&& $table === 'gradebook_assignments' )
 				{
 					$value = $course_id;
-					$sql .= 'COURSE_PERIOD_ID=NULL,';
+
+					$update_columns['COURSE_PERIOD_ID'] = null;
 				}
-				elseif ( $column == 'COURSE_ID'
-					&& $table == 'gradebook_assignments' )
+				elseif ( $column === 'COURSE_ID'
+					&& $table === 'gradebook_assignments' )
 				{
 					$column = 'COURSE_PERIOD_ID';
 					$value = UserCoursePeriod();
-					$sql .= 'COURSE_ID=NULL,';
+
+					$update_columns['COURSE_ID'] = null;
 				}
-				elseif ( $column == 'FINAL_GRADE_PERCENT'
-					&& $table == 'gradebook_assignment_types' )
+				elseif ( $column === 'FINAL_GRADE_PERCENT'
+					&& $table === 'gradebook_assignment_types' )
 				{
 					// Fix PHP8.1 fatal error unsupported operand types: string / int
 					$value = ( (float) preg_replace( '/[^0-9.]/', '', $value ) ) / 100;
@@ -157,21 +161,31 @@ if ( $_REQUEST['modfunc'] === 'save' )
 					$value = '-1';
 				}
 
-				$sql .= DBEscapeIdentifier( $column ) . "='" . $value . "',";
+				$update_columns[ $column ] = $value;
 			}
 
-			$sql = mb_substr( $sql, 0, -1 ) . " WHERE " .
-			DBEscapeIdentifier( mb_substr( $table, 10, -1 ) . '_ID' ) . "='" . $id . "';";
+			if ( ! $error )
+			{
+				$where_id_column = $table === 'gradebook_assignments' ?
+					'ASSIGNMENT_ID' : 'ASSIGNMENT_TYPE_ID';
 
-			$go = true;
+				DBUpdate(
+					$table,
+					$update_columns,
+					[
+						$where_id_column => (int) $id,
+						'STAFF_ID' => User( 'STAFF_ID' ),
+					]
+				);
+			}
 		}
 
 		// New: check for Title.
 		elseif ( $columns['TITLE'] )
 		{
-			$sql = "INSERT INTO " . DBEscapeIdentifier( $table ) . " ";
+			$insert_columns = [];
 
-			if ( $table == 'gradebook_assignments' )
+			if ( $table === 'gradebook_assignments' )
 			{
 				if ( ! empty( $columns['ASSIGNMENT_TYPE_ID'] ) )
 				{
@@ -180,19 +194,20 @@ if ( $_REQUEST['modfunc'] === 'save' )
 					unset( $columns['ASSIGNMENT_TYPE_ID'] );
 				}
 
-				$fields = "ASSIGNMENT_TYPE_ID,STAFF_ID,MARKING_PERIOD_ID,";
-
-				$values = "'" . (int) $_REQUEST['assignment_type_id'] . "','" .
-				User( 'STAFF_ID' ) . "','" . UserMP() . "',";
+				$insert_columns = [
+					'ASSIGNMENT_TYPE_ID' => (int) $_REQUEST['assignment_type_id'],
+					'STAFF_ID' => User( 'STAFF_ID' ),
+					'MARKING_PERIOD_ID' => UserMP(),
+				];
 			}
-			elseif ( $table == 'gradebook_assignment_types' )
+			elseif ( $table === 'gradebook_assignment_types' )
 			{
-				$fields = "STAFF_ID,COURSE_ID,CREATED_MP,";
-
-				$values = "'" . User( 'STAFF_ID' ) . "','" . $course_id . "','" . UserMP() . "',";
+				$insert_columns = [
+					'STAFF_ID' => User( 'STAFF_ID' ),
+					'COURSE_ID' => (int) $course_id,
+					'CREATED_MP' => UserMP(),
+				];
 			}
-
-			$go = false;
 
 			foreach ( (array) $columns as $column => $value )
 			{
@@ -216,8 +231,8 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 					$value = UserCoursePeriod();
 				}
-				elseif ( $column == 'FINAL_GRADE_PERCENT'
-					&& $table == 'gradebook_assignment_types' )
+				elseif ( $column === 'FINAL_GRADE_PERCENT'
+					&& $table === 'gradebook_assignment_types' )
 				{
 					// Fix PHP8.1 fatal error unsupported operand types: string / int
 					$value = ( (float) preg_replace( '/[^0-9.]/', '', $value ) ) / 100;
@@ -230,35 +245,23 @@ if ( $_REQUEST['modfunc'] === 'save' )
 				}
 
 				//FJ default points
-				elseif ( $column == 'DEFAULT_POINTS'
-					&& $value == '*'
-					&& $table == 'gradebook_assignments' )
+				elseif ( $column === 'DEFAULT_POINTS'
+					&& $value === '*'
+					&& $table === 'gradebook_assignments' )
 				{
 					$value = '-1';
 				}
 
-				if ( $value != '' )
-				{
-					$fields .= DBEscapeIdentifier( $column ) . ',';
-
-					$values .= "'" . $value . "',";
-
-					$go = true;
-				}
+				$insert_columns[ $column ] = $value;
 			}
 
-			$sql .= '(' . mb_substr( $fields, 0, -1 ) . ') values(' . mb_substr( $values, 0, -1 ) . ');';
-		}
-
-		if ( ! $error && $go )
-		{
-			DBQuery( $sql );
-
-			$is_update = $id !== 'new';
-
-			if ( $id === 'new' )
+			if ( ! $error )
 			{
-				$id = DBLastInsertID();
+				$id = DBInsert(
+					$table,
+					$insert_columns,
+					'id'
+				);
 
 				if ( $table == 'gradebook_assignments' )
 				{
@@ -269,7 +272,10 @@ if ( $_REQUEST['modfunc'] === 'save' )
 					$_REQUEST['assignment_type_id'] = $id;
 				}
 			}
+		}
 
+		if ( ! $error )
+		{
 			// Check if file submitted.
 
 			if ( ! empty( $_FILES['assignment_file']['name'] ) )
@@ -283,9 +289,14 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 				if ( $file )
 				{
-					DBQuery( "UPDATE gradebook_assignments
-						SET FILE='" . $file . "'
-						WHERE ASSIGNMENT_ID='" . (int) $id . "';" );
+					DBUpdate(
+						'gradebook_assignments',
+						[ 'FILE' => $file ],
+						[
+							'STAFF_ID' => User( 'STAFF_ID' ),
+							'ASSIGNMENT_ID' => (int) $id,
+						]
+					);
 				}
 			}
 
@@ -427,7 +438,8 @@ if ( $_REQUEST['modfunc'] === 'delete' )
 			}
 
 			DBQuery( "DELETE FROM gradebook_assignments
-				WHERE ASSIGNMENT_TYPE_ID='" . (int) $_REQUEST['assignment_type_id'] . "'" );
+				WHERE ASSIGNMENT_TYPE_ID='" . (int) $_REQUEST['assignment_type_id'] . "'
+				AND STAFF_ID='" . User( 'STAFF_ID' ) . "'" );
 
 			// Unset assignment type ID & redirect URL.
 			RedirectURL( 'assignment_type_id' );

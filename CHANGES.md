@@ -11,6 +11,7 @@ Changes in 13.0
 - Security fix #391 IDOR/BOLA: cross-school calendar event access via event_id in Calendar.php, thanks to @P1oNerd
 - SQL performance: use explicit JOIN (4x faster) in Portal.php
 - Add "Include Inactive Students" checkbox when no students were found in Search.inc.php
+- Use DBInsert() & DBUpdate() functions in Assignments.php
 
 Changes in 12.9.2
 -----------------

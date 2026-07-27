@@ -226,6 +226,7 @@ meta/
 /config.inc.php
 assets/FileUploads/*
 !assets/FileUploads/FS_icons/
+!assets/FileUploads/.htaccess
 assets/StudentPhotos/
 assets/UserPhotos/
 assets/school_logo*

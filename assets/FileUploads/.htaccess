@@ -1,0 +1,7 @@
+## Begin - Security
+# Block access to web-executable files inside the uploads folder
+<FilesMatch "\.(php.?|phar|[psx]html?|xml|svg|js)$">
+	Require all denied
+</FilesMatch>
+#
+## End - Security

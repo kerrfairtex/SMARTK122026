@@ -154,12 +154,10 @@ function PortalPollsDisplay( $value, $name )
 		FROM portal_polls
 		WHERE ID='" . (int) $poll_id . "'" );
 
-	require_once 'ProgramFunctions/Linkify.fnc.php';
-
 	$poll_questions_RET = DBGet( "SELECT ID,QUESTION,OPTIONS,TYPE,VOTES
 		FROM portal_poll_questions
 		WHERE PORTAL_POLL_ID='" . (int) $poll_id . "'
-		ORDER BY ID", [ 'OPTIONS' => 'Linkify' ] );
+		ORDER BY ID", [ 'OPTIONS' => 'PortalPollsMakeOptions' ] );
 
 	if ( ! $poll_RET || ! $poll_questions_RET )
 	{
@@ -564,4 +562,50 @@ function makeFileAttached( $value, $name )
 	) . '</div></div>';
 
 	return $return;
+}
+
+/**
+ * Make Portal Poll options
+ *
+ * DBGet() callback
+ *
+ * @since 13.0
+ *
+ * @param string $value  Options.
+ * @param string $column Column name.
+ *
+ * @return string Truncated link > 100 chars.
+ */
+function PortalPollsMakeOptions( $value, $column = 'OPTIONS' )
+{
+	/**
+	 * Linkify
+	 * Transforms the URLs present a in text to anchors tags
+	 * and truncate the link text of URLs > 100 chars
+	 */
+	$pattern = '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,8}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))';
+
+	return preg_replace_callback( "#$pattern#i", function( $matches )
+	{
+		$input = $matches[0];
+
+		$url = preg_match( '!^https?://!i', $input ) ? $input : "http://$input";
+
+		if ( mb_strlen( $input ) > 100
+			&& ! mb_strpos( $input, ' ' ) )
+		{
+			$separator = '...';
+
+			$maxlength = 97; // 100 - $separator length.
+
+			$input = substr_replace(
+				$input,
+				$separator,
+				( $maxlength / 2 ),
+				( mb_strlen( $input ) - $maxlength )
+			);
+		}
+
+		return '<a href="' . URLEscape( $url ) . '" target="_blank">' . $input . '</a>';
+	}, $value );
 }

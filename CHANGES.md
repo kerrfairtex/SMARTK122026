@@ -25,6 +25,7 @@ Changes in 13.0
 - Use RosarioSIS\Functions\Hacking class, program wide
 - Remove deprecated `_printPageHead()` function in PasswordReset.php
 - Deprecate Linkify() function in Linkify.fnc.php
+- Add PortalPollsMakeOptions() function to replace Linkify() in PortalPollNotes.fnc.php
 
 Changes in 12.9.2
 -----------------

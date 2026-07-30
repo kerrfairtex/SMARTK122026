@@ -438,28 +438,6 @@ function _passwordResetForm( $hash, $user_id )
 }
 
 
-// @deprecated since 12.5
-function _printPageHead( $title )
-{
-	global $locale,
-		$error,
-		$note,
-		$_ROSARIO;
-
-	$_ROSARIO['page'] = 'password-reset';
-
-	Warehouse( 'header' );
-
-	$_ROSARIO['HeaderIcon'] = 'misc';
-
-	DrawHeader( _( 'Password help' ) );
-
-	echo ErrorMessage( $error );
-
-	echo ErrorMessage( $note, 'note' );
-}
-
-
 function _notifyServerAdminPasswordReset( $user_id )
 {
 	global $RosarioNotifyAddress;

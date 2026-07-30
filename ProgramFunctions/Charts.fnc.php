@@ -143,32 +143,6 @@ function ChartjsChart( $type, $data, $title )
 }
 
 /**
- * jqPlot Chart generation
- *
- * @deprecated since 6.0 use ChartjsChart().
- *
- * @example require_once 'ProgramFunctions/Charts.fnc.php';
- *          echo jqPlotChart( 'pie', $chart_data, $chartTitle );
- *
- * @param  string  $type       Chart type line|column|pie.
- * @param  array   $data       associative array containing X axis|ticks|labels [0] & Y axis|values [1]
- *                             Stack series (columns): array( 'series1_label' => $data1, 'series2_label' => $data2, ).
- * @param  string  $title      Chart title.
- * @param  boolean $save_image Export Chart to image inside ColorBox (to save Chart) (optional). Defaults to true.
- *
- * @return string              JS, CSS files & jqPlot Chart JS or empty string if error
- */
-function jqPlotChart( $type, $data, $title, $save_image = true )
-{
-	if ( $type === 'column' )
-	{
-		$type = 'bar';
-	}
-
-	return ChartjsChart( $type, $data, $title );
-}
-
-/**
  * Add Number to Chart X axis
  * Increment occurences of Number in Chart Y axis
  *

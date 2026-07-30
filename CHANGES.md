@@ -16,6 +16,7 @@ Changes in 13.0
 - Security fix #394 Upload directories are web-executable in assets/FileUploads/.htaccess, thanks to @c3mc3f
 - Add Date (today) & Balance (Student Billing) to Substitutions in Letters.php
 - Remove deprecated jqPlotChart() function in Charts.fnc.php
+- Deprecate Dashboard(), DashboardOutput() & DashboardAdd() functions in Dashboard.fnc.php
 
 Changes in 12.9.2
 -----------------

@@ -27,6 +27,7 @@ Changes in 13.0
 - Deprecate Linkify() function in Linkify.fnc.php
 - Add PortalPollsMakeOptions() function to replace Linkify() in PortalPollNotes.fnc.php
 - Deprecate SendEmail() function in SendEmail.fnc.php
+- Add RosarioSIS\Functions\Email class in Email.php
 
 Changes in 12.9.2
 -----------------

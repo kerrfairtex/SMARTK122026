@@ -19,6 +19,7 @@ Changes in 13.0
 - Deprecate Dashboard(), DashboardOutput() & DashboardAdd() functions in Dashboard.fnc.php
 - Deprecate DashboardModule(), DashboardModuleTitle() & DashboardModuleData() functions in DashboardModule.fnc.php
 - Add RosarioSIS\Functions\Dashboard & RosarioSIS\Functions\DashboardModule objects in Dashboard.php & DashboardModule.php
+- Use RosarioSIS\Functions\Dashboard & RosarioSIS\Functions\DashboardModule objects in Portal.php & Dashboard.inc.php
 
 Changes in 12.9.2
 -----------------

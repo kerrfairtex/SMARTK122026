@@ -15,8 +15,6 @@
  */
 function DashboardDefaultSchoolSetup()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -31,7 +29,7 @@ function DashboardDefaultSchoolSetup()
 		$data = DashboardSchoolSetupAdmin();
 	}
 
-	return DashboardModule( 'School_Setup', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardSchoolSetupAdmin' ) )

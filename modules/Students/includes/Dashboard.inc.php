@@ -15,8 +15,6 @@
  */
 function DashboardDefaultStudents()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -26,7 +24,7 @@ function DashboardDefaultStudents()
 		$data = DashboardStudentsAdmin();
 	}
 
-	return DashboardModule( 'Students', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardStudentsAdmin' ) )

@@ -16,8 +16,6 @@
  */
 function DashboardDefaultDiscipline()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultDiscipline()
 		$data = DashboardDisciplineAdmin();
 	}
 
-	return DashboardModule( 'Discipline', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardDisciplineAdmin' ) )

@@ -1,6 +1,5 @@
 <?php
 require_once 'ProgramFunctions/PortalPollsNotes.fnc.php';
-require_once 'ProgramFunctions/Dashboard.fnc.php';
 require_once 'modules/School_Setup/includes/Rollover.fnc.php';
 
 if ( $RosarioModules['Discipline'] )
@@ -118,10 +117,11 @@ echo ErrorMessage( $note, 'note' );
 
 echo ErrorMessage( $warning, 'warning' );
 
-// Dashboard.
-Dashboard();
-
-DashboardOutput();
+if ( User( 'PROFILE' ) === 'admin' )
+{
+	// Dashboard.
+	(new RosarioSIS\Functions\Dashboard)->output();
+}
 
 $portal_LO_options = [ 'save' => false, 'search' => false ];
 

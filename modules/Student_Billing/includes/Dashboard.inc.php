@@ -16,8 +16,6 @@
  */
 function DashboardDefaultStudentBilling()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultStudentBilling()
 		$data = DashboardStudentBillingAdmin();
 	}
 
-	return DashboardModule( 'Student_Billing', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardStudentBillingAdmin' ) )

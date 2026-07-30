@@ -16,8 +16,6 @@
  */
 function DashboardDefaultFoodService()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultFoodService()
 		$data = DashboardFoodServiceAdmin();
 	}
 
-	return DashboardModule( 'Food_Service', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardFoodServiceAdmin' ) )

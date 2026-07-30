@@ -16,8 +16,6 @@
  */
 function DashboardDefaultUsers()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultUsers()
 		$data = DashboardUsersAdmin();
 	}
 
-	return DashboardModule( 'Users', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardUsersAdmin' ) )

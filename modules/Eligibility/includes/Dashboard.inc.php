@@ -16,8 +16,6 @@
  */
 function DashboardDefaultEligibility()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultEligibility()
 		$data = DashboardEligibilityAdmin();
 	}
 
-	return DashboardModule( 'Eligibility', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardEligibilityAdmin' ) )

@@ -16,8 +16,6 @@
  */
 function DashboardDefaultGrades()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultGrades()
 		$data = DashboardGradesAdmin();
 	}
 
-	return DashboardModule( 'Grades', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardGradesAdmin' ) )

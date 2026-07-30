@@ -16,8 +16,6 @@
  */
 function DashboardDefaultAttendance()
 {
-	require_once 'ProgramFunctions/DashboardModule.fnc.php';
-
 	$profile = User( 'PROFILE' );
 
 	$data = '';
@@ -27,7 +25,7 @@ function DashboardDefaultAttendance()
 		$data = DashboardAttendanceAdmin();
 	}
 
-	return DashboardModule( 'Attendance', $data );
+	return $data;
 }
 
 if ( ! function_exists( 'DashboardAttendanceAdmin' ) )

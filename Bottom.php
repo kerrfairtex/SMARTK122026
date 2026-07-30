@@ -142,8 +142,7 @@ elseif ( $_REQUEST['bottomfunc'] === 'print' ) :
 			|| mb_strpos( $modname, '..' ) !== false
 			/*|| ! is_file( 'modules/' . $modname )*/ )
 		{
-			require_once 'ProgramFunctions/HackingLog.fnc.php';
-			HackingLog();
+			(new RosarioSIS\Functions\Hacking)->log();
 		}
 		else
 			require_once 'modules/' . $modname;
@@ -152,8 +151,7 @@ elseif ( $_REQUEST['bottomfunc'] === 'print' ) :
 	// Not allowed, hacking attempt?
 	elseif ( User( 'USERNAME' ) )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 
 	// FJ call PDFStop to generate Print PDF.

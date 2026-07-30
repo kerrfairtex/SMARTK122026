@@ -36,8 +36,7 @@ $directories_bypass = [
 
 if ( isset( $_REQUEST['module'] ) && strpos( $_REQUEST['module'], '..' ) !== false )
 {
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
-	HackingLog();
+	(new RosarioSIS\Functions\Hacking)->log();
 }
 
 if ( $_REQUEST['modfunc'] === 'upload'

@@ -327,24 +327,15 @@ if ( ! empty( $_REQUEST['modfunc'] )
 	if ( ! isset( $_SERVER['HTTP_X_CSRF_TOKEN'] )
 		|| $_SERVER['HTTP_X_CSRF_TOKEN'] !== $_SESSION['token'] )
 	{
+		$logged_in = ! empty( $_SESSION['STAFF_ID'] ) || ! empty( $_SESSION['STUDENT_ID'] );
+
 		// Security fix #371 check CSRF token for modfunc requests
-		if ( empty( $_SESSION['STAFF_ID'] ) && empty( $_SESSION['STUDENT_ID'] ) )
-		{
+		(new RosarioSIS\Functions\Hacking)->log(
+			// No token & not logged in, do not send email (99% chances its a bot)
+			( isset( $_REQUEST['token'] ) || $logged_in ),
 			// No user in session yet, 403 Forbidden error (99% chances its a bot)
-			http_response_code( 403 );
-
-			$error[] = _( 'You\'re not allowed to use this program!' );
-
-			ErrorSendEmail( $error, 'HACKING ATTEMPT' );
-
-			echo ErrorMessage( $error );
-
-			exit;
-		}
-
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-		HackingLog();
+			! $logged_in
+		);
 	}
 }
 

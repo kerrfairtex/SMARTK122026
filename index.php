@@ -407,8 +407,7 @@ elseif ( isset( $_REQUEST['create_account'] ) )
 			|| mb_strpos( $include, '..' ) !== false
 			|| ! is_file( 'modules/' . $include ) )
 		{
-			require_once 'ProgramFunctions/HackingLog.fnc.php';
-			HackingLog();
+			(new RosarioSIS\Functions\Hacking)->log();
 		}
 		else
 			require_once 'modules/' . $include;

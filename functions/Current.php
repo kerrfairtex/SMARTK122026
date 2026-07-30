@@ -186,9 +186,7 @@ function SetUserStaffID( $staff_id )
 
 	if ( $isHack )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 
 	$_SESSION['staff_id'] = (string) (int) $staff_id;
@@ -307,9 +305,7 @@ function SetUserStudentID( $student_id )
 
 	if ( $isHack )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 
 	$_SESSION['student_id'] = (string) (int) $student_id;
@@ -418,9 +414,7 @@ function SetUserCoursePeriod( $course_period_id )
 
 	if ( $isHack )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 
 	$_SESSION['UserCoursePeriod'] = (string) (int) $course_period_id;

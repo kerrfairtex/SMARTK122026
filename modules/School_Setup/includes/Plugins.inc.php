@@ -18,8 +18,7 @@ $directories_bypass = [];
 
 if ( isset( $_REQUEST['plugin'] ) && strpos( $_REQUEST['plugin'], '..' ) !== false )
 {
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
-	HackingLog();
+	(new RosarioSIS\Functions\Hacking)->log();
 }
 
 if ( $_REQUEST['modfunc'] === 'config' )

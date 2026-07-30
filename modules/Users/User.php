@@ -14,8 +14,7 @@ if ( User( 'PROFILE' ) !== 'admin'
 {
 	if ( User( 'USERNAME' ) )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 
 	exit;
@@ -230,8 +229,7 @@ if ( $_REQUEST['modfunc'] === 'update'
 
 			if ( isset( $_REQUEST['staff']['PROFILE'] ) )
 			{
-				require_once 'ProgramFunctions/HackingLog.fnc.php';
-				HackingLog();
+				(new RosarioSIS\Functions\Hacking)->log();
 			}
 		}
 

@@ -21,8 +21,7 @@ if ( User( 'PROFILE' ) !== 'admin'
 	}
 	elseif ( User( 'USERNAME' ) )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 	else
 	{
@@ -173,9 +172,7 @@ if ( $_REQUEST['modfunc'] === 'update'
 						|| ( isset( $_REQUEST['values']['student_enrollment']['new'] )
 							&& count( (array) $_REQUEST['values']['student_enrollment']['new'] ) > 2 ) ) )
 			{
-				require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-				HackingLog();
+				(new RosarioSIS\Functions\Hacking)->log();
 			}
 
 			if ( ! Config( 'CREATE_STUDENT_ACCOUNT_DEFAULT_SCHOOL_FORCE' )
@@ -189,9 +186,7 @@ if ( $_REQUEST['modfunc'] === 'update'
 
 				if ( ! $school_exists )
 				{
-					require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-					HackingLog();
+					(new RosarioSIS\Functions\Hacking)->log();
 				}
 			}
 			else

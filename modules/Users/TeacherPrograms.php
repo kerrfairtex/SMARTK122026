@@ -154,8 +154,7 @@ if ( UserStaffID() )
 		|| mb_strpos( $REQUEST_include, '..' ) !== false
 		|| ! is_file( 'modules/' . $REQUEST_include ) )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 	else
 	{

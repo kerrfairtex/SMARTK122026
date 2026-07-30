@@ -47,9 +47,7 @@ if ( AllowUse() )
 		|| strpos( $modname, '..' ) !== false
 		/*|| ! is_file( 'modules/' . $modname )*/ )
 	{
-		require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-		HackingLog();
+		(new RosarioSIS\Functions\Hacking)->log();
 	}
 	else
 	{
@@ -60,9 +58,7 @@ if ( AllowUse() )
 // Not allowed, hacking attempt?
 elseif ( User( 'USERNAME' ) )
 {
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
-
-	HackingLog();
+	(new RosarioSIS\Functions\Hacking)->log();
 }
 
 // Output Footer HTML.

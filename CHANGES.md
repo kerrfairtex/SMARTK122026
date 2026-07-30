@@ -21,6 +21,7 @@ Changes in 13.0
 - Add RosarioSIS\Functions\Dashboard & RosarioSIS\Functions\DashboardModule objects in Dashboard.php & DashboardModule.php
 - Use RosarioSIS\Functions\Dashboard & RosarioSIS\Functions\DashboardModule objects in Portal.php & Dashboard.inc.php
 - Deprecate HackingLog() function in HackingLog.fnc.php
+- Add RosarioSIS\Functions\Hacking class in Hacking.php
 
 Changes in 12.9.2
 -----------------

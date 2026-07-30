@@ -17,6 +17,7 @@ Changes in 13.0
 - Add Date (today) & Balance (Student Billing) to Substitutions in Letters.php
 - Remove deprecated jqPlotChart() function in Charts.fnc.php
 - Deprecate Dashboard(), DashboardOutput() & DashboardAdd() functions in Dashboard.fnc.php
+- Deprecate DashboardModule(), DashboardModuleTitle() & DashboardModuleData() functions in DashboardModule.fnc.php
 
 Changes in 12.9.2
 -----------------

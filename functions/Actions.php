@@ -129,6 +129,7 @@ $RosarioActions = [];
 	 * Before Send.
 	 *
 	 * @since 3.6.1
+	 * @deprecated since 13.0 Use 'RosarioSIS/Functions/Email.php|before_send' instead
 	 */
 	/*'ProgramFunctions/SendEmail.fnc.php|before_send' => [],
 
@@ -388,6 +389,7 @@ $RosarioActions = [];
 	 * Send email error.
 	 *
 	 * @since 8.7
+	 * @deprecated since 13.0 Use 'RosarioSIS/Functions/Email.php|send_error' instead
 	 */
 	/*'ProgramFunctions/SendEmail.fnc.php|send_error' => [ $e->errorMessage() ],
 

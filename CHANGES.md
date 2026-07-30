@@ -18,6 +18,7 @@ Changes in 13.0
 - Remove deprecated jqPlotChart() function in Charts.fnc.php
 - Deprecate Dashboard(), DashboardOutput() & DashboardAdd() functions in Dashboard.fnc.php
 - Deprecate DashboardModule(), DashboardModuleTitle() & DashboardModuleData() functions in DashboardModule.fnc.php
+- Add RosarioSIS\Functions\Dashboard & RosarioSIS\Functions\DashboardModule objects in Dashboard.php & DashboardModule.php
 
 Changes in 12.9.2
 -----------------

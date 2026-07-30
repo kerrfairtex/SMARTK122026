@@ -102,6 +102,23 @@ if ( $_REQUEST['modfunc'] === 'save'
 			AND sch.SYEAR='" . UserSyear() . "') AS SCHOOL_TITLE";
 	}
 
+	if ( ! empty( $RosarioModules['Student_Billing'] )
+		&& AllowUse( 'Student_Billing/StudentBalances.php' ) )
+	{
+		// SELECT Student Balance.
+		$extra['SELECT'] .= ',(COALESCE((SELECT SUM(f.AMOUNT)
+				FROM billing_fees f
+				WHERE f.STUDENT_ID=ssm.STUDENT_ID
+				AND f.SYEAR=ssm.SYEAR),0)
+			-COALESCE((SELECT SUM(p.AMOUNT)
+				FROM billing_payments p
+				WHERE p.STUDENT_ID=ssm.STUDENT_ID
+				AND p.SYEAR=ssm.SYEAR),0)) AS BALANCE';
+
+		// Call functions to format Columns.
+		$extra['functions'] = [ 'BALANCE' => '_makeCurrency' ];
+	}
+
 	$RET = GetStuList( $extra );
 
 	if ( empty( $RET ) )
@@ -149,6 +166,8 @@ if ( $_REQUEST['modfunc'] === 'save'
 			'__GRADE_ID__' => $student['GRADE_ID'],
 			'__TEACHER__' => $student['TEACHER'],
 			'__ROOM__' => $student['ROOM'],
+			'__DATE__' => ProperDate( DBDate() ),
+			'__BALANCE__' => issetVal( $student['BALANCE'] ),
 		];
 
 		$substitutions += SubstitutionsCustomFieldsValues( 'STUDENT', $student );
@@ -211,6 +230,16 @@ if ( ! $_REQUEST['modfunc'] )
 			$substitutions['__ROOM__'] = _( 'Your Room' );
 		}
 
+		// @since 13.0 Add Date to Substitutions
+		$substitutions['__DATE__'] = _( 'Date' );
+
+		if ( ! empty( $RosarioModules['Student_Billing'] )
+			&& AllowUse( 'Student_Billing/StudentBalances.php' ) )
+		{
+			// @since 13.0 Add Balance to Substitutions
+			$substitutions['__BALANCE__'] = _( 'Balance' );
+		}
+
 		$substitutions += SubstitutionsCustomFields( 'student' );
 
 		$extra['extra_header_left'] .= '<tr class="st"><td>' .
@@ -252,4 +281,20 @@ if ( ! $_REQUEST['modfunc'] )
 		echo '<br /><div class="center">' .
 		SubmitButton( _( 'Print Letters for Selected Students' ) ) . '</div></form>';
 	}
+}
+
+
+/**
+ * Make Currency
+ *
+ * Local function
+ *
+ * @param  string $value  Balance value.
+ * @param  string $column 'BALANCE'.
+ *
+ * @return string Formatted Balance value with Currency
+ */
+function _makeCurrency( $value, $column )
+{
+	return Currency( $value * -1 );
 }

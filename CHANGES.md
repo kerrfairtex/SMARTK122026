@@ -14,6 +14,7 @@ Changes in 13.0
 - Use DBInsert() & DBUpdate() functions in Assignments.php
 - Security fix #393 SQL prevent INSERT or UPDATE on any table in Assignments.php, thanks to @c3mc3f
 - Security fix #394 Upload directories are web-executable in assets/FileUploads/.htaccess, thanks to @c3mc3f
+- Add Date (today) & Balance (Student Billing) to Substitutions in Letters.php
 
 Changes in 12.9.2
 -----------------

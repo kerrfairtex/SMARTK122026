@@ -26,6 +26,7 @@ Changes in 13.0
 - Remove deprecated `_printPageHead()` function in PasswordReset.php
 - Deprecate Linkify() function in Linkify.fnc.php
 - Add PortalPollsMakeOptions() function to replace Linkify() in PortalPollNotes.fnc.php
+- Deprecate SendEmail() function in SendEmail.fnc.php
 
 Changes in 12.9.2
 -----------------

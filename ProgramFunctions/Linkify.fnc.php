@@ -11,6 +11,8 @@
  * Transforms the URLs present a in text to anchors tags
  * and truncate the link text of URLs > 100 chars
  *
+ * @deprecated since RosarioSIS 13.0 Use your own function instead.
+ *
  * @example $text_linkified = Linkify( $text );
  *
  * @link http://stackoverflow.com/questions/15928606/php-converting-text-links-to-anchor-tags
@@ -21,6 +23,11 @@
  */
 function Linkify( $text )
 {
+	trigger_error(
+		'Linkify() function is deprecated since RosarioSIS 13.0. Please use your own function instead.',
+		E_USER_DEPRECATED
+	);
+
 	$pattern = '((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,8}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?«»“”‘’]))';
 
 	return preg_replace_callback( "#$pattern#i", function( $matches )

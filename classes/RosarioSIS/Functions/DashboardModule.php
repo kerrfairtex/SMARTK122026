@@ -36,7 +36,7 @@ class DashboardModule
 	 *
 	 * @return string Dashboard module HTML.
 	 */
-	function do( $module )
+	function load( $module )
 	{
 		if ( mb_strpos( $module, '..' ) !== false
 			|| ! file_exists( 'modules/' . $module . '/includes/Dashboard.inc.php' ) )

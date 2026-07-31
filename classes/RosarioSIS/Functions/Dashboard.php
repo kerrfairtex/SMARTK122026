@@ -60,7 +60,7 @@ class Dashboard
 				continue;
 			}
 
-			$html = $this->module->do( $module );
+			$html = $this->module->load( $module );
 
 			$this->add( $module, $html, true );
 		}

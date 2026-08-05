@@ -121,8 +121,6 @@ else
 			// Send New Registration email to Notify.
 			if ( filter_var( $RosarioNotifyAddress, FILTER_VALIDATE_EMAIL ) )
 			{
-				require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 				$student_name = DBGetOne( "SELECT " . DisplayNameSQL() . " AS FULL_NAME
 					FROM students
 					WHERE STUDENT_ID='" . UserStudentID() . "'" );
@@ -134,7 +132,7 @@ else
 					User( 'NAME' )
 				);
 
-				SendEmail( $RosarioNotifyAddress, _( 'New Registration' ), $message );
+				(new RosarioSIS\Functions\Email)->send( $RosarioNotifyAddress, _( 'New Registration' ), $message );
 			}
 		}
 

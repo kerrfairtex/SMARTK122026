@@ -1,7 +1,6 @@
 <?php
 
 require_once 'ProgramFunctions/Template.fnc.php';
-require_once 'ProgramFunctions/SendEmail.fnc.php';
 require_once 'ProgramFunctions/Substitutions.fnc.php';
 
 // This was a quick hack to email parents who were assigned accounts but had never logged in
@@ -95,7 +94,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 			$to = empty( $test_email ) ? $staff['EMAIL'] : $test_email;
 
-			$result = SendEmail( $to, $subject, $msg, $reply_to );
+			$result = (new RosarioSIS\Functions\Email)->send( $to, $subject, $msg, $reply_to );
 
 			$LO_result[] = [
 				'PARENT' => $staff['FULL_NAME'],

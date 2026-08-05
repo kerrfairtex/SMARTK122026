@@ -2,7 +2,6 @@
 
 require_once 'ProgramFunctions/Template.fnc.php';
 require_once 'ProgramFunctions/Substitutions.fnc.php';
-require_once 'ProgramFunctions/SendEmail.fnc.php';
 
 // This script will automatically create parent accounts and associate students based on an email address which is part of the student record.
 
@@ -311,7 +310,7 @@ if ( $_REQUEST['modfunc'] === 'save'
 			if ( ! empty( $_REQUEST['modfunc_send_email_notification'] ) )
 			{
 				// @since 5.8 Send email notification to Parents is optional.
-				$result = SendEmail( $to, $subject[$account], $msg, $reply_to );
+				$result = (new RosarioSIS\Functions\Email)->send( $to, $subject[$account], $msg, $reply_to );
 			}
 
 			$RET[$email][1]['PARENT'] = $staff['NAME'];

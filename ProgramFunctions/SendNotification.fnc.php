@@ -21,8 +21,6 @@ function SendNotificationCreateStudentAccount( $student_id, $to = '' )
 {
 	global $RosarioNotifyAddress;
 
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( empty( $to ) )
 	{
 		$to = $RosarioNotifyAddress;
@@ -57,7 +55,7 @@ function SendNotificationCreateStudentAccount( $student_id, $to = '' )
 
 	$message = sprintf( $message, $student_name, $student_id );
 
-	return SendEmail( $to, _( 'Create Student Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'Create Student Account' ), $message );
 }
 
 /**
@@ -73,8 +71,6 @@ function SendNotificationCreateStudentAccount( $student_id, $to = '' )
 function SendNotificationCreateUserAccount( $staff_id, $to = '' )
 {
 	global $RosarioNotifyAddress;
-
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
 
 	if ( empty( $to ) )
 	{
@@ -97,7 +93,7 @@ function SendNotificationCreateUserAccount( $staff_id, $to = '' )
 		UserStaffID()
 	);
 
-	return SendEmail( $to, _( 'Create User Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'Create User Account' ), $message );
 }
 
 /**
@@ -113,8 +109,6 @@ function SendNotificationCreateUserAccount( $staff_id, $to = '' )
 function SendNotificationNewAdministrator( $staff_id, $to = '' )
 {
 	global $RosarioNotifyAddress;
-
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
 
 	if ( empty( $to ) )
 	{
@@ -146,7 +140,7 @@ function SendNotificationNewAdministrator( $staff_id, $to = '' )
 		User( 'NAME' )
 	);
 
-	return SendEmail( $to, _( 'New Administrator Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'New Administrator Account' ), $message );
 }
 
 /**
@@ -163,8 +157,6 @@ function SendNotificationNewAdministrator( $staff_id, $to = '' )
  */
 function SendNotificationActivateStudentAccount( $student_id, $to = '' )
 {
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( empty( $to ) )
 	{
 		if ( ! Config( 'STUDENTS_EMAIL_FIELD' ) )
@@ -215,7 +207,7 @@ function SendNotificationActivateStudentAccount( $student_id, $to = '' )
 
 	$message = sprintf( $message, $student_id, $rosario_url );
 
-	return SendEmail( $to, _( 'Create Student Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'Create Student Account' ), $message );
 }
 
 /**
@@ -232,8 +224,6 @@ function SendNotificationActivateStudentAccount( $student_id, $to = '' )
  */
 function SendNotificationActivateUserAccount( $staff_id, $to = '' )
 {
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( empty( $to ) )
 	{
 		$to = DBGetOne( "SELECT EMAIL FROM staff
@@ -280,7 +270,7 @@ function SendNotificationActivateUserAccount( $staff_id, $to = '' )
 
 	$message = sprintf( $message, $staff_id, $rosario_url );
 
-	return SendEmail( $to, _( 'Create User Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'Create User Account' ), $message );
 }
 
 /**
@@ -299,8 +289,6 @@ function SendNotificationActivateUserAccount( $staff_id, $to = '' )
  */
 function SendNotificationNewStudentAccount( $student_id, $to = '', $password = '' )
 {
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( empty( $to ) )
 	{
 		if ( ! Config( 'STUDENTS_EMAIL_FIELD' ) )
@@ -347,7 +335,7 @@ function SendNotificationNewStudentAccount( $student_id, $to = '', $password = '
 
 	$message = sprintf( $message, $student_id, $rosario_url );
 
-	return SendEmail( $to, _( 'Student Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'Student Account' ), $message );
 }
 
 /**
@@ -366,8 +354,6 @@ function SendNotificationNewStudentAccount( $student_id, $to = '', $password = '
  */
 function SendNotificationNewUserAccount( $staff_id, $to = '', $password = '' )
 {
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( empty( $to ) )
 	{
 		$to = DBGetOne( "SELECT EMAIL FROM staff
@@ -411,7 +397,7 @@ function SendNotificationNewUserAccount( $staff_id, $to = '', $password = '' )
 
 	$message = sprintf( $message, $staff_id, $rosario_url );
 
-	return SendEmail( $to, _( 'User Account' ), $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, _( 'User Account' ), $message );
 }
 
 /**

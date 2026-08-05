@@ -121,8 +121,6 @@ function ErrorSendEmail( $error = [], $title = 'PHP Fatal error' )
 
 	chdir( dirname( __FILE__ ) . '/../' );
 
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	if ( ! $error )
 	{
 		$last_error = error_get_last();
@@ -205,5 +203,5 @@ function ErrorSendEmail( $error = [], $title = 'PHP Fatal error' )
 		$message = nl2br( $message );
 	}
 
-	return SendEmail( $RosarioErrorsAddress, $title, $message );
+	return (new RosarioSIS\Functions\Email)->send( $RosarioErrorsAddress, $title, $message );
 }

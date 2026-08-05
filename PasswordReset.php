@@ -366,15 +366,13 @@ function _sendPasswordResetEmail( $user_id, $user_type, $email )
 	$link = RosarioURL( 'script' ) . '?h=' . $hash;
 
 	// Send email.
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	$message = _( 'Please visit the following link to reset your password' ) . ':<br />
 		<a href="' . URLEscape( $link ) . '">' . $link . '</a>
 		<br />' . _( 'Username' ) . ': ' . $username . '
 		<br /><br />' .
 		_( 'Please permanently delete this email once you are done.' );
 
-	$email_sent = SendEmail( $email, _( 'Password Reset' ), $message );
+	$email_sent = (new RosarioSIS\Functions\Email)->send( $email, _( 'Password Reset' ), $message );
 
 	if ( ! $email_sent )
 	{
@@ -454,9 +452,6 @@ function _notifyServerAdminPasswordReset( $user_id )
 		WHERE STAFF_ID='" . (int) $user_id . "'
 		AND SYEAR='" . Config( 'SYEAR' ) . "'" );
 
-	// FJ add SendEmail function.
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	$to = $RosarioNotifyAddress;
 
 	$name = $staff_RET[1]['FULL_NAME'];
@@ -476,5 +471,5 @@ function _notifyServerAdminPasswordReset( $user_id )
 Profile: %s
 Remote IP: %s', $username, $profile, $ip );
 
-	return SendEmail( $to, $subject, $message );
+	return (new RosarioSIS\Functions\Email)->send( $to, $subject, $message );
 }

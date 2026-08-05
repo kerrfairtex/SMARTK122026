@@ -14,8 +14,6 @@
  */
 function EmailReferral( $referral_id, $emails )
 {
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	// Verify emails array and build TO.
 	$to_emails = [];
 
@@ -65,7 +63,7 @@ function EmailReferral( $referral_id, $emails )
 
 	//var_dump($to, $subject,$message, $from);
 
-	return SendEmail( $to, $subject, $message, $from );
+	return (new RosarioSIS\Functions\Email)->send( $to, $subject, $message, $from );
 }
 
 /**

@@ -31,6 +31,7 @@ Changes in 13.0
 - Deprecate 'ProgramFunctions/SendEmail.fnc.php|before_send' & 'ProgramFunctions/SendEmail.fnc.php|send_error' action hooks in Email.php & Actions.php
 - Fix PHP 5.6 syntax error unexpected 'do' (T_DO) in DashboardModule.php
 - Add README.md files in classes/
+- Use RosarioSIS\Functions\Email class, program wide
 
 Changes in 12.9.2
 -----------------

@@ -196,8 +196,6 @@ function ContentSecurityPolicySendReport( $cron_day )
 		return false;
 	}
 
-	require_once 'ProgramFunctions/SendEmail.fnc.php';
-
 	$subject = _( 'Content Security Policy Violations' );
 
 	$message = 'System: ' . ParseMLField( Config( 'TITLE' ) ) . "\n";
@@ -215,7 +213,7 @@ function ContentSecurityPolicySendReport( $cron_day )
 		$message .= 'Full Report: ' . "\n" . $json_pretty;
 	}
 
-	return SendEmail( $RosarioErrorsAddress, $subject, $message );
+	return (new RosarioSIS\Functions\Email)->send( $RosarioErrorsAddress, $subject, $message );
 }
 
 /**

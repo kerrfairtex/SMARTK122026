@@ -32,6 +32,7 @@ Changes in 13.0
 - Fix PHP 5.6 syntax error unexpected 'do' (T_DO) in DashboardModule.php
 - Add README.md files in classes/
 - Use RosarioSIS\Functions\Email class, program wide
+- Remove deprecated `_rosarioLoginURL()` function in SendNotification.fnc.php
 
 Changes in 12.9.2
 -----------------

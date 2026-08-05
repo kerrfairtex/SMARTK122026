@@ -399,19 +399,3 @@ function SendNotificationNewUserAccount( $staff_id, $to = '', $password = '' )
 
 	return (new RosarioSIS\Functions\Email)->send( $to, _( 'User Account' ), $message );
 }
-
-/**
- * RosarioSIS login page URL
- * Removes part beginning with 'Modules.php' or 'index.php' from URI.
- *
- * Local function
- *
- * @since 5.9
- * @deprecated since 11.2 Use RosarioURL() instead of local function
- *
- * @return string Login page URL.
- */
-function _rosarioLoginURL()
-{
-	return RosarioURL();
-}

@@ -33,6 +33,7 @@ Changes in 13.0
 - Add README.md files in classes/
 - Use RosarioSIS\Functions\Email class, program wide
 - Remove deprecated `_rosarioLoginURL()` function in SendNotification.fnc.php
+- Add `&modfunc=save` to Fields form in Fields.fnc.php, SchoolFields.php, AddressFields.php, PeopleFields.php, StudentFields.php & UserFields.php
 
 Changes in 12.9.2
 -----------------

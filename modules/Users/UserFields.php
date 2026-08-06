@@ -13,10 +13,12 @@ $_REQUEST['category_id'] = issetVal( $_REQUEST['category_id'], '' );
 
 DrawHeader( ProgramTitle() );
 
-if ( isset( $_POST['tables'] )
-	&& is_array( $_POST['tables'] )
+// @since 13.0 Add `&modfunc=save` to Fields form
+if ( $_REQUEST['modfunc'] === 'save'
 	&& AllowEdit() )
 {
+	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
+
 	$table = issetVal( $_REQUEST['table'] );
 
 	if ( ! in_array( $table, [ 'staff_field_categories', 'staff_fields' ] ) )
@@ -145,8 +147,8 @@ if ( isset( $_POST['tables'] )
 			$error[] = _( 'Please enter valid Numeric data.' );
 	}
 
-	// Unset tables & redirect URL.
-	RedirectURL( 'tables' );
+	// Unset modfunc, tables & redirect URL.
+	RedirectURL( [ 'modfunc', 'tables' ] );
 }
 
 // Delete Field / Category.

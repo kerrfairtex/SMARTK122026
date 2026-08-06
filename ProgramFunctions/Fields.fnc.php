@@ -290,6 +290,7 @@ function DeleteDBFieldCategory( $table, $id )
  * Get Field or Field Category Form
  *
  * @since 4.6 Add Files type.
+ * @since 13.0 Add `&modfunc=save` to Fields form
  *
  * @example echo GetFieldsForm( 'student', $title, $RET, $extra_fields );
  *
@@ -359,7 +360,32 @@ function GetFieldsForm( $table, $title, $RET, $extra_category_fields = [], $type
 		$full_table = $table . '_field_categories';
 	}
 
-	$form .= '&table=' . $full_table . '" method="POST">';
+	$form .= '&table=' . $full_table;
+
+	require_once 'modules/School_Setup/includes/Addon.fnc.php';
+
+	if ( ( $table === 'hostel_room' || $table === 'hostel_building' )
+		&& version_compare( AddonInfoGet( 'module', 'Hostel_Premium', [ 'version' ] ), '5.0', '<' ) )
+	{
+		// Old Hostel Premium module version, do NOT add `&modfunc=save` to form
+	}
+	elseif ( $table === 'library_document'
+		&& version_compare( AddonInfoGet( 'module', 'Library_Premium', [ 'version' ] ), '13.3', '<' ) )
+	{
+		// Old Library Premium module version, do NOT add `&modfunc=save` to form
+	}
+	elseif ( $table === 'staff_absence'
+		&& version_compare( AddonInfoGet( 'module', 'Staff_Absences', [ 'version' ] ), '12.3', '<' ) )
+	{
+		// Old Staff Absences module version, do NOT add `&modfunc=save` to form
+	}
+	else
+	{
+		// @since 13.0 Add `&modfunc=save` to Fields form
+		$form .= '&modfunc=save';
+	}
+
+	$form .= '" method="POST">';
 
 	$delete_button = '';
 

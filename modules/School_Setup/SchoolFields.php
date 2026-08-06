@@ -12,10 +12,12 @@ DrawHeader( ProgramTitle() );
 
 $_REQUEST['id'] = issetVal( $_REQUEST['id'], false );
 
-if ( isset( $_POST['tables'] )
-	&& is_array( $_POST['tables'] )
+// @since 13.0 Add `&modfunc=save` to Fields form
+if ( $_REQUEST['modfunc'] === 'save'
 	&& AllowEdit() )
 {
+	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
+
 	$table = issetVal( $_REQUEST['table'] );
 
 	if ( ! in_array( $table, [ 'school_fields' ] ) )
@@ -84,8 +86,8 @@ if ( isset( $_POST['tables'] )
 			$error[] = _( 'Please enter valid Numeric data.' );
 	}
 
-	// Unset tables & redirect URL.
-	RedirectURL( 'tables' );
+	// Unset modfunc, tables & redirect URL.
+	RedirectURL( [ 'modfunc', 'tables' ] );
 }
 
 if ( $_REQUEST['modfunc'] === 'delete'

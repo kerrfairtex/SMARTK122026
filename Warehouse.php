@@ -496,22 +496,6 @@ if ( mb_internal_encoding() !== 'UTF-8' )
 	mb_internal_encoding( 'UTF-8' );
 }
 
-if ( ROSARIO_DEBUG )
-{
-	// @deprecated since 12.7
-	require_once 'ProgramFunctions/Debug.fnc.php';
-
-	// @since 5.0 Load Kint.
-	Kint();
-}
-else
-{
-	function d()
-	{
-		// Prevent PHP Fatal error if Kint debug d() function not loaded.
-	}
-}
-
 /**
  * Update RosarioSIS
  * Automatically runs after manual files update
@@ -946,6 +930,7 @@ function isAJAX()
  *
  * @global $ETagCache ETag cache system.
  * @since  3.1
+ * @since 12.9 Security fix #371 Request Forgery add CSRF token to links/forms containing `modfunc=`
  *
  * @param  string  $mode Mode: start|stop. Optional, defaults to ''.
  * @return boolean True if ETagCache activated, else false.

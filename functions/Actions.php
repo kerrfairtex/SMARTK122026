@@ -557,6 +557,27 @@ $RosarioActions = [];
 	 * @since 13.0
 	 */
 	/*'Scheduling/Courses.php|cp_inputs' => [ &$header, &$cp_inputs ],
+
+	/**
+	 * Before Send.
+	 *
+	 * @since 13.0
+	 */
+	/*'RosarioSIS/Functions/Email.php|before_send' => [],
+
+	/**
+	 * Send email error.
+	 *
+	 * @since 13.0
+	 */
+	/*'RosarioSIS/Functions/Email.php|send_error' => [ $e->errorMessage() ],
+
+	/**
+	 * Before delete Course Period hook
+	 *
+	 * @since 13.0
+	 */
+	/*'Scheduling/Courses.php|before_delete_course_period' => [],
 );*/
 
 /**

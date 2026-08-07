@@ -37,6 +37,7 @@ Changes in 13.0
 - Remove Debug.fnc.php file include: Kint() & d() functions in Warehouse.php
 - Temp dir is now dynamic (was hardcoded to /tmp/) + fix error ttl property not declared in curl.php
 - Fix SQL roll "Block" Periods correctly in Rollover.php
+- Add Before delete Course Period hook in Courses.php & Actions.php
 
 Changes in 12.9.2
 -----------------

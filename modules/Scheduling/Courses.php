@@ -747,6 +747,16 @@ if ( $_REQUEST['modfunc'] === 'delete'
 
 	if ( DeletePrompt( $table ) )
 	{
+		if ( $_REQUEST['course_period_id'] )
+		{
+			/**
+			 * Before delete Course Period hook
+			 *
+			 * @since 13.0
+			 */
+			do_action( 'Scheduling/Courses.php|before_delete_course_period' );
+		}
+
 		DBQuery( $delete_sql );
 
 		if ( $_REQUEST['course_period_id'] )

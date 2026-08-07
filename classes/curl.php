@@ -59,7 +59,7 @@ class curl {
 	 */
 	public function __construct($options = array()){
 		if (!function_exists('curl_init')) {
-			$this->error = 'cURL module must be enabled!';
+			$this->error = 'PHP curl extension must be enabled!';
 			// FJ fix PHP8.4 deprecated passing E_USER_ERROR to trigger_error()
 			throw new \Exception($this->error);
 			return false;
@@ -547,17 +547,23 @@ class curl {
  * @subpackage file
  * @copyright  1999 onwards Martin Dougiamas  {@link http://moodle.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ *
+ * @since 13.0 Temp dir is now dynamic (was hardcoded to /tmp/)
  */
 class curl_cache {
 	/** @var string */
 	public $dir = '';
+
+	/** @var int */
+	public $ttl;
+
 	/**
 	 *
 	 * @param string @module which module is using curl_cache
 	 *
 	 */
 	function __construct() {
-		$this->dir = '/tmp/';
+		$this->dir = sys_get_temp_dir() . DIRECTORY_SEPARATOR;
 		if (!file_exists($this->dir)) {
 			mkdir($this->dir, 0700, true);
 		}

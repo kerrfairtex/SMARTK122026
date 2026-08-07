@@ -35,6 +35,7 @@ Changes in 13.0
 - Remove deprecated `_rosarioLoginURL()` function in SendNotification.fnc.php
 - Add `&modfunc=save` to Fields form in Fields.fnc.php, SchoolFields.php, AddressFields.php, PeopleFields.php, StudentFields.php & UserFields.php
 - Remove Debug.fnc.php file include: Kint() & d() functions in Warehouse.php
+- Temp dir is now dynamic (was hardcoded to /tmp/) + fix error ttl property not declared in curl.php
 
 Changes in 12.9.2
 -----------------

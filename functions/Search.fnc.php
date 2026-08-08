@@ -809,7 +809,8 @@ function SearchField( $field, $type = 'student', $extra = [] )
 					DBUnescapeString( $value ) . '<br />';
 			}
 
-			return ' AND LOWER(' . $sql_col . ") LIKE '" . mb_strtolower( $value ) . "%' ";
+			// @since 13.0 SQL use CONCAT() so string is escaped if needed
+			return ' AND LOWER(' . $sql_col . ") LIKE CONCAT(LOWER('" . $value . "'),'%') ";
 
 		// Checkbox.
 		case 'radio':

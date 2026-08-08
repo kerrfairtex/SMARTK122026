@@ -938,8 +938,9 @@ function makeParents( $student_id, $column )
 
 		if ( $_ROSARIO['makeParents'] != '!' )
 		{
-			$constraint = " AND (lower(sjp.STUDENT_RELATION) LIKE '" .
-				mb_strtolower( $_ROSARIO['makeParents'] ) . "%')";
+			// @since 13.0 SQL use CONCAT() so string is escaped if needed
+			$constraint = " AND (LOWER(sjp.STUDENT_RELATION) LIKE CONCAT(LOWER('" .
+				$_ROSARIO['makeParents'] . "'),'%'))";
 		}
 	}
 
@@ -1275,10 +1276,11 @@ function appendSQL( $sql, $extra = [] )
 	// Address (City, State, Zip code) (contains, case insensitive).
 	if ( ! empty( $_REQUEST['addr'] ) )
 	{
-		$sql .= " AND (LOWER(a.ADDRESS) LIKE '%" . mb_strtolower( $_REQUEST['addr'] ) .
-			"%' OR LOWER(a.CITY) LIKE '" . mb_strtolower( $_REQUEST['addr'] ) .
-			"%' OR LOWER(a.STATE)='" . mb_strtolower( $_REQUEST['addr'] ) .
-			"' OR a.ZIPCODE LIKE '" . $_REQUEST['addr'] . "%')";
+		// @since 13.0 SQL use CONCAT() so string is escaped if needed
+		$sql .= " AND (LOWER(a.ADDRESS) LIKE CONCAT('%',LOWER('" . $_REQUEST['addr'] . "'),'%')
+			OR LOWER(a.CITY) LIKE CONCAT(LOWER('" . $_REQUEST['addr'] . "'),'%')
+			OR LOWER(a.STATE)=LOWER('" . $_REQUEST['addr'] . "')
+			OR a.ZIPCODE LIKE CONCAT('" . $_REQUEST['addr'] . "','%'))";
 
 		if ( ! $no_search_terms )
 		{

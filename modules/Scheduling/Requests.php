@@ -4,11 +4,13 @@ if ( $_REQUEST['modfunc'] === 'XMLHttpRequest' )
 {
 	header( "Content-Type: text/xml\n\n" );
 
-	$courses_RET = DBGet( "SELECT c.COURSE_ID,c.TITLE FROM courses c WHERE " .
-		( $_REQUEST['subject_id'] ? "c.SUBJECT_ID='" . (int) $_REQUEST['subject_id'] . "' AND " : '' ) .
-		"UPPER(c.TITLE) LIKE '%" . mb_strtoupper( $_REQUEST['course_title'] ) .
-		"%' AND c.SYEAR='" . UserSyear() .
-		"' AND c.SCHOOL_ID='" . UserSchool() . "'
+	// @since 13.0 SQL use CONCAT() so string is escaped if needed
+	$courses_RET = DBGet( "SELECT c.COURSE_ID,c.TITLE
+		FROM courses c
+		WHERE " . ( $_REQUEST['subject_id'] ? "c.SUBJECT_ID='" . (int) $_REQUEST['subject_id'] . "' AND " : '' ) .
+		"UPPER(c.TITLE) LIKE CONCAT('%',UPPER('" . $_REQUEST['course_title'] . "'),'%')
+		AND c.SYEAR='" . UserSyear() . "'
+		AND c.SCHOOL_ID='" . UserSchool() . "'
 		ORDER BY c.TITLE", [ 'TITLE' => 'ParseMLField' ] );
 
 	echo '<?phpxml version="1.0" standalone="yes"?><courses>';

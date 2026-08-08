@@ -863,7 +863,7 @@ function MultipleCheckboxInput( $value, $name, $title, $options, $extra = '', $d
  * @param  string         $values   Input value(s).
  * @param  string         $name     Input name.
  * @param  string         $title    Input title (optional). Defaults to ''.
- * @param  array          $options  Input options: array( option_value => option_text ) or with groups: array( group_name => array( option_value => option_text ) ).
+ * @param  array          $options  Input options: [ option_value => option_text ] or with groups: [ group_name => [ option_value => option_text ] ].
  * @param  string|boolean $allow_na Allow N/A (empty value); set to false to disallow (optional). Defaults to N/A.
  * @param  string         $extra    Extra HTML attributes added to the input. Add 'group' to enable options grouping.
  * @param  boolean        $div      Is input wrapped into <div onclick>? (optional). Defaults to true.
@@ -1401,13 +1401,6 @@ function RadioInput( $value, $name, $title, $options, $allow_na = 'N/A', $extra 
  */
 function ColorInput( $value, $name, $title = '', $extra = '', $div = true )
 {
-	if ( strpos( $_SERVER['HTTP_USER_AGENT'], 'MSIE' )
-		|| strpos( $_SERVER['HTTP_USER_AGENT'], 'Trident/7' ) )
-	{
-		// Is Internet Explorer: not compatible with color input.
-		return ColorInputMiniColors( $value, $name, $title, 'hidden', $extra, $div );
-	}
-
 	$id = GetInputID( $name );
 
 	$required = $value == '' && mb_strpos( $extra, 'required' ) !== false;
@@ -1436,97 +1429,6 @@ function ColorInput( $value, $name, $title = '', $extra = '', $div = true )
 		$input,
 		$color_rect,
 		FormatInputTitle( $title )
-	);
-}
-
-
-/**
- * Color Picker Input for browsers not supporting HTML5 color input
- * @link http://caniuse.com/#search=input%20type
- *
- * @example ColorInputMiniColors( $value, 'values[' . $id . '][' . $column . ']', '', 'hidden', 'data-position="bottom right"' );
- *
- * @deprecated
- *
- * @since 5.4
- *
- * @uses jQuery MiniColors plugin
- *
- * @see assets/js/jquery-minicolors/ for plugin files
- *
- * @link https://github.com/claviska/jquery-minicolors/
- *
- * @param  string  $value Color value
- * @param  string  $name  Input name attribute
- * @param  string  $title Input title (label)
- * @param  string  $type  hidden|text Input type attribute (optional). Defaults to 'hidden'
- * @param  string  $extra Extra HTML attributes added to the input (optional).
- * @param  boolean $div   Is input wrapped into <div onclick>? (optional). Defaults to true
- *
- * @return string  Color Picker Input HTML
- */
-function ColorInputMiniColors( $value, $name, $title = '', $type = 'hidden', $extra = '', $div = true )
-{
-	static $included = false;
-
-	$id = GetInputID( $name );
-
-	$required = $value == '' && mb_strpos( $extra, 'required' ) !== false;
-
-	$color_rect = '<div class="color-input-value" style="background-color:' . $value . ';"></div>';
-
-	if ( ! AllowEdit()
-		|| isset( $_REQUEST['_ROSARIO_PDF'] ) )
-	{
-		return $color_rect . FormatInputTitle( $title, '', '', '' );
-	}
-
-	$js = '';
-
-	if ( ! $included )
-	{
-		ob_start();
-		?>
-		<!-- MiniColors -->
-		<link rel="stylesheet" href="assets/js/jquery-minicolors/jquery.minicolors.css">
-		<script src="assets/js/jquery-minicolors/jquery.minicolors.js"></script>
-		<script>$(document).ready(function(){
-			$('.minicolors').each(function(){
-				$(this).minicolors({
-					position: $(this).attr('data-position') || 'bottom left'
-				});
-			});
-		});</script>
-		<?php
-		$js = ob_get_clean();
-
-		$included = true;
-	}
-
-	ob_start();
-	?>
-	<input type="<?php echo AttrEscape( $type ); ?>" name="<?php echo AttrEscape( $name ); ?>" id="<?php echo $id; ?>"
-		class="minicolors" value="<?php echo AttrEscape( $value ); ?>" <?php echo $extra; ?>>
-	<?php
-
-	$color = ob_get_clean() . FormatInputTitle( $title, $id, $required );
-
-	if ( $value == ''
-		|| ! $div )
-	{
-		return $js . $color;
-	}
-
-	return $js . InputDivOnclick(
-		$id,
-		$color,
-		$color_rect,
-		FormatInputTitle( $title ) .
-		'<script>$("#div' . $id . '").on("click", function(){
-			$("#' . $id . '").minicolors({
-				position: $("#' . $id . '").attr("data-position") || "bottom left"
-			});
-		});</script>'
 	);
 }
 

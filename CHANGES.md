@@ -40,6 +40,7 @@ Changes in 13.0
 - Add Before delete Course Period hook in Courses.php & Actions.php
 - Remove deprecated `_myURLEncode()` function in PreparePHP_SELF.fnc.php
 - SQL use CONCAT() so string is escaped if needed in GetStuList.fnc.php, Search.fnc.php & Requests.php
+- Remove deprecated ColorInputMiniColors() function and related JS in Inputs.php & assets/js/jquery-minicolors/
 
 Changes in 12.9.2
 -----------------

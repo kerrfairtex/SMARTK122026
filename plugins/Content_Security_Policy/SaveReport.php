@@ -56,7 +56,7 @@ $domain_skip = [
 	'https://tl.ytlogs.ru', // Russian YouTube logs?
 	'https://mainf.global-cache.online', // JS file injected by ??
 	'https://wallet.binance.com', // Binance
-	'https://filtering.adblock360.com', // AdBlock360
+	'adblock360.com', // AdBlock360
 	'https://static.contextall.com', // VisualSPHost
 ];
 

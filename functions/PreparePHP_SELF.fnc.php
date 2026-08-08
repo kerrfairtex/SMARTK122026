@@ -306,12 +306,6 @@ function URLEscape( $string )
 	);
 }
 
-// @deprecated since 6.8 Use URLEscape().
-function _myURLEncode( $string )
-{
-	return URLEscape( $string );
-}
-
 /**
  * RosarioSIS URL: dir (site), or script (page), or request (includes request params)
  * Will detect https inside Docker or behind reverse proxy

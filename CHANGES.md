@@ -38,6 +38,7 @@ Changes in 13.0
 - Temp dir is now dynamic (was hardcoded to /tmp/) + fix error ttl property not declared in curl.php
 - Fix SQL roll "Block" Periods correctly in Rollover.php
 - Add Before delete Course Period hook in Courses.php & Actions.php
+- Remove deprecated `_myURLEncode()` function in PreparePHP_SELF.fnc.php
 
 Changes in 12.9.2
 -----------------

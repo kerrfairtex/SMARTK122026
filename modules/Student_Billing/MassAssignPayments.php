@@ -118,6 +118,15 @@ if ( ! $_REQUEST['modfunc'] )
 			'comments',
 			_( 'Comment' ),
 			'maxlength="1000" size="25"'
+		) . '</td></tr>';
+
+		// @since 13.0 Add "Lunch Payment" checkbox
+		echo '<tr><td>' . CheckboxInput(
+			'',
+			'lunch_payment',
+			_( 'Lunch Payment' ),
+			'',
+			true
 		) . '</td></tr></table>';
 
 		PopTable( 'footer' );

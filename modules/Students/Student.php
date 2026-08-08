@@ -407,9 +407,13 @@ if ( $_REQUEST['modfunc'] === 'update'
 				);
 
 				// Create default food service account for this student.
-				// Associate with default food service account and assign other defaults.
-				DBQuery( "INSERT INTO food_service_student_accounts (STUDENT_ID,DISCOUNT,BARCODE,ACCOUNT_ID)
-					VALUES('" . $student_id . "','','','" . $student_id . "')" );
+				DBInsert(
+					'food_service_student_accounts',
+					[
+						'STUDENT_ID' => (int) $student_id,
+						'ACCOUNT_ID' => (int) $student_id,
+					]
+				);
 
 				// Fix SQL error, Check if Account ID already exists
 				$fs_account_id_exists = DBGetOne( "SELECT 1
@@ -418,8 +422,13 @@ if ( $_REQUEST['modfunc'] === 'update'
 
 				if ( ! $fs_account_id_exists )
 				{
-					DBQuery( "INSERT INTO food_service_accounts (ACCOUNT_ID,BALANCE,TRANSACTION_ID)
-						VALUES('" . $student_id . "','0.00','0');" );
+					DBInsert(
+						'food_service_accounts',
+						[
+							'ACCOUNT_ID' => (int) $student_id,
+							'BALANCE' => '0.00',
+						]
+					);
 				}
 
 				// Create enrollment.

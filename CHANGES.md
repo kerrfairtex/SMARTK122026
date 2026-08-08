@@ -43,6 +43,7 @@ Changes in 13.0
 - Remove deprecated ColorInputMiniColors() function and related JS in Inputs.php & assets/js/jquery-minicolors/
 - Add Staff Payroll Balance widget in StaffBalances.php
 - Remove deprecated `$_ROSARIO['ReferralInput']` global var in Referral.fnc.php
+- Use DBInsert() function in Student.php
 
 Changes in 12.9.2
 -----------------

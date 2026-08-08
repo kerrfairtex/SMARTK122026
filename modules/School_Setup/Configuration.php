@@ -246,6 +246,14 @@ else
 			];
 		}
 
+		if ( $RosarioModules['Student_Billing'] )
+		{
+			$tabs[] = [
+				'title' => _( 'Student Billing' ),
+				'link' => 'Modules.php?modname=' . $_REQUEST['modname'] . '&tab=student_billing',
+			];
+		}
+
 		if ( $RosarioModules['Food_Service'] )
 		{
 			$tabs[] = [
@@ -784,6 +792,55 @@ else
 				'</i></div>',
 				' type="number" min="1" max="99"'
 			) . '</td></tr></table>';
+		}
+
+		if ( $_REQUEST['tab'] === 'student_billing' )
+		{
+			// @since 13.0 Add "Credit Food Service Account on Lunch Payment" config option
+			echo '<table class="cellpadding-5"><tr><td>' . CheckboxInput(
+				ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' ),
+				'values[program_config][student_billing][STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT]',
+				_( 'Credit Food Service Account on Lunch Payment' ),
+				'',
+				false,
+				'Yes',
+				'No',
+				false,
+				'class="onclick-student-billing-credit-food-service-account-toggle"'
+			);
+
+			$options = [
+				'Cash' => _( 'Cash' ),
+				'Check' => _( 'Check' ),
+				'Credit Card' => _( 'Credit Card' ),
+				'Debit Card' => _( 'Debit Card' ),
+				'Transfer' => _( 'Transfer' ),
+			];
+
+			$class_hide = $disabled = '';
+
+			if ( ! ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' ) )
+			{
+				$class_hide = ' hide';
+
+				$disabled = ' disabled';
+			}
+
+			echo '<br>' . SelectInput(
+				ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' ),
+				'values[program_config][student_billing][STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT]',
+				'',
+				$options,
+				false,
+				'class="student-billing-credit-food-service-account-options' . $class_hide . '"' . $disabled,
+				false
+			);
+
+			?>
+			<script src="assets/js/csp/modules/schoolSetup/Configuration.js?v=13.0"></script>
+			<?php
+
+			echo '</td></tr></table>';
 		}
 
 		if ( $_REQUEST['tab'] === 'food_service' )

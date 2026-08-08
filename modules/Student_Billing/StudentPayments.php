@@ -60,10 +60,18 @@ if ( $_REQUEST['modfunc'] === 'save'
 			// @since 11.2 Add CREATED_BY column to billing_fees & billing_payments tables
 			$columns['CREATED_BY'] = DBEscapeString( User( 'NAME' ) );
 
-			DBInsert(
+			$id = DBInsert(
 				'billing_payments',
-				$insert_columns + $columns
+				$insert_columns + $columns,
+				'id'
 			);
+
+			if ( $columns['LUNCH_PAYMENT']
+				&& ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' ) )
+			{
+				// @since 13.0 Add "Credit Food Service Account on Lunch Payment" config option
+				_creditPaymentsFoodServiceAccount( $id );
+			}
 		}
 	}
 

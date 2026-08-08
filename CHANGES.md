@@ -45,6 +45,7 @@ Changes in 13.0
 - Remove deprecated `$_ROSARIO['ReferralInput']` global var in Referral.fnc.php
 - Use DBInsert() function in Student.php
 - Add `_creditPaymentsFoodServiceAccount()` function in Student_Billing/functions.inc.php
+- Add "Credit Food Service Account on Lunch Payment" config option in Help_en.php, Configuration.php, MassAssignPayments.php & StudentPayments.php
 
 Changes in 12.9.2
 -----------------

@@ -1,4 +1,5 @@
 <?php
+require_once 'modules/Student_Billing/functions.inc.php';
 
 if ( $_REQUEST['modfunc'] === 'save' )
 {
@@ -31,7 +32,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 				foreach ( (array) $student_ids as $student_id )
 				{
-					$inserted = DBInsert(
+					$id = DBInsert(
 						'billing_payments',
 						[
 							'SYEAR' => UserSyear(),
@@ -40,13 +41,22 @@ if ( $_REQUEST['modfunc'] === 'save' )
 							'PAYMENT_DATE' => $date,
 							'AMOUNT' => $_REQUEST['amount'],
 							'COMMENTS' => $_REQUEST['comments'],
+							'LUNCH_PAYMENT' => $_REQUEST['lunch_payment'],
 							// @since 11.2 Add CREATED_BY column to billing_fees & billing_payments tables
 							'CREATED_BY' => DBEscapeString( User( 'NAME' ) ),
-						]
+						],
+						'id'
 					);
+
+					if ( $_REQUEST['lunch_payment']
+						&& ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' ) )
+					{
+						// @since 13.0 Add "Credit Food Service Account on Lunch Payment" config option
+						_creditPaymentsFoodServiceAccount( $id );
+					}
 				}
 
-				if ( ! empty( $inserted ) )
+				if ( ! empty( $id ) )
 				{
 					$note[] = button( 'check' ) . '&nbsp;' . _( 'That payment has been added to the selected students.' );
 				}

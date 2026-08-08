@@ -42,6 +42,7 @@ Changes in 13.0
 - SQL use CONCAT() so string is escaped if needed in GetStuList.fnc.php, Search.fnc.php & Requests.php
 - Remove deprecated ColorInputMiniColors() function and related JS in Inputs.php & assets/js/jquery-minicolors/
 - Add Staff Payroll Balance widget in StaffBalances.php
+- Remove deprecated `$_ROSARIO['ReferralInput']` global var in Referral.fnc.php
 
 Changes in 12.9.2
 -----------------

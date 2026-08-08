@@ -9,9 +9,6 @@
  *
  * @since 4.5
  *
- * @global $_ROSARIO['ReferralInput'] Contains the HTML code.
- * @deprecated Filter $_ROSARIO['ReferralInput'] global. Since 5.4 Use &$input instead.
- *
  * @example echo ReferralInput( $category, $RET['CATEGORY_' . $category['ID'] ], false );
  *
  * @param array   $category Referral category array.
@@ -22,8 +19,6 @@
  */
 function ReferralInput( $category, $value = '', $new = true )
 {
-	global $_ROSARIO;
-
 	$input = '';
 
 	switch ( $category['DATA_TYPE'] )
@@ -133,9 +128,6 @@ function ReferralInput( $category, $value = '', $new = true )
 
 			break;
 	}
-
-	// @deprecated Filter $_ROSARIO['ReferralInput'] global.
-	$_ROSARIO['ReferralInput'] = $input;
 
 	$action_args = [
 		'category' => $category,

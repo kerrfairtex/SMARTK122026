@@ -20,6 +20,8 @@ $extra['link']['FULL_NAME'] = false;
 $extra['new'] = true;
 $extra['functions'] = [ 'BALANCE' => '_makeCurrency' ];
 
+StaffWidgets( 'staff_balance' );
+
 if ( User( 'PROFILE' ) === 'parent' || User( 'PROFILE' ) === 'teacher' )
 {
 	$_REQUEST['search_modfunc'] = 'list';

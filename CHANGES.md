@@ -47,6 +47,7 @@ Changes in 13.0
 - Add `_creditPaymentsFoodServiceAccount()` function in Student_Billing/functions.inc.php
 - Add "Credit Food Service Account on Lunch Payment" config option in Configuration.php, MassAssignPayments.php & StudentPayments.php
 - Add "Lunch Payment" checkbox in MassAssignPayments.php
+- Add and translate help for "Credit Food Service Account on Lunch Payment" config option in Help_en.php & help.po
 
 Changes in 12.9.2
 -----------------

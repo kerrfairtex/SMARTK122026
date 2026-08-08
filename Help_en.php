@@ -196,6 +196,11 @@ if ( User( 'PROFILE' ) === 'admin' ):
 		<li>' . _help( '<i>Number of days before / after the school date teachers can edit attendance</i>: leave the fields blank to always allow teachers to edit attendance' ) . '</li>
 	</ul>
 
+	<p>' . _help( 'The Student Billing module:' ) . '</p>
+	<ul>
+		<li>' . _help( '<i>Credit Food Service Account on Lunch Payment</i>: when a payment is added, and the "Lunch Payment" checkbox is checked, the amount will be credited to the relevant student\'s food service account. Select the payment method for the transactions from the list.' ) . '</li>
+	</ul>
+
 	<p>' . _help( 'The Food Service module:' ) . '</p>
 	<ul>
 		<li>' . _help( '<i>Food Service Balance minimum amount for warning</i>: set the minimum amount under which a warning will be displayed to the student and its parents on the Portal and to generate Reminders' ) . '</li>

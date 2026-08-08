@@ -44,6 +44,7 @@ Changes in 13.0
 - Add Staff Payroll Balance widget in StaffBalances.php
 - Remove deprecated `$_ROSARIO['ReferralInput']` global var in Referral.fnc.php
 - Use DBInsert() function in Student.php
+- Add `_creditPaymentsFoodServiceAccount()` function in Student_Billing/functions.inc.php
 
 Changes in 12.9.2
 -----------------

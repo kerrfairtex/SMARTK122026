@@ -413,3 +413,102 @@ function _savePaymentsFile( $id )
 {
 	return _saveFeesFile( $id );
 }
+
+/**
+ * Credit Food Service Account on Lunch Payment
+ *
+ * @since 13.0
+ *
+ * @param  int $id Payment ID.
+ *
+ * @return bool    True if Food Service Account was credited.
+ */
+function _creditPaymentsFoodServiceAccount( $id )
+{
+	$payment_RET = DBGet( "SELECT STUDENT_ID,AMOUNT,COMMENTS
+		FROM billing_payments
+		WHERE ID='" . (int) $id . "'" );
+
+	if ( ! $payment_RET )
+	{
+		return false;
+	}
+
+	$is_money = function( $value )
+	{
+		if ( $value > 0 )
+		{
+			// Fix SQL error:
+			// A field with precision 9, scale 2 must round to an absolute value less than 10^7.
+			if ( ! mb_strpos( $value, '.' )
+				&& mb_strlen( $value ) > 7 )
+			{
+				return false;
+			}
+
+			if ( mb_strpos( $value, '.' )
+				&& $value > 9999999.99 )
+			{
+				return false;
+			}
+
+			return (float) $value;
+		}
+
+		return false;
+	};
+
+	$amount = $payment_RET[1]['AMOUNT'];
+
+	if ( ! $is_money( $amount ) )
+	{
+		return false;
+	}
+
+	$student_id = $payment_RET[1]['STUDENT_ID'];
+
+	$account_id = DBGetOne( "SELECT ACCOUNT_ID
+		FROM food_service_student_accounts
+		WHERE STUDENT_ID='" . (int) $student_id . "'" );
+
+	if ( ! $account_id )
+	{
+		return false;
+	}
+
+	$option = ProgramConfig( 'student_billing', 'STUDENT_BILLING_CREDIT_FOOD_SERVICE_ACCOUNT' );
+
+	$fields = 'SYEAR,SCHOOL_ID,ACCOUNT_ID,STUDENT_ID,BALANCE,' . DBEscapeIdentifier( 'TIMESTAMP' ) . ',SHORT_NAME,DESCRIPTION,SELLER_ID';
+
+	$values = "'" . UserSyear() . "','" . UserSchool() . "','" . (int) $account_id . "','" . (int) $student_id . "',
+		(SELECT BALANCE FROM food_service_accounts WHERE ACCOUNT_ID='" . (int) $account_id . "'),
+		CURRENT_TIMESTAMP,'CREDIT','Credit','" . User( 'STAFF_ID' ) . "'";
+
+	$sql = "INSERT INTO food_service_transactions (" . $fields . ") values (" . $values . ")";
+
+	DBQuery( $sql );
+
+	$transaction_id = DBLastInsertID();
+
+	$full_description = _( $option ) . ' ' . _( 'Lunch Payment' );
+
+	DBInsert(
+		'food_service_transaction_items',
+		[
+			'ITEM_ID' => '0',
+			'TRANSACTION_ID' => (int) $transaction_id,
+			'AMOUNT' => $amount,
+			'DISCOUNT' => '',
+			'SHORT_NAME' => mb_strtoupper( $option ),
+			'DESCRIPTION' => DBEscapeString( $full_description ),
+		]
+	);
+
+	DBQuery( "UPDATE food_service_accounts
+		SET TRANSACTION_ID='" . (int) $transaction_id . "',BALANCE=BALANCE+(SELECT sum(AMOUNT)
+			FROM food_service_transaction_items
+			WHERE TRANSACTION_ID='" . (int) $transaction_id . "')
+		WHERE ACCOUNT_ID='" . (int) $account_id . "'" );
+
+	return true;
+}

@@ -96,7 +96,7 @@ if ( $_REQUEST['modfunc'] === 'save' )
 
 	if ( empty( $RET ) )
 	{
-		BackPrompt( _( 'No Students were found.' ) );
+		BackPrompt( _( 'No courses found' ) );
 	}
 
 	if ( User( 'PROFILE' ) !== 'admin' )

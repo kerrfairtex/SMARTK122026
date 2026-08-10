@@ -58,7 +58,8 @@ if ( AllowUse() )
 // Not allowed, hacking attempt?
 elseif ( User( 'USERNAME' ) )
 {
-	(new RosarioSIS\Functions\Hacking)->log();
+	// Can use modname: false, do not send "HACKING ATTEMPT" email
+	(new RosarioSIS\Functions\Hacking)->log( false );
 }
 
 // Output Footer HTML.

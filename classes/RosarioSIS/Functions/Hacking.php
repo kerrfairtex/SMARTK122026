@@ -172,12 +172,18 @@ class Hacking
 
 	/**
 	 * Forbidden error
+	 *
+	 * Return 403 only if not logged in.
 	 */
 	function forbidden()
 	{
 		global $error;
 
-		http_response_code( 403 );
+		if ( empty( $_SESSION['STAFF_ID'] ) && empty( $_SESSION['STUDENT_ID'] ) )
+		{
+			// Not logged in.
+			http_response_code( 403 );
+		}
 
 		echo ErrorMessage( $error );
 

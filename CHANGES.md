@@ -51,6 +51,7 @@ Changes in 13.0
 - Update French & Spanish translations in rosariosis.po & rosariosis.pot
 - Change error message from "No students were found." to "No courses found" in PrintSchedules.php
 - Can use modname: false, do not send "HACKING ATTEMPT" email in Modules.php
+- Return 403 Forbidden only if not logged in in Hacking.php
 
 Changes in 12.9.2
 -----------------

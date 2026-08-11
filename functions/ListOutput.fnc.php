@@ -241,7 +241,7 @@ function ListOutput( $result, $column_names, $singular = '.', $plural = '.', $li
 
 		if ( $LO_sort
 			&& $result_count > 1
-			&& array_key_exists( $LO_sort, $result[1] ) )
+			&& array_key_exists( $LO_sort, (array) $result[1] ) )
 		{
 			foreach ( (array) $result as $sort )
 			{

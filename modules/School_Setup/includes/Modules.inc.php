@@ -173,8 +173,11 @@ if ( $_REQUEST['modfunc'] === 'deactivate'
 			//save $RosarioModules
 			Config( 'MODULES', serialize( $RosarioModules ) );
 
-			//reload menu
-			_reloadMenu();
+			// Reload menu
+			// @since 12.5 CSP remove unsafe-inline Javascript
+			?>
+			<script src="assets/js/csp/modules/ReloadMenu.js?v=12.5"></script>
+			<?php
 		}
 
 		//verify module dir exists
@@ -296,8 +299,11 @@ if ( $_REQUEST['modfunc'] === 'activate'
 		//save $RosarioModules
 		Config( 'MODULES', serialize( $RosarioModules ) );
 
-		//reload menu
-		_reloadMenu();
+		// Reload menu
+		// @since 12.5 CSP remove unsafe-inline Javascript
+		?>
+		<script src="assets/js/csp/modules/ReloadMenu.js?v=12.5"></script>
+		<?php
 	}
 
 	// Unset modfunc & module & redirect URL.
@@ -478,14 +484,3 @@ function _makeDelete( $module_title, $activated = null )
 
 	return $return;
 }
-
-function _reloadMenu()
-{
-	// @since 12.5 CSP remove unsafe-inline Javascript
-	?>
-	<script src="assets/js/csp/modules/ReloadMenu.js?v=12.5"></script>
-	<?php
-
-	return true;
-}
-

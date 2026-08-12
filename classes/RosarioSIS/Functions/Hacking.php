@@ -11,8 +11,10 @@ namespace RosarioSIS\Functions;
 
 class Hacking
 {
+	/** @var int Max. Hacking Attempts to log user out */
 	public $max_attempts;
 
+	/** @var int Hacking Attempts within one minute */
 	public $attempts_within_one_minute;
 
 	/**

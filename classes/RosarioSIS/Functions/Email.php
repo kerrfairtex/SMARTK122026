@@ -11,6 +11,7 @@ namespace RosarioSIS\Functions;
 
 class Email
 {
+	/** @var object Mailer object instance */
 	static $mailer;
 
 	/**

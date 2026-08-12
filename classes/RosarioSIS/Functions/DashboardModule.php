@@ -11,6 +11,7 @@ namespace RosarioSIS\Functions;
 
 class DashboardModule
 {
+	/** @var array Menu entries and programs for each module */
 	protected $menu;
 
 	/**

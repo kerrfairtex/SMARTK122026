@@ -11,8 +11,10 @@ namespace RosarioSIS\Functions;
 
 class Dashboard
 {
+	/** @var array Dashboard HTML */
 	protected $dashboard = [];
 
+	/** @var object DashboardModule object instance */
 	protected $module;
 
 	/**

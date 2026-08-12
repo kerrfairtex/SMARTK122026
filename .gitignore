@@ -299,6 +299,7 @@ modules/Ecuador_Retake_Exam*
 modules/Liberty_Cambodia*
 modules/Slovenian_Temporary_Residence*
 modules/YessCS*
+modules/Medical_Report*
 modules/update.sh
 plugins/Email_SMTP*
 plugins/Public_Pages*
@@ -339,6 +340,8 @@ plugins/Previous_Next_Student*
 plugins/Unsaved_Changes_Warning*
 plugins/Chrome_To_PDF*
 plugins/Two_Factor_Authentication*
+plugins/RHIT_Report_Cards*
+plugins/Flexible_Schedule*
 plugins/update.sh
 locale/fr_FR.utf8_ParisComSup
 functions/1GetMP.php

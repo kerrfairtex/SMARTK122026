@@ -66,6 +66,8 @@ class Hacking
 	 *
 	 * @uses ErrorSendEmail()
 	 *
+	 * @global $error
+	 *
 	 * @param  bool $send_email Send email (optional). Defaults to true.
 	 * @param  bool $redirect   Redirect user (optional). Defaults to true.
 	 *
@@ -73,11 +75,18 @@ class Hacking
 	 */
 	function log( $send_email = true, $redirect = true )
 	{
+		global $error;
+
 		/**
 		 * Log "RosarioSIS HACKING ATTEMPT" into Apache error.log
 		 * So you can ban IP using a custom fail2ban jail
 		 */
 		error_log( 'RosarioSIS HACKING ATTEMPT' );
+
+		if ( empty( $error ) )
+		{
+			$error[] = _( 'You\'re not allowed to use this program!' );
+		}
 
 		if ( $send_email )
 		{
@@ -99,16 +108,12 @@ class Hacking
 	 * If user has NOT just logged in (&redirect_to= in referer)
 	 * Or if attempts within one minute > max attempts
 	 *
-	 * @global $error
-	 *
 	 * @param  string $title Email title.
 	 *
 	 * @return bool True if email sent.
 	 */
 	function sendEmail( $title )
 	{
-		global $error;
-
 		$email_sent = false;
 
 		if ( $this->attempts_within_one_minute >= $this->max_attempts
@@ -116,8 +121,6 @@ class Hacking
 			// Do not send email if user has just logged in (&redirect_to= in referer)
 			|| mb_strpos( $_SERVER['HTTP_REFERER'], '&redirect_to=' ) === false )
 		{
-			$error[] = _( 'You\'re not allowed to use this program!' );
-
 			$email_sent = ErrorSendEmail( $error, $title );
 		}
 

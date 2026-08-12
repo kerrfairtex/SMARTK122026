@@ -334,7 +334,7 @@ if ( ! empty( $_REQUEST['modfunc'] )
 			// No token & not logged in, do not send email (99% chances its a bot)
 			( isset( $_REQUEST['token'] ) || $logged_in ),
 			// No user in session yet, 403 Forbidden error (99% chances its a bot)
-			! $logged_in
+			$logged_in
 		);
 	}
 }

@@ -54,6 +54,7 @@ Changes in 13.0
 - Return 403 Forbidden only if not logged in in Hacking.php
 - Fix PHP typeError: array_key_exists() argument #2 must be of type array, null given in ListOutput.fnc.php
 - POST max size limit reached: send email, do not redirect, display error in Warehouse.php
+- Only add "You're not allowed to use this program!" error if $error is empty in Hacking.php
 
 Changes in 12.9.2
 -----------------

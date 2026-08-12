@@ -53,6 +53,7 @@ Changes in 13.0
 - Can use modname: false, do not send "HACKING ATTEMPT" email in Modules.php
 - Return 403 Forbidden only if not logged in in Hacking.php
 - Fix PHP typeError: array_key_exists() argument #2 must be of type array, null given in ListOutput.fnc.php
+- POST max size limit reached: send email, do not redirect, display error in Warehouse.php
 
 Changes in 12.9.2
 -----------------

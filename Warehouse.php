@@ -428,14 +428,13 @@ if ( $_POST
 
 	array_rwalk( $_REQUEST, $post_max_size_limit );
 
-	require_once 'ProgramFunctions/HackingLog.fnc.php';
-
 	// Do not translate.
 	$error[] = 'You are submitting too much data: over the ' .
 		( ROSARIO_POST_MAX_SIZE_LIMIT / 1024 / 1024 ) .
 		'M limit. Try reducing the data you are submitting.';
 
-	HackingLog();
+	// Send email, do not redirect, display error.
+	(new RosarioSIS\Functions\Hacking)->log( true, false );
 }
 
 /**

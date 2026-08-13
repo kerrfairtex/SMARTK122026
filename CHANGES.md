@@ -60,6 +60,7 @@ Changes in 13.0
 - Check add-on requirements in Modules.inc.php & Plugins.inc.php
 - Add AddonMakeUpdateAvailable() function in Addon.fnc.php
 - Check for add-on updates in Modules.inc.php & Plugins.inc.php
+- Add link to rosariosis.org/modules & rosariosis.org/plugins in Modules.inc.php & Plugins.inc.php
 
 Changes in 12.9.2
 -----------------

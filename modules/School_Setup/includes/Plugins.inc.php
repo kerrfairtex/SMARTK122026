@@ -366,6 +366,17 @@ if ( ! $_REQUEST['modfunc'] )
 			_( 'Check for updates' ) . '</a>';
 	}
 
+	$lang_2_chars = mb_substr( $_SESSION['locale'], 0, 2 );
+
+	$plugins_url = 'https://www.rosariosis.org/' .
+		( $lang_2_chars === 'es' || $lang_2_chars === 'fr' ? $lang_2_chars . '/' : '' ) .
+		'plugins/';
+
+	DrawHeader(
+		'<a href="' . $plugins_url . '" target="_blank" rel="noreferrer">' . $plugins_url .  '</a>',
+		$check_updates_link
+	);
+
 	echo ErrorMessage( $error );
 
 	echo ErrorMessage( $note, 'note' );

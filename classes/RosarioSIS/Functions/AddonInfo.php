@@ -115,7 +115,7 @@ class AddonInfo
 
 			try
 			{
-				$curl = new curl( [ 'cache' => true ] );
+				$curl = new \curl( [ 'cache' => true ] );
 
 				$json = $curl->get( $url );
 			}

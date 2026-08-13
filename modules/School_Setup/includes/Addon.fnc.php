@@ -446,3 +446,56 @@ function AddonUpsellPremium( $type, $addon_dir, $md_filename = 'PREMIUM.md' )
 
 	return $return;
 }
+
+/**
+ * Check if update available for add-on
+ *
+ * @since 13.0
+ *
+ * @uses RosarioSIS\Functions\AddonInfo class
+ *
+ * @param string $type      Add-on type: module|plugin.
+ * @param string $addon_dir Add-on directory. For example: 'My_Module'.
+ *
+ * @return string Empty if no version found, ❌ if no update, ✅ + remote / new versions + dates otherwise.
+ */
+function AddonMakeUpdateAvailable( $type, $addon_dir )
+{
+	$addon_info = new RosarioSIS\Functions\AddonInfo( $type, $addon_dir );
+
+	$version = $addon_info->get( [ 'version' ] );
+
+	if ( ! $version )
+	{
+		return '';
+	}
+
+	$version_remote = $addon_info->remoteGet( [ 'version' ] );
+
+	if ( ! $version_remote )
+	{
+		return '';
+	}
+
+	if ( version_compare( $version, $version_remote, '<' ) )
+	{
+		if ( ! empty( $_REQUEST['LO_save'] ) )
+		{
+			return _( 'Yes' );
+		}
+
+		$date = $addon_info->get( [ 'time' ] );
+
+		$date_remote = $addon_info->remoteGet( $type, $addon_dir, [ 'time' ] );
+
+		require_once 'ProgramFunctions/TipMessage.fnc.php';
+
+		$msg = '<table><tr><td>' . NoInput( $version, ProperDate( $date ) ) .
+			'</td><td> → </td><td>' .
+			NoInput( $version_remote, ProperDate( $date_remote ) ) . '</td></tr></table>';
+
+		return MakeTipMessage( $msg, _( 'Update available' ), button( 'check' ) );
+	}
+
+	return ! empty( $_REQUEST['LO_save'] ) ? _( 'No' ) : button( 'x' );
+}

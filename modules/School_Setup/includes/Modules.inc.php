@@ -212,6 +212,11 @@ if ( $_REQUEST['modfunc'] === 'activate'
 			'-main'
 		);
 	}
+	else
+	{
+		// @since 13.0 Check add-on requirements
+		(new RosarioSIS\Functions\AddonInfo( 'module', $_REQUEST['module'] ))->checkRequirements();
+	}
 
 	//verify not already in $RosarioModules
 

@@ -57,6 +57,7 @@ Changes in 13.0
 - Only add "You're not allowed to use this program!" error if $error is empty in Hacking.php
 - Remove local `_reloadMenu()` function in Modules.inc.php
 - Add RosarioSIS\Functions\AddonInfo class in AddonInfo.php
+- Check add-on requirements in Modules.inc.php & Plugins.inc.php
 
 Changes in 12.9.2
 -----------------

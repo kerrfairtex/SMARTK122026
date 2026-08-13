@@ -56,6 +56,7 @@ Changes in 13.0
 - POST max size limit reached: send email, do not redirect, display error in Warehouse.php
 - Only add "You're not allowed to use this program!" error if $error is empty in Hacking.php
 - Remove local `_reloadMenu()` function in Modules.inc.php
+- Add RosarioSIS\Functions\AddonInfo class in AddonInfo.php
 
 Changes in 12.9.2
 -----------------

@@ -232,7 +232,7 @@ class AddonInfo
 
 		$parts = explode( '.', $min );
 
-		return sprintf( '%s.%s', (int) $parts[0], (int) ( $parts[1] ?? 0 ) );
+		return sprintf( '%s.%s', (int) $parts[0], (int) ( isset( $parts[1] ) ? $parts[1] : 0 ) );
 	}
 
 	/**

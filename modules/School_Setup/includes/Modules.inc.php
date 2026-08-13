@@ -329,13 +329,23 @@ if ( $_REQUEST['modfunc'] === 'installation_statistics_post'
 	exit;
 }
 
+$check_updates = false;
+
+if ( $_REQUEST['modfunc'] === 'check_updates'
+	&& AllowEdit() )
+{
+	// @since 13.0 Check for add-on updates
+	$check_updates = true;
+
+	// Unset modfunc & redirect URL.
+	RedirectURL( 'modfunc' );
+}
+
 if ( ! $_REQUEST['modfunc'] )
 {
-	echo ErrorMessage( $error );
-
-	echo ErrorMessage( $note, 'note' );
-
 	$modules_RET = [ '' ];
+
+	$has_non_core_modules = false;
 
 	foreach ( (array) $RosarioModules as $module_title => $activated )
 	{
@@ -343,11 +353,38 @@ if ( ! $_REQUEST['modfunc'] )
 		$THIS_RET['DELETE'] = _makeDelete( $module_title, $activated );
 		$THIS_RET['TITLE'] = AddonMakeReadMe( 'module', $module_title, $activated );
 		$THIS_RET['ACTIVATED'] = AddonMakeActivated( $activated );
+		$THIS_RET['UPDATE_AVAILABLE'] = '';
+
+		if ( ! in_array( $module_title, $RosarioCoreModules ) )
+		{
+			$has_non_core_modules = true;
+
+			if ( $check_updates )
+			{
+				// @since 13.0 Check for add-on updates
+				$THIS_RET['UPDATE_AVAILABLE'] = AddonMakeUpdateAvailable( 'module', $module_title );
+			}
+		}
 
 		$modules_RET[] = $THIS_RET;
 
 		$directories_bypass[] = 'modules/' . $module_title;
 	}
+
+	$check_updates_link = '';
+
+	if ( $has_non_core_modules
+		&& strpos( $_SERVER['HTTP_HOST'], '.rosariosis.com' ) === false
+		&& AllowEdit() )
+	{
+		// @since 13.0 Check for add-on updates
+		$check_updates_link = '<a href="Modules.php?modname=School_Setup/Configuration.php&tab=modules&modfunc=check_updates">' .
+			_( 'Check for updates' ) . '</a>';
+	}
+
+	echo ErrorMessage( $error );
+
+	echo ErrorMessage( $note, 'note' );
 
 	// Scan modules/ folder for uninstalled modules.
 	$modules = array_diff( glob( 'modules/*', GLOB_ONLYDIR ), $directories_bypass );
@@ -387,6 +424,12 @@ if ( ! $_REQUEST['modfunc'] )
 		$THIS_RET['TITLE'] = AddonMakeReadMe( 'module', $module_title );
 		$THIS_RET['ACTIVATED'] = AddonMakeActivated( false );
 
+		if ( $check_updates )
+		{
+			// @since 13.0 Check for add-on updates
+			$THIS_RET['UPDATE_AVAILABLE'] = AddonMakeUpdateAvailable( 'module', $module_title );
+		}
+
 		$modules_RET[] = $THIS_RET;
 	}
 
@@ -395,6 +438,11 @@ if ( ! $_REQUEST['modfunc'] )
 		'TITLE' => _( 'Title' ),
 		'ACTIVATED' => _( 'Activated' ),
 	];
+
+	if ( $check_updates )
+	{
+		$columns['UPDATE_AVAILABLE'] = _( 'Update available' );
+	}
 
 	unset( $modules_RET[0] );
 

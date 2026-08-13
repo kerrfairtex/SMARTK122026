@@ -210,10 +210,15 @@ class AddonInfo
 			return $v;
 		}, $arr );
 
-		$text_version = array_find( $arr, static function( $v )
+		$text_version = null;
+
+		foreach ( $arr as $key => $v )
 		{
-			return true === preg_match( '/^\D/', $v );
-		} );
+			if ( true === preg_match( '/^\D/', $v ) )
+			{
+				$text_version = $v;
+			}
+		}
 
 		if ( null !== $text_version )
 		{

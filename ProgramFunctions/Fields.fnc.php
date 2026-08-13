@@ -365,17 +365,29 @@ function GetFieldsForm( $table, $title, $RET, $extra_category_fields = [], $type
 	require_once 'modules/School_Setup/includes/Addon.fnc.php';
 
 	if ( ( $table === 'hostel_room' || $table === 'hostel_building' )
-		&& version_compare( AddonInfoGet( 'module', 'Hostel_Premium', [ 'version' ] ), '5.0', '<' ) )
+		&& version_compare(
+			(new RosarioSIS\Functions\AddonInfo( 'module', 'Hostel_Premium' ))->get( [ 'version' ] ),
+			'5.0',
+			'<'
+		) )
 	{
 		// Old Hostel Premium module version, do NOT add `&modfunc=save` to form
 	}
 	elseif ( $table === 'library_document'
-		&& version_compare( AddonInfoGet( 'module', 'Library_Premium', [ 'version' ] ), '13.3', '<' ) )
+		&& version_compare(
+			(new RosarioSIS\Functions\AddonInfo( 'module', 'Library_Premium' ))->get( [ 'version' ] ),
+			'13.3',
+			'<'
+		) )
 	{
 		// Old Library Premium module version, do NOT add `&modfunc=save` to form
 	}
 	elseif ( $table === 'staff_absence'
-		&& version_compare( AddonInfoGet( 'module', 'Staff_Absences', [ 'version' ] ), '12.3', '<' ) )
+		&& version_compare(
+			(new RosarioSIS\Functions\AddonInfo( 'module', 'Staff_Absences' ))->get( [ 'version' ] ),
+			'12.3',
+			'<'
+		) )
 	{
 		// Old Staff Absences module version, do NOT add `&modfunc=save` to form
 	}

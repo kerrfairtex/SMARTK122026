@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: RosarioSIS\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-08-08 21:12+0200\n"
-"PO-Revision-Date: 2026-08-08 21:15+0200\n"
+"PO-Revision-Date: 2026-08-12 20:27+0200\n"
 "Last-Translator: François Jacquet <info@rosariosis.org>\n"
 "Language-Team: RosarioSIS\n"
 "Language: es\n"
@@ -7493,7 +7493,7 @@ msgid ""
 "The %s add-on requires %s version %s. You are currently running %s version "
 "%s."
 msgstr ""
-"El complemento %s requiere %s en versión %s. Estás corriendo %s versión %s."
+"El complemento %s requiere %s versión %s. Estás corriendo %s versión %s."
 
 #: modules/School_Setup/includes/Addon.fnc.php:613
 #, php-format

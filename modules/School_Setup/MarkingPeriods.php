@@ -42,14 +42,16 @@ else
 	$_REQUEST['marking_period_id'] = (string) (int) $_REQUEST['marking_period_id'];
 }
 
-// Add eventual Dates to $_REQUEST['tables'].
-AddRequestedDates( 'tables', 'post' );
-
 // UPDATING
-
-if ( ! empty( $_POST['tables'] )
+// @since 13.0 Add `&modfunc=save` to form
+if ( $_REQUEST['modfunc'] === 'save'
 	&& AllowEdit() )
 {
+	$_REQUEST['tables'] = issetVal( $_REQUEST['tables'], [] );
+
+	// Add eventual Dates to $_REQUEST['tables'].
+	AddRequestedDates( 'tables' );
+
 	foreach ( (array) $_REQUEST['tables'] as $id => $columns )
 	{
 		//FJ fix SQL bug invalid sort order
@@ -264,8 +266,8 @@ if ( ! empty( $_POST['tables'] )
 		}
 	}
 
-	// Unset tables & redirect URL.
-	RedirectURL( [ 'tables' ] );
+	// Unset modfunc, tables & redirect URL.
+	RedirectURL( [ 'modfunc', 'tables' ] );
 }
 
 // DELETING
@@ -440,7 +442,8 @@ if ( ! $_REQUEST['modfunc'] )
 		}
 	}
 
-	echo '<form action="' . URLEscape( $mp_href ) . '" method="POST">';
+	// @since 13.0 Add `&modfunc=save` to form
+	echo '<form action="' . URLEscape( $mp_href . '&modfunc=save' ) . '" method="POST">';
 
 	DrawHeader( $title, $delete_button . SubmitButton() );
 

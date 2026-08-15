@@ -86,7 +86,7 @@ if ( isset( $_REQUEST['course_modfunc'] )
 	if ( $_REQUEST['modfunc'] === 'choose_course'
 		&& $_REQUEST['modname'] === 'Scheduling/Schedule.php' )
 	{
-		echo '<input type="hidden" name="include_child_mps" value="' . AttrEscape( $_REQUEST['include_child_mps'] ) . '" />
+		echo '<input type="hidden" name="include_child_mps" value="' . AttrEscape( issetVal( $_REQUEST['include_child_mps'], '' ) ) . '" />
 			<input type="hidden" name="year_date" value="' . AttrEscape( $_REQUEST['year_date'] ) . '" />
 			<input type="hidden" name="month_date" value="' . AttrEscape( $_REQUEST['month_date'] ) . '" />
 			<input type="hidden" name="day_date" value="' . AttrEscape( $_REQUEST['day_date'] ) . '" />';

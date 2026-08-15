@@ -62,6 +62,10 @@ Changes in 13.0
 - Check for add-on updates in Modules.inc.php & Plugins.inc.php
 - Add link to rosariosis.org/modules & rosariosis.org/plugins in Modules.inc.php & Plugins.inc.php
 
+Changes in 12.9.3
+-----------------
+- Security fix #397 Unauthenticated stored XSS: remove HTML tags in SaveReport.php, thanks to @Bradsen
+
 Changes in 12.9.2
 -----------------
 - Fix SQL syntax error "AND STUDENT_ID IN()" when nothing to save in InputFinalGrades.php & EnterEligibility.php

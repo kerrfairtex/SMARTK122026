@@ -110,12 +110,16 @@ class Hacking
 	 * If user has NOT just logged in (&redirect_to= in referer)
 	 * Or if attempts within one minute > max attempts
 	 *
+	 * @global $error
+	 *
 	 * @param  string $title Email title.
 	 *
 	 * @return bool True if email sent.
 	 */
 	function sendEmail( $title )
 	{
+		global $error;
+
 		$email_sent = false;
 
 		if ( $this->attempts_within_one_minute >= $this->max_attempts
@@ -178,15 +182,18 @@ class Hacking
 	/**
 	 * Forbidden error
 	 *
-	 * Return 403 only if not logged in.
+	 * @global $error
+	 *
+	 * Return 403 only if not logged in & not AJAX request.
 	 */
 	function forbidden()
 	{
 		global $error;
 
-		if ( empty( $_SESSION['STAFF_ID'] ) && empty( $_SESSION['STUDENT_ID'] ) )
+		if ( empty( $_SESSION['STAFF_ID'] ) && empty( $_SESSION['STUDENT_ID'] )
+			&& ! isAJAX() )
 		{
-			// Not logged in.
+			// Not logged in & not AJAX request.
 			http_response_code( 403 );
 		}
 

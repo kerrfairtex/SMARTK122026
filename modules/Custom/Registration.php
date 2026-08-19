@@ -105,10 +105,12 @@ else
 
 		$config = RegistrationFormConfig();
 
-		if ( ! empty( $_REQUEST['sibling_use_contacts_address'] )
-			&& ! empty( $_REQUEST['sibling_id'] ) )
+		if ( ! empty( $_REQUEST['sibling_use_contacts_address'] ) )
 		{
-			$save_ok = RegistrationSaveSibling( $config, $values, $_REQUEST['sibling_id'] );
+			// Security fix check sibling belongs to the authenticated parent
+			$sibling_id = RegistrationSiblingRegistered();
+
+			$save_ok = RegistrationSaveSibling( $config, $values, $sibling_id );
 		}
 		else
 		{

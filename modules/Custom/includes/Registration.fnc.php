@@ -132,9 +132,7 @@ function RegistrationSiblingUseContactsAddress( $student_id )
 		FROM students
 		WHERE STUDENT_ID='" . (int) $student_id . "'" );
 
-	$sibling_id_input = '<input type="hidden" name="sibling_id" value="' . AttrEscape( $student_id ) . '" />';
-
-	return $js . $sibling_id_input . CheckboxInput(
+	return $js . CheckboxInput(
 		'Y',
 		'sibling_use_contacts_address',
 		sprintf(

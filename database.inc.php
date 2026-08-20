@@ -66,6 +66,8 @@ function db_start( $show_error = true )
 
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 
+                $connectstring .= " options='--search_path=rosariosis,public'";
+
 		if ( $DatabasePassword !== '' )
 		{
 			$connectstring .= ' password=' . $DatabasePassword;

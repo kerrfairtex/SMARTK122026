@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SmartCampus — Batu-Batu NIHS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233F; --ink-2:#22335A; --gold:#C98A2C; --gold-light:#F3E4C6;
+    --page:#F2F4F8; --card:#FFFFFF; --border:#E2E5EC;
+    --text:#1B2333; --text-2:#63697A; --text-3:#9498A6;
+    --green:#2F8F5B; --green-light:#E4F3EA; --coral:#D1573F; --coral-light:#FBE7E2;
+    --blue:#3D6FD1; --sans:'Inter',sans-serif; --serif:'Lora',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--sans);background:var(--page);color:var(--text);font-size:13.5px;}
+  .shell{display:flex;flex-direction:column;height:100vh;}
+  .topbar{height:56px;background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:16px;color:#fff;}
+  .brand{font-family:var(--serif);font-weight:600;font-size:16px;}
+  .main{flex:1;overflow-y:auto;padding:24px 28px;}
+  h1.page-title{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);margin-bottom:16px;}
+  .kpi-row{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px;}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 18px;}
+  .kpi .label{font-size:11.5px;color:var(--text-2);margin-bottom:8px;}
+  .kpi .value{font-size:24px;font-weight:600;font-family:var(--serif);color:var(--ink);}
+  .kpi .value.loading{color:var(--text-3);font-size:13px;font-family:var(--sans);}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  table.data{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.data th{text-align:left;color:var(--text-2);font-weight:600;font-size:11px;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border);}
+  table.data td{padding:9px 10px;border-bottom:1px solid #F0F1F5;}
+  .att-btn{min-width:30px;height:26px;padding:0 6px;border-radius:6px;border:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-2);cursor:pointer;background:#fff;margin-right:4px;}
+  .att-btn.selected{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .btn{font-size:12px;font-weight:600;padding:8px 14px;border-radius:7px;border:1px solid var(--border);background:#fff;cursor:pointer;}
+  .btn.primary{background:var(--ink);border-color:var(--ink);color:#fff;}
+  .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink);color:#fff;padding:11px 18px;border-radius:8px;font-size:12.5px;opacity:0;pointer-events:none;transition:.2s;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .error-banner{background:var(--coral-light);color:var(--coral);border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:none;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar"><div class="brand">SmartCampus — Batu-Batu NIHS</div></div>
+  <div class="main">
+    <div class="error-banner" id="errorBanner"></div>
+    <h1 class="page-title">Portal</h1>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">Total enrollment</div><div class="value loading" id="kpiEnrolled">Loading…</div></div>
+      <div class="kpi"><div class="label">Discipline referrals this year</div><div class="value loading" id="kpiReferrals">Loading…</div></div>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:13.5px;margin-bottom:12px">Take Attendance — Course Period <span id="cpLabel"></span></h2>
+      <table class="data" id="attTable">
+        <tr><th>Learner</th><th>ID #</th><th>Mark</th></tr>
+        <tr><td colspan="3" style="color:var(--text-3)">Loading learners…</td></tr>
+      </table>
+      <div style="margin-top:12px;text-align:right"><button class="btn primary" id="saveAttBtn">Submit attendance</button></div>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:13.5px;margin-bottom:12px">Discipline — Referral Log</h2>
+      <table class="data" id="discTable">
+        <tr><th>Learner</th><th>Date</th><th>Category</th></tr>
+        <tr><td colspan="3" style="color:var(--text-3)">Loading referrals…</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  // window.SMARTCAMPUS_BOOT is injected server-side by SmartCampus.php
+  // (school id, syear, token, ajaxUrl, course_period_id, period_id).
+  var BOOT = window.SMARTCAMPUS_BOOT || {
+    schoolId: 1, syear: 2026,
+    ajaxUrl: 'Modules.php?modname=SmartCampus/Ajax.php',
+    token: 'demo-token',
+    coursePeriodId: 0,
+    periodId: 0
+  };
+
+  document.getElementById('cpLabel').textContent = BOOT.coursePeriodId || '—';
+
+  function showToast(msg){
+    var t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(function(){ t.classList.remove('show'); }, 2600);
+  }
+
+  function showError(msg){
+    var b = document.getElementById('errorBanner');
+    b.textContent = msg;
+    b.style.display = 'block';
+  }
+
+  function callService(modfunc, params, method){
+    params = params || {};
+    method = method || 'GET';
+    var url = BOOT.ajaxUrl + '&modfunc=' + encodeURIComponent(modfunc);
+
+    if (method === 'GET'){
+      Object.keys(params).forEach(function(k){ url += '&' + k + '=' + encodeURIComponent(params[k]); });
+      return fetch(url, { credentials: 'same-origin' }).then(handleResponse);
+    }
+
+    var body = new URLSearchParams(Object.assign({ token: BOOT.token }, flatten(params)));
+    return fetch(url, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: body
+    }).then(handleResponse);
+  }
+
+  function flatten(obj){
+    var out = {};
+    Object.keys(obj).forEach(function(k){
+      if (typeof obj[k] === 'object' && obj[k] !== null){
+        Object.keys(obj[k]).forEach(function(sub){ out['marks[' + sub + ']'] = obj[k][sub]; });
+      } else {
+        out[k] = obj[k];
+      }
+    });
+    return out;
+  }
+
+  function handleResponse(res){
+    if (!res.ok) throw new Error('Service returned ' + res.status);
+    return res.json();
+  }
+
+  // --- Portal stats -----------------------------------------------
+  callService('portal_stats').then(function(data){
+    document.getElementById('kpiEnrolled').classList.remove('loading');
+    document.getElementById('kpiEnrolled').textContent = data.totalEnrolled ?? '—';
+    document.getElementById('kpiReferrals').classList.remove('loading');
+    document.getElementById('kpiReferrals').textContent = data.referralsThisYear ?? '—';
+  }).catch(function(err){
+    showError('Could not load portal stats: ' + err.message);
+    document.getElementById('kpiEnrolled').textContent = '—';
+    document.getElementById('kpiReferrals').textContent = '—';
+  });
+
+  // --- Attendance codes + list --------------------------------------
+  var currentMarks = {};
+  var attendanceCodes = [];
+
+  callService('attendance_codes').then(function(data){
+    attendanceCodes = data.codes || [];
+    return callService('attendance_list', {
+      course_period_id: BOOT.coursePeriodId,
+      period_id: BOOT.periodId
+    });
+  }).then(function(data){
+    var table = document.getElementById('attTable');
+    var rows = '<tr><th>Learner</th><th>ID #</th><th>Mark</th></tr>';
+
+    (data.learners || []).forEach(function(l){
+      var defaultCode = attendanceCodes.find(function(c){ return c.DEFAULT_CODE === 'Y'; });
+      var current = l.ATTENDANCE_CODE || (defaultCode ? defaultCode.id : null);
+      currentMarks[l.STUDENT_ID] = current;
+
+      rows += '<tr><td>' + l.FIRST_NAME + ' ' + l.LAST_NAME + '</td><td>' + (l.ID_NUMBER || '—') + '</td><td>' +
+        attendanceCodes.map(function(c){
+          var sel = String(current) === String(c.ID) ? 'selected' : '';
+          return '<button class="att-btn ' + sel + '" data-student="' + l.STUDENT_ID + '" data-code="' + c.ID + '" title="' + c.TITLE + '">' +
+            (c.STATE_CODE || c.SHORT_NAME || c.TITLE) + '</button>';
+        }).join('') + '</td></tr>';
+    });
+
+    table.innerHTML = rows || '<tr><td colspan="3" style="color:var(--text-3)">No learners scheduled in this course period.</td></tr>';
+
+    table.querySelectorAll('.att-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var sid = btn.dataset.student, code = btn.dataset.code;
+        table.querySelectorAll('.att-btn[data-student="' + sid + '"]').forEach(function(b){
+          b.classList.remove('selected');
+        });
+        btn.classList.add('selected');
+        currentMarks[sid] = code;
+      });
+    });
+  }).catch(function(err){
+    document.getElementById('attTable').innerHTML =
+      '<tr><td colspan="3" style="color:var(--coral)">Could not load attendance: ' + err.message + '</td></tr>';
+  });
+
+  document.getElementById('saveAttBtn').addEventListener('click', function(){
+    callService('attendance_save', {
+      course_period_id: BOOT.coursePeriodId,
+      period_id: BOOT.periodId,
+      marks: currentMarks
+    }, 'POST')
+      .then(function(res){ showToast('Attendance saved for ' + res.saved + ' learners'); })
+      .catch(function(err){ showError('Save failed: ' + err.message); });
+  });
+
+  // --- Discipline log -------------------------------------------------
+  callService('discipline_list').then(function(data){
+    var table = document.getElementById('discTable');
+    var rows = '<tr><th>Learner</th><th>Date</th><th>Category</th></tr>';
+    (data.referrals || []).forEach(function(r){
+      rows += '<tr><td>' + r.FIRST_NAME + ' ' + r.LAST_NAME + '</td><td>' + r.REFERRAL_DATE + '</td><td>' + (r.CATEGORY_1 || '—') + '</td></tr>';
+    });
+    table.innerHTML = rows || '<tr><td colspan="3" style="color:var(--text-3)">No referrals on file.</td></tr>';
+  }).catch(function(err){
+    document.getElementById('discTable').innerHTML =
+      '<tr><td colspan="3" style="color:var(--coral)">Could not load referrals: ' + err.message + '</td></tr>';
+  });
+</script>
+</body>
+</html>

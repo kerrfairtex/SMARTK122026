@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Discipline Log — Batu-Batu NIHS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#16233F; --page:#F2F4F8; --card:#FFFFFF; --border:#E2E5EC;
+    --text:#1B2333; --text-2:#63697A; --text-3:#9498A6; --coral:#D1573F; --coral-light:#FBE7E2;
+    --sans:'Inter',sans-serif; --serif:'Lora',Georgia,serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--sans);background:var(--page);color:var(--text);font-size:13.5px;}
+  .shell{display:flex;flex-direction:column;height:100vh;}
+  .topbar{height:56px;background:var(--ink);display:flex;align-items:center;padding:0 20px;gap:16px;color:#fff;}
+  .brand{font-family:var(--serif);font-weight:600;font-size:16px;}
+  .main{flex:1;overflow-y:auto;padding:24px 28px;}
+  h1.page-title{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--ink);margin-bottom:16px;}
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:16px;}
+  table.data{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.data th{text-align:left;color:var(--text-2);font-weight:600;font-size:11px;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--border);}
+  table.data td{padding:9px 10px;border-bottom:1px solid #F0F1F5;}
+  .error-banner{background:var(--coral-light);color:var(--coral);border-radius:8px;padding:10px 14px;font-size:12px;margin-bottom:14px;display:none;}
+</style>
+</head>
+<body>
+<div class="shell">
+  <div class="topbar"><div class="brand">SmartCampus — Discipline Log</div></div>
+  <div class="main">
+    <div class="error-banner" id="errorBanner"></div>
+    <h1 class="page-title">Discipline — Referral Log</h1>
+
+    <div class="panel">
+      <table class="data" id="discTable">
+        <tr><th>Learner</th><th>Date</th><th>Category</th></tr>
+        <tr><td colspan="3" style="color:var(--text-3)">Loading referrals…</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  var BOOT = window.SMARTCAMPUS_BOOT || {
+    schoolId: 1, syear: 2026,
+    ajaxUrl: 'Modules.php?modname=SmartCampus/Ajax.php',
+    token: 'demo-token'
+  };
+
+  function showError(msg){
+    var b = document.getElementById('errorBanner');
+    b.textContent = msg;
+    b.style.display = 'block';
+  }
+
+  function callService(modfunc, params){
+    params = params || {};
+    var url = BOOT.ajaxUrl + '&modfunc=' + encodeURIComponent(modfunc);
+    Object.keys(params).forEach(function(k){ url += '&' + k + '=' + encodeURIComponent(params[k]); });
+    return fetch(url, { credentials: 'same-origin' }).then(function(res){
+      if (!res.ok) throw new Error('Service returned ' + res.status);
+      return res.json();
+    });
+  }
+
+  callService('discipline_list').then(function(data){
+    var table = document.getElementById('discTable');
+    var rows = '<tr><th>Learner</th><th>Date</th><th>Category</th></tr>';
+    (data.referrals || []).forEach(function(r){
+      rows += '<tr><td>' + r.FIRST_NAME + ' ' + r.LAST_NAME + '</td><td>' + r.REFERRAL_DATE + '</td><td>' + (r.CATEGORY_1 || '—') + '</td></tr>';
+    });
+    table.innerHTML = rows || '<tr><td colspan="3" style="color:var(--text-3)">No referrals on file.</td></tr>';
+  }).catch(function(err){
+    showError('Could not load referrals: ' + err.message);
+    document.getElementById('discTable').innerHTML =
+      '<tr><td colspan="3" style="color:var(--coral)">Could not load referrals: ' + err.message + '</td></tr>';
+  });
+</script>
+</body>
+</html>

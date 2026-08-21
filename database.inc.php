@@ -56,17 +56,16 @@ function db_start( $show_error = true )
 		 *
 		 * @since 3.5.2
 		 */
-		$connectstring = 'host=' . $DatabaseServer . ' ';
+		$connectstring = 'host=' . $DatabaseServer;
 
-		if ( isset( $DatabasePort )
-			&& $DatabasePort !== '5432' )
+		if ( isset( $DatabasePort ) && $DatabasePort !== '5432' )
 		{
-			$connectstring .= 'port=' . $DatabasePort . ' ';
+			$connectstring .= ' port=' . $DatabasePort;
 		}
 
-		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
-
-                $connectstring .= " options='--search_path=rosariosis,public'";
+		$connectstring .= ' dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
+		$connectstring .= " options='--search_path=rosariosis,public'";
+		$connectstring .= ' sslmode=require';
 
 		if ( $DatabasePassword !== '' )
 		{

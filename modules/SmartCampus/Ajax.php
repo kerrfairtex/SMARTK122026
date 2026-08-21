@@ -31,7 +31,7 @@ if ( ! AllowUse() ) {
 $write_actions = [ 'attendance_save', 'discipline_save', 'enrollment_save' ];
 
 if ( in_array( $_REQUEST['modfunc'], $write_actions, true )
-	&& ( empty( $_REQUEST['token'] ) || $_REQUEST['token'] !== $_SESSION['token'] ) ) {
+	&& ( empty( $_SESSION['token'] ) || ! hash_equals( $_SESSION['token'], (string) ( $_REQUEST['token'] ?? '' ) ) ) ) {
 	http_response_code( 403 );
 	echo json_encode( [ 'error' => 'Invalid or missing token' ] );
 	exit;
@@ -55,17 +55,17 @@ switch ( $_REQUEST['modfunc'] ) {
 			WHERE school_id='" . (int) $school_id . "'
 			AND syear='" . (int) $syear . "'
 			AND ( end_date IS NULL OR end_date >= CURRENT_DATE )" );
-		$enr_RES = DBFetchArray( $enr_RET );
+		$enr_RES = db_fetch_row( $enr_RET );
 
 		$disc_RET = DBQuery( "SELECT COUNT(*) AS referral_count
 			FROM discipline_referrals
 			WHERE school_id='" . (int) $school_id . "'
 			AND syear='" . (int) $syear . "'" );
-		$disc_RES = DBFetchArray( $disc_RET );
+		$disc_RES = db_fetch_row( $disc_RET );
 
 		echo json_encode( [
-			'totalEnrolled'      => ! empty( $enr_RES[0]['enrolled_count'] ) ? (int) $enr_RES[0]['enrolled_count'] : 0,
-			'referralsThisYear'  => ! empty( $disc_RES[0]['referral_count'] ) ? (int) $disc_RES[0]['referral_count'] : 0,
+			'totalEnrolled'      => ! empty( $enr_RES['enrolled_count'] ) ? (int) $enr_RES['enrolled_count'] : 0,
+			'referralsThisYear'  => ! empty( $disc_RES['referral_count'] ) ? (int) $disc_RES['referral_count'] : 0,
 			// Attendance rate deliberately omitted — see file header note.
 		] );
 		break;
@@ -81,10 +81,14 @@ switch ( $_REQUEST['modfunc'] ) {
 			AND syear='" . (int) $syear . "'
 			ORDER BY sort_order" );
 
-		echo json_encode( [ 'codes' => DBFetchArray( $RET ) ?: [] ] );
+		$rows = $RET ? pg_fetch_all( $RET ) : [];
+		echo json_encode( [ 'codes' => ( $rows === false ? [] : $rows ) ] );
 		break;
 
 	// -----------------------------------------------------------
+	// This is the attendance_list endpoint that client.html expects.
+	// It provides learners for the portal attendance section,
+	// matching what the portal frontend calls for real-time updates.
 	case 'attendance_list':
 
 		$course_period_id = (int) ( $_REQUEST['course_period_id'] ?? 0 );
@@ -107,7 +111,8 @@ switch ( $_REQUEST['modfunc'] ) {
 			AND ( se.end_date IS NULL OR se.end_date >= CURRENT_DATE )
 			ORDER BY s.last_name, s.first_name" );
 
-		echo json_encode( [ 'learners' => DBFetchArray( $RET ) ?: [] ] );
+		$rows = $RET ? pg_fetch_all( $RET ) : [];
+		echo json_encode( [ 'learners' => ( $rows === false ? [] : $rows ) ] );
 		break;
 
 	// -----------------------------------------------------------
@@ -156,29 +161,28 @@ switch ( $_REQUEST['modfunc'] ) {
 			ORDER BY dr.referral_date DESC
 			LIMIT 50" );
 
-		echo json_encode( [ 'referrals' => DBFetchArray( $RET ) ?: [] ] );
+		$rows = $RET ? pg_fetch_all( $RET ) : [];
+		echo json_encode( [ 'referrals' => ( $rows === false ? [] : $rows ) ] );
 		break;
-        // -----------------------------------------------------------
-        // enrollment_code / drop_code are integer FKs whose lookup table
-        // hasn't been confirmed yet — returned raw. No enrollment_save
-        // exists yet; don't add one until that's checked (same trap as
-        // the attendance_code guess earlier in this file).
-        case 'enrollment_list':
-
-                $RET = DBQuery( "SELECT s.student_id, s.first_name, s.last_name,
-                                se.grade_id, se.start_date, se.end_date,
-                                se.enrollment_code, se.drop_code
-                        FROM student_enrollment se
-                        INNER JOIN students s ON s.student_id = se.student_id
-                        WHERE se.school_id='" . (int) $school_id . "'
-                        AND se.syear='" . (int) $syear . "'
-                        ORDER BY s.last_name, s.first_name" );
-
-                echo json_encode( [ 'enrollments' => DBFetchArray( $RET ) ?: [] ] );
-                break;
 
 	// -----------------------------------------------------------
-	default:
+	case 'enrollment_list':
+
+		$RET = DBQuery( "SELECT s.student_id, s.first_name, s.last_name,
+				se.grade_id, se.start_date, se.end_date,
+				se.enrollment_code, se.drop_code
+			FROM student_enrollment se
+			INNER JOIN students s ON s.student_id = se.student_id
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND se.syear='" . (int) $syear . "'
+			ORDER BY s.last_name, s.first_name" );
+
+		$rows = $RET ? pg_fetch_all( $RET ) : [];
+		echo json_encode( [ 'enrollments' => ( $rows === false ? [] : $rows ) ] );
+		break;
+
+	// -----------------------------------------------------------
+default:
 		http_response_code( 404 );
-		echo json_encode( [ 'error' => 'Unknown modfunc: ' . $_REQUEST['modfunc'] ] );
+	echo json_encode( [ 'error' => 'Unknown modfunc: ' . $_REQUEST['modfunc'] ] );
 }

@@ -1,0 +1,11 @@
+.git
+.gitignore
+.env
+.env.*
+config.inc.php
+node_modules
+npm-debug.log
+yarn-error.log
+*.log
+*.tmp
+.DS_Store

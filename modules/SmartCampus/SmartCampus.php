@@ -31,10 +31,10 @@ switch ( $_REQUEST['modfunc'] ) {
                         AND syear='" . (int) $syear . "'
                         AND ( end_date IS NULL OR end_date >= CURRENT_DATE )" );
 
-                $enrolled_RES = DBFetchArray( $enrolled_RET );
+                $enrolled_RES = db_fetch_row( $enrolled_RET );
 
-                $total_enrolled = ! empty( $enrolled_RES[0]['student_count'] )
-                        ? (int) $enrolled_RES[0]['student_count']
+                $total_enrolled = ! empty( $enrolled_RES['student_count'] )
+                        ? (int) $enrolled_RES['student_count']
                         : 0;
 
                 // TODO: course_period_id / period_id should come from the logged-in

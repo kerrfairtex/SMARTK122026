@@ -238,7 +238,12 @@ echo '</div>';
 (function(){
 	async function refreshKPIs() {
 		try {
-			var res = await fetch('Modules.php?modname=SmartCampus/Ajax.php&modfunc=kpi_refresh', { credentials: 'same-origin' });
+			var token = window.SMARTCAMPUS_TOKEN || (document.querySelector('meta[name="token"]') ? document.querySelector('meta[name="token"]').getAttribute('content') : '');
+			var url = 'Modules.php?modname=SmartCampus/Ajax.php&modfunc=kpi_refresh' + (token ? '&token=' + encodeURIComponent(token) : '');
+			var res = await fetch(url, { 
+				credentials: 'same-origin',
+				headers: { 'X-CSRF-Token': token, 'X-Requested-With': 'XMLHttpRequest' }
+			});
 			if (!res.ok) return;
 			var data = await res.json();
 			var elEnrolled = document.querySelector('.sc-val-enrolled');

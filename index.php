@@ -434,7 +434,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 	PopTable(
 		'header',
-		sprintf( _( '%s Login' ), Config( 'NAME' ) )
+		_( 'BATU-BATU NIHS LOGIN' )
 	);
 
 	if ( isset( $_REQUEST['reason'] ) )
@@ -484,7 +484,8 @@ if ( empty( $_SESSION['STAFF_ID'] )
 ?>
 
 	<img src="assets/themes/<?php echo URLEscape( Config( 'THEME' ) ); ?>/logo.png" class="logo center" alt="Logo" />
-	<h4 class="center"><?php echo ParseMLField( Config( 'TITLE' ) ); ?></h4>
+	<h4 class="center">Batu-Batu National Integrated High School</h4>
+	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
 	<form name="loginform" id="loginform" method="post">
 	<table class="cellspacing-0 width-100p">
 

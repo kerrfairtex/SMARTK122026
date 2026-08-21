@@ -202,9 +202,9 @@ function AllowUse( $modname = false, $cache_all = false )
 
 	if ( ! $modname )
 	{
-		$modname = $_ROSARIO['ProgramLoaded'] = $_REQUEST['modname'];
+		$modname = $_ROSARIO['ProgramLoaded'] = $_REQUEST['modname'] ?? '';
 
-		$query_string = urldecode( $_SERVER['QUERY_STRING'] );
+		$query_string = isset( $_SERVER['QUERY_STRING'] ) ? urldecode( $_SERVER['QUERY_STRING'] ) : '';
 
 		if ( isset( $_REQUEST['bottomfunc'] )
 			&& $_REQUEST['bottomfunc'] === 'print' )

@@ -71,9 +71,10 @@
 body.login .logo {
   max-width: 100px !important;
   max-height: 100px !important;
-  width: auto;
-  height: auto;
-  object-fit: contain;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
   margin: 4px auto 10px;
 }
 

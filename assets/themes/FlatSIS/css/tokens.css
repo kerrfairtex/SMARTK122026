@@ -1,0 +1,109 @@
+/**
+ * SmartCampus / Batu-Batu NIHS Design System Tokens
+ * Defines core variables for typography, color palette, surface elevations, and layout primitives.
+ */
+:root {
+  /* Institutional Palette */
+  --sc-primary: #1E5B8C;          /* Brand primary */
+  --sc-primary-hover: #16476F;    /* Interactive state */
+  --sc-primary-light: #E9F2F9;    /* Tinted container */
+  --sc-accent: #E0A030;           /* Warm accent / badges */
+  --sc-accent-hover: #C58922;
+
+  /* Surfaces & Backgrounds */
+  --sc-bg: #F7F8FA;               /* Application background */
+  --sc-surface: #FFFFFF;          /* Card & table background */
+  --sc-surface-alt: #F9FAFB;      /* Table alternate row / sub-header */
+  --sc-border: #E5E7EB;           /* Structural border */
+  --sc-border-light: #F3F4F6;     /* Subtle separator */
+
+  /* Text & Typography */
+  --sc-text-main: #1F2937;        /* Primary high-contrast text */
+  --sc-text-muted: #4B5563;       /* Secondary descriptive text */
+  --sc-text-subtle: #9CA3AF;      /* Disabled/placeholder text */
+  --sc-font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --sc-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Status Colors */
+  --sc-success: #10B981;
+  --sc-warning: #F59E0B;
+  --sc-danger: #EF4444;
+  --sc-info: #3B82F6;
+
+  /* Layout, Radii & Shadows */
+  --sc-card-radius: 10px;
+  --sc-button-radius: 6px;
+  --sc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --sc-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  --sc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* KPI Cards Component */
+.sc-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 16px;
+  margin: 16px 0 24px;
+}
+
+.sc-kpi-card {
+  background: var(--sc-surface);
+  border: 1px solid var(--sc-border);
+  border-radius: var(--sc-card-radius);
+  padding: 16px 18px;
+  box-shadow: var(--sc-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.sc-kpi-card:hover {
+  box-shadow: var(--sc-shadow-lg);
+  border-color: var(--sc-primary);
+}
+
+.sc-kpi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.sc-kpi-icon {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--sc-primary);
+  background: var(--sc-primary-light);
+  padding: 8px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sc-kpi-trend {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--sc-accent);
+  background: #FFFBEB;
+  padding: 2px 8px;
+  border-radius: 12px;
+  align-self: flex-start;
+}
+
+.sc-kpi-value {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--sc-text-main);
+  line-height: 1.2;
+  margin: 4px 0;
+  font-family: var(--sc-font-display);
+}
+
+.sc-kpi-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sc-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

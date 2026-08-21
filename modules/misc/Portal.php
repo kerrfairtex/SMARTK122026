@@ -117,6 +117,122 @@ echo ErrorMessage( $note, 'note' );
 
 echo ErrorMessage( $warning, 'warning' );
 
+/**
+ * SmartCampus Reusable KPI Card & Helpers
+ */
+if ( ! function_exists( 'renderKPICard' ) )
+{
+	function renderKPICard( $label, $value, $icon = '', $trend = '' )
+	{
+		echo '<div class="sc-kpi-card">';
+		echo '  <div class="sc-kpi-header">';
+		echo '    <div class="sc-kpi-icon">' . $icon . '</div>';
+		if ( $trend )
+		{
+			echo '    <div class="sc-kpi-trend">' . $trend . '</div>';
+		}
+		echo '  </div>';
+		echo '  <div class="sc-kpi-value">' . $value . '</div>';
+		echo '  <div class="sc-kpi-label">' . $label . '</div>';
+		echo '</div>';
+	}
+}
+
+if ( ! function_exists( 'getEnrollCount' ) )
+{
+	function getEnrollCount( $school_id, $syear )
+	{
+		$res = DBGet( "SELECT COUNT(*) AS count
+			FROM student_enrollment
+			WHERE school_id='" . (int) $school_id . "'
+			AND syear='" . (int) $syear . "'
+			AND ( end_date IS NULL OR end_date >= CURRENT_DATE )" );
+		return ! empty( $res[1]['COUNT'] ) ? (int) $res[1]['COUNT'] : 0;
+	}
+}
+
+if ( ! function_exists( 'getTodayAttendanceRate' ) )
+{
+	function getTodayAttendanceRate( $school_id )
+	{
+		$tot_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND ap.school_date=CURRENT_DATE" );
+		$total = ! empty( $tot_res[1]['COUNT'] ) ? (int) $tot_res[1]['COUNT'] : 0;
+		if ( ! $total )
+		{
+			return 100;
+		}
+
+		$pres_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+			INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND ap.school_date=CURRENT_DATE
+			AND ac.state_code='P'" );
+		$present = ! empty( $pres_res[1]['COUNT'] ) ? (int) $pres_res[1]['COUNT'] : 0;
+
+		return round( ( $present / $total ) * 100 );
+	}
+}
+
+if ( ! function_exists( 'getTeacherClassCount' ) )
+{
+	function getTeacherClassCount( $staff_id )
+	{
+		$res = DBGet( "SELECT COUNT(*) AS count
+			FROM course_periods
+			WHERE ( teacher_id='" . (int) $staff_id . "' OR secondary_teacher_id='" . (int) $staff_id . "' )
+			AND school_id='" . (int) UserSchool() . "'
+			AND syear='" . (int) UserSyear() . "'" );
+		return ! empty( $res[1]['COUNT'] ) ? (int) $res[1]['COUNT'] : 0;
+	}
+}
+
+if ( ! function_exists( 'getStudentAttendanceRate' ) )
+{
+	function getStudentAttendanceRate( $student_id )
+	{
+		$tot_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period
+			WHERE student_id='" . (int) $student_id . "'" );
+		$total = ! empty( $tot_res[1]['COUNT'] ) ? (int) $tot_res[1]['COUNT'] : 0;
+		if ( ! $total )
+		{
+			return 100;
+		}
+
+		$pres_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+			WHERE ap.student_id='" . (int) $student_id . "'
+			AND ac.state_code='P'" );
+		$present = ! empty( $pres_res[1]['COUNT'] ) ? (int) $pres_res[1]['COUNT'] : 0;
+
+		return round( ( $present / $total ) * 100 );
+	}
+}
+
+// Render role-specific KPI cards
+echo '<div class="sc-kpi-grid">';
+if ( User( 'PROFILE' ) === 'admin' )
+{
+	renderKPICard( 'Enrolled Students', getEnrollCount( UserSchool(), UserSyear() ), '👥', 'Active' );
+	renderKPICard( 'Attendance Today', getTodayAttendanceRate( UserSchool() ) . '%', '📅', 'Daily Rate' );
+}
+elseif ( User( 'PROFILE' ) === 'teacher' )
+{
+	renderKPICard( 'My Classes Today', getTeacherClassCount( User( 'STAFF_ID' ) ), '📚', 'Active Periods' );
+}
+elseif ( User( 'PROFILE' ) === 'student' )
+{
+	renderKPICard( 'My Attendance', getStudentAttendanceRate( User( 'STUDENT_ID' ) ) . '%', '📊', 'Term Rate' );
+}
+echo '</div>';
+
 if ( User( 'PROFILE' ) === 'admin' )
 {
 	// Dashboard.

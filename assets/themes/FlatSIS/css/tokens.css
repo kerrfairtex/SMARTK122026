@@ -56,6 +56,34 @@
   --sc-shadow-lg: 0 12px 24px -4px rgba(14, 58, 93, 0.12), 0 4px 8px -2px rgba(14, 58, 93, 0.06);
 }
 
+/* Institutional Logo Sizing & Fit */
+.logo {
+  max-width: 96px !important;
+  max-height: 96px !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto 8px;
+  border-radius: 8px;
+}
+
+body.login .logo {
+  max-width: 100px !important;
+  max-height: 100px !important;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 4px auto 10px;
+}
+
+#menu .logo {
+  max-width: 54px !important;
+  max-height: 54px !important;
+  object-fit: contain;
+  margin: 6px auto;
+}
+
 /* KPI Grid Component - Mobile First */
 .sc-kpi-grid {
   display: grid;

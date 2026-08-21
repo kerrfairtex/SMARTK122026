@@ -122,7 +122,7 @@ echo ErrorMessage( $warning, 'warning' );
  */
 if ( ! function_exists( 'renderKPICard' ) )
 {
-	function renderKPICard( $label, $value, $icon = '', $trend = '' )
+	function renderKPICard( $label, $value, $icon = '', $trend = '', $value_class = '' )
 	{
 		echo '<div class="sc-kpi-card">';
 		echo '  <div class="sc-kpi-header">';
@@ -132,7 +132,7 @@ if ( ! function_exists( 'renderKPICard' ) )
 			echo '    <div class="sc-kpi-trend">' . $trend . '</div>';
 		}
 		echo '  </div>';
-		echo '  <div class="sc-kpi-value">' . $value . '</div>';
+		echo '  <div class="sc-kpi-value ' . AttrEscape( $value_class ) . '">' . $value . '</div>';
 		echo '  <div class="sc-kpi-label">' . $label . '</div>';
 		echo '</div>';
 	}
@@ -220,18 +220,41 @@ if ( ! function_exists( 'getStudentAttendanceRate' ) )
 echo '<div class="sc-kpi-grid">';
 if ( User( 'PROFILE' ) === 'admin' )
 {
-	renderKPICard( 'Enrolled Students', getEnrollCount( UserSchool(), UserSyear() ), '👥', 'Active' );
-	renderKPICard( 'Attendance Today', getTodayAttendanceRate( UserSchool() ) . '%', '📅', 'Daily Rate' );
+	renderKPICard( 'Enrolled Students', getEnrollCount( UserSchool(), UserSyear() ), '👥', 'Active', 'sc-val-enrolled' );
+	renderKPICard( 'Attendance Today', getTodayAttendanceRate( UserSchool() ) . '%', '📅', 'Daily Rate', 'sc-val-attendance' );
 }
 elseif ( User( 'PROFILE' ) === 'teacher' )
 {
-	renderKPICard( 'My Classes Today', getTeacherClassCount( User( 'STAFF_ID' ) ), '📚', 'Active Periods' );
+	renderKPICard( 'My Classes Today', getTeacherClassCount( User( 'STAFF_ID' ) ), '📚', 'Active Periods', 'sc-val-teacher-classes' );
 }
 elseif ( User( 'PROFILE' ) === 'student' )
 {
-	renderKPICard( 'My Attendance', getStudentAttendanceRate( User( 'STUDENT_ID' ) ) . '%', '📊', 'Term Rate' );
+	renderKPICard( 'My Attendance', getStudentAttendanceRate( User( 'STUDENT_ID' ) ) . '%', '📊', 'Term Rate', 'sc-val-student-attendance' );
 }
 echo '</div>';
+
+?>
+<script>
+(function(){
+	async function refreshKPIs() {
+		try {
+			var res = await fetch('Modules.php?modname=SmartCampus/Ajax.php&modfunc=kpi_refresh', { credentials: 'same-origin' });
+			if (!res.ok) return;
+			var data = await res.json();
+			var elEnrolled = document.querySelector('.sc-val-enrolled');
+			if (elEnrolled && data.enrolled !== undefined) elEnrolled.textContent = data.enrolled;
+			var elAtt = document.querySelector('.sc-val-attendance');
+			if (elAtt && data.attendance_today !== undefined) elAtt.textContent = data.attendance_today + '%';
+			var elTClasses = document.querySelector('.sc-val-teacher-classes');
+			if (elTClasses && data.teacher_classes !== undefined) elTClasses.textContent = data.teacher_classes;
+			var elSAtt = document.querySelector('.sc-val-student-attendance');
+			if (elSAtt && data.student_attendance !== undefined) elSAtt.textContent = data.student_attendance + '%';
+		} catch (e) {}
+	}
+	setInterval(refreshKPIs, 60000);
+})();
+</script>
+<?php
 
 if ( User( 'PROFILE' ) === 'admin' )
 {

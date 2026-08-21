@@ -182,6 +182,80 @@ switch ( $_REQUEST['modfunc'] ) {
 		break;
 
 	// -----------------------------------------------------------
+	case 'kpi_refresh':
+
+		$enroll_count = 0;
+		$enr_RET = DBQuery( "SELECT COUNT(*) AS count
+			FROM student_enrollment
+			WHERE school_id='" . (int) $school_id . "'
+			AND syear='" . (int) $syear . "'
+			AND ( end_date IS NULL OR end_date >= CURRENT_DATE )" );
+		$enr_row = db_fetch_row( $enr_RET );
+		if ( ! empty( $enr_row['count'] ) ) {
+			$enroll_count = (int) $enr_row['count'];
+		}
+
+		$att_rate = 100;
+		$tot_RET = DBQuery( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND ap.school_date=CURRENT_DATE" );
+		$tot_row = db_fetch_row( $tot_RET );
+		$total_att = ! empty( $tot_row['count'] ) ? (int) $tot_row['count'] : 0;
+
+		if ( $total_att > 0 ) {
+			$pres_RET = DBQuery( "SELECT COUNT(*) AS count
+				FROM attendance_period ap
+				INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+				INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+				WHERE se.school_id='" . (int) $school_id . "'
+				AND ap.school_date=CURRENT_DATE
+				AND ac.state_code='P'" );
+			$pres_row = db_fetch_row( $pres_RET );
+			$present_att = ! empty( $pres_row['count'] ) ? (int) $pres_row['count'] : 0;
+			$att_rate = round( ( $present_att / $total_att ) * 100 );
+		}
+
+		$teacher_classes = 0;
+		if ( User( 'STAFF_ID' ) ) {
+			$tc_RET = DBQuery( "SELECT COUNT(*) AS count
+				FROM course_periods
+				WHERE ( teacher_id='" . (int) User( 'STAFF_ID' ) . "' OR secondary_teacher_id='" . (int) User( 'STAFF_ID' ) . "' )
+				AND school_id='" . (int) $school_id . "'
+				AND syear='" . (int) $syear . "'" );
+			$tc_row = db_fetch_row( $tc_RET );
+			$teacher_classes = ! empty( $tc_row['count'] ) ? (int) $tc_row['count'] : 0;
+		}
+
+		$student_att = 100;
+		if ( User( 'STUDENT_ID' ) ) {
+			$stot_RET = DBQuery( "SELECT COUNT(*) AS count
+				FROM attendance_period
+				WHERE student_id='" . (int) User( 'STUDENT_ID' ) . "'" );
+			$stot_row = db_fetch_row( $stot_RET );
+			$stotal = ! empty( $stot_row['count'] ) ? (int) $stot_row['count'] : 0;
+			if ( $stotal > 0 ) {
+				$spres_RET = DBQuery( "SELECT COUNT(*) AS count
+					FROM attendance_period ap
+					INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+					WHERE ap.student_id='" . (int) User( 'STUDENT_ID' ) . "'
+					AND ac.state_code='P'" );
+				$spres_row = db_fetch_row( $spres_RET );
+				$spresent = ! empty( $spres_row['count'] ) ? (int) $spres_row['count'] : 0;
+				$student_att = round( ( $spresent / $stotal ) * 100 );
+			}
+		}
+
+		echo json_encode( [
+			'enrolled'          => $enroll_count,
+			'attendance_today'  => $att_rate,
+			'teacher_classes'   => $teacher_classes,
+			'student_attendance'=> $student_att,
+		] );
+		break;
+
+	// -----------------------------------------------------------
 default:
 		http_response_code( 404 );
 	echo json_encode( [ 'error' => 'Unknown modfunc: ' . $_REQUEST['modfunc'] ] );

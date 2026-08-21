@@ -1,49 +1,81 @@
 /**
  * SmartCampus / Batu-Batu NIHS Design System Tokens
- * Defines core variables for typography, color palette, surface elevations, and layout primitives.
+ * Named Brand Palette:
+ * - Sea Navy (#0E3A5D): Deep Sulu Sea maritime authority & primary institutional base
+ * - Pearl Teal (#0D8A92): Coastal clarity & active indicator highlights
+ * - Golden Yellow (#F3B229): Mindanao provincial sunshine & warm badge accents
+ * - Palm Emerald (#1B7A43): Island ecology & attendance/success states
+ * - Shell White (#FFFFFF) & Sand Fog (#F6F8FA): Clean background surfaces
+ * - Coral Red (#D9383A): Urgent alert & discipline indicators
  */
 :root {
   /* Institutional Palette */
-  --sc-primary: #1E5B8C;          /* Brand primary */
-  --sc-primary-hover: #16476F;    /* Interactive state */
-  --sc-primary-light: #E9F2F9;    /* Tinted container */
-  --sc-accent: #E0A030;           /* Warm accent / badges */
-  --sc-accent-hover: #C58922;
+  --sc-navy: #0E3A5D;             /* Sea Navy */
+  --sc-navy-hover: #092842;
+  --sc-teal: #0D8A92;             /* Pearl Teal */
+  --sc-teal-light: #E4F5F6;
+  --sc-gold: #F3B229;             /* Golden Yellow */
+  --sc-gold-light: #FEF8E7;
+  --sc-emerald: #1B7A43;          /* Palm Emerald */
+  --sc-emerald-light: #E8F7EE;
+  --sc-coral: #D9383A;            /* Coral Red */
+  --sc-coral-light: #FDECEC;
+
+  /* Aliases */
+  --sc-primary: var(--sc-navy);
+  --sc-primary-hover: var(--sc-navy-hover);
+  --sc-primary-light: var(--sc-teal-light);
+  --sc-accent: var(--sc-gold);
+  --sc-accent-hover: #D89814;
 
   /* Surfaces & Backgrounds */
-  --sc-bg: #F7F8FA;               /* Application background */
-  --sc-surface: #FFFFFF;          /* Card & table background */
-  --sc-surface-alt: #F9FAFB;      /* Table alternate row / sub-header */
-  --sc-border: #E5E7EB;           /* Structural border */
-  --sc-border-light: #F3F4F6;     /* Subtle separator */
+  --sc-bg: #F6F8FA;               /* Sand Fog application background */
+  --sc-surface: #FFFFFF;          /* Shell White card background */
+  --sc-surface-alt: #EDF2F7;
+  --sc-border: #DCE3EC;
+  --sc-border-light: #EEF2F6;
 
   /* Text & Typography */
-  --sc-text-main: #1F2937;        /* Primary high-contrast text */
-  --sc-text-muted: #4B5563;       /* Secondary descriptive text */
-  --sc-text-subtle: #9CA3AF;      /* Disabled/placeholder text */
+  --sc-text-main: #122132;
+  --sc-text-muted: #52627A;
+  --sc-text-subtle: #8E9DB2;
   --sc-font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --sc-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Status Colors */
-  --sc-success: #10B981;
-  --sc-warning: #F59E0B;
-  --sc-danger: #EF4444;
-  --sc-info: #3B82F6;
+  --sc-success: var(--sc-emerald);
+  --sc-warning: var(--sc-gold);
+  --sc-danger: var(--sc-coral);
+  --sc-info: var(--sc-teal);
 
   /* Layout, Radii & Shadows */
-  --sc-card-radius: 10px;
-  --sc-button-radius: 6px;
-  --sc-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-  --sc-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  --sc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --sc-card-radius: 12px;
+  --sc-button-radius: 8px;
+  --sc-shadow-sm: 0 1px 3px rgba(14, 58, 93, 0.06);
+  --sc-shadow: 0 3px 10px rgba(14, 58, 93, 0.08);
+  --sc-shadow-lg: 0 12px 24px -4px rgba(14, 58, 93, 0.12), 0 4px 8px -2px rgba(14, 58, 93, 0.06);
 }
 
-/* KPI Cards Component */
+/* KPI Grid Component - Mobile First */
 .sc-kpi-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 16px;
+  grid-template-columns: 1fr;
+  gap: 14px;
   margin: 16px 0 24px;
+}
+
+@media (min-width: 600px) {
+  .sc-kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sc-kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 18px;
+  }
 }
 
 .sc-kpi-card {
@@ -54,56 +86,127 @@
   box-shadow: var(--sc-shadow);
   display: flex;
   flex-direction: column;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.sc-kpi-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sc-teal), var(--sc-gold));
+  opacity: 0.9;
 }
 
 .sc-kpi-card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--sc-shadow-lg);
-  border-color: var(--sc-primary);
+  border-color: var(--sc-teal);
 }
 
 .sc-kpi-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 .sc-kpi-icon {
-  font-size: 20px;
+  font-size: 18px;
   line-height: 1;
-  color: var(--sc-primary);
-  background: var(--sc-primary-light);
-  padding: 8px;
-  border-radius: 8px;
+  color: var(--sc-navy);
+  background: var(--sc-teal-light);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .sc-kpi-trend {
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: var(--sc-accent);
-  background: #FFFBEB;
-  padding: 2px 8px;
-  border-radius: 12px;
-  align-self: flex-start;
+  color: #925C05;
+  background: var(--sc-gold-light);
+  border: 1px solid rgba(243, 178, 41, 0.35);
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+}
+
+.sc-kpi-body {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sc-kpi-main {
+  display: flex;
+  flex-direction: column;
 }
 
 .sc-kpi-value {
-  font-size: 26px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
   color: var(--sc-text-main);
-  line-height: 1.2;
-  margin: 4px 0;
+  line-height: 1.15;
+  margin: 2px 0 4px;
   font-family: var(--sc-font-display);
+  letter-spacing: -0.5px;
 }
 
 .sc-kpi-label {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12.5px;
+  font-weight: 600;
   color: var(--sc-text-muted);
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
+}
+
+/* Signature SVG Attendance Radial Ring Interaction */
+.sc-ring-wrapper {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.sc-ring-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.sc-ring-bg {
+  fill: none;
+  stroke: var(--sc-border);
+  stroke-width: 4;
+}
+
+.sc-ring-progress {
+  fill: none;
+  stroke: var(--sc-emerald);
+  stroke-width: 4.5;
+  stroke-linecap: round;
+  stroke-dasharray: 125.6; /* 2 * PI * 20 */
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.4s ease;
+}
+
+.sc-ring-text {
+  position: absolute;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sc-text-main);
+  font-family: var(--sc-font-display);
 }

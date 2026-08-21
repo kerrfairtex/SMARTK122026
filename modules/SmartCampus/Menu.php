@@ -1,29 +1,35 @@
 <?php
 /**
- * SmartCampus Menu
+ * SmartCampus module Menu entries
  *
- * Registers this module's programs in the RosarioSIS side menu.
- * Follows the same "default" entry convention as core modules
- * (see modules/Attendance/Menu.php in the upstream repo).
+ * @uses $menu global var
  *
- * @package SmartCampus
- * @since   1.0
+ * @see  Menu.php in root folder
+ *
+ * @package RosarioSIS
+ * @subpackage modules
  */
 
-$MENU['default'] = 'modfunc=portal';
+$menu['SmartCampus']['admin'] = [
+	'title' => _( 'SmartCampus' ),
+	'default' => 'SmartCampus/SmartCampus.php',
+	'SmartCampus/SmartCampus.php' => _( 'My Dashboard' ),
+	'SmartCampus/Enrollment.php' => _( 'Enrollment' ),
+	'SmartCampus/TakeAttendance.php' => _( 'Take Attendance' ),
+	'SmartCampus/DisciplineLog.php' => _( 'Discipline Log' ),
+] + issetVal( $menu['SmartCampus']['admin'], [] );
 
-$MENU['modules/SmartCampus/SmartCampus.php']['title']         = 'Portal';
-$MENU['modules/SmartCampus/SmartCampus.php']['url']           = 'modname=SmartCampus/SmartCampus.php&modfunc=portal';
-$MENU['modules/SmartCampus/SmartCampus.php']['index']         = 0;
+$menu['SmartCampus']['teacher'] = [
+	'title' => _( 'SmartCampus' ),
+	'default' => 'SmartCampus/SmartCampus.php',
+	'SmartCampus/SmartCampus.php' => _( 'My Dashboard' ),
+	'SmartCampus/TakeAttendance.php' => _( 'Take Attendance' ),
+	'SmartCampus/DisciplineLog.php' => _( 'Discipline Log' ),
+] + issetVal( $menu['SmartCampus']['teacher'], [] );
 
-$MENU['modules/SmartCampus/Enrollment.php']['title']          = 'Enrollment';
-$MENU['modules/SmartCampus/Enrollment.php']['url']            = 'modname=SmartCampus/Enrollment.php&modfunc=list';
-$MENU['modules/SmartCampus/Enrollment.php']['index']          = 1;
+$menu['SmartCampus']['parent'] = [
+	'title' => _( 'SmartCampus' ),
+	'default' => 'SmartCampus/SmartCampus.php',
+	'SmartCampus/SmartCampus.php' => _( 'My Dashboard' ),
+] + issetVal( $menu['SmartCampus']['parent'], [] );
 
-$MENU['modules/SmartCampus/TakeAttendance.php']['title']      = 'Take Attendance';
-$MENU['modules/SmartCampus/TakeAttendance.php']['url']        = 'modname=SmartCampus/TakeAttendance.php&modfunc=list';
-$MENU['modules/SmartCampus/TakeAttendance.php']['index']      = 2;
-
-$MENU['modules/SmartCampus/DisciplineLog.php']['title']       = 'Discipline Log';
-$MENU['modules/SmartCampus/DisciplineLog.php']['url']         = 'modname=SmartCampus/DisciplineLog.php&modfunc=list';
-$MENU['modules/SmartCampus/DisciplineLog.php']['index']       = 3;

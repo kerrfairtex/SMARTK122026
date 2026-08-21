@@ -518,6 +518,7 @@ if ( version_compare( Config( 'VERSION' ), ROSARIO_VERSION, '<' ) )
  *
  * Core modules (packaged with RosarioSIS): cannot be deleted.
  */
+// Append Custom Dashboard link to the user section if desired or register in RosarioCoreModules
 $RosarioCoreModules = [
 	'School_Setup',
 	'Students',
@@ -532,9 +533,11 @@ $RosarioCoreModules = [
 	'Food_Service',
 	'Resources',
 	'Custom',
+	'SmartCampus',
 ];
 
-$RosarioModules = unserialize( Config( 'MODULES' ) );
+$RosarioModules = (array) unserialize( Config( 'MODULES' ) );
+$RosarioModules['SmartCampus'] = true;
 
 $non_core_modules = array_diff_key( $RosarioModules, array_flip( $RosarioCoreModules ) );
 

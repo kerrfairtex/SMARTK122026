@@ -28,6 +28,11 @@ if ( ! AllowUse() ) {
 	exit;
 }
 
+// Check if called directly or through Modules.php, clean any buffer
+if ( ob_get_length() ) {
+	ob_clean();
+}
+
 $write_actions = [ 'attendance_save', 'discipline_save', 'enrollment_save' ];
 
 if ( in_array( $_REQUEST['modfunc'], $write_actions, true )
@@ -253,6 +258,7 @@ switch ( $_REQUEST['modfunc'] ) {
 			'teacher_classes'   => $teacher_classes,
 			'student_attendance'=> $student_att,
 		] );
+		exit();
 		break;
 
 	// -----------------------------------------------------------

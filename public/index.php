@@ -15,14 +15,19 @@ $school_short_name = 'BBNIHS';
 $school_id = '305053';
 $theme = 'FlatSIS';
 
-// Attempt to read from RosarioSIS config if available
+// Attempt to read from RosarioSIS config if available (with error handling)
 $rosariosis_config = dirname(__FILE__) . '/../config.inc.php';
-if (file_exists($rosariosis_config)) {
-    require_once $rosariosis_config;
-    require_once dirname(__FILE__) . '/../Warehouse.php';
-    $school_name = Config('TITLE') ?: $school_name;
-    $school_short_name = Config('NAME') ?: $school_short_name;
-    $theme = Config('THEME') ?: $theme;
+$rosariosis_warehouse = dirname(__FILE__) . '/../Warehouse.php';
+if (file_exists($rosariosis_config) && file_exists($rosariosis_warehouse)) {
+    try {
+        require_once $rosariosis_config;
+        require_once $rosariosis_warehouse;
+        $school_name = Config('TITLE') ?: $school_name;
+        $school_short_name = Config('NAME') ?: $school_short_name;
+        $theme = Config('THEME') ?: $theme;
+    } catch (Exception $e) {
+        // Fall back to defaults if config loading fails
+    }
 }
 
 // PSA-verified community statistics (2024 POPCEN)
@@ -42,9 +47,6 @@ $img_base = 'assets/images/';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($school_name); ?> — Smart Campus K12</title>
     <meta name="description" content="<?php echo htmlspecialchars($school_name); ?> — A public integrated high school in Batu-Batu, Panglima Sugala, Tawi-Tawi, BARMM, Philippines. School ID: <?php echo $school_id; ?>">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --navy-deep: #08182B;
@@ -86,6 +88,7 @@ $img_base = 'assets/images/';
             padding: 2rem;
             position: relative;
             overflow: hidden;
+            background-color: var(--navy);
         }
 
         .hero-bg {
@@ -94,10 +97,10 @@ $img_base = 'assets/images/';
             left: 0;
             right: 0;
             bottom: 0;
-            background-image: url('<?php echo $img_base; ?>img-06.jpeg');
+            background-image: url('<?php echo $img_base; ?>img-09.jpeg');
             background-size: cover;
             background-position: center;
-            filter: brightness(0.3);
+            filter: brightness(0.5);
             z-index: 0;
         }
 
@@ -108,7 +111,7 @@ $img_base = 'assets/images/';
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(180deg, rgba(8,24,43,0.7) 0%, rgba(8,24,43,0.9) 100%);
+            background: linear-gradient(180deg, rgba(8,24,43,0.6) 0%, rgba(8,24,43,0.8) 100%);
             z-index: 1;
         }
 
@@ -306,6 +309,7 @@ $img_base = 'assets/images/';
             align-items: center;
             justify-content: center;
             overflow: hidden;
+            background-color: var(--navy);
         }
 
         .photo-section::before {
@@ -317,7 +321,7 @@ $img_base = 'assets/images/';
             bottom: 0;
             background-size: cover;
             background-position: center;
-            filter: brightness(0.4);
+            filter: brightness(0.5);
         }
 
         .photo-section::after {
@@ -327,16 +331,12 @@ $img_base = 'assets/images/';
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(8,24,43,0.8) 0%, rgba(20,32,64,0.8) 100%);
+            background: linear-gradient(135deg, rgba(8,24,43,0.7) 0%, rgba(20,32,64,0.7) 100%);
         }
 
         .photo-section > * {
             position: relative;
             z-index: 2;
-        }
-
-        .photo-section.hero-section::before {
-            background-image: url('<?php echo $img_base; ?>img-07.jpeg');
         }
 
         .photo-section.island-section::before {
@@ -503,6 +503,13 @@ $img_base = 'assets/images/';
 
         footer a:hover {
             color: var(--white);
+        }
+
+        footer .license-note {
+            margin-top: 1rem;
+            font-size: 0.7rem;
+            color: var(--gray-500);
+            font-style: italic;
         }
 
         /* Responsive */
@@ -724,6 +731,7 @@ $img_base = 'assets/images/';
         <p>&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" target="_blank" rel="noopener">Kerr Fairtex</a> and Company</p>
         <p>Powered by <a href="https://www.rosariosis.org" target="_blank" rel="noopener">RosarioSIS</a> — Open Source Student Information System</p>
         <p style="margin-top: 1rem; font-size: 0.75rem;">School ID 305053 &bull; DepEd Philippines &bull; Batu-Batu, Panglima Sugala, Tawi-Tawi</p>
+        <p class="license-note">Community population data: PSA 2024 POPCEN. Verify image licenses before republishing.</p>
     </footer>
 
 </body>

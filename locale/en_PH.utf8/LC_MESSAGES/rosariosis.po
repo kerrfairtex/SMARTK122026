@@ -2,8 +2,7 @@
 #
 # The primary language is English. This locale applies Philippine-school
 # terminology to a subset of RosarioSIS English msgid strings so the UI reads
-# as a Philippine K-12 school system (e.g. "Adviser" instead of "Advisor",
-# "Quarter" preferred over "Marking Period" where contextually appropriate).
+# as a Philippine K-12 school system (e.g. "Quarter" preferred over "Marking Period").
 #
 # Compile with: msgfmt -o locale/en_PH.utf8/LC_MESSAGES/rosariosis.mo locale/en_PH.utf8/LC_MESSAGES/rosariosis.po
 #
@@ -23,13 +22,7 @@ msgstr ""
 "X-Poedit-Basepath: ../../..\n"
 
 # Philippine K-12 terminology #
-# "Adviser" is the standard Philippine spelling (US: Advisor).
-msgid "Advisor"
-msgstr "Adviser"
-
 # Prefer "Quarter" phrasing where the source uses "Marking Period".
-# NOTE: Kept as a targeted override — "Marking Period" is the underlying
-# RosarioSIS concept; the Philippine quarter system maps 1:1 to it.
 msgid "Marking Period"
 msgstr "Quarter"
 
@@ -57,9 +50,6 @@ msgstr "History Quarters"
 msgid "this marking period to date"
 msgstr "this quarter to date"
 
-msgid "Year and Semester marking periods are not graded."
-msgstr "Year and semester marking periods are not graded."
-
 msgid "You are not currently in a marking period"
 msgstr "You are not currently in a quarter"
 
@@ -70,9 +60,6 @@ msgid "Offer Enrollment in Child Marking Periods"
 msgstr "Offer Enrollment in Child Quarters"
 
 # Philippine K-12 grading terminology #
-msgid "Final Grading Percentages"
-msgstr "Final Grading Percentages"
-
 msgid "Report Card"
 msgstr "Report Card"
 
@@ -81,10 +68,3 @@ msgstr "Report Cards"
 
 msgid "Report Card Grade"
 msgstr "Report Card Grade"
-
-# "Learner" + "Student" both supported per task spec.
-msgid "Student"
-msgstr "Student"
-
-msgid "Students"
-msgstr "Students"

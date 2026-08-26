@@ -599,6 +599,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		<p class="center size-1">
 			&copy; 2004-2009 The Miller Group &amp; Learners Circle
 			<br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
+			<br />&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" rel="noreferrer">Kerr Fairtex</a> and Company
 		</p>
 	</details>
 

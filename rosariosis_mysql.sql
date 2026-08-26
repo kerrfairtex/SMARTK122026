@@ -2139,7 +2139,7 @@ CREATE TABLE user_profiles (
 -- BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL — Batu-Batu, Panglima Sugala, Tawi-Tawi, Philippines
 -- Philippine K-12 public integrated school (see BATU_BUKU_MIGRATION_PLAN.md).
 -- School ID: 305053 (DepEd inventory). Municipality: Panglima Sugala (NOT Turtle Islands).
-INSERT INTO schools VALUES (2026, NULL, 'BATU-BATU National Integrated High School', 'Batu-Batu', 'Panglima Sugala', 'Tawi-Tawi', '', '', NULL, NULL, '305053', 'BBNIHS', 4, NULL, CURRENT_TIMESTAMP, NULL);
+INSERT INTO schools VALUES (2026, NULL, 'BATU-BATU National Integrated High School', 'Batu-Batu', 'Panglima Sugala', 'Tawi-Tawi', '', '', NULL, NULL, '305053', 'BBNIHS', NULL, NULL, CURRENT_TIMESTAMP, NULL);
 
 
 

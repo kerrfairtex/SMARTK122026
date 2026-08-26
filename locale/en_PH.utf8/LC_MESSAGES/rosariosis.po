@@ -60,11 +60,5 @@ msgid "Offer Enrollment in Child Marking Periods"
 msgstr "Offer Enrollment in Child Quarters"
 
 # Philippine K-12 grading terminology #
-msgid "Report Card"
-msgstr "Report Card"
 
-msgid "Report Cards"
-msgstr "Report Cards"
 
-msgid "Report Card Grade"
-msgstr "Report Card Grade"

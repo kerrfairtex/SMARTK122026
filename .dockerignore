@@ -1,0 +1,9 @@
+.git
+.gitignore
+.env
+.env.*
+config.inc.php
+node_modules
+*.log
+*.tmp
+.dockerignore

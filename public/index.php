@@ -3,7 +3,7 @@
  * Public Landing Page — Batu-Batu National Integrated High School
  *
  * A standalone institutional page separate from the RosarioSIS login system.
- * Reads school identity from RosarioSIS config but does NOT handle authentication.
+ * Features real photography and PSA-verified community statistics.
  *
  * @package SmartCampus
  * @since 1.0
@@ -31,6 +31,9 @@ $community_stats = [
     'panglima_sugala' => ['population' => 52657, 'label' => 'Panglima Sugala', 'context' => 'Municipality Population'],
     'tawi_tawi' => ['population' => 482645, 'label' => 'Tawi-Tawi', 'context' => 'Province Population'],
 ];
+
+// Image base path
+$img_base = 'assets/images/';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -39,6 +42,9 @@ $community_stats = [
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo htmlspecialchars($school_name); ?> — Smart Campus K12</title>
     <meta name="description" content="<?php echo htmlspecialchars($school_name); ?> — A public integrated high school in Batu-Batu, Panglima Sugala, Tawi-Tawi, BARMM, Philippines. School ID: <?php echo $school_id; ?>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --navy-deep: #08182B;
@@ -78,25 +84,37 @@ $community_stats = [
             align-items: center;
             text-align: center;
             padding: 2rem;
-            background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 50%, var(--sea-blue) 100%);
             position: relative;
             overflow: hidden;
         }
 
-        .hero::before {
+        .hero-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('<?php echo $img_base; ?>img-06.jpeg');
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.3);
+            z-index: 0;
+        }
+
+        .hero::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%23ffffff' fill-opacity='0.03' d='M0,192L48,197.3C96,203,192,213,288,229.3C384,245,480,267,576,250.7C672,235,768,181,864,181.3C960,181,1056,235,1152,234.7C1248,235,1344,181,1392,154.7L1440,128L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3C/svg%3E") no-repeat bottom;
-            background-size: cover;
+            background: linear-gradient(180deg, rgba(8,24,43,0.7) 0%, rgba(8,24,43,0.9) 100%);
+            z-index: 1;
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
             max-width: 800px;
         }
 
@@ -106,6 +124,7 @@ $community_stats = [
             color: var(--white);
             margin-bottom: 0.5rem;
             letter-spacing: -0.02em;
+            text-shadow: 0 2px 20px rgba(0,0,0,0.5);
         }
 
         .hero .tagline {
@@ -113,6 +132,7 @@ $community_stats = [
             color: var(--gray-300);
             margin-bottom: 1.5rem;
             font-weight: 300;
+            text-shadow: 0 1px 10px rgba(0,0,0,0.5);
         }
 
         .hero .location {
@@ -151,12 +171,15 @@ $community_stats = [
         .btn-primary:hover {
             background: var(--accent-hover);
             border-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,115,170,0.3);
         }
 
         .btn-outline {
-            background: transparent;
+            background: rgba(255,255,255,0.1);
             color: var(--white);
             border-color: var(--white);
+            backdrop-filter: blur(5px);
         }
 
         .btn-outline:hover {
@@ -166,7 +189,7 @@ $community_stats = [
 
         /* Section Styles */
         section {
-            padding: 4rem 2rem;
+            padding: 5rem 2rem;
         }
 
         .section-title {
@@ -273,6 +296,75 @@ $community_stats = [
             color: var(--gray-300);
             margin-bottom: 1rem;
             font-size: 1.05rem;
+        }
+
+        /* Photo Sections */
+        .photo-section {
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .photo-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-size: cover;
+            background-position: center;
+            filter: brightness(0.4);
+        }
+
+        .photo-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(8,24,43,0.8) 0%, rgba(20,32,64,0.8) 100%);
+        }
+
+        .photo-section > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-section.hero-section::before {
+            background-image: url('<?php echo $img_base; ?>img-07.jpeg');
+        }
+
+        .photo-section.island-section::before {
+            background-image: url('<?php echo $img_base; ?>img-09.jpeg');
+        }
+
+        .photo-section.community-section::before {
+            background-image: url('<?php echo $img_base; ?>img-02.jpeg');
+        }
+
+        .photo-content {
+            text-align: center;
+            max-width: 600px;
+            padding: 2rem;
+        }
+
+        .photo-content h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .photo-content p {
+            color: var(--gray-300);
+            font-size: 1.1rem;
+            text-shadow: 0 1px 5px rgba(0,0,0,0.5);
         }
 
         /* Academics */
@@ -430,6 +522,10 @@ $community_stats = [
             .stat-card .number {
                 font-size: 2rem;
             }
+
+            .photo-section {
+                min-height: 300px;
+            }
         }
     </style>
 </head>
@@ -437,6 +533,7 @@ $community_stats = [
 
     <!-- Hero Section -->
     <section class="hero">
+        <div class="hero-bg"></div>
         <div class="hero-content">
             <h1><?php echo htmlspecialchars($school_name); ?></h1>
             <p class="tagline">Learning Beyond the Classroom</p>
@@ -488,6 +585,14 @@ $community_stats = [
                 </div>
                 <?php endforeach; ?>
             </div>
+        </div>
+    </section>
+
+    <!-- Island Community Photo Section -->
+    <section class="photo-section island-section">
+        <div class="photo-content">
+            <h2>Our Island Home</h2>
+            <p>Tawi-Tawi is the Philippines' southernmost province — a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.</p>
         </div>
     </section>
 
@@ -566,13 +671,20 @@ $community_stats = [
         </div>
     </section>
 
-    <!-- Island Community -->
+    <!-- Community Photo Section -->
+    <section class="photo-section community-section">
+        <div class="photo-content">
+            <h2>Rooted in Our Community</h2>
+            <p>From the sea to the classroom, our community is shaped by knowledge, work, and cooperation.</p>
+        </div>
+    </section>
+
+    <!-- Island Identity -->
     <section class="island">
         <div class="container">
             <div class="island-content">
-                <h2 class="section-title">Rooted in an Island Community</h2>
-                <p>Tawi-Tawi is the Philippines' southernmost province — a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.</p>
-                <p>Our school serves learners within this unique island environment, where education is connected to community, culture, and the sea.</p>
+                <h2 class="section-title">Rooted in Tawi-Tawi</h2>
+                <p>Our island communities carry generations of maritime knowledge, tradition, and cultural heritage. The sea shapes how we see the world.</p>
                 <div class="identity-tags">
                     <span class="identity-tag">Sea</span>
                     <span class="identity-tag">Islands</span>

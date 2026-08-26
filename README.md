@@ -1,7 +1,7 @@
-RosarioSIS Student Information System
-=====================================
+BATU-BATU National Integrated High School Student Information System
+===================================================================
 
-[<img src="http://www.rosariosis.org/wp-content/uploads/2013/02/rosariosis_logo2half.png" width="144" />](https://www.rosariosis.org)
+[<img src="assets/themes/FlatSIS/logo.png" width="144" />](.)
 
 License
 -------

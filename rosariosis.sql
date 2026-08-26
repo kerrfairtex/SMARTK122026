@@ -2112,7 +2112,12 @@ CREATE TABLE user_profiles (
 -- Data for Name: schools; Type: TABLE DATA; Schema: public; Owner: rosariosis
 --
 
-INSERT INTO schools VALUES (2026, NEXTVAL('schools_id_seq'), 'Default School', '500 S. Street St.', 'Springfield', 'IL', '62704', NULL, 'Mr. Principal', 'www.rosariosis.org', NULL, NULL, 4, NULL);
+-- BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL — Turtle Islands, Tawi-Tawi, Philippines
+-- Philippine K-12 public integrated school (see BATU_BUKU_MIGRATION_PLAN.md).
+-- These are seed defaults applied on fresh install only; an administrator may
+-- edit school information via School > School Information. Do NOT invent official
+-- DepEd codes or contact details here — leave those to runtime configuration.
+INSERT INTO schools VALUES (2026, NEXTVAL('schools_id_seq'), 'BATU-BATU National Integrated High School', 'Turtle Islands', 'Tawi-Tawi', '', '', NULL, NULL, NULL, NULL, 'BBNIHS', 4, NULL);
 
 
 --
@@ -2271,8 +2276,8 @@ INSERT INTO attendance_codes VALUES (NEXTVAL('attendance_codes_id_seq'), 2026, 1
 
 INSERT INTO config VALUES (0, 'LOGIN', 'No');
 INSERT INTO config VALUES (0, 'VERSION', '12.9.2');
-INSERT INTO config VALUES (0, 'TITLE', 'Rosario Student Information System');
-INSERT INTO config VALUES (0, 'NAME', 'RosarioSIS');
+INSERT INTO config VALUES (0, 'TITLE', 'BATU-BATU National Integrated High School');
+INSERT INTO config VALUES (0, 'NAME', 'BBNIHS');
 INSERT INTO config VALUES (0, 'MODULES', 'a:13:{s:12:"School_Setup";b:1;s:8:"Students";b:1;s:5:"Users";b:1;s:10:"Scheduling";b:1;s:6:"Grades";b:1;s:10:"Attendance";b:1;s:11:"Eligibility";b:1;s:10:"Discipline";b:1;s:10:"Accounting";b:1;s:15:"Student_Billing";b:1;s:12:"Food_Service";b:1;s:9:"Resources";b:1;s:6:"Custom";b:1;}');
 INSERT INTO config VALUES (0, 'PLUGINS', 'a:2:{s:23:"Content_Security_Policy";b:1;s:6:"Moodle";b:0;}');
 INSERT INTO config VALUES (0, 'THEME', 'FlatSIS');
@@ -2941,7 +2946,7 @@ INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Quick Setup Guide
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Forum', 'https://www.rosariosis.org/forum/', ',1,2,');
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Contribute', 'https://www.rosariosis.org/contribute/');
 INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Report a bug', 'https://gitlab.com/francoisjacquet/rosariosis/-/issues');
-INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'Review RosarioSIS', 'https://www.rosariosis.org/reviews/', ',1,2,');
+INSERT INTO resources VALUES (NEXTVAL('resources_id_seq'), 1, 'BBNIHS Website', NULL, ',1,2,');
 
 
 --
@@ -2969,6 +2974,10 @@ INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, 
 INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '06', '6th', 8, 7);
 INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '07', '7th', 9, 8);
 INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '08', '8th', NULL, 9);
+INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '09', 'Grade 9', NULL, 10);
+INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '10', 'Grade 10', NULL, 11);
+INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '11', 'Grade 11', NULL, 12);
+INSERT INTO school_gradelevels VALUES (NEXTVAL('school_gradelevels_id_seq'), 1, '12', 'Grade 12', NULL, 13);
 
 
 --

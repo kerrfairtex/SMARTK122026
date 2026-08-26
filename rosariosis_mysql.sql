@@ -2136,7 +2136,12 @@ CREATE TABLE user_profiles (
 -- Data for Name: schools; Type: TABLE DATA;
 --
 
-INSERT INTO schools VALUES (2026, NULL, 'Default School', '500 S. Street St.', 'Springfield', 'IL', '62704', NULL, 'Mr. Principal', 'www.rosariosis.org', NULL, NULL, 4, NULL, CURRENT_TIMESTAMP, NULL);
+-- BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL — Turtle Islands, Tawi-Tawi, Philippines
+-- Philippine K-12 public integrated school (see BATU_BUKU_MIGRATION_PLAN.md).
+-- These are seed defaults applied on fresh install only; an administrator may
+-- edit school information via School > School Information. Do NOT invent official
+-- DepEd codes or contact details here — leave those to runtime configuration.
+INSERT INTO schools VALUES (2026, NULL, 'BATU-BATU National Integrated High School', 'Turtle Islands', 'Tawi-Tawi', '', '', NULL, NULL, NULL, NULL, 'BBNIHS', 4, NULL, CURRENT_TIMESTAMP, NULL);
 
 
 
@@ -2296,8 +2301,8 @@ INSERT INTO attendance_codes VALUES (NULL, 2026, 1, 'Excused Absence', 'E', 'off
 
 INSERT INTO config VALUES (0, 'LOGIN', 'No', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'VERSION', '12.9.2', CURRENT_TIMESTAMP, NULL);
-INSERT INTO config VALUES (0, 'TITLE', 'Rosario Student Information System', CURRENT_TIMESTAMP, NULL);
-INSERT INTO config VALUES (0, 'NAME', 'RosarioSIS', CURRENT_TIMESTAMP, NULL);
+INSERT INTO config VALUES (0, 'TITLE', 'BATU-BATU National Integrated High School', CURRENT_TIMESTAMP, NULL);
+INSERT INTO config VALUES (0, 'NAME', 'BBNIHS', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'MODULES', 'a:13:{s:12:"School_Setup";b:1;s:8:"Students";b:1;s:5:"Users";b:1;s:10:"Scheduling";b:1;s:6:"Grades";b:1;s:10:"Attendance";b:1;s:11:"Eligibility";b:1;s:10:"Discipline";b:1;s:10:"Accounting";b:1;s:15:"Student_Billing";b:1;s:12:"Food_Service";b:1;s:9:"Resources";b:1;s:6:"Custom";b:1;}', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'PLUGINS', 'a:2:{s:23:"Content_Security_Policy";b:1;s:6:"Moodle";b:0;}', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'THEME', 'FlatSIS', CURRENT_TIMESTAMP, NULL);
@@ -2966,7 +2971,7 @@ INSERT INTO resources VALUES (NULL, 1, 'Quick Setup Guide', 'https://www.rosario
 INSERT INTO resources VALUES (NULL, 1, 'Forum', 'https://www.rosariosis.org/forum/', ',1,2,', NULL, CURRENT_TIMESTAMP, NULL);
 INSERT INTO resources VALUES (NULL, 1, 'Contribute', 'https://www.rosariosis.org/contribute/', NULL, NULL, CURRENT_TIMESTAMP, NULL);
 INSERT INTO resources VALUES (NULL, 1, 'Report a bug', 'https://gitlab.com/francoisjacquet/rosariosis/-/issues', NULL, NULL, CURRENT_TIMESTAMP, NULL);
-INSERT INTO resources VALUES (NULL, 1, 'Review RosarioSIS', 'https://www.rosariosis.org/reviews/', ',1,2,', NULL, CURRENT_TIMESTAMP, NULL);
+INSERT INTO resources VALUES (NULL, 1, 'BBNIHS Website', NULL, ',1,2,', NULL, CURRENT_TIMESTAMP, NULL);
 
 
 --
@@ -2994,6 +2999,10 @@ INSERT INTO school_gradelevels VALUES (NULL, 1, '05', '5th', 7, 6, CURRENT_TIMES
 INSERT INTO school_gradelevels VALUES (NULL, 1, '06', '6th', 8, 7, CURRENT_TIMESTAMP, NULL);
 INSERT INTO school_gradelevels VALUES (NULL, 1, '07', '7th', 9, 8, CURRENT_TIMESTAMP, NULL);
 INSERT INTO school_gradelevels VALUES (NULL, 1, '08', '8th', NULL, 9, CURRENT_TIMESTAMP, NULL);
+INSERT INTO school_gradelevels VALUES (NULL, 1, '09', 'Grade 9', NULL, 10, CURRENT_TIMESTAMP, NULL);
+INSERT INTO school_gradelevels VALUES (NULL, 1, '10', 'Grade 10', NULL, 11, CURRENT_TIMESTAMP, NULL);
+INSERT INTO school_gradelevels VALUES (NULL, 1, '11', 'Grade 11', NULL, 12, CURRENT_TIMESTAMP, NULL);
+INSERT INTO school_gradelevels VALUES (NULL, 1, '12', 'Grade 12', NULL, 13, CURRENT_TIMESTAMP, NULL);
 
 
 --

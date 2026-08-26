@@ -1,0 +1,90 @@
+# Philippine (English) translation override for BATU-BATU NIHS.
+#
+# The primary language is English. This locale applies Philippine-school
+# terminology to a subset of RosarioSIS English msgid strings so the UI reads
+# as a Philippine K-12 school system (e.g. "Adviser" instead of "Advisor",
+# "Quarter" preferred over "Marking Period" where contextually appropriate).
+#
+# Compile with: msgfmt -o locale/en_PH.utf8/LC_MESSAGES/rosariosis.mo locale/en_PH.utf8/LC_MESSAGES/rosariosis.po
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: BATU-BATU NIHS\n"
+"POT-Creation-Date: 2026-08-26\n"
+"PO-Revision-Date: 2026-08-26\n"
+"Last-Translator: BATU-BATU NIHS\n"
+"Language-Team: BATU-BATU NIHS\n"
+"Language: en_PH\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: manual\n"
+"X-Poedit-Basepath: ../../..\n"
+
+# Philippine K-12 terminology #
+# "Adviser" is the standard Philippine spelling (US: Advisor).
+msgid "Advisor"
+msgstr "Adviser"
+
+# Prefer "Quarter" phrasing where the source uses "Marking Period".
+# NOTE: Kept as a targeted override — "Marking Period" is the underlying
+# RosarioSIS concept; the Philippine quarter system maps 1:1 to it.
+msgid "Marking Period"
+msgstr "Quarter"
+
+msgid "New Marking Period"
+msgstr "New Quarter"
+
+msgid "Add another marking period"
+msgstr "Add another quarter"
+
+msgid "Remove Marking Period"
+msgstr "Remove Quarter"
+
+msgid "Marking Periods"
+msgstr "Quarters"
+
+msgid "Marking Period Statistics"
+msgstr "Quarter Statistics"
+
+msgid "History Marking Period"
+msgstr "History Quarter"
+
+msgid "History Marking Periods"
+msgstr "History Quarters"
+
+msgid "this marking period to date"
+msgstr "this quarter to date"
+
+msgid "Year and Semester marking periods are not graded."
+msgstr "Year and semester marking periods are not graded."
+
+msgid "You are not currently in a marking period"
+msgstr "You are not currently in a quarter"
+
+msgid "This period does not meet in the marking period of the selected date."
+msgstr "This period does not meet in the quarter of the selected date."
+
+msgid "Offer Enrollment in Child Marking Periods"
+msgstr "Offer Enrollment in Child Quarters"
+
+# Philippine K-12 grading terminology #
+msgid "Final Grading Percentages"
+msgstr "Final Grading Percentages"
+
+msgid "Report Card"
+msgstr "Report Card"
+
+msgid "Report Cards"
+msgstr "Report Cards"
+
+msgid "Report Card Grade"
+msgstr "Report Card Grade"
+
+# "Learner" + "Student" both supported per task spec.
+msgid "Student"
+msgstr "Student"
+
+msgid "Students"
+msgstr "Students"

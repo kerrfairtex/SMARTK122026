@@ -306,7 +306,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		'&redirect_to=' . urlencode( http_build_query( $get ) ) : '';
 
 	// Redirection is done in HTML in case current request is AJAX.
-	$redirect_url = 'index.php?modfunc=logout' . $redirect_to . '&token=' . $_SESSION['token'];
+	$redirect_url = 'login.php?modfunc=logout' . $redirect_to . '&token=' . $_SESSION['token'];
 	?>
 	<html>
 	<head>
@@ -723,7 +723,7 @@ function Warehouse( $mode )
 			do_action( 'Warehouse.php|header_head' );
 		?>
 	<noscript>
-		<meta http-equiv="REFRESH" content="0; url=index.php?modfunc=logout&reason=javascript">
+		<meta http-equiv="REFRESH" content="0; url=login.php?modfunc=logout&reason=javascript">
 	</noscript>
 </head>
 <body class="<?php echo AttrEscape( $_ROSARIO['page'] ); ?>">

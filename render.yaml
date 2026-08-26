@@ -10,13 +10,13 @@ services:
     healthCheckPath: /healthz.php
     envVars:
       - key: DB_SERVER
-        value: postgres.ebyepweqwihdvjecrufk
+        value: aws-0-us-east-1.pooler.supabase.com
       - key: DB_PORT
         value: "6543"
       - key: DB_NAME
         value: postgres
       - key: DB_USER
-        value: postgres
+        value: postgres.ebyepweqwihdvjecrufk
       - key: DB_PASSWORD
         sync: true
       - key: DEFAULT_SYEAR

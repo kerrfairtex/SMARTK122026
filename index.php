@@ -18,7 +18,7 @@ if ( isset( $_REQUEST['modfunc'] )
 	&& $_REQUEST['modfunc'] === 'logout' )
 {
 	// Redirect to index.php with same locale as old session & eventual reason & redirect to URL.
-	header( 'Location: ' . URLEscape( 'index.php?locale=' . $_SESSION['locale'] .
+	header( 'Location: ' . URLEscape( 'login.php?locale=' . $_SESSION['locale'] .
 		( isset( $_REQUEST['reason'] ) ? '&reason=' . $_REQUEST['reason'] : '' ) .
 		( isset( $_REQUEST['redirect_to'] ) ?
 			'&redirect_to=' . urlencode( $_REQUEST['redirect_to'] ) :
@@ -312,7 +312,7 @@ elseif ( isset( $_POST['USERNAME'] )
 	{
 		// First Login.
 		header( 'Location: ' . URLEscape(
-			'index.php?locale=' . $_SESSION['locale'] . '&modfunc=first-login&token=' . $_SESSION['token']
+			'login.php?locale=' . $_SESSION['locale'] . '&modfunc=first-login&token=' . $_SESSION['token']
 		) );
 
 		exit;
@@ -498,7 +498,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 					ucfirst( locale_get_display_language( $loc, $locale ) ) :
 					str_replace( '.utf8', '', $loc ); ?>
 
-				<a href="index.php?locale=<?php echo $loc; ?>" title="<?php echo AttrEscape( $language ); ?>">
+				<a href="login.php?locale=<?php echo $loc; ?>" title="<?php echo AttrEscape( $language ); ?>">
 					<img src="locale/<?php echo $loc; ?>/flag.png" width="32" alt="<?php echo AttrEscape( $language ); ?>" />
 				</a>&nbsp;
 
@@ -558,7 +558,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	<?php if ( Config( 'CREATE_USER_ACCOUNT' ) ) : ?>
 
 		<p class="align-right">
-			<a href="index.php?create_account=user&amp;staff_id=new" rel="nofollow">
+			<a href="login.php?create_account=user&amp;staff_id=new" rel="nofollow">
 				<?php echo _( 'Create User Account' ); ?>
 			</a>
 		</p>
@@ -568,7 +568,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	if ( Config( 'CREATE_STUDENT_ACCOUNT' ) ) : ?>
 
 		<p class="align-right">
-			<a href="index.php?create_account=student&amp;student_id=new" rel="nofollow">
+			<a href="login.php?create_account=student&amp;student_id=new" rel="nofollow">
 				<?php echo _( 'Create Student Account' ); ?>
 			</a>
 		</p>

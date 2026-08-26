@@ -6,7 +6,7 @@
  * Features real photography and PSA-verified community statistics.
  *
  * @package SmartCampus
- * @since 1.0
+ * @since   1.0
  */
 
 // Read RosarioSIS config for school identity (optional — falls back to defaults)
@@ -16,8 +16,8 @@ $school_id = '305053';
 $theme = 'FlatSIS';
 
 // Attempt to read from RosarioSIS config if available (with error handling)
-$rosariosis_config = dirname(__FILE__) . '/../config.inc.php';
-$rosariosis_warehouse = dirname(__FILE__) . '/../Warehouse.php';
+$rosariosis_config = __DIR__ . '/config.inc.php';
+$rosariosis_warehouse = __DIR__ . '/Warehouse.php';
 if (file_exists($rosariosis_config) && file_exists($rosariosis_warehouse)) {
     try {
         require_once $rosariosis_config;
@@ -547,7 +547,7 @@ $img_base = 'assets/images/';
             <p class="location">Batu-Batu &bull; Panglima Sugala &bull; Tawi-Tawi &bull; BARMM</p>
             <div class="hero-buttons">
                 <a href="#about" class="btn btn-outline">Explore Our School</a>
-                <a href="../index.php" class="btn btn-primary">Smart Campus Login</a>
+                <a href="login.php" class="btn btn-primary">Smart Campus Login</a>
             </div>
         </div>
     </section>
@@ -673,7 +673,7 @@ $img_base = 'assets/images/';
                 </div>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
-                <a href="../index.php" class="btn btn-primary">Enter Smart Campus</a>
+                <a href="login.php" class="btn btn-primary">Enter Smart Campus</a>
             </div>
         </div>
     </section>

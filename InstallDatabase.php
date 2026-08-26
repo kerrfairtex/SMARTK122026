@@ -96,7 +96,7 @@ if ( _configTableCheck() )
 		db_query( $addons_sql );
 	}
 
-	die( 'Success: database translated. <a href="index.php">Access RosarioSIS</a>' );
+	die( 'Success: database translated. <a href="login.php">Access RosarioSIS</a>' );
 }
 
 $sql_file = $DatabaseType === 'mysql' ? 'rosariosis_mysql.sql' : 'rosariosis.sql';
@@ -153,7 +153,7 @@ if ( file_exists( 'rosariosis_addons.sql' ) )
 
 die( 'Success: database' .
 	( file_exists( 'rosariosis_addons.sql' ) ? ' and add-ons' : '' ) .
-	' installed. <a href="index.php">Access RosarioSIS</a>' );
+	' installed. <a href="login.php">Access RosarioSIS</a>' );
 
 /**
  * Check if config table exists

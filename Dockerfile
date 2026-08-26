@@ -34,6 +34,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /var/www/html
 COPY . /var/www/html/
 
+# Swap entry points: public landing page becomes index.php, RosarioSIS login becomes login.php
+RUN mv /var/www/html/index.php /var/www/html/login.php \
+    && mv /var/www/html/public/index.php /var/www/html/index.php
+
 # Ensure upload directories exist and permissions are set
 RUN mkdir -p assets/FileUploads assets/StudentPhotos assets/UserPhotos public/assets/images \
     && chown -R www-data:www-data /var/www/html \

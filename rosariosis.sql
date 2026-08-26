@@ -2112,12 +2112,10 @@ CREATE TABLE user_profiles (
 -- Data for Name: schools; Type: TABLE DATA; Schema: public; Owner: rosariosis
 --
 
--- BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL — Turtle Islands, Tawi-Tawi, Philippines
+-- BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL — Batu-Batu, Panglima Sugala, Tawi-Tawi, Philippines
 -- Philippine K-12 public integrated school (see BATU_BUKU_MIGRATION_PLAN.md).
--- These are seed defaults applied on fresh install only; an administrator may
--- edit school information via School > School Information. Do NOT invent official
--- DepEd codes or contact details here — leave those to runtime configuration.
-INSERT INTO schools VALUES (2026, NEXTVAL('schools_id_seq'), 'BATU-BATU National Integrated High School', 'Turtle Islands', 'Tawi-Tawi', '', '', NULL, NULL, NULL, NULL, 'BBNIHS', 4, NULL);
+-- School ID: 305053 (DepEd inventory). Municipality: Panglima Sugala (NOT Turtle Islands).
+INSERT INTO schools VALUES (2026, NEXTVAL('schools_id_seq'), 'BATU-BATU National Integrated High School', 'Batu-Batu', 'Panglima Sugala', 'Tawi-Tawi', '', '', NULL, NULL, '305053', 'BBNIHS', 4, NULL);
 
 
 --

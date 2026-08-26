@@ -2303,7 +2303,7 @@ INSERT INTO config VALUES (0, 'LOGIN', 'No', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'VERSION', '12.9.2', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'TITLE', 'BATU-BATU National Integrated High School', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'NAME', 'BBNIHS', CURRENT_TIMESTAMP, NULL);
-INSERT INTO config VALUES (0, 'MODULES', 'a:14:{s:12:"School_Setup";b:1;s:8:"Students";b:1;s:5:"Users";b:1;s:10:"Scheduling";b:1;s:6:"Grades";b:1;s:10:"Attendance";b:1;s:11:"Eligibility";b:1;s:10:"Discipline";b:1;s:10:"Accounting";b:1;s:15:"Student_Billing";b:1;s:12:"Food_Service";b:1;s:9:"Resources";b:1;s:6:"Custom";b:1;s:12:"SmartCampus";b:1;}', CURRENT_TIMESTAMP, NULL);
+INSERT INTO config VALUES (0, 'MODULES', 'a:14:{s:12:"School_Setup";b:1;s:8:"Students";b:1;s:5:"Users";b:1;s:10:"Scheduling";b:1;s:6:"Grades";b:1;s:10:"Attendance";b:1;s:11:"Eligibility";b:1;s:10:"Discipline";b:1;s:10:"Accounting";b:1;s:15:"Student_Billing";b:1;s:12:"Food_Service";b:1;s:9:"Resources";b:1;s:6:"Custom";b:1;s:11:"SmartCampus";b:1;}', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'PLUGINS', 'a:2:{s:23:"Content_Security_Policy";b:1;s:6:"Moodle";b:0;}', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'THEME', 'FlatSIS', CURRENT_TIMESTAMP, NULL);
 INSERT INTO config VALUES (0, 'THEME_FORCE', NULL, CURRENT_TIMESTAMP, NULL);

@@ -36,7 +36,7 @@ function DashboardDefaultSmartCampus()
 
 	// ---- Current quarter (Philippine K-12 quarters Q1–Q4) ----
 	// The mp column stores 'QTR' for quarters; short_name stores 'Q1'..'Q4'.
-	$mp_ret = DBGetOne( "SELECT title, short_name, start_date, end_date
+	$mp_ret = DBGet( "SELECT title, short_name, start_date, end_date
 		FROM school_marking_periods
 		WHERE syear='" . (int) $syear . "'
 		AND school_id='" . (int) $school_id . "'
@@ -47,8 +47,8 @@ function DashboardDefaultSmartCampus()
 		LIMIT 1" );
 
 	$current_quarter = '';
-	if ( $mp_ret ) {
-		$current_quarter = trim( (string) ( $mp_ret['short_name'] ?: $mp_ret['title'] ) );
+	if ( ! empty( $mp_ret[1] ) ) {
+		$current_quarter = trim( (string) ( $mp_ret[1]['short_name'] ?: $mp_ret[1]['title'] ) );
 	}
 	$data[_( 'Current Quarter' )] = $current_quarter ?: null;
 
@@ -76,33 +76,33 @@ function DashboardDefaultSmartCampus()
 
 	// ---- Teacher count: admin & teacher ----
 	if ( $profile === 'admin' || $profile === 'teacher' ) {
-		$teacher_ret = DBGetOne( "SELECT COUNT(*) AS NB
+		$teacher_nb = (int) DBGetOne( "SELECT COUNT(*)
 			FROM staff
 			WHERE syear='" . (int) $syear . "'
 			AND profile='teacher'
 			AND (schools IS NULL OR position(CONCAT(',', '" . (int) $school_id . "', ',') IN schools) > 0)" );
 
-		$teacher_nb = (int) $teacher_ret['NB'];
 		$data[_( 'Teachers' )] = NoInput( $teacher_nb, _( 'Teachers' ) );
 	}
 
 	// ---- Section count (course periods): admin & teacher ----
 	if ( $profile === 'admin' || $profile === 'teacher' ) {
-		$section_ret = DBGetOne( "SELECT COUNT(*) AS NB
+		$section_nb = (int) DBGetOne( "SELECT COUNT(*)
 			FROM course_periods
 			WHERE syear='" . (int) $syear . "'
 			AND school_id='" . (int) $school_id . "'" );
 
-		$data[_( 'Sections' )] = NoInput( (int) $section_ret['NB'], _( 'Sections' ) );
+		$data[_( 'Sections' )] = NoInput( $section_nb, _( 'Sections' ) );
 	}
 
 	// ---- Today's attendance snapshot: admin & teacher ----
 	// Uses attendance_day (daily rollup with state_value: 1.0=present, 0.5=half, 0=absent).
 	// Joins through student_enrollment to scope to current school — avoids multi-school leak.
+	// Note: COUNT(*) always returns 1 row even if no matches; handle NULL from SUM with COALESCE.
 	if ( $profile === 'admin' || $profile === 'teacher' ) {
 		$att_ret = DBGet( "SELECT
 				COUNT(*) AS TOTAL,
-				SUM(CASE WHEN ad.state_value >= 1 THEN 1 END) AS PRESENT
+				COALESCE( SUM( CASE WHEN ad.state_value >= 1 THEN 1 END ), 0 ) AS PRESENT
 			FROM attendance_day ad
 			JOIN student_enrollment se ON (
 				se.student_id = ad.student_id
@@ -113,8 +113,8 @@ function DashboardDefaultSmartCampus()
 			)
 			WHERE ad.school_date = CURRENT_DATE" );
 
-		$att_total   = (int) $att_ret[1]['TOTAL'];
-		$att_present = (int) $att_ret[1]['PRESENT'];
+		$att_total   = isset( $att_ret[1]['TOTAL'] ) ? (int) $att_ret[1]['TOTAL'] : 0;
+		$att_present = isset( $att_ret[1]['PRESENT'] ) ? (int) $att_ret[1]['PRESENT'] : 0;
 		$att_pct     = $att_total > 0 ? round( ( $att_present / $att_total ) * 100 ) : 0;
 
 		$data[_( 'Attendance Today' )] = $att_total > 0

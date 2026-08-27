@@ -891,6 +891,70 @@ $img_base = 'assets/images/';
             text-align: center;
         }
 
+        /* Who can enroll / categories */
+        .enroll-cards {
+            max-width: 900px;
+            margin: 2rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+        }
+
+        .ecard {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .ecard h4 { color: var(--white); font-size: 1rem; margin-bottom: 0.35rem; }
+        .ecard p { color: var(--gray-500); font-size: 0.85rem; }
+
+        .enroll-sub {
+            max-width: 900px;
+            margin: 2.5rem auto 0;
+        }
+
+        .enroll-sub h3 {
+            color: var(--white);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        .req {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            margin-bottom: 0.6rem;
+            overflow: hidden;
+        }
+
+        .req > summary {
+            cursor: pointer;
+            padding: 0.9rem 1.1rem;
+            color: var(--white);
+            font-weight: 600;
+            list-style: none;
+        }
+
+        .req > summary::-webkit-details-marker { display: none; }
+        .req > summary::before { content: '+ '; color: var(--accent); }
+        .req[open] > summary::before { content: '\2212 '; }
+
+        .req ul { padding: 0 1.1rem 1rem 2.2rem; color: var(--gray-300); font-size: 0.9rem; }
+        .req ul li { margin-bottom: 0.3rem; }
+
+        .config-note {
+            max-width: 900px;
+            margin: 1.5rem auto 0;
+            color: var(--gray-500);
+            font-size: 0.82rem;
+            font-style: italic;
+            text-align: center;
+        }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -1214,6 +1278,84 @@ $img_base = 'assets/images/';
                     <h4>Enrollment Confirmation</h4>
                     <p>Upon approval, the learner is officially enrolled and classes begin.</p>
                 </div>
+            </div>
+
+            <div class="enroll-sub">
+                <h3>Who Can Enroll?</h3>
+                <div class="enroll-cards">
+                    <div class="ecard">
+                        <h4>Kindergarten</h4>
+                        <p>For eligible incoming Kindergarten learners.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Elementary</h4>
+                        <p>Incoming/returning elementary learners, where the school's grade coverage supports this.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Junior High School</h4>
+                        <p>Grades 7&ndash;10.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Senior High School</h4>
+                        <p>Grades 11&ndash;12.</p>
+                    </div>
+                </div>
+                <p class="config-note">Actual grade-level availability is configured from the SmartCampus dashboard rather than hardcoded here.</p>
+
+                <h3>Enrollment Categories</h3>
+                <div class="enroll-cards">
+                    <div class="ecard">
+                        <h4>New Student</h4>
+                        <p>Enrolling at Batu-Batu for the first time.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Returning Student</h4>
+                        <p>Existing Batu-Batu learners continuing to the next grade.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Transferee</h4>
+                        <p>Transferring from another school.</p>
+                    </div>
+                    <div class="ecard">
+                        <h4>Balik-Aral / Returning Learner</h4>
+                        <p>Returning to formal schooling after an interruption, where applicable.</p>
+                    </div>
+                </div>
+                <p class="config-note">Categories are configurable according to the school's actual policies.</p>
+
+                <h3>Requirements</h3>
+                <details class="req">
+                    <summary>New Learner</summary>
+                    <ul>
+                        <li>Learner information</li>
+                        <li>PSA / NSO birth certificate, where required</li>
+                        <li>Previous school records, where applicable</li>
+                        <li>Enrollment-related forms</li>
+                        <li>Parent / guardian information</li>
+                        <li>Supporting documents</li>
+                    </ul>
+                </details>
+                <details class="req">
+                    <summary>Transferee</summary>
+                    <ul>
+                        <li>Birth certificate</li>
+                        <li>Previous school records</li>
+                        <li>Form 137 / learner records, as applicable</li>
+                        <li>Form 138 / report card, as applicable</li>
+                        <li>Transfer credentials</li>
+                        <li>Parent / guardian information</li>
+                    </ul>
+                </details>
+                <details class="req">
+                    <summary>Returning Learner</summary>
+                    <ul>
+                        <li>Existing learner information</li>
+                        <li>Previous school records</li>
+                        <li>Updated parent / guardian information</li>
+                        <li>Required enrollment forms</li>
+                    </ul>
+                </details>
+                <p class="config-note">Requirements are configurable per school year, grade level, and enrollment category from the dashboard.</p>
             </div>
 
             <div class="enroll-form-wrap" id="enroll-form">

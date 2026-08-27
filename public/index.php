@@ -40,7 +40,10 @@ if (file_exists($rosariosis_config) && file_exists($rosariosis_warehouse)) {
                 $cfg_conn = db_start(false);
                 $cfg_check = @pg_query($cfg_conn, 'SELECT 1 FROM config LIMIT 1');
                 if ($cfg_check !== false) {
-                    $school_name = Config('TITLE') ?: $school_name;
+                    // NOTE: intentionally do NOT overwrite $school_name with
+                    // Config('TITLE') — the DB TITLE is the SIS brand label
+                    // ('SMARTCAMP-K12'), not the school's real name. The landing
+                    // uses the hardcoded official name and $hero_name='BATU-BATU'.
                     $school_short_name = Config('NAME') ?: $school_short_name;
                     $theme = Config('THEME') ?: $theme;
                 }

@@ -30,3 +30,8 @@ h1,h2,h3,h4,h5,h6{color:var(--batu-heading)}
 .widefat tr:nth-child(even){background:var(--batu-surface)}
 .dashboard-module-title{color:var(--batu-heading)}
 .dashboard-module-data-tipmsg .legend-gray{color:var(--batu-secondary)}
+/* Fix invisible typed text: form controls must always use a dark color,
+   independent of parent (e.g. dark #menu / login box) which would otherwise
+   make text white-on-white. */
+input[type=text],input[type=password],input[type=email],input[type=search],input[type=tel],input[type=url],input[type=number],input[type=time],select,textarea{color:#111 !important}
+input[type=text]::placeholder,input[type=password]::placeholder,input[type=email]::placeholder,input[type=search]::placeholder,input[type=tel]::placeholder,input[type=url]::placeholder,input[type=number]::placeholder,textarea::placeholder{color:#777 !important}

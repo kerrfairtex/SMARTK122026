@@ -59,7 +59,7 @@ if ( ! function_exists( 'DashboardUsersAdmin' ) )
 
 		foreach ( $users_RET as $users )
 		{
-			$profile = $profiles[$users['PROFILE']];
+			$profile = $profiles[$users['PROFILE']] ?? _( 'User' );
 
 			$users_profile_data[$profile] = $users['USERS_NB'];
 

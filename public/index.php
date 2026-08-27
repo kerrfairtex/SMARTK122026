@@ -750,6 +750,125 @@ $img_base = 'assets/images/';
             background: var(--white);
         }
 
+        /* Enrollment Portal */
+        .enroll {
+            background: linear-gradient(135deg, var(--navy) 0%, var(--sea-blue) 100%);
+        }
+
+        .enroll-status {
+            max-width: 760px;
+            margin: 1.5rem auto 2rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+        }
+
+        .enroll-status .stat {
+            text-align: center;
+        }
+
+        .enroll-status .stat .k {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.35rem;
+        }
+
+        .enroll-status .stat .v {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .enroll-status .stat .v.open { color: #4ade80; }
+
+        .enroll-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .steps {
+            max-width: 760px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+        }
+
+        .step-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .step-card .num {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--white);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .step-card h4 { color: var(--white); font-size: 1rem; margin-bottom: 0.35rem; }
+        .step-card p { color: var(--gray-500); font-size: 0.9rem; }
+
+        .enroll-form-wrap {
+            max-width: 560px;
+            margin: 2.5rem auto 0;
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .enroll-form-wrap h3 { color: var(--white); margin-bottom: 1rem; text-align: center; }
+
+        .form-field { margin-bottom: 1rem; }
+        .form-field label { display: block; color: var(--gray-300); font-size: 0.9rem; margin-bottom: 0.35rem; }
+        .form-field input, .form-field select {
+            width: 100%;
+            padding: 0.7rem;
+            border-radius: 4px;
+            border: 1px solid rgba(255,255,255,0.15);
+            background: var(--navy-deep);
+            color: var(--white);
+            font-size: 0.95rem;
+        }
+
+        .form-note { color: var(--gray-500); font-size: 0.82rem; margin-top: 0.75rem; text-align: center; }
+
+        .enroll-result {
+            margin-top: 1.25rem;
+            padding: 1rem;
+            border-radius: 6px;
+            background: rgba(74,222,128,0.12);
+            border: 1px solid rgba(74,222,128,0.4);
+            color: var(--white);
+            font-size: 0.95rem;
+            display: none;
+        }
+        .enroll-result.show { display: block; }
+
+        .status-check {
+            max-width: 560px;
+            margin: 1.5rem auto 0;
+            text-align: center;
+        }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -849,7 +968,7 @@ $img_base = 'assets/images/';
             <div class="hero-buttons">
                 <a href="#about" class="btn btn-primary">Discover Our School</a>
                 <a href="login.php" class="btn btn-outline">SmartCampus Portal</a>
-                <a href="#admissions" class="btn btn-outline">Admissions / Enrollment</a>
+                <a href="#enroll" class="btn btn-outline">Admissions / Enrollment</a>
                 <a href="#contact" class="btn btn-outline">Contact the School</a>
             </div>
         </div>
@@ -1018,6 +1137,102 @@ $img_base = 'assets/images/';
 
             <div style="text-align:center; margin-top:2rem;">
                 <a href="#contact" class="btn btn-primary">Inquire About Admissions</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admissions / Enrollment Portal -->
+    <section id="enroll" class="enroll">
+        <div class="container">
+            <h2 class="section-title">Admissions &amp; Enrollment</h2>
+            <p class="section-subtitle">Enroll at Batu-Batu National Integrated High School</p>
+
+            <div class="enroll-status">
+                <div class="stat">
+                    <div class="k">Enrollment Status</div>
+                    <div class="v open">OPEN</div>
+                </div>
+                <div class="stat">
+                    <div class="k">School Year</div>
+                    <div class="v">2026&ndash;2027</div>
+                </div>
+                <div class="stat">
+                    <div class="k">Period</div>
+                    <div class="v">Now &ndash; Aug 2026</div>
+                </div>
+                <div class="stat">
+                    <div class="k">Accepting</div>
+                    <div class="v">Grade 7&ndash;12</div>
+                </div>
+            </div>
+
+            <div class="enroll-cta">
+                <a href="#enroll-form" class="btn btn-primary">Start Enrollment</a>
+                <a href="#enroll-status" class="btn btn-outline">Check Application Status</a>
+            </div>
+
+            <div class="steps">
+                <div class="step-card">
+                    <span class="num">1</span>
+                    <h4>Submit Application</h4>
+                    <p>Fill the online application form with the learner's details and preferred grade level.</p>
+                </div>
+                <div class="step-card">
+                    <span class="num">2</span>
+                    <h4>Document Review</h4>
+                    <p>The school reviews submitted requirements (report card, birth certificate, etc.).</p>
+                </div>
+                <div class="step-card">
+                    <span class="num">3</span>
+                    <h4>Assessment</h4>
+                    <p>Incoming learners may be scheduled for a brief assessment / interview.</p>
+                </div>
+                <div class="step-card">
+                    <span class="num">4</span>
+                    <h4>Enrollment Confirmation</h4>
+                    <p>Upon approval, the learner is officially enrolled and classes begin.</p>
+                </div>
+            </div>
+
+            <div class="enroll-form-wrap" id="enroll-form">
+                <h3>Start Your Enrollment</h3>
+                <form id="enrollForm" novalidate>
+                    <div class="form-field">
+                        <label for="ef_name">Learner's Full Name</label>
+                        <input type="text" id="ef_name" name="name" required>
+                    </div>
+                    <div class="form-field">
+                        <label for="ef_grade">Grade Level Applying For</label>
+                        <select id="ef_grade" name="grade" required>
+                            <option value="">Select grade level</option>
+                            <option>Grade 7</option>
+                            <option>Grade 8</option>
+                            <option>Grade 9</option>
+                            <option>Grade 10</option>
+                            <option>Grade 11</option>
+                            <option>Grade 12</option>
+                        </select>
+                    </div>
+                    <div class="form-field">
+                        <label for="ef_contact">Parent / Guardian Contact (email or phone)</label>
+                        <input type="text" id="ef_contact" name="contact" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="width:100%;">Submit Application</button>
+                    <p class="form-note">This is a guided application request. The school will contact you to complete enrollment. No payment is collected here.</p>
+                </form>
+                <div class="enroll-result" id="enrollResult"></div>
+            </div>
+
+            <div class="status-check" id="enroll-status">
+                <h3 style="color:var(--white);margin-bottom:1rem;">Check Application Status</h3>
+                <form id="statusForm" novalidate>
+                    <div class="form-field">
+                        <label for="sf_ref">Application Reference Number</label>
+                        <input type="text" id="sf_ref" name="ref" placeholder="e.g. BBNIHS-XXXXXX" required>
+                    </div>
+                    <button type="submit" class="btn btn-outline">Check Status</button>
+                </form>
+                <div class="enroll-result" id="statusResult"></div>
             </div>
         </div>
     </section>
@@ -1218,6 +1433,55 @@ $img_base = 'assets/images/';
         slider.addEventListener('mouseleave', start);
 
         start();
+    })();
+
+    // Enrollment Portal (no backend — uses localStorage so it actually works)
+    (function () {
+        var form = document.getElementById('enrollForm');
+        if (!form) return;
+        var STORE = 'bbnihs_enrollments';
+        function rand6() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var name = document.getElementById('ef_name').value.trim();
+            var grade = document.getElementById('ef_grade').value;
+            var contact = document.getElementById('ef_contact').value.trim();
+            var res = document.getElementById('enrollResult');
+            if (!name || !grade || !contact) {
+                res.textContent = 'Please complete all fields.';
+                res.classList.add('show');
+                return;
+            }
+            var ref = 'BBNIHS-' + rand6();
+            var apps = [];
+            try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
+            apps.push({ ref: ref, name: name, grade: grade, contact: contact, status: 'Received', ts: Date.now() });
+            localStorage.setItem(STORE, JSON.stringify(apps));
+            res.innerHTML = 'Application received! Your reference number is <strong>' + ref +
+                '</strong>. The school will contact you at <em>' + contact + '</em> to complete enrollment. ' +
+                'Keep this reference to check your status.';
+            res.classList.add('show');
+            form.reset();
+        });
+
+        var sform = document.getElementById('statusForm');
+        sform.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var ref = document.getElementById('sf_ref').value.trim().toUpperCase();
+            var sres = document.getElementById('statusResult');
+            var apps = [];
+            try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
+            var found = apps.filter(function (a) { return a.ref === ref; })[0];
+            if (found) {
+                sres.innerHTML = 'Reference <strong>' + found.ref + '</strong><br>Applicant: ' + found.name +
+                    '<br>Grade: ' + found.grade + '<br>Status: <strong>' + found.status + '</strong>';
+            } else {
+                sres.innerHTML = 'No application found for reference <strong>' + ref +
+                    '</strong>. If you submitted one on this device, ensure the reference is entered exactly.';
+            }
+            sres.classList.add('show');
+        });
     })();
     </script>
 

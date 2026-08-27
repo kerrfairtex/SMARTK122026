@@ -35,14 +35,3 @@ h1,h2,h3,h4,h5,h6{color:var(--batu-heading)}
    make text white-on-white. */
 input[type=text],input[type=password],input[type=email],input[type=search],input[type=tel],input[type=url],input[type=number],input[type=time],select,textarea{color:#111 !important}
 input[type=text]::placeholder,input[type=password]::placeholder,input[type=email]::placeholder,input[type=search]::placeholder,input[type=tel]::placeholder,input[type=url]::placeholder,input[type=number]::placeholder,textarea::placeholder{color:#767676 !important}
-
-/* BATU-BATU NIHS: light menu + submenu (override FlatSIS dark sidebar) */
-#menu,#adminmenu{background:#ffffff!important;border-color:#e2e8f0!important;color:#1e293b!important}
-.menu-top{background-color:#ffffff!important;color:#1e293b!important;border-top-color:#e2e8f0!important;border-bottom-color:#e2e8f0!important}
-#menu-top select{border-color:#cbd5e1!important;background:#ffffff!important;color:#1e293b!important}
-.wp-submenu{background:#ffffff!important;border-color:#e2e8f0!important}
-.adminmenu a,.menu-top,.BottomButton,a.menu-top{color:#1e293b!important}
-#selectedModuleLink,.menu-top:focus,.menu-top:hover{background-color:#e2e8f0!important;color:#0f172a!important}
-#selectedMenuLink,.wp-submenu a:active,.wp-submenu a:focus,.wp-submenu a:hover{background-color:#e2e8f0!important;color:#0f172a!important}
-.menu-inter{color:#475569!important}
-.no-touch .menu-module:hover .menu-top::after,.no-touch .menu-module:focus-within .menu-top::after{color:#475569!important}

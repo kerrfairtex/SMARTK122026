@@ -552,6 +552,28 @@ $img_base = 'assets/images/';
             display: block;
         }
 
+        .img-cycle {
+            position: relative;
+            width: 100%;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .img-cycle img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .img-cycle img.active {
+            opacity: 1;
+        }
+
         .gallery-card .caption {
             padding: 1rem 1.25rem 1.25rem;
         }
@@ -1316,7 +1338,10 @@ $img_base = 'assets/images/';
             <p class="section-subtitle">Glimpses of learning and community at Batu-Batu NIHS</p>
             <div class="gallery-grid">
                 <div class="gallery-card">
-                    <img src="assets/images/img-education.jpg" alt="Students engaged in learning">
+                    <div class="img-cycle" data-cycle="2000">
+                        <img class="active" src="assets/images/classroom1.jpeg" alt="Students engaged in learning">
+                        <img src="assets/images/classroom2.jpeg" alt="Students engaged in learning">
+                    </div>
                     <div class="caption">
                         <h4>In the Classroom</h4>
                         <p>Day-to-day teaching and learning across the K-12 basic education program.</p>
@@ -1481,6 +1506,22 @@ $img_base = 'assets/images/';
                     '</strong>. If you submitted one on this device, ensure the reference is entered exactly.';
             }
             sres.classList.add('show');
+        });
+    })();
+
+    // Generic image crossfade cycler (e.g. Classroom gallery card), every data-cycle ms
+    (function () {
+        var cycles = document.querySelectorAll('.img-cycle');
+        cycles.forEach(function (box) {
+            var imgs = box.querySelectorAll('img');
+            if (imgs.length < 2) return;
+            var delay = parseInt(box.getAttribute('data-cycle'), 10) || 3000;
+            var i = 0;
+            setInterval(function () {
+                imgs[i].classList.remove('active');
+                i = (i + 1) % imgs.length;
+                imgs[i].classList.add('active');
+            }, delay);
         });
     })();
     </script>

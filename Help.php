@@ -108,7 +108,7 @@ foreach ( (array) $help as $program => $value ) :
 	}
 	else
 	{
-		$program_title = 'RosarioSIS';
+		$program_title = ParseMLField( Config( 'NAME' ) );
 
 		// Fix do not use ProgramTitle() (loads Menu.php in English only)
 		// Loop modules.

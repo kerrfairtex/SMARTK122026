@@ -4,3 +4,7 @@ div.calendar{position:relative;z-index:10000}.calendar,.calendar table{border:1p
    make text white-on-white. */
 input[type=text],input[type=password],input[type=email],input[type=search],input[type=tel],input[type=url],input[type=number],input[type=time],textarea{color:#111 !important}
 input[type=text]::placeholder,input[type=password]::placeholder,input[type=email]::placeholder,input[type=search]::placeholder,input[type=tel]::placeholder,input[type=url]::placeholder,input[type=number]::placeholder,textarea::placeholder{color:#767676 !important}
+
+/* Hide visible "RosarioSIS" brand word on login footer (CSS-only, reversible).
+   Copyright year text remains; only the brand link is hidden. */
+a[href*="rosariosis.org"]{font-size:0}

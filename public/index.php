@@ -1419,9 +1419,9 @@ $img_base = 'assets/images/';
                 <h2 class="section-title">About Batu-Batu NHS</h2>
                 <div class="about-slider" id="aboutSlider">
                     <div class="about-slides">
-                        <img class="active" src="assets/images/img-campus.jpg" alt="Batu-Batu National High School campus">
+                        <img class="active" src="assets/images/bbnihs-legacy.jpg" alt="Batu-Batu National High School campus">
                         <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School">
-                        <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National High School">
+                        <img src="assets/images/bbnihs-graduation.jpeg" alt="Batu-Batu National High School graduation">
                         <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National High School">
                         <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National High School">
                     </div>
@@ -1908,7 +1908,7 @@ $img_base = 'assets/images/';
                 <img src="assets/images/bbnihs-scholarship.jpeg" alt="Bangsamoro Scholarship Program induction in Tawi-Tawi"
                      data-title="Scholarship &amp; Training Induction"
                      data-desc="Participants in a Training Induction Program for the Bangsamoro Scholarship Program for Technical-Vocational Education, Tawi-Tawi &mdash; expanding access to learning beyond the classroom.">
-                <img src="assets/images/classroom1.jpg" alt="A teacher leading a classroom lesson"
+                <img src="assets/images/classroom1.jpeg" alt="A teacher leading a classroom lesson"
                      data-title="In the Classroom"
                      data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education.">
                 <img src="assets/images/tawi-bajau-children.jpeg" alt="Children on a coastal stilt-village walkway"

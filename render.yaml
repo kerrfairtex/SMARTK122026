@@ -27,5 +27,9 @@ services:
         value: require
     disk:
       name: smartcampus-data
-      mountPath: /var/www/html/assets
+      # Mount ONLY the uploads subdir. Mounting at all of /var/www/html/assets would
+      # shadow the committed themes/logo/js and the landing-image symlink (assets/images),
+      # breaking CSS, logo, and landing photos. Only FileUploads/StudentPhotos/UserPhotos
+      # need persistence.
+      mountPath: /var/www/html/assets/FileUploads
       sizeGB: 1

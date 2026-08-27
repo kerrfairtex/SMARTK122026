@@ -660,7 +660,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Academics -->
-    <section class="academics">
+    <section id="academics" class="academics">
         <div class="container">
             <h2 class="section-title">Academic Programs</h2>
             <p class="section-subtitle">K-12 basic education</p>
@@ -678,7 +678,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Smart Campus -->
-    <section class="smart-campus">
+    <section id="features" class="smart-campus">
         <div class="container">
             <h2 class="section-title">Smart Campus K12</h2>
             <p class="section-subtitle">Digital school services for students, teachers, parents, and administrators</p>
@@ -750,7 +750,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Contact -->
-    <section class="contact">
+    <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">Contact</h2>
             <div class="contact-grid">

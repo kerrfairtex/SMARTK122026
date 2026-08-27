@@ -1016,6 +1016,63 @@ $img_base = 'assets/images/';
             text-align: center;
         }
 
+        /* Important dates */
+        .dates-grid {
+            max-width: 760px;
+            margin: 1.5rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+        .date-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.25rem;
+            text-align: center;
+        }
+        .date-card .k { color: var(--gray-500); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+        .date-card .v { color: var(--white); font-size: 1.05rem; font-weight: 700; }
+        .dates-cta { text-align: center; margin-top: 1.5rem; }
+
+        /* Status timeline (static legend from spec) */
+        .status-legend {
+            max-width: 760px;
+            margin: 1.5rem auto 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+        .status-legend .sl {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 0.8rem 1rem;
+        }
+        .status-legend .sl b { color: var(--white); display: block; margin-bottom: 0.2rem; }
+        .status-legend .sl span { color: var(--gray-500); font-size: 0.82rem; }
+
+        /* FAQ */
+        .faq { max-width: 820px; margin: 1.5rem auto 0; }
+        .faq details {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            margin-bottom: 0.6rem;
+            overflow: hidden;
+        }
+        .faq details > summary {
+            cursor: pointer;
+            padding: 0.9rem 1.1rem;
+            color: var(--white);
+            font-weight: 600;
+            list-style: none;
+        }
+        .faq details > summary::-webkit-details-marker { display: none; }
+        .faq details > summary::before { content: '+ '; color: var(--accent); }
+        .faq details[open] > summary::before { content: '\2212 '; }
+        .faq details p { padding: 0 1.1rem 1rem 1.1rem; color: var(--gray-300); font-size: 0.92rem; }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -1318,6 +1375,29 @@ $img_base = 'assets/images/';
                 <a href="#enroll-status" class="btn btn-outline">Check Application Status</a>
             </div>
 
+            <div class="enroll-sub">
+                <h3>Important Enrollment Dates</h3>
+                <div class="dates-grid" id="datesGrid">
+                    <div class="date-card"><div class="k">Enrollment Opens</div><div class="v" id="dOpens">—</div></div>
+                    <div class="date-card"><div class="k">Enrollment Period</div><div class="v" id="dPeriod">—</div></div>
+                    <div class="date-card"><div class="k">Classes Begin</div><div class="v" id="dClasses">—</div></div>
+                </div>
+                <div class="dates-cta">
+                    <a href="#enroll-form" class="btn btn-outline">View Enrollment Calendar</a>
+                </div>
+
+                <h3>Enrollment Status Timeline</h3>
+                <div class="status-legend">
+                    <div class="sl"><b>Submitted</b><span>Application received</span></div>
+                    <div class="sl"><b>Under Review</b><span>School is reviewing information</span></div>
+                    <div class="sl"><b>Documents Needed</b><span>Additional requirements required</span></div>
+                    <div class="sl"><b>Verified</b><span>Documents / information verified</span></div>
+                    <div class="sl"><b>Approved</b><span>Application approved</span></div>
+                    <div class="sl"><b>Enrolled</b><span>Enrollment completed</span></div>
+                    <div class="sl"><b>Rejected</b><span>Application cannot proceed</span></div>
+                </div>
+            </div>
+
             <div class="steps">
                 <div class="step-card">
                     <span class="num">01</span>
@@ -1512,6 +1592,19 @@ $img_base = 'assets/images/';
                     <button type="submit" class="btn btn-outline">Check Status</button>
                 </form>
                 <div class="enroll-result" id="statusResult"></div>
+            </div>
+
+            <div class="faq">
+                <h3 style="color:var(--white);border-left:4px solid var(--accent);padding-left:0.75rem;margin-bottom:1rem;">Frequently Asked Questions</h3>
+                <details><summary>Who can enroll at Batu-Batu NIHS?</summary><p>Kindergarten, elementary, junior high (Grades 7&ndash;10), and senior high (Grades 11&ndash;12) learners, subject to the school's grade-level coverage for the school year.</p></details>
+                <details><summary>What documents are required?</summary><p>Requirements vary by enrollment category (New Learner, Transferee, Returning Learner). See the Requirements section above for the typical documents. The school configures the exact list per school year.</p></details>
+                <details><summary>Can I enroll without an internet connection?</summary><p>Yes. You can begin the application online and submit required documents physically at the school if connectivity is limited. Use "Save &amp; Continue Later" to keep your progress on this device.</p></details>
+                <details><summary>Can I submit documents physically?</summary><p>Yes. If online upload isn't possible, bring the required documents to the school. The application records which documents you will submit.</p></details>
+                <details><summary>How do I check my application?</summary><p>Use "Check Application Status" with the reference number you received (e.g. BATU-2026-001284). No full account is required.</p></details>
+                <details><summary>What happens after I submit my application?</summary><p>The school reviews your information and documents, then verifies and approves. You can track each stage via your reference number.</p></details>
+                <details><summary>Can I edit my application after submission?</summary><p>Contact the school with your reference number to request changes; the school can update records on your behalf.</p></details>
+                <details><summary>How do transferees enroll?</summary><p>Choose "Transferee" as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section.</p></details>
+                <details><summary>Where can I get assistance?</summary><p>Visit Batu-Batu National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, or use the Contact section below.</p></details>
             </div>
         </div>
     </section>
@@ -1717,11 +1810,10 @@ $img_base = 'assets/images/';
         start();
     })();
 
-    // Enrollment Portal (no backend — uses localStorage so it actually works)
+    // Enrollment Portal — backed by enroll_api.php (Supabase via app DB connection)
     (function () {
         var form = document.getElementById('enrollForm');
         if (!form) return;
-        var STORE = 'bbnihs_enrollments';
         var step = 1, TOTAL = 5;
         var dots = document.querySelectorAll('#msProgress .ms-dot');
         var steps = form.querySelectorAll('.ms-step');
@@ -1730,6 +1822,8 @@ $img_base = 'assets/images/';
         var submitBtn = document.getElementById('msSubmit');
         var saveBtn = document.getElementById('msSave');
         var res = document.getElementById('enrollResult');
+
+        var STAGES = ['Submitted', 'Under Review', 'Documents Needed', 'Verified', 'Approved', 'Enrolled', 'Rejected'];
 
         function showStep(n) {
             step = n;
@@ -1783,6 +1877,16 @@ $img_base = 'assets/images/';
             return ok;
         }
 
+        function gather() {
+            var data = {};
+            new FormData(form).forEach(function (v, k) { data[k] = v; });
+            data.documents = {
+                bc: form.doc_bc.checked, rc: form.doc_rc.checked,
+                tc: form.doc_tc.checked, other: form.doc_other.checked
+            };
+            return data;
+        }
+
         nextBtn.addEventListener('click', function () {
             if (!validateStep(step)) { res.textContent = 'Please complete the required fields.'; res.classList.add('show'); return; }
             res.classList.remove('show');
@@ -1791,70 +1895,78 @@ $img_base = 'assets/images/';
         prevBtn.addEventListener('click', function () { showStep(step - 1); });
 
         saveBtn.addEventListener('click', function () {
-            saveDraft();
-            res.textContent = 'Progress saved on this device. You can return and continue later.';
+            localStorage.setItem('bbnihs_draft', JSON.stringify(gather()));
+            res.textContent = 'Progress saved on this device. Return and continue later.';
             res.classList.add('show');
         });
-
-        function saveDraft() {
-            var data = {};
-            new FormData(form).forEach(function (v, k) { data[k] = v; });
-            localStorage.setItem('bbnihs_draft', JSON.stringify(data));
-        }
         // restore draft
         try {
             var d = JSON.parse(localStorage.getItem('bbnihs_draft') || 'null');
             if (d) {
                 Object.keys(d).forEach(function (k) {
-                    if (form[k]) {
-                        if (form[k].type === 'checkbox') form[k].checked = true;
-                        else form[k].value = d[k];
-                    }
+                    if (k === 'documents') return;
+                    if (form[k]) { if (form[k].type === 'checkbox') form[k].checked = true; else form[k].value = d[k]; }
                 });
+                if (d.documents) {
+                    form.doc_bc.checked = !!d.documents.bc; form.doc_rc.checked = !!d.documents.rc;
+                    form.doc_tc.checked = !!d.documents.tc; form.doc_other.checked = !!d.documents.other;
+                }
             }
         } catch (e) {}
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             if (!validateStep(step)) return;
-            var ref = 'BATU-2026-' + String(Math.floor(100000 + Math.random() * 899999));
-            var rec = { ref: ref, status: 'Submitted', ts: Date.now() };
-            new FormData(form).forEach(function (v, k) { rec[k] = v; });
-            var apps = [];
-            try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
-            apps.push(rec);
-            localStorage.setItem(STORE, JSON.stringify(apps));
-            localStorage.removeItem('bbnihs_draft');
-            res.innerHTML = 'APPLICATION SUBMITTED<br>Reference: <strong>' + ref + '</strong><br>Status: Submitted. ' +
-                'The school will review and contact you. Keep this reference to check your status.';
+            res.textContent = 'Submitting…';
             res.classList.add('show');
-            form.reset();
-            showStep(1);
+            fetch('enroll_api.php?action=submit', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(gather())
+            }).then(function (r) { return r.json(); }).then(function (j) {
+                if (j.error) { res.textContent = 'Error: ' + j.error; return; }
+                localStorage.removeItem('bbnihs_draft');
+                res.innerHTML = 'APPLICATION SUBMITTED<br>Reference: <strong>' + j.ref + '</strong><br>Status: ' + j.status +
+                    '. Keep this reference to check your status. The school will review and contact you.';
+                form.reset();
+                showStep(1);
+            }).catch(function () { res.textContent = 'Network error. Please try again or submit documents physically at the school.'; });
         });
 
+        // --- Load enrollment config (dates/status from DB) ---
+        fetch('enroll_api.php?action=config').then(function (r) { return r.json(); }).then(function (j) {
+            if (!j.period) return;
+            var p = j.period;
+            var fmt = function (d) { return d ? new Date(d).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : '—'; };
+            var opens = fmt(p.enrollment_opens), closes = fmt(p.enrollment_closes), begins = fmt(p.classes_begin);
+            document.getElementById('dOpens').textContent = opens;
+            document.getElementById('dPeriod').textContent = (opens && closes) ? (opens + ' – ' + closes) : '—';
+            document.getElementById('dClasses').textContent = begins;
+        }).catch(function () {});
+
+        // --- Status check (uses API + full 7-stage pipeline) ---
         var sform = document.getElementById('statusForm');
         sform.addEventListener('submit', function (e) {
             e.preventDefault();
             var ref = document.getElementById('sf_ref').value.trim().toUpperCase();
             var sres = document.getElementById('statusResult');
-            var apps = [];
-            try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
-            var found = apps.filter(function (a) { return a.ref === ref; })[0];
-            var stages = ['Submitted', 'Under Review', 'Documents Verified', 'Approved', 'Enrolled'];
-            if (found) {
-                var idx = stages.indexOf(found.status);
+            sres.textContent = 'Checking…';
+            sres.classList.add('show');
+            fetch('enroll_api.php?action=status&ref=' + encodeURIComponent(ref)).then(function (r) { return r.json(); }).then(function (j) {
+                if (!j.found) {
+                    sres.innerHTML = 'No application found for reference <strong>' + ref + '</strong>. Ensure it is entered exactly (e.g. BATU-2026-001284).';
+                    return;
+                }
+                var status = j.application.status || 'Submitted';
+                var idx = STAGES.indexOf(status);
                 if (idx < 0) idx = 0;
-                var pipe = stages.map(function (st, i) {
+                var pipe = STAGES.map(function (st, i) {
                     var cls = i < idx ? 'done' : (i === idx ? 'current' : '');
                     return '<div class="pstep ' + cls + '"><span class="bullet"></span>' + st + '</div>';
                 }).join('');
-                sres.innerHTML = 'Reference <strong>' + found.ref + '</strong><br>Applicant: ' + (found.lname || '—') +
+                sres.innerHTML = 'Reference <strong>' + j.application.ref + '</strong><br>Applicant: ' + (j.application.learner_name || '—') +
                     '<div class="pipeline">' + pipe + '</div>';
-            } else {
-                sres.innerHTML = 'No application found for reference <strong>' + ref +
-                    '</strong>. If you submitted one on this device, ensure the reference is entered exactly.';
-            }
-            sres.classList.add('show');
+            }).catch(function () { sres.textContent = 'Network error. Please try again.'; });
         });
 
         showStep(1);

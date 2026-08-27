@@ -34,9 +34,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /var/www/html
 COPY . /var/www/html/
 
-# Swap entry points: public landing page becomes index.php, RosarioSIS login becomes login.php
-RUN mv /var/www/html/index.php /var/www/html/login.php \
-    && mv /var/www/html/public/index.php /var/www/html/index.php
+# NOTE: index.php<->login.php swap and landing-image symlink are performed at container
+# start inside docker-entrypoint.sh (idempotent) so they survive Render build caching
+# and redeploys. Do NOT run the mv here — build-time mv is what silently failed live.
 
 # Ensure upload directories exist and permissions are set
 RUN mkdir -p assets/FileUploads assets/StudentPhotos assets/UserPhotos public/assets/images \

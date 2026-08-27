@@ -44,4 +44,17 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
 </VirtualHost>
 EOF
 
+# --- Swap landing page in as the docroot (idempotent, at container start) ---
+# Render build-time `mv` silently failed on the deployed instance, so the login
+# screen kept serving as `/`. This runs every start but only once thanks to the guard.
+if [ ! -f /var/www/html/login.php ]; then
+    mv /var/www/html/index.php /var/www/html/login.php
+    mv /var/www/html/public/index.php /var/www/html/index.php
+fi
+
+# --- Expose landing-page photos at /assets/images (survives the Render disk
+# mount at /var/www/html/assets, which would otherwise shadow the image tree) ---
+chmod 755 /var/www/html/public /var/www/html/public/assets 2>/dev/null || true
+ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
+
 exec "$@"

@@ -885,11 +885,72 @@ $img_base = 'assets/images/';
         }
         .enroll-result.show { display: block; }
 
-        .status-check {
-            max-width: 560px;
-            margin: 1.5rem auto 0;
-            text-align: center;
+        .ms-progress {
+            display: flex;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 1.5rem;
         }
+
+        .ms-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--navy-deep);
+            color: var(--gray-500);
+            border: 1px solid rgba(255,255,255,0.15);
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .ms-dot.active { background: var(--accent); color: var(--white); border-color: var(--accent); }
+
+        .ms-step h4 { color: var(--white); margin-bottom: 1rem; }
+        .ms-step[hidden] { display: none; }
+
+        .ms-nav {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+            margin-top: 1.25rem;
+        }
+
+        .review-box {
+            background: var(--navy-deep);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 1rem 1.25rem;
+            color: var(--gray-300);
+            font-size: 0.92rem;
+        }
+        .review-box div { margin-bottom: 0.35rem; }
+        .review-box strong { color: var(--white); }
+
+        /* Status pipeline */
+        .pipeline {
+            text-align: left;
+            max-width: 320px;
+            margin: 1rem auto 0;
+        }
+        .pipeline .pstep {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.4rem 0;
+            color: var(--gray-500);
+        }
+        .pipeline .pstep .bullet {
+            width: 14px; height: 14px; border-radius: 50%;
+            border: 2px solid var(--gray-500);
+            flex: none;
+        }
+        .pipeline .pstep.done { color: var(--gray-300); }
+        .pipeline .pstep.done .bullet { background: var(--gray-500); }
+        .pipeline .pstep.current { color: #4ade80; font-weight: 700; }
+        .pipeline .pstep.current .bullet { border-color: #4ade80; background: #4ade80; }
 
         /* Who can enroll / categories */
         .enroll-cards {
@@ -1259,24 +1320,29 @@ $img_base = 'assets/images/';
 
             <div class="steps">
                 <div class="step-card">
-                    <span class="num">1</span>
-                    <h4>Submit Application</h4>
-                    <p>Fill the online application form with the learner's details and preferred grade level.</p>
+                    <span class="num">01</span>
+                    <h4>Choose Enrollment Type</h4>
+                    <p>Select New, Returning, Transferee, or Balik-Aral.</p>
                 </div>
                 <div class="step-card">
-                    <span class="num">2</span>
-                    <h4>Document Review</h4>
-                    <p>The school reviews submitted requirements (report card, birth certificate, etc.).</p>
+                    <span class="num">02</span>
+                    <h4>Complete Application</h4>
+                    <p>Fill learner, guardian, and previous-school details. Save &amp; continue later.</p>
                 </div>
                 <div class="step-card">
-                    <span class="num">3</span>
-                    <h4>Assessment</h4>
-                    <p>Incoming learners may be scheduled for a brief assessment / interview.</p>
+                    <span class="num">03</span>
+                    <h4>Submit Documents</h4>
+                    <p>List requirements online or submit physically at the school if connectivity is limited.</p>
                 </div>
                 <div class="step-card">
-                    <span class="num">4</span>
-                    <h4>Enrollment Confirmation</h4>
-                    <p>Upon approval, the learner is officially enrolled and classes begin.</p>
+                    <span class="num">04</span>
+                    <h4>School Verification</h4>
+                    <p>The school reviews requirements and learner records.</p>
+                </div>
+                <div class="step-card">
+                    <span class="num">05</span>
+                    <h4>Enrollment Confirmed</h4>
+                    <p>Upon approval, the learner is officially enrolled.</p>
                 </div>
             </div>
 
@@ -1360,29 +1426,78 @@ $img_base = 'assets/images/';
 
             <div class="enroll-form-wrap" id="enroll-form">
                 <h3>Start Your Enrollment</h3>
+                <div class="ms-progress" id="msProgress">
+                    <span class="ms-dot active" data-step="1">1</span>
+                    <span class="ms-dot" data-step="2">2</span>
+                    <span class="ms-dot" data-step="3">3</span>
+                    <span class="ms-dot" data-step="4">4</span>
+                    <span class="ms-dot" data-step="5">5</span>
+                </div>
+
                 <form id="enrollForm" novalidate>
-                    <div class="form-field">
-                        <label for="ef_name">Learner's Full Name</label>
-                        <input type="text" id="ef_name" name="name" required>
+                    <!-- Step 1: Learner -->
+                    <div class="ms-step" data-step="1">
+                        <h4>Learner Information</h4>
+                        <div class="form-field"><label>Learner's Name</label><input name="lname" required></div>
+                        <div class="form-field"><label>Birth Date</label><input type="date" name="bdate" required></div>
+                        <div class="form-field"><label>Sex</label>
+                            <select name="sex" required><option value=""></option><option>Male</option><option>Female</option></select></div>
+                        <div class="form-field"><label>Birthplace</label><input name="bplace"></div>
+                        <div class="form-field"><label>Address</label><input name="laddress" required></div>
+                        <div class="form-field"><label>Grade Level</label>
+                            <select name="grade" required>
+                                <option value=""></option><option>Kindergarten</option><option>Grade 1</option><option>Grade 2</option><option>Grade 3</option><option>Grade 4</option><option>Grade 5</option><option>Grade 6</option><option>Grade 7</option><option>Grade 8</option><option>Grade 9</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option>
+                            </select></div>
+                        <div class="form-field"><label>School Year</label><input name="sy" value="2026-2027" required></div>
+                        <div class="form-field"><label>Enrollment Type</label>
+                            <select name="etype" required>
+                                <option value=""></option><option>New Student</option><option>Returning Student</option><option>Transferee</option><option>Balik-Aral / Returning Learner</option>
+                            </select></div>
                     </div>
-                    <div class="form-field">
-                        <label for="ef_grade">Grade Level Applying For</label>
-                        <select id="ef_grade" name="grade" required>
-                            <option value="">Select grade level</option>
-                            <option>Grade 7</option>
-                            <option>Grade 8</option>
-                            <option>Grade 9</option>
-                            <option>Grade 10</option>
-                            <option>Grade 11</option>
-                            <option>Grade 12</option>
-                        </select>
+
+                    <!-- Step 2: Parent/Guardian -->
+                    <div class="ms-step" data-step="2" hidden>
+                        <h4>Parent / Guardian</h4>
+                        <div class="form-field"><label>Parent/Guardian Name</label><input name="pname" required></div>
+                        <div class="form-field"><label>Relationship</label><input name="prel"></div>
+                        <div class="form-field"><label>Contact Number</label><input name="pcontact" required></div>
+                        <div class="form-field"><label>Address</label><input name="paddress"></div>
+                        <div class="form-field"><label>Email (optional)</label><input type="email" name="pemail"></div>
                     </div>
-                    <div class="form-field">
-                        <label for="ef_contact">Parent / Guardian Contact (email or phone)</label>
-                        <input type="text" id="ef_contact" name="contact" required>
+
+                    <!-- Step 3: Previous School -->
+                    <div class="ms-step" data-step="3" hidden>
+                        <h4>Previous School</h4>
+                        <div class="form-field"><label>Previous School</label><input name="pschool"></div>
+                        <div class="form-field"><label>School Address</label><input name="psaddress"></div>
+                        <div class="form-field"><label>Last Grade Completed</label><input name="plastgrade"></div>
+                        <div class="form-field"><label>School Year</label><input name="psy"></div>
+                        <div class="form-field"><label>Learner Reference Number</label><input name="lref"></div>
                     </div>
-                    <button type="submit" class="btn btn-primary" style="width:100%;">Submit Application</button>
-                    <p class="form-note">This is a guided application request. The school will contact you to complete enrollment. No payment is collected here.</p>
+
+                    <!-- Step 4: Documents -->
+                    <div class="ms-step" data-step="4" hidden>
+                        <h4>Documents</h4>
+                        <p class="form-note" style="text-align:left;margin-top:0;">List the requirements you will submit. If online upload isn't possible, you may submit documents physically at the school.</p>
+                        <div class="form-field"><label><input type="checkbox" name="doc_bc"> Birth Certificate</label></div>
+                        <div class="form-field"><label><input type="checkbox" name="doc_rc"> Report Card</label></div>
+                        <div class="form-field"><label><input type="checkbox" name="doc_tc"> Transfer Credentials</label></div>
+                        <div class="form-field"><label><input type="checkbox" name="doc_other"> Other Required Documents</label></div>
+                    </div>
+
+                    <!-- Step 5: Review -->
+                    <div class="ms-step" data-step="5" hidden>
+                        <h4>Review Application</h4>
+                        <div id="reviewBox" class="review-box"></div>
+                    </div>
+
+                    <div class="ms-nav">
+                        <button type="button" class="btn btn-outline" id="msPrev" style="display:none;">Back</button>
+                        <button type="button" class="btn btn-primary" id="msNext">Next</button>
+                        <button type="submit" class="btn btn-primary" id="msSubmit" style="display:none;">Submit Application</button>
+                        <button type="button" class="btn btn-outline" id="msSave" style="margin-left:auto;">Save &amp; Continue Later</button>
+                    </div>
+                    <p class="form-note">No payment is collected here. The school will contact you to complete enrollment.</p>
                 </form>
                 <div class="enroll-result" id="enrollResult"></div>
             </div>
@@ -1392,7 +1507,7 @@ $img_base = 'assets/images/';
                 <form id="statusForm" novalidate>
                     <div class="form-field">
                         <label for="sf_ref">Application Reference Number</label>
-                        <input type="text" id="sf_ref" name="ref" placeholder="e.g. BBNIHS-XXXXXX" required>
+                        <input type="text" id="sf_ref" name="ref" placeholder="e.g. BATU-2026-001284" required>
                     </div>
                     <button type="submit" class="btn btn-outline">Check Status</button>
                 </form>
@@ -1607,29 +1722,114 @@ $img_base = 'assets/images/';
         var form = document.getElementById('enrollForm');
         if (!form) return;
         var STORE = 'bbnihs_enrollments';
-        function rand6() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+        var step = 1, TOTAL = 5;
+        var dots = document.querySelectorAll('#msProgress .ms-dot');
+        var steps = form.querySelectorAll('.ms-step');
+        var prevBtn = document.getElementById('msPrev');
+        var nextBtn = document.getElementById('msNext');
+        var submitBtn = document.getElementById('msSubmit');
+        var saveBtn = document.getElementById('msSave');
+        var res = document.getElementById('enrollResult');
+
+        function showStep(n) {
+            step = n;
+            steps.forEach(function (s) {
+                s.hidden = (parseInt(s.getAttribute('data-step'), 10) !== n);
+            });
+            dots.forEach(function (d) {
+                d.classList.toggle('active', parseInt(d.getAttribute('data-step'), 10) <= n);
+            });
+            prevBtn.style.display = n > 1 ? '' : 'none';
+            nextBtn.style.display = n < TOTAL ? '' : 'none';
+            submitBtn.style.display = n === TOTAL ? '' : 'none';
+            if (n === TOTAL) buildReview();
+        }
+
+        function buildReview() {
+            var f = form;
+            var rows = [
+                ['Learner', val(f.lname) + ' (' + val(f.sex) + ')'],
+                ['Birth Date', val(f.bdate)],
+                ['Birthplace', val(f.bplace)],
+                ['Address', val(f.laddress)],
+                ['Grade Level', val(f.grade)],
+                ['School Year', val(f.sy)],
+                ['Enrollment Type', val(f.etype)],
+                ['Parent/Guardian', val(f.pname) + ' (' + val(f.prel) + ')'],
+                ['Contact', val(f.pcontact)],
+                ['Previous School', val(f.pschool) + ' / ' + val(f.plastgrade)]
+            ];
+            var docs = [];
+            if (f.doc_bc.checked) docs.push('Birth Certificate');
+            if (f.doc_rc.checked) docs.push('Report Card');
+            if (f.doc_tc.checked) docs.push('Transfer Credentials');
+            if (f.doc_other.checked) docs.push('Other');
+            var html = rows.map(function (r) {
+                return '<div><strong>' + r[0] + ':</strong> ' + (r[1] || '<em>—</em>') + '</div>';
+            }).join('');
+            html += '<div><strong>Documents:</strong> ' + (docs.length ? docs.join(', ') : '<em>none selected</em>') + '</div>';
+            document.getElementById('reviewBox').innerHTML = html;
+        }
+
+        function val(el) { return el ? (el.value || '') : ''; }
+
+        function validateStep(n) {
+            var s = form.querySelector('.ms-step[data-step="' + n + '"]');
+            var ok = true;
+            s.querySelectorAll('[required]').forEach(function (inp) {
+                if (!inp.value.trim()) { ok = false; inp.style.borderColor = '#ef4444'; }
+                else { inp.style.borderColor = ''; }
+            });
+            return ok;
+        }
+
+        nextBtn.addEventListener('click', function () {
+            if (!validateStep(step)) { res.textContent = 'Please complete the required fields.'; res.classList.add('show'); return; }
+            res.classList.remove('show');
+            if (step < TOTAL) showStep(step + 1);
+        });
+        prevBtn.addEventListener('click', function () { showStep(step - 1); });
+
+        saveBtn.addEventListener('click', function () {
+            saveDraft();
+            res.textContent = 'Progress saved on this device. You can return and continue later.';
+            res.classList.add('show');
+        });
+
+        function saveDraft() {
+            var data = {};
+            new FormData(form).forEach(function (v, k) { data[k] = v; });
+            localStorage.setItem('bbnihs_draft', JSON.stringify(data));
+        }
+        // restore draft
+        try {
+            var d = JSON.parse(localStorage.getItem('bbnihs_draft') || 'null');
+            if (d) {
+                Object.keys(d).forEach(function (k) {
+                    if (form[k]) {
+                        if (form[k].type === 'checkbox') form[k].checked = true;
+                        else form[k].value = d[k];
+                    }
+                });
+            }
+        } catch (e) {}
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            var name = document.getElementById('ef_name').value.trim();
-            var grade = document.getElementById('ef_grade').value;
-            var contact = document.getElementById('ef_contact').value.trim();
-            var res = document.getElementById('enrollResult');
-            if (!name || !grade || !contact) {
-                res.textContent = 'Please complete all fields.';
-                res.classList.add('show');
-                return;
-            }
-            var ref = 'BBNIHS-' + rand6();
+            if (!validateStep(step)) return;
+            var ref = 'BATU-2026-' + String(Math.floor(100000 + Math.random() * 899999));
+            var rec = { ref: ref, status: 'Submitted', ts: Date.now() };
+            new FormData(form).forEach(function (v, k) { rec[k] = v; });
             var apps = [];
             try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
-            apps.push({ ref: ref, name: name, grade: grade, contact: contact, status: 'Received', ts: Date.now() });
+            apps.push(rec);
             localStorage.setItem(STORE, JSON.stringify(apps));
-            res.innerHTML = 'Application received! Your reference number is <strong>' + ref +
-                '</strong>. The school will contact you at <em>' + contact + '</em> to complete enrollment. ' +
-                'Keep this reference to check your status.';
+            localStorage.removeItem('bbnihs_draft');
+            res.innerHTML = 'APPLICATION SUBMITTED<br>Reference: <strong>' + ref + '</strong><br>Status: Submitted. ' +
+                'The school will review and contact you. Keep this reference to check your status.';
             res.classList.add('show');
             form.reset();
+            showStep(1);
         });
 
         var sform = document.getElementById('statusForm');
@@ -1640,15 +1840,24 @@ $img_base = 'assets/images/';
             var apps = [];
             try { apps = JSON.parse(localStorage.getItem(STORE) || '[]'); } catch (e) {}
             var found = apps.filter(function (a) { return a.ref === ref; })[0];
+            var stages = ['Submitted', 'Under Review', 'Documents Verified', 'Approved', 'Enrolled'];
             if (found) {
-                sres.innerHTML = 'Reference <strong>' + found.ref + '</strong><br>Applicant: ' + found.name +
-                    '<br>Grade: ' + found.grade + '<br>Status: <strong>' + found.status + '</strong>';
+                var idx = stages.indexOf(found.status);
+                if (idx < 0) idx = 0;
+                var pipe = stages.map(function (st, i) {
+                    var cls = i < idx ? 'done' : (i === idx ? 'current' : '');
+                    return '<div class="pstep ' + cls + '"><span class="bullet"></span>' + st + '</div>';
+                }).join('');
+                sres.innerHTML = 'Reference <strong>' + found.ref + '</strong><br>Applicant: ' + (found.lname || '—') +
+                    '<div class="pipeline">' + pipe + '</div>';
             } else {
                 sres.innerHTML = 'No application found for reference <strong>' + ref +
                     '</strong>. If you submitted one on this device, ensure the reference is entered exactly.';
             }
             sres.classList.add('show');
         });
+
+        showStep(1);
     })();
 
     // Generic image crossfade cycler (e.g. Classroom gallery card), every data-cycle ms

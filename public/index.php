@@ -96,7 +96,7 @@ $img_base = 'assets/images/';
             --gray-100: #E2E8F0;
             --gray-300: #CBD5E1;
             --gray-500: #94A3B8;
-            --accent: #0073aa;
+            --accent: #2a9bd0;
             --accent-hover: #005f8a;
         }
 

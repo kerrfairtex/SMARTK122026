@@ -1385,13 +1385,13 @@ $img_base = 'assets/images/';
         <div class="container">
             <div class="about-content">
                 <h2 class="section-title">About Batu-Batu NHS</h2>
-                <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 1rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
                 <div class="about-slider" id="aboutSlider">
                     <div class="about-slides">
-                        <img class="active" src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National Integrated High School">
-                        <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National Integrated High School">
-                        <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National Integrated High School">
-                        <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National Integrated High School">
+                        <img class="active" src="assets/images/img-campus.jpg" alt="Batu-Batu National High School campus">
+                        <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School">
+                        <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National High School">
+                        <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National High School">
+                        <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National High School">
                     </div>
                     <button class="nav-btn prev" aria-label="Previous photo">&#10094;</button>
                     <button class="nav-btn next" aria-label="Next photo">&#10095;</button>
@@ -1400,6 +1400,7 @@ $img_base = 'assets/images/';
                         <span class="dot" data-i="1"></span>
                         <span class="dot" data-i="2"></span>
                         <span class="dot" data-i="3"></span>
+                        <span class="dot" data-i="4"></span>
                     </div>
                 </div>
 

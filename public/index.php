@@ -514,6 +514,46 @@ $img_base = 'assets/images/';
             color: var(--gray-300);
         }
 
+        /* Campus Gallery */
+        .gallery {
+            background: var(--navy-deep);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .gallery-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-card .caption {
+            padding: 1rem 1.25rem 1.25rem;
+        }
+
+        .gallery-card .caption h4 {
+            color: var(--white);
+            font-size: 1.05rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .gallery-card .caption p {
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -765,6 +805,72 @@ $img_base = 'assets/images/';
                     <span class="identity-tag">Education</span>
                     <span class="identity-tag">Resilience</span>
                     <span class="identity-tag">Future</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Campus Life Gallery -->
+    <section class="gallery">
+        <div class="container">
+            <h2 class="section-title">Campus Life</h2>
+            <p class="section-subtitle">Glimpses of learning and community at Batu-Batu NIHS</p>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="assets/images/img-education.jpg" alt="Students engaged in learning">
+                    <div class="caption">
+                        <h4>In the Classroom</h4>
+                        <p>Day-to-day teaching and learning across the K-12 basic education program.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-01.jpeg" alt="School grounds and surroundings">
+                    <div class="caption">
+                        <h4>School Grounds</h4>
+                        <p>The campus setting in the island community of Batu-Batu, Panglima Sugala.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-03.jpeg" alt="Students on campus">
+                    <div class="caption">
+                        <h4>Students</h4>
+                        <p>Learners of Batu-Batu National Integrated High School.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-04.jpeg" alt="Campus activity">
+                    <div class="caption">
+                        <h4>Campus Activity</h4>
+                        <p>Moments from school life and student activities.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-05.jpeg" alt="School facility">
+                    <div class="caption">
+                        <h4>School Facility</h4>
+                        <p>Learning spaces that support teaching and administration.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-06.jpeg" alt="Community and school">
+                    <div class="caption">
+                        <h4>Community &amp; School</h4>
+                        <p>The school and its island community, shaped by the sea and cooperation.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-08.jpeg" alt="Campus view">
+                    <div class="caption">
+                        <h4>Campus View</h4>
+                        <p>A view of the school environment in Tawi-Tawi.</p>
+                    </div>
+                </div>
+                <div class="gallery-card">
+                    <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus">
+                    <div class="caption">
+                        <h4>Our Campus</h4>
+                        <p>Batu-Batu National Integrated High School.</p>
+                    </div>
                 </div>
             </div>
         </div>

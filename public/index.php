@@ -1890,24 +1890,33 @@ $img_base = 'assets/images/';
     <section id="gallery" class="gallery">
         <div class="container">
             <h2 class="section-title">Campus Life &amp; Community Gallery</h2>
-            <p class="section-subtitle">Each photograph carries its own story &mdash; learning, community, and the island culture of Tawi-Tawi.</p>
+            <p class="section-subtitle">Real moments from Batu-Batu National High School and the island communities of Tawi-Tawi.</p>
 
             <div class="cg-stage" id="cgStage">
-                <img class="active" src="assets/images/classroom1.jpeg" alt="A teacher leading a classroom lesson"
+                <img class="active" src="assets/images/bbnihs-staff.jpeg" alt="Batu-Batu National High School teachers and staff group photo"
+                     data-title="Our Faculty &amp; Staff"
+                     data-desc="Teachers and school personnel of Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, posed in front of the school building.">
+                <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="Batu-Batu Integrated High School Joint Baccalaureate Service Recognition Day"
+                     data-title="Baccalaureate Recognition Day"
+                     data-desc="Students and faculty of Batu-Batu Integrated High School during their Joint Baccalaureate Service Recognition Day, celebrating learner achievement.">
+                <img src="assets/images/bbnihs-graduation.jpeg" alt="Batu Integrated High School 52nd Graduation Exercises"
+                     data-title="52nd Graduation Exercises"
+                     data-desc="The graduating class, faculty, and staff of Batu Integrated High School on stage for the 52nd Graduation Exercises.">
+                <img src="assets/images/bbnihs-legacy.jpg" alt="Batu-Batu National High School named NMYL Legacy Program Site"
+                     data-title="Legacy Program Site"
+                     data-desc="Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, recognized as a Legacy Program Site by the National Movement of Young Legislators (February 4, 2025).">
+                <img src="assets/images/bbnihs-scholarship.jpeg" alt="Bangsamoro Scholarship Program induction in Tawi-Tawi"
+                     data-title="Scholarship &amp; Training Induction"
+                     data-desc="Participants in a Training Induction Program for the Bangsamoro Scholarship Program for Technical-Vocational Education, Tawi-Tawi &mdash; expanding access to learning beyond the classroom.">
+                <img src="assets/images/classroom1.jpg" alt="A teacher leading a classroom lesson"
                      data-title="In the Classroom"
-                     data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education. (Illustrative of classroom learning; verify as a Batu-Batu NIHS photo.)">
-                <img src="assets/images/classroom2.jpeg" alt="Learners at individual computer workstations"
-                     data-title="Learning Sessions"
-                     data-desc="Students work at individual stations during a computer-based session &mdash; part of expanding learning opportunities. (Illustrative; verify as a Batu-Batu NIHS photo.)">
-                <img src="assets/images/img-03.jpeg" alt="A decorated traditional boat in a coastal regatta"
-                     data-title="Maritime Celebrations"
-                     data-desc="Colorfully decorated boats take part in coastal regattas &mdash; a vibrant expression of Tawi-Tawi's maritime culture and community spirit.">
-                <img src="assets/images/img-campus.jpg" alt="A floating market along island waterways"
-                     data-title="Island Community &amp; Markets"
-                     data-desc="Markets and waterways are central to daily life in Tawi-Tawi's island communities, where commerce and culture meet on the water.">
-                <img src="assets/images/img-06.jpeg" alt="Government climate-resilience program for Tawi-Tawi"
+                     data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education.">
+                <img src="assets/images/tawi-bajau-children.jpeg" alt="Children on a coastal stilt-village walkway"
+                     data-title="Island Community Life"
+                     data-desc="Children cross a bamboo walkway over the sea in a Tawi-Tawi coastal community &mdash; the everyday reality of island living.">
+                <img src="assets/images/tawi-bongao.jpg" alt="Bongao coastal stilt village with mountain backdrop"
                      data-title="Our Region: Tawi-Tawi"
-                     data-desc="Tawi-Tawi is the focus of national climate-resilience programs supporting water access and adaptive capacity across its island municipalities.">
+                     data-desc="Stilt homes and fish farms along the coastline beneath Tawi-Tawi's rugged mountains &mdash; the province Batu-Batu calls home.">
 
                 <button class="cg-arrow cg-prev" aria-label="Previous photo">&#10094;</button>
                 <button class="cg-arrow cg-next" aria-label="Next photo">&#10095;</button>

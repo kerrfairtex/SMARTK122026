@@ -23,7 +23,7 @@ $hero_name = 'BATU-BATU';
 $project_phone = '09637130812';                              // SmartCampus project mobile (Kerr Fairtex)
 $project_email = 'kerrfairtex@gmail.com';
 $project_facebook = 'https://www.facebook.com/KerrFairtex';
-$school_maps = 'https://www.google.com/maps/search/?api=1&query=' . urlencode('Batu-Batu Poblacion Panglima Sugala Tawi-Tawi');
+$school_maps = 'https://maps.app.goo.gl/iqsoLNLLXWFH9FjQ6';
 $deped_division_phone = '(062) 992-4151';                    // Tawi-Tawi Schools Division Office
 $school_address = 'Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi';
 $school_classification = 'Public &bull; DepEd Managed &bull; JHS with SHS';
@@ -1158,6 +1158,40 @@ $img_base = 'assets/images/';
         .who-table th { background: var(--navy-deep); color: var(--white); }
         .who-table tr:last-child td { border-bottom: none; }
 
+        /* Offline enrollment (connectivity-resilient) */
+        .offline-enroll {
+            max-width: 760px;
+            margin: 2rem auto 0;
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .offline-enroll h3 { color: var(--white); text-align: center; margin-bottom: 0.5rem; }
+        .offline-flow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            justify-content: center;
+            align-items: center;
+            margin: 1rem 0;
+        }
+        .offline-flow .step {
+            background: var(--navy-deep);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 6px;
+            padding: 0.6rem 0.9rem;
+            color: var(--gray-300);
+            font-size: 0.88rem;
+        }
+        .offline-flow .arrow { color: var(--accent); font-weight: 700; }
+        .offline-enroll .need {
+            text-align: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
         /* Need Assistance (high-visibility, Turtle Islands community) */
         .assistance {
             background: linear-gradient(135deg, var(--accent) 0%, #0e7490 100%);
@@ -1724,6 +1758,26 @@ $img_base = 'assets/images/';
                 <details><summary>How do transferees enroll?</summary><p>Choose "Transferee" as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section.</p></details>
                 <details><summary>Where can I get assistance?</summary><p>Visit <?php echo htmlspecialchars($school_name); ?> in Batu-Batu, Panglima Sugala, Tawi-Tawi, or use the Contact section below.</p></details>
             </div>
+
+            <div class="offline-enroll">
+                <h3>Enrollment for Intermittent Connectivity</h3>
+                <p style="text-align:center;color:var(--gray-300);">Designed for Turtle Islands / Tawi-Tawi, where connections can be slow or unreliable.</p>
+                <div class="offline-flow">
+                    <span class="step">Start Application</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="step">Save &amp; Continue</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="step">Submit When Connected</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="step">Need Offline Assistance?</span>
+                    <span class="arrow">&rarr;</span>
+                    <span class="step">School Enrollment Office</span>
+                </div>
+                <div class="need">
+                    <p style="color:var(--gray-300);margin-bottom:1rem;">You can begin the form online and finish later &mdash; your progress is saved on this device. If you cannot get online, visit the school enrollment office and bring your documents; personnel can assist you in person.</p>
+                    <a href="#contact" class="btn btn-outline">Visit the School Office</a>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1894,7 +1948,7 @@ $img_base = 'assets/images/';
                 <div class="contact-card">
                     <h4>SmartCampus Support</h4>
                     <p>Need help with the SmartCampus portal?<br><br>
-                    <strong>Kerr Fairtex</strong><br>SmartCampus K&ndash;12 Developer / Technical Contact</p>
+                    <strong>Kerr Fairtex</strong></p>
                     <p>
                         <a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
                         <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
@@ -2005,7 +2059,7 @@ $img_base = 'assets/images/';
             </div>
             <div class="footer-col">
                 <h4>CONTACT</h4>
-                <p>Kerr Fairtex<br><span class="footer-muted">SmartCampus K&ndash;12 Developer / Project Contact</span></p>
+                <p>Kerr Fairtex<br><span class="footer-muted">SmartCampus K&ndash;12</span></p>
                 <p><a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
                    <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
                    <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a></p>

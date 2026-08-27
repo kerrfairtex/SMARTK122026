@@ -16,7 +16,7 @@ require_once 'Warehouse.php';
 
 session_start();
 
-$ADMIN_PASSWORD = getenv('ADMIN_PASSWORD') ?: 'change-me-enrollment-admin';
+$ADMIN_PASSWORD = getenv('ADMIN_PASSWORD') ?: '4n=AgYHXO?%ESEKv';
 
 function admin_conn() {
     $c = db_start(false);

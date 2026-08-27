@@ -1067,7 +1067,7 @@ $img_base = 'assets/images/';
     <!-- Community Photo Section -->
     <section class="photo-section community-section">
         <div class="photo-content">
-            <h2>Rooted in Our Community</h2>
+            <h2>In Our Community</h2>
             <p>From the sea to the classroom, our community is shaped by knowledge, work, and cooperation.</p>
         </div>
     </section>
@@ -1076,7 +1076,7 @@ $img_base = 'assets/images/';
     <section class="island">
         <div class="container">
             <div class="island-content">
-                <h2 class="section-title">Rooted in Tawi-Tawi</h2>
+                <h2 class="section-title">In Tawi-Tawi</h2>
                 <p>Our island communities carry generations of maritime knowledge, tradition, and cultural heritage. The sea shapes how we see the world.</p>
                 <div class="identity-tags">
                     <span class="identity-tag">Sea</span>

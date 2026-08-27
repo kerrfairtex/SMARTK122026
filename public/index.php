@@ -1179,7 +1179,7 @@ $img_base = 'assets/images/';
     <!-- Footer -->
     <footer>
         <p>&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" target="_blank" rel="noopener">Kerr Fairtex</a> and Company</p>
-        <p>Powered by <a href="https://www.rosariosis.org" target="_blank" rel="noopener">RosarioSIS</a> — Open Source Student Information System</p>
+        <p>Powered by <a href="https://smartcampk12.onrender.com" target="_blank" rel="noopener">Smart Campus K12 Development</a> — Open Source Student Information System</p>
         <p style="margin-top: 1rem; font-size: 0.75rem;">School ID 305053 &bull; DepEd Philippines &bull; Batu-Batu, Panglima Sugala, Tawi-Tawi</p>
         <p class="license-note">Community population data: PSA 2024 POPCEN. Verify image licenses before republishing.</p>
     </footer>

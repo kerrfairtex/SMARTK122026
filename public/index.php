@@ -162,9 +162,17 @@ $img_base = 'assets/images/';
         .hero .location {
             font-size: 0.95rem;
             color: var(--gray-500);
-            margin-bottom: 2rem;
+            margin-bottom: 1.25rem;
             text-transform: uppercase;
             letter-spacing: 0.1em;
+        }
+
+        .hero .supporting {
+            font-size: 1.05rem;
+            color: var(--gray-300);
+            max-width: 620px;
+            margin: 0 auto 2rem;
+            font-weight: 300;
         }
 
         .hero-buttons {
@@ -554,6 +562,108 @@ $img_base = 'assets/images/';
             font-size: 0.9rem;
         }
 
+        /* Timeline */
+        .timeline {
+            background: var(--navy-deep);
+        }
+
+        .timeline-track {
+            max-width: 760px;
+            margin: 2rem auto 0;
+            border-left: 2px solid rgba(255,255,255,0.15);
+            padding-left: 2rem;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.45rem;
+            top: 0.35rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            border: 2px solid var(--navy-deep);
+        }
+
+        .timeline-item h4 {
+            color: var(--white);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .timeline-item p {
+            color: var(--gray-500);
+            font-size: 0.95rem;
+        }
+
+        /* Academic levels */
+        .level-block {
+            margin-bottom: 2rem;
+        }
+
+        .level-block h3 {
+            color: var(--white);
+            font-size: 1.35rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent);
+            padding-left: 0.75rem;
+        }
+
+        .grade-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.75rem;
+        }
+
+        .grade-item {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 0.9rem;
+            text-align: center;
+            color: var(--gray-300);
+            font-weight: 600;
+        }
+
+        .track-note {
+            margin-top: 1rem;
+            color: var(--gray-500);
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        /* Values */
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .value-item {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 6px;
+            padding: 1.25rem;
+        }
+
+        .value-item h4 {
+            color: var(--white);
+            font-size: 1rem;
+            margin-bottom: 0.35rem;
+        }
+
+        .value-item p {
+            color: var(--gray-500);
+            font-size: 0.88rem;
+        }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -637,7 +747,7 @@ $img_base = 'assets/images/';
         <a href="#glance">At a Glance</a>
         <a href="#community">Community</a>
         <a href="#about">About</a>
-        <a href="#academics">Academics</a>
+        <a href="#admissions">Academics</a>
         <a href="#features">Features</a>
         <a href="#contact">Contact</a>
     </nav>
@@ -647,11 +757,14 @@ $img_base = 'assets/images/';
         <div class="hero-bg"></div>
         <div class="hero-content">
             <h1><?php echo htmlspecialchars($school_name); ?></h1>
-            <p class="tagline">Learning Beyond the Classroom</p>
-            <p class="location">Batu-Batu &bull; Panglima Sugala &bull; Tawi-Tawi &bull; BARMM</p>
+            <p class="tagline">Learning, growing, and building the future of the Turtle Islands</p>
+            <p class="location">Batu-Batu &bull; Turtle Islands &bull; Tawi-Tawi &bull; BARMM</p>
+            <p class="supporting">A modern school community serving learners in Batu-Batu, Turtle Islands, Tawi-Tawi, supported by SmartCampus K&ndash;12 digital services.</p>
             <div class="hero-buttons">
-                <a href="#about" class="btn btn-outline">Explore Our School</a>
-                <a href="login.php" class="btn btn-primary">Smart Campus Login</a>
+                <a href="#about" class="btn btn-primary">Discover Our School</a>
+                <a href="login.php" class="btn btn-outline">SmartCampus Portal</a>
+                <a href="#admissions" class="btn btn-outline">Admissions / Enrollment</a>
+                <a href="#contact" class="btn btn-outline">Contact the School</a>
             </div>
         </div>
     </section>
@@ -711,29 +824,98 @@ $img_base = 'assets/images/';
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
-                <h2 class="section-title">About the School</h2>
+                <h2 class="section-title">About Batu-Batu NIHS</h2>
                 <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 2rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
-                <p><?php echo htmlspecialchars($school_name); ?> is a public integrated high school serving learners in the Batu-Batu community of Panglima Sugala, Tawi-Tawi.</p>
-                <p>As part of the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM), the school is committed to providing accessible education rooted in the local island community.</p>
-                <p>The school is listed in the DepEd infrastructure inventory with ongoing projects to support learning facilities.</p>
+
+                <p><strong><?php echo htmlspecialchars($school_name); ?></strong> (School ID <?php echo $school_id; ?>) is a public National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, within the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM).</p>
+
+                <p><strong>Location:</strong> Batu-Batu is part of the Turtle Islands, a group of islands in the southernmost municipality of Tawi-Tawi, near the Philippines&ndash;Malaysia border. The school serves learners from the island community and surrounding barangays.</p>
+
+                <p><strong>Educational mandate:</strong> As a National Integrated High School, the institution delivers the K&ndash;12 basic education program &mdash; Junior High School (Grades 7&ndash;10) and Senior High School (Grades 11&ndash;12) &mdash; under the Department of Education (DepEd), Republic of the Philippines.</p>
+
+                <p><strong>Mission:</strong> <em>[To be configured from verified school records &mdash; insert the official DepEd/BARMM mission statement.]</em></p>
+
+                <p><strong>Vision:</strong> <em>[To be configured from verified school records &mdash; insert the official school vision.]</em></p>
+
+                <div class="values-grid">
+                    <div class="value-item">
+                        <h4>Learner-Centered</h4>
+                        <p>Education rooted in the needs of island-community learners.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4>Inclusive</h4>
+                        <p>Accessible basic education for all children of the community.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4>Community</h4>
+                        <p>Partnership with families and the Turtle Islands community.</p>
+                    </div>
+                    <div class="value-item">
+                        <h4>Resilience</h4>
+                        <p>Adapting to the opportunities and challenges of island life.</p>
+                    </div>
+                </div>
+
+                <p style="margin-top:2rem;"><strong>School leadership &amp; faculty:</strong> <em>[Names and positions of the School Head, department heads, and teaching/non-teaching personnel to be populated from the official plantilla / verified school directory.]</em></p>
+
+                <p><strong>Community role:</strong> Beyond instruction, the school is a hub for community learning, DepEd programs, and local development in the Turtle Islands, contributing to the social and economic life of the municipality.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- School History Timeline -->
+    <section class="timeline">
+        <div class="container">
+            <h2 class="section-title">School History</h2>
+            <p class="section-subtitle">A visual timeline of Batu-Batu NIHS</p>
+            <div class="timeline-track">
+                <div class="timeline-item">
+                    <h4>Foundation</h4>
+                    <p>The school was established to provide public secondary education to the Batu-Batu community. <em>[Exact founding year and original name &mdash; verify from DepEd records.]</em></p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Development</h4>
+                    <p>Growth of academic offerings and school facilities to serve a growing island population.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>Expansion</h4>
+                    <p>Integration into the National Integrated High School system and expansion of the K&ndash;12 program.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4>SmartCampus Digital Transformation</h4>
+                    <p>Adoption of SmartCampus K&ndash;12 digital services &mdash; student information, enrollment, attendance, and grades &mdash; to modernize school administration.</p>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Academics -->
-    <section id="academics" class="academics">
+    <section id="admissions" class="academics">
         <div class="container">
             <h2 class="section-title">Academic Programs</h2>
-            <p class="section-subtitle">K-12 basic education</p>
-            <div class="academics-grid">
-                <div class="academic-card">
-                    <h3>Junior High School</h3>
-                    <p>Grades 7–10</p>
+            <p class="section-subtitle">K-12 basic education under DepEd</p>
+
+            <div class="level-block">
+                <h3>Junior High School</h3>
+                <div class="grade-list">
+                    <div class="grade-item">Grade 7</div>
+                    <div class="grade-item">Grade 8</div>
+                    <div class="grade-item">Grade 9</div>
+                    <div class="grade-item">Grade 10</div>
                 </div>
-                <div class="academic-card">
-                    <h3>Senior High School</h3>
-                    <p>Grades 11–12</p>
+            </div>
+
+            <div class="level-block">
+                <h3>Senior High School</h3>
+                <div class="grade-list">
+                    <div class="grade-item">Grade 11</div>
+                    <div class="grade-item">Grade 12</div>
                 </div>
+                <p class="track-note">Available tracks / strands are configured by the school in accordance with the DepEd Senior High School program offerings.</p>
+            </div>
+
+            <div style="text-align:center; margin-top:2rem;">
+                <a href="#contact" class="btn btn-primary">Inquire About Admissions</a>
             </div>
         </div>
     </section>

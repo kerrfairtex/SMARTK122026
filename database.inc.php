@@ -75,8 +75,9 @@ function db_start( $show_error = true )
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 
                 // RosarioSIS tables are installed in the public schema (the SQL
-                // dumps use no custom schema), so search_path must be public.
-                $connectstring .= " options='--search_path=public'";
+                // dumps use no custom schema). Widen to include postgres + "$user"
+                // so a dump loaded under the Supabase 'postgres' role is still found.
+                $connectstring .= " options='--search_path=public,postgres,\"\$user\"'";
 
 		if ( $DatabasePassword !== '' )
 		{

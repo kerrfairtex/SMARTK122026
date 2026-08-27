@@ -32,9 +32,19 @@ if (file_exists($rosariosis_config) && file_exists($rosariosis_warehouse)) {
             $db_ok = false;
         }
         if ($db_ok) {
-            $school_name = Config('TITLE') ?: $school_name;
-            $school_short_name = Config('NAME') ?: $school_short_name;
-            $theme = Config('THEME') ?: $theme;
+            // Only read identity if the RosarioSIS schema is actually present.
+            // A missing 'config' table must NOT white-screen the public landing.
+            try {
+                $cfg_conn = db_start(false);
+                $cfg_check = @pg_query($cfg_conn, 'SELECT 1 FROM config LIMIT 1');
+                if ($cfg_check !== false) {
+                    $school_name = Config('TITLE') ?: $school_name;
+                    $school_short_name = Config('NAME') ?: $school_short_name;
+                    $theme = Config('THEME') ?: $theme;
+                }
+            } catch (Throwable $t) {
+                // DB reachable but schema missing/incomplete -> keep hardcoded defaults
+            }
         }
     } catch (Throwable $e) {
         // Fall back to defaults if config loading fails

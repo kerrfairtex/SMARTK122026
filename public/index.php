@@ -543,51 +543,83 @@ $img_base = 'assets/images/';
             background: var(--navy-deep);
         }
 
-        .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+        /* Campus Life & Community Gallery (single-photo editorial) */
+        .gallery { background: var(--navy); }
+        .cg-stage {
+            position: relative;
+            max-width: 900px;
+            margin: 1.5rem auto 0;
+            aspect-ratio: 16 / 9;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.35);
+            background: var(--navy-deep);
         }
-
-        .gallery-card {
+        .cg-stage img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+        }
+        .cg-stage img.active { opacity: 1; }
+        .cg-stage .cg-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(8,24,43,0.55);
+            color: var(--white);
+            border: none;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            font-size: 1.3rem;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+        .cg-stage .cg-arrow:hover { background: var(--accent); }
+        .cg-stage .cg-prev { left: 12px; }
+        .cg-stage .cg-next { right: 12px; }
+        .cg-caption {
+            max-width: 900px;
+            margin: 1rem auto 0;
             background: var(--navy-light);
             border: 1px solid rgba(255,255,255,0.08);
             border-radius: 8px;
-            overflow: hidden;
+            padding: 1.1rem 1.5rem;
         }
-
-        .gallery-card img {
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            display: block;
+        .cg-caption h4 { color: var(--white); margin: 0 0 0.4rem; font-size: 1.05rem; }
+        .cg-caption p { color: var(--gray-300); margin: 0; font-size: 0.92rem; line-height: 1.5; }
+        .cg-controls {
+            max-width: 900px;
+            margin: 0.75rem auto 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
         }
-
-        .img-cycle {
-            position: relative;
-            width: 100%;
-            height: 220px;
-            overflow: hidden;
+        .cg-controls .cg-text {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--gray-300);
+            padding: 0.45rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
-
-        .img-cycle img {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 220px;
-            object-fit: cover;
-            opacity: 0;
-            transition: opacity 0.6s ease-in-out;
+        .cg-controls .cg-text:hover { border-color: var(--accent); color: var(--white); }
+        .cg-dots { display: flex; gap: 8px; }
+        .cg-dots .dot {
+            width: 10px; height: 10px; border-radius: 50%;
+            background: rgba(255,255,255,0.35); cursor: pointer; transition: background 0.2s ease;
         }
-
-        .img-cycle img.active {
-            opacity: 1;
-        }
-
-        .gallery-card .caption {
-            padding: 1rem 1.25rem 1.25rem;
-        }
+        .cg-dots .dot.active { background: var(--white); }
 
         .gallery-card .caption h4 {
             color: var(--white);
@@ -1854,71 +1886,42 @@ $img_base = 'assets/images/';
         </div>
     </section>
 
-    <!-- Campus Life Gallery -->
-    <section class="gallery">
+    <!-- Campus Life & Community Gallery -->
+    <section id="gallery" class="gallery">
         <div class="container">
-            <h2 class="section-title">Campus Life</h2>
-            <p class="section-subtitle">Glimpses of learning and community at Batu-Batu NIHS</p>
-            <div class="gallery-grid">
-                <div class="gallery-card">
-                    <div class="img-cycle" data-cycle="2000">
-                        <img class="active" src="assets/images/classroom1.jpeg" alt="Students engaged in learning">
-                        <img src="assets/images/classroom2.jpeg" alt="Students engaged in learning">
-                    </div>
-                    <div class="caption">
-                        <h4>In the Classroom</h4>
-                        <p>Day-to-day teaching and learning across the K-12 basic education program.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-01.jpeg" alt="School grounds and surroundings">
-                    <div class="caption">
-                        <h4>School Grounds</h4>
-                        <p>The campus setting in the island community of Batu-Batu, Panglima Sugala.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-03.jpeg" alt="Students on campus">
-                    <div class="caption">
-                        <h4>Students</h4>
-                        <p>Learners of Batu-Batu National Integrated High School.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-04.jpeg" alt="Campus activity">
-                    <div class="caption">
-                        <h4>Campus Activity</h4>
-                        <p>Moments from school life and student activities.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-05.jpeg" alt="School facility">
-                    <div class="caption">
-                        <h4>School Facility</h4>
-                        <p>Learning spaces that support teaching and administration.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-06.jpeg" alt="Community and school">
-                    <div class="caption">
-                        <h4>Community &amp; School</h4>
-                        <p>The school and its island community, shaped by the sea and cooperation.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-08.jpeg" alt="Campus view">
-                    <div class="caption">
-                        <h4>Campus View</h4>
-                        <p>A view of the school environment in Tawi-Tawi.</p>
-                    </div>
-                </div>
-                <div class="gallery-card">
-                    <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus">
-                    <div class="caption">
-                        <h4>Our Campus</h4>
-                        <p>Batu-Batu National Integrated High School.</p>
-                    </div>
-                </div>
+            <h2 class="section-title">Campus Life &amp; Community Gallery</h2>
+            <p class="section-subtitle">Each photograph carries its own story &mdash; learning, community, and the island culture of Tawi-Tawi.</p>
+
+            <div class="cg-stage" id="cgStage">
+                <img class="active" src="assets/images/classroom1.jpeg" alt="A teacher leading a classroom lesson"
+                     data-title="In the Classroom"
+                     data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education. (Illustrative of classroom learning; verify as a Batu-Batu NIHS photo.)">
+                <img src="assets/images/classroom2.jpeg" alt="Learners at individual computer workstations"
+                     data-title="Learning Sessions"
+                     data-desc="Students work at individual stations during a computer-based session &mdash; part of expanding learning opportunities. (Illustrative; verify as a Batu-Batu NIHS photo.)">
+                <img src="assets/images/img-03.jpeg" alt="A decorated traditional boat in a coastal regatta"
+                     data-title="Maritime Celebrations"
+                     data-desc="Colorfully decorated boats take part in coastal regattas &mdash; a vibrant expression of Tawi-Tawi's maritime culture and community spirit.">
+                <img src="assets/images/img-campus.jpg" alt="A floating market along island waterways"
+                     data-title="Island Community &amp; Markets"
+                     data-desc="Markets and waterways are central to daily life in Tawi-Tawi's island communities, where commerce and culture meet on the water.">
+                <img src="assets/images/img-06.jpeg" alt="Government climate-resilience program for Tawi-Tawi"
+                     data-title="Our Region: Tawi-Tawi"
+                     data-desc="Tawi-Tawi is the focus of national climate-resilience programs supporting water access and adaptive capacity across its island municipalities.">
+
+                <button class="cg-arrow cg-prev" aria-label="Previous photo">&#10094;</button>
+                <button class="cg-arrow cg-next" aria-label="Next photo">&#10095;</button>
+            </div>
+
+            <div class="cg-caption" id="cgCaption">
+                <h4 id="cgTitle"></h4>
+                <p id="cgDesc"></p>
+            </div>
+
+            <div class="cg-controls">
+                <button class="cg-text" id="cgPrev">&#8249; Previous</button>
+                <div class="cg-dots" id="cgDots"></div>
+                <button class="cg-text" id="cgNext">Next &#8250;</button>
             </div>
         </div>
     </section>
@@ -2297,6 +2300,68 @@ $img_base = 'assets/images/';
                 form.reset();
             }).catch(function () { res.textContent = 'Network error. Please try again or use the contact details below.'; });
         });
+    })();
+
+    // Editorial Campus Life & Community Gallery (single photo + caption panel)
+    (function () {
+        var stage = document.getElementById('cgStage');
+        if (!stage) return;
+        var imgs = Array.prototype.slice.call(stage.querySelectorAll('img'));
+        var titleEl = document.getElementById('cgTitle');
+        var descEl = document.getElementById('cgDesc');
+        var dotsWrap = document.getElementById('cgDots');
+        if (!imgs.length || !titleEl) return;
+
+        var idx = 0, timer = null, DELAY = 3000;
+        var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        // Build dots
+        imgs.forEach(function (_, i) {
+            var d = document.createElement('span');
+            d.className = 'dot' + (i === 0 ? ' active' : '');
+            d.addEventListener('click', function () { show(i); start(); });
+            dotsWrap.appendChild(d);
+        });
+        var dots = Array.prototype.slice.call(dotsWrap.children);
+
+        function preload(i) {
+            var n = (i + 1) % imgs.length;
+            if (imgs[n] && imgs[n].getAttribute('src')) { var p = new Image(); p.src = imgs[n].getAttribute('src'); }
+        }
+
+        function show(n) {
+            idx = (n + imgs.length) % imgs.length;
+            imgs.forEach(function (im, i) { im.classList.toggle('active', i === idx); });
+            dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+            titleEl.textContent = imgs[idx].getAttribute('data-title') || '';
+            descEl.innerHTML = imgs[idx].getAttribute('data-desc') || '';
+            preload(idx);
+        }
+        function next() { show(idx + 1); }
+        function prev() { show(idx - 1); }
+        function start() { stop(); if (!reduceMotion) timer = setInterval(next, DELAY); }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+        stage.querySelector('.cg-next').addEventListener('click', function () { next(); start(); });
+        stage.querySelector('.cg-prev').addEventListener('click', function () { prev(); start(); });
+        var pBtn = document.getElementById('cgPrev'), nBtn = document.getElementById('cgNext');
+        if (pBtn) pBtn.addEventListener('click', function () { prev(); start(); });
+        if (nBtn) nBtn.addEventListener('click', function () { next(); start(); });
+        stage.addEventListener('mouseenter', stop);
+        stage.addEventListener('mouseleave', start);
+
+        // Touch swipe
+        var sx = null;
+        stage.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; stop(); }, { passive: true });
+        stage.addEventListener('touchend', function (e) {
+            if (sx === null) return;
+            var dx = e.changedTouches[0].clientX - sx;
+            if (Math.abs(dx) > 40) { if (dx < 0) next(); else prev(); }
+            sx = null; start();
+        }, { passive: true });
+
+        show(0);
+        start();
     })();
 
     // Generic image crossfade cycler (e.g. Classroom gallery card), every data-cycle ms

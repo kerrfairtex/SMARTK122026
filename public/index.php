@@ -10,12 +10,23 @@
  */
 
 // Read RosarioSIS config for school identity (optional — falls back to defaults)
-$school_name = 'BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL';
+$school_name = 'Batu-Batu National High School';
 $school_short_name = 'BBNIHS';
 $school_id = '305053';
 $theme = 'FlatSIS';
 // Big hero display name (upper-center lettering). Kept short/branded per request.
 $hero_name = 'BATU-BATU';
+
+// Contact details. IMPORTANT: Kerr Fairtex is the SmartCampus K-12 PROJECT /
+// DEVELOPER contact (technology & website support) — NOT the school's official
+// representative. Official school matters stay attributable to the school / DepEd.
+$project_phone = '09637130812';                              // SmartCampus project mobile (Kerr Fairtex)
+$project_email = 'kerrfairtex@gmail.com';
+$project_facebook = 'https://www.facebook.com/KerrFairtex';
+$school_maps = 'https://www.google.com/maps/search/?api=1&query=' . urlencode('Batu-Batu Poblacion Panglima Sugala Tawi-Tawi');
+$deped_division_phone = '(062) 992-4151';                    // Tawi-Tawi Schools Division Office
+$school_address = 'Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi';
+$school_classification = 'Public &bull; DepEd Managed &bull; JHS with SHS';
 
 // Attempt to read from RosarioSIS config if available (with error handling)
 $rosariosis_config = __DIR__ . '/config.inc.php';
@@ -1081,48 +1092,153 @@ $img_base = 'assets/images/';
         .contact-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+            gap: 1.5rem;
         }
 
-        .contact-item h4 {
+        .contact-card {
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .contact-card h4 {
             color: var(--white);
             font-size: 1rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
         }
 
-        .contact-item p {
-            color: var(--gray-500);
-            font-size: 0.95rem;
+        .contact-card p {
+            color: var(--gray-300);
+            font-size: 0.92rem;
+            margin-bottom: 0.6rem;
         }
+
+        .contact-card a { color: var(--accent); text-decoration: none; }
+        .contact-card a:hover { text-decoration: underline; }
+
+        .contact-source {
+            color: var(--gray-500) !important;
+            font-size: 0.75rem !important;
+            font-style: italic;
+            margin-top: 0.5rem;
+        }
+
+        .contact-form-wrap {
+            max-width: 560px;
+            margin: 2.5rem auto 0;
+            background: var(--navy-light);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        .contact-form-wrap h3 { color: var(--white); margin-bottom: 1.25rem; text-align: center; }
+        .contact-form-wrap .btn-primary { width: 100%; }
+        .contact-form-wrap .enroll-result { margin-top: 1rem; }
+
+        .contact-who {
+            max-width: 760px;
+            margin: 2.5rem auto 0;
+        }
+        .contact-who h3 { color: var(--white); margin-bottom: 1rem; text-align: center; }
+        .who-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--navy-light);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .who-table th, .who-table td {
+            text-align: left;
+            padding: 0.7rem 1rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            color: var(--gray-300);
+            font-size: 0.9rem;
+        }
+        .who-table th { background: var(--navy-deep); color: var(--white); }
+        .who-table tr:last-child td { border-bottom: none; }
+
+        /* Need Assistance (high-visibility, Turtle Islands community) */
+        .assistance {
+            background: linear-gradient(135deg, var(--accent) 0%, #0e7490 100%);
+            color: var(--white);
+            text-align: center;
+        }
+        .assistance .container { max-width: 760px; }
+        .assistance h2 { color: var(--white); }
+        .assistance .sub { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .assistance .desc { color: rgba(255,255,255,0.9); margin-bottom: 1.5rem; }
+        .assistance .actions { margin-bottom: 1.75rem; }
+        .assistance .btn-primary { background: var(--white); color: var(--navy); border-color: var(--white); }
+        .assistance .btn-primary:hover { background: var(--navy-light); color: var(--white); }
+        .assist-office {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 8px;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+        }
+        .assist-office h4 { color: var(--white); margin-bottom: 0.4rem; }
+        .assist-office p { color: rgba(255,255,255,0.9); margin: 0; }
+        .assist-buttons {
+            display: flex;
+            gap: 0.75rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+        .assist-buttons a {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            color: var(--white);
+            padding: 0.6rem 1.1rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .assist-buttons a:hover { background: rgba(255,255,255,0.22); }
+        .assist-note { font-size: 0.85rem; color: rgba(255,255,255,0.85); font-style: italic; }
 
         /* Footer */
         footer {
             background: var(--navy-deep);
             border-top: 1px solid rgba(255,255,255,0.08);
-            padding: 2rem;
-            text-align: center;
+            padding: 2.5rem 2rem 1.5rem;
         }
 
-        footer p {
-            color: var(--gray-500);
-            font-size: 0.85rem;
-            margin-bottom: 0.5rem;
+        .footer-grid {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
         }
 
-        footer a {
-            color: var(--gray-300);
-            text-decoration: none;
-        }
-
-        footer a:hover {
+        .footer-col h4 {
             color: var(--white);
+            font-size: 0.8rem;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.75rem;
         }
 
-        footer .license-note {
-            margin-top: 1rem;
-            font-size: 0.7rem;
+        .footer-col p {
+            color: var(--gray-300);
+            font-size: 0.85rem;
+            margin-bottom: 0.4rem;
+        }
+
+        .footer-col a { color: var(--accent); text-decoration: none; }
+        .footer-col a:hover { text-decoration: underline; }
+
+        .footer-muted { color: var(--gray-500) !important; }
+
+        .footer-copy {
+            text-align: center;
             color: var(--gray-500);
-            font-style: italic;
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(255,255,255,0.06);
         }
 
         /* Responsive */
@@ -1157,6 +1273,7 @@ $img_base = 'assets/images/';
         <a href="#community">Community</a>
         <a href="#about">About</a>
         <a href="#admissions">Academics</a>
+        <a href="#enroll">Admissions</a>
         <a href="#features">Features</a>
         <a href="#contact">Contact</a>
     </nav>
@@ -1166,9 +1283,9 @@ $img_base = 'assets/images/';
         <div class="hero-bg"></div>
         <div class="hero-content">
             <h1><?php echo htmlspecialchars($hero_name); ?></h1>
-            <p class="tagline">Learning, growing, and building the future of the Turtle Islands</p>
-            <p class="location">Batu-Batu &bull; Turtle Islands &bull; Tawi-Tawi &bull; BARMM</p>
-            <p class="supporting">A modern school community serving learners in Batu-Batu, Turtle Islands, Tawi-Tawi, supported by SmartCampus K&ndash;12 digital services.</p>
+            <p class="tagline">Learning, growing, and building the future of Tawi-Tawi</p>
+            <p class="location">Batu-Batu, Panglima Sugala, Tawi-Tawi &bull; BARMM</p>
+            <p class="supporting">A public high school serving learners in Batu-Batu, Panglima Sugala, supported by SmartCampus K&ndash;12 digital services.</p>
             <div class="hero-buttons">
                 <a href="#about" class="btn btn-primary">Discover Our School</a>
                 <a href="login.php" class="btn btn-outline">SmartCampus Portal</a>
@@ -1233,7 +1350,7 @@ $img_base = 'assets/images/';
     <section id="about" class="about">
         <div class="container">
             <div class="about-content">
-                <h2 class="section-title">About Batu-Batu NIHS</h2>
+                <h2 class="section-title">About Batu-Batu NHS</h2>
                 <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 1rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
                 <div class="about-slider" id="aboutSlider">
                     <div class="about-slides">
@@ -1252,9 +1369,9 @@ $img_base = 'assets/images/';
                     </div>
                 </div>
 
-                <p><strong><?php echo htmlspecialchars($school_name); ?></strong> (School ID <?php echo $school_id; ?>) is a public National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, within the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM).</p>
+                <p><strong><?php echo htmlspecialchars($school_name); ?></strong> (School ID <?php echo $school_id; ?>) is a public National High School in Batu-Batu, Panglima Sugala, Tawi-Tawi, within the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM).</p>
 
-                <p><strong>Location:</strong> Batu-Batu is part of the Turtle Islands, a group of islands in the southernmost municipality of Tawi-Tawi, near the Philippines&ndash;Malaysia border. The school serves learners from the island community and surrounding barangays.</p>
+                <p><strong>Location:</strong> Batu-Batu is a barangay in the municipality of Panglima Sugala (Balimbing), Tawi-Tawi, near the Philippines&ndash;Malaysia border. The school serves learners from the local island community and surrounding barangays.</p>
 
                 <p><strong>Educational mandate:</strong> As a National Integrated High School, the institution delivers the K&ndash;12 basic education program &mdash; Junior High School (Grades 7&ndash;10) and Senior High School (Grades 11&ndash;12) &mdash; under the Department of Education (DepEd), Republic of the Philippines.</p>
 
@@ -1283,7 +1400,7 @@ $img_base = 'assets/images/';
 
                 <p style="margin-top:2rem;"><strong>School leadership &amp; faculty:</strong> <em>[Names and positions of the School Head, department heads, and teaching/non-teaching personnel to be populated from the official plantilla / verified school directory.]</em></p>
 
-                <p><strong>Community role:</strong> Beyond instruction, the school is a hub for community learning, DepEd programs, and local development in the Turtle Islands, contributing to the social and economic life of the municipality.</p>
+                <p><strong>Community role:</strong> Beyond instruction, the school is a hub for community learning, DepEd programs, and local development in Batu-Batu, Panglima Sugala, contributing to the social and economic life of the municipality and the wider Tawi-Tawi island communities.</p>
             </div>
         </div>
     </section>
@@ -1591,6 +1708,7 @@ $img_base = 'assets/images/';
                     </div>
                     <button type="submit" class="btn btn-outline">Check Status</button>
                 </form>
+                <p class="form-note" style="max-width:560px;margin:1rem auto 0;">Status lookup shows only your application stage. Student, parent, and document details remain inside the authenticated SmartCampus system and are not exposed here.</p>
                 <div class="enroll-result" id="statusResult"></div>
             </div>
 
@@ -1604,7 +1722,7 @@ $img_base = 'assets/images/';
                 <details><summary>What happens after I submit my application?</summary><p>The school reviews your information and documents, then verifies and approves. You can track each stage via your reference number.</p></details>
                 <details><summary>Can I edit my application after submission?</summary><p>Contact the school with your reference number to request changes; the school can update records on your behalf.</p></details>
                 <details><summary>How do transferees enroll?</summary><p>Choose "Transferee" as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section.</p></details>
-                <details><summary>Where can I get assistance?</summary><p>Visit Batu-Batu National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, or use the Contact section below.</p></details>
+                <details><summary>Where can I get assistance?</summary><p>Visit <?php echo htmlspecialchars($school_name); ?> in Batu-Batu, Panglima Sugala, Tawi-Tawi, or use the Contact section below.</p></details>
             </div>
         </div>
     </section>
@@ -1754,29 +1872,160 @@ $img_base = 'assets/images/';
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">Contact</h2>
+            <p class="section-subtitle">Connect with the Batu-Batu school community</p>
+
             <div class="contact-grid">
-                <div class="contact-item">
-                    <h4>Address</h4>
-                    <p>Batu-Batu, Panglima Sugala<br>Tawi-Tawi, BARMM, Philippines</p>
+                <!-- School Information (official DepEd reference) -->
+                <div class="contact-card">
+                    <h4>School Information</h4>
+                    <p><strong><?php echo htmlspecialchars($school_name); ?></strong><br>School ID: <?php echo htmlspecialchars($school_id); ?></p>
+                    <p><?php echo htmlspecialchars($school_address); ?><br><?php echo $school_classification; ?></p>
+                    <p class="contact-source">Source: DepEd School Masterlist (National Inventory Dashboard).</p>
                 </div>
-                <div class="contact-item">
-                    <h4>School ID</h4>
-                    <p>305053</p>
+
+                <!-- Where We Are -->
+                <div class="contact-card">
+                    <h4>Where We Are</h4>
+                    <p>Batu-Batu, Poblacion<br>Panglima Sugala<br>Tawi-Tawi<br>BARMM, Philippines</p>
+                    <a class="btn btn-outline" href="<?php echo htmlspecialchars($school_maps); ?>" target="_blank" rel="noopener">Open in Google Maps</a>
                 </div>
-                <div class="contact-item">
-                    <h4>Region</h4>
-                    <p>BARMM (Bangsamoro Autonomous Region in Muslim Mindanao)</p>
+
+                <!-- SmartCampus Support (project / developer) -->
+                <div class="contact-card">
+                    <h4>SmartCampus Support</h4>
+                    <p>Need help with the SmartCampus portal?<br><br>
+                    <strong>Kerr Fairtex</strong><br>SmartCampus K&ndash;12 Developer / Technical Contact</p>
+                    <p>
+                        <a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
+                        <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
+                        <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook &mdash; Kerr Fairtex</a>
+                    </p>
+                    <p class="contact-source">Support topics: login, enrollment application, application status, website/portal errors, account assistance, technical feedback.</p>
+                </div>
+
+                <!-- DepEd Division -->
+                <div class="contact-card">
+                    <h4>DepEd &mdash; Tawi-Tawi Division</h4>
+                    <p>Schools Division Office &ndash; Tawi-Tawi<br>Department of Education<br>Bongao, Tawi-Tawi</p>
+                    <p>Telephone: <a href="tel:<?php echo htmlspecialchars($deped_division_phone); ?>"><?php echo htmlspecialchars($deped_division_phone); ?></a></p>
+                    <p class="contact-source">Source: DepEd Regional &amp; Division Offices Directory.</p>
                 </div>
             </div>
+
+            <!-- Contact form (SmartCampus Team) -->
+            <div class="contact-form-wrap">
+                <h3>Contact the SmartCampus Team</h3>
+                <form id="contactForm" novalidate>
+                    <div class="form-field"><label>Full Name *</label><input name="name" required></div>
+                    <div class="form-field"><label>Email Address *</label><input type="email" name="email" required></div>
+                    <div class="form-field"><label>Mobile Number</label><input name="mobile"></div>
+                    <div class="form-field">
+                        <label>Concern *</label>
+                        <select name="concern" required>
+                            <option value=""></option>
+                            <option>Enrollment</option>
+                            <option>SmartCampus</option>
+                            <option>Website</option>
+                            <option>Technical Support</option>
+                            <option>School Information</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="form-field"><label>Message *</label><textarea name="message" rows="4" required></textarea></div>
+                    <button type="submit" class="btn btn-primary">Submit Message</button>
+                </form>
+                <div class="enroll-result" id="contactResult"></div>
+                <p class="contact-source">For official school records, enrollment decisions, learner records, and other school administrative matters, please contact the school or appropriate DepEd office. This form reaches the SmartCampus project team (technology/website support), not the school administration.</p>
+            </div>
+
+            <!-- Who should I contact? -->
+            <div class="contact-who">
+                <h3>Who Should I Contact?</h3>
+                <table class="who-table">
+                    <thead><tr><th>Concern</th><th>Contact</th></tr></thead>
+                    <tbody>
+                        <tr><td>Enrollment</td><td>School / designated enrollment personnel</td></tr>
+                        <tr><td>Student records</td><td>School registrar</td></tr>
+                        <tr><td>Academic concerns</td><td>School / teacher</td></tr>
+                        <tr><td>Parent concerns</td><td>School administration</td></tr>
+                        <tr><td>SmartCampus technical issue</td><td>Kerr Fairtex (SmartCampus team)</td></tr>
+                        <tr><td>Website issue</td><td>Kerr Fairtex (SmartCampus team)</td></tr>
+                        <tr><td>Application system issue</td><td>SmartCampus support</td></tr>
+                        <tr><td>DepEd concern</td><td>Tawi-Tawi Schools Division Office</td></tr>
+                        <tr><td>Learner protection concern</td><td>School / DepEd appropriate channel</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Need Assistance -->
+    <section class="assistance">
+        <div class="container">
+            <h2>Need Help With Enrollment?</h2>
+            <p class="desc">Our school personnel can assist you with the enrollment process.</p>
+            <div class="actions">
+                <a href="#contact" class="btn btn-primary">Contact the School</a>
+            </div>
+
+            <div class="assist-office">
+                <h4>Enrollment Assistance</h4>
+                <p>School Office<br><?php echo htmlspecialchars($school_address); ?></p>
+            </div>
+
+            <p class="assist-note" style="margin-bottom:1rem;">For enrollment help, visit the school office or use the contact channels below. Official enrollment decisions and learner records are handled by the school and DepEd.</p>
+
+            <div class="assist-office" style="background:rgba(255,255,255,0.06);">
+                <h4>SmartCampus Project Support</h4>
+                <p style="margin-bottom:0.75rem;">Technology &amp; website help (not the school's official line)</p>
+                <div class="assist-buttons">
+                    <a href="tel:<?php echo htmlspecialchars($project_phone); ?>">Call</a>
+                    <a href="sms:<?php echo htmlspecialchars($project_phone); ?>">Message</a>
+                    <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a>
+                    <a href="<?php echo htmlspecialchars($school_maps); ?>" target="_blank" rel="noopener">Get Directions</a>
+                </div>
+                <p class="assist-note">SmartCampus K&ndash;12 developer contact: Kerr Fairtex. For school administrative matters, contact the school or DepEd.</p>
+            </div>
+
+            <p class="assist-note">Don't rely exclusively on email. A phone / SMS / in-person visit is more practical for many island residents.</p>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" target="_blank" rel="noopener">Kerr Fairtex</a> and Company</p>
-        <p>Powered by <a href="https://smartcampk12.onrender.com" target="_blank" rel="noopener">Smart Campus K12 Development</a> — Open Source Student Information System</p>
-        <p style="margin-top: 1rem; font-size: 0.75rem;">School ID 305053 &bull; DepEd Philippines &bull; Batu-Batu, Panglima Sugala, Tawi-Tawi</p>
-        <p class="license-note">Community population data: PSA 2024 POPCEN. Verify image licenses before republishing.</p>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>BATU-BATU</h4>
+                <p>National High School</p>
+                <p class="footer-muted">School ID: 305053<br>Batu-Batu, Panglima Sugala, Tawi-Tawi<br>BARMM, Philippines</p>
+            </div>
+            <div class="footer-col">
+                <h4>SMARTCAMPUS K&ndash;12</h4>
+                <p class="footer-muted">Digital school services for learning, administration, communication, and community engagement.</p>
+            </div>
+            <div class="footer-col">
+                <h4>CONTACT</h4>
+                <p>Kerr Fairtex<br><span class="footer-muted">SmartCampus K&ndash;12 Developer / Project Contact</span></p>
+                <p><a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
+                   <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
+                   <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>QUICK LINKS</h4>
+                <p><a href="#about">About</a></p>
+                <p><a href="#admissions">Academics</a></p>
+                <p><a href="#enroll">Admissions</a></p>
+                <p><a href="login.php">SmartCampus Portal</a></p>
+                <p><a href="#contact">Contact</a></p>
+                <p><a href="privacy.php">Privacy</a></p>
+                <p><a href="privacy.php#accessibility">Accessibility</a></p>
+            </div>
+            <div class="footer-col">
+                <h4>INSTITUTIONAL REFERENCE</h4>
+                <p class="footer-muted">Department of Education<br>Schools Division of Tawi-Tawi<br>BARMM</p>
+            </div>
+        </div>
+        <p class="footer-copy">&copy; 2026 SmartCampus K&ndash;12</p>
     </footer>
 
     <script>
@@ -1970,6 +2219,29 @@ $img_base = 'assets/images/';
         });
 
         showStep(1);
+    })();
+
+    // Contact form -> contact_api.php (SmartCampus project team)
+    (function () {
+        var form = document.getElementById('contactForm');
+        if (!form) return;
+        var res = document.getElementById('contactResult');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            var data = {};
+            new FormData(form).forEach(function (v, k) { data[k] = v; });
+            res.textContent = 'Sending…';
+            res.classList.add('show');
+            fetch('contact_api.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            }).then(function (r) { return r.json(); }).then(function (j) {
+                if (j.error) { res.textContent = 'Error: ' + j.error; return; }
+                res.textContent = j.message || 'Message received.';
+                form.reset();
+            }).catch(function () { res.textContent = 'Network error. Please try again or use the contact details below.'; });
+        });
     })();
 
     // Generic image crossfade cycler (e.g. Classroom gallery card), every data-cycle ms

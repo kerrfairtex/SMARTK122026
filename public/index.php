@@ -14,6 +14,8 @@ $school_name = 'BATU-BATU NATIONAL INTEGRATED HIGH SCHOOL';
 $school_short_name = 'BBNIHS';
 $school_id = '305053';
 $theme = 'FlatSIS';
+// Big hero display name (upper-center lettering). Kept short/branded per request.
+$hero_name = 'BATU-BATU';
 
 // Attempt to read from RosarioSIS config if available (with error handling)
 $rosariosis_config = __DIR__ . '/config.inc.php';
@@ -837,7 +839,7 @@ $img_base = 'assets/images/';
     <section class="hero">
         <div class="hero-bg"></div>
         <div class="hero-content">
-            <h1><?php echo htmlspecialchars($school_name); ?></h1>
+            <h1><?php echo htmlspecialchars($hero_name); ?></h1>
             <p class="tagline">Learning, growing, and building the future of the Turtle Islands</p>
             <p class="location">Batu-Batu &bull; Turtle Islands &bull; Tawi-Tawi &bull; BARMM</p>
             <p class="supporting">A modern school community serving learners in Batu-Batu, Turtle Islands, Tawi-Tawi, supported by SmartCampus K&ndash;12 digital services.</p>

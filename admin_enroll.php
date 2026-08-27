@@ -1,15 +1,16 @@
 <?php
 /**
- * SmartCampus Enrollment Admin Dashboard (minimal, session-gated)
+ * SmartCampus Enrollment Admin Dashboard
  *
  * Lets school/SmartCampus personnel:
  *   1. Configure enrollment_periods (school year, opening/closing, grades, status)
  *   2. List applications and advance their status through the pipeline
  *   3. View contact messages
  *
- * AUTH: simple shared-secret gate. Set the password via the ADMIN_PASSWORD
- * env var (render.yaml / environment) or it falls back to the placeholder below.
- * For production, replace with the RosarioSIS authenticated admin role.
+ * AUTH: reuses the RosarioSIS authenticated session (Warehouse.php already
+ * starts it). Only an authenticated staff member with PROFILE = 'admin' may
+ * access this page. Not logged in -> redirected to the RosarioSIS login.
+ * Non-admins see an access-denied message. No separate shared secret.
  */
 require_once 'database.inc.php';
 require_once 'Warehouse.php';
@@ -19,8 +20,6 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$ADMIN_PASSWORD = getenv('ADMIN_PASSWORD') ?: '4n=AgYHXO?%ESEKv';
-
 function admin_conn() {
     $c = db_start(false);
     if ($c === false) throw new Exception('db');
@@ -29,22 +28,31 @@ function admin_conn() {
 
 $STAGES = ['Submitted', 'Under Review', 'Documents Needed', 'Verified', 'Approved', 'Enrolled', 'Rejected'];
 
+// Determine RosarioSIS admin identity from the shared authenticated session.
+$is_admin = false;
 $login_error = '';
-if (isset($_POST['login'])) {
-    if ($_POST['password'] === $ADMIN_PASSWORD) {
-        $_SESSION['admin_ok'] = true;
-    } else {
-        $login_error = 'Incorrect password.';
+try {
+    if (function_exists('User') && !empty($_SESSION['STAFF_ID']) && (int) $_SESSION['STAFF_ID'] > 0) {
+        $profile = User('PROFILE');
+        $is_admin = ($profile === 'admin');
     }
+} catch (Throwable $t) {
+    // DB unreachable or session not fully initialized — treat as not authenticated.
+    $is_admin = false;
 }
-if (isset($_GET['logout'])) {
-    $_SESSION['admin_ok'] = false;
-    session_destroy();
-    header('Location: admin_enroll.php');
+
+// Not authenticated at all -> send to the RosarioSIS login (preserving return path).
+if (!$is_admin && empty($_SESSION['STAFF_ID'])) {
+    header('Location: login.php?modfunc=logout&reason=authenticate');
     exit;
 }
 
-$authed = !empty($_SESSION['admin_ok']);
+if (isset($_GET['logout'])) {
+    header('Location: login.php?modfunc=logout');
+    exit;
+}
+
+$authed = $is_admin;
 $msg = '';
 
 if ($authed) {
@@ -107,15 +115,14 @@ function esc($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
 </head>
 <body>
 <?php if (!$authed): ?>
-  <div class="box" style="max-width:400px;">
+  <div class="box" style="max-width:480px;">
     <h1>Enrollment Admin</h1>
-    <?php if ($login_error): ?><p class="err"><?php echo $login_error; ?></p><?php endif; ?>
-    <form method="post">
-      <label>Password</label>
-      <input type="password" name="password" required>
-      <button type="submit" name="login">Login</button>
-    </form>
-    <p style="font-size:0.75rem;color:#94a3b8;margin-top:1rem;">Set ADMIN_PASSWORD in the environment for production use.</p>
+    <p style="color:#cbd5e1;">Access restricted. This dashboard is available to authenticated RosarioSIS administrators only.</p>
+    <p style="font-size:0.85rem;color:#94a3b8;margin-top:1rem;">
+      If you are an administrator, please <a href="login.php">sign in to the SmartCampus Portal</a> first, then return to this page.
+      <br><br>
+      <a href="login.php?modfunc=logout">Log out</a>
+    </p>
   </div>
 <?php else: ?>
   <div class="box">

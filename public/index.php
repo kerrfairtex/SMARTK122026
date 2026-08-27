@@ -664,6 +664,24 @@ $img_base = 'assets/images/';
             font-size: 0.88rem;
         }
 
+        /* About photo row */
+        .about-photos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.75rem;
+            margin: 0 auto 2rem;
+            max-width: 700px;
+        }
+
+        .about-photos img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            border-radius: 6px;
+            display: block;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+
         /* Contact */
         .contact {
             background: var(--navy-deep);
@@ -825,7 +843,13 @@ $img_base = 'assets/images/';
         <div class="container">
             <div class="about-content">
                 <h2 class="section-title">About Batu-Batu NIHS</h2>
-                <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 2rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+                <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 1rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+                <div class="about-photos">
+                    <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National Integrated High School">
+                    <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National Integrated High School">
+                    <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National Integrated High School">
+                    <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National Integrated High School">
+                </div>
 
                 <p><strong><?php echo htmlspecialchars($school_name); ?></strong> (School ID <?php echo $school_id; ?>) is a public National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, within the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM).</p>
 

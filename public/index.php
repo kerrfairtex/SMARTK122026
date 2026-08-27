@@ -193,6 +193,39 @@ $img_base = 'assets/images/';
         /* Section Styles */
         section {
             padding: 5rem 2rem;
+            scroll-margin-top: 80px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--navy-deep);
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 2rem;
+            overflow-x: auto;
+        }
+        .nav-bar a {
+            color: var(--gray-300);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.35rem 0.75rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        .nav-bar a:hover {
+            color: var(--white);
+            background: rgba(255,255,255,0.08);
         }
 
         .section-title {
@@ -538,6 +571,16 @@ $img_base = 'assets/images/';
 </head>
 <body>
 
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <a href="#glance">At a Glance</a>
+        <a href="#community">Community</a>
+        <a href="#about">About</a>
+        <a href="#academics">Academics</a>
+        <a href="#features">Features</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-bg"></div>
@@ -553,7 +596,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- School at a Glance -->
-    <section class="glance">
+    <section id="glance" class="glance">
         <div class="container">
             <h2 class="section-title">School at a Glance</h2>
             <p class="section-subtitle">Verified institutional information</p>
@@ -579,7 +622,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Our Community -->
-    <section class="community">
+    <section id="community" class="community">
         <div class="container">
             <h2 class="section-title">Our Community</h2>
             <p class="section-subtitle">Philippine Statistics Authority, 2024 Population Census</p>
@@ -604,10 +647,11 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- About -->
-    <section class="about">
+    <section id="about" class="about">
         <div class="container">
             <div class="about-content">
                 <h2 class="section-title">About the School</h2>
+                <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 2rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
                 <p><?php echo htmlspecialchars($school_name); ?> is a public integrated high school serving learners in the Batu-Batu community of Panglima Sugala, Tawi-Tawi.</p>
                 <p>As part of the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM), the school is committed to providing accessible education rooted in the local island community.</p>
                 <p>The school is listed in the DepEd infrastructure inventory with ongoing projects to support learning facilities.</p>

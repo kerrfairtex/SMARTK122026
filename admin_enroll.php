@@ -103,7 +103,7 @@ function esc($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
   h1,h2{color:#f8fafc;}
   label{display:block;margin:0.5rem 0 0.2rem;color:#94a3b8;font-size:0.85rem;}
   input,select,textarea{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #2a3f63;background:#0c1e3a;color:#f8fafc;}
-  button{background:#0ea5b7;color:#fff;border:none;padding:0.6rem 1.2rem;border-radius:4px;cursor:pointer;font-weight:600;margin-top:0.75rem;}
+  button{background:#0e7490;color:#fff;border:none;padding:0.6rem 1.2rem;border-radius:4px;cursor:pointer;font-weight:600;margin-top:0.75rem;}
   table{width:100%;border-collapse:collapse;font-size:0.85rem;}
   th,td{text-align:left;padding:0.5rem;border-bottom:1px solid rgba(255,255,255,.08);}
   th{color:#f8fafc;}

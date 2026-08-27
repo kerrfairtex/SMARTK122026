@@ -2187,7 +2187,7 @@ $img_base = 'assets/images/';
             var s = form.querySelector('.ms-step[data-step="' + n + '"]');
             var ok = true;
             s.querySelectorAll('[required]').forEach(function (inp) {
-                if (!inp.value.trim()) { ok = false; inp.style.borderColor = '#ef4444'; }
+                if (!inp.value.trim()) { ok = false; inp.style.borderColor = '#dc2626'; }
                 else { inp.style.borderColor = ''; }
             });
             return ok;

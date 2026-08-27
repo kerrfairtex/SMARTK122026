@@ -22,10 +22,21 @@ if (file_exists($rosariosis_config) && file_exists($rosariosis_warehouse)) {
     try {
         require_once $rosariosis_config;
         require_once $rosariosis_warehouse;
-        $school_name = Config('TITLE') ?: $school_name;
-        $school_short_name = Config('NAME') ?: $school_short_name;
-        $theme = Config('THEME') ?: $theme;
-    } catch (Exception $e) {
+        // NOTE: Config() -> DBGet -> db_start, which calls die() on connection
+        // failure (db_show_error). To avoid a white-screen when the DB is down,
+        // probe connectivity first; only read identity if the DB answers.
+        $db_ok = false;
+        try {
+            $db_ok = (db_start(false) !== false);
+        } catch (Throwable $t) {
+            $db_ok = false;
+        }
+        if ($db_ok) {
+            $school_name = Config('TITLE') ?: $school_name;
+            $school_short_name = Config('NAME') ?: $school_short_name;
+            $theme = Config('THEME') ?: $theme;
+        }
+    } catch (Throwable $e) {
         // Fall back to defaults if config loading fails
     }
 }

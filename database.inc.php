@@ -64,9 +64,19 @@ function db_start( $show_error = true )
 			$connectstring .= 'port=' . $DatabasePort . ' ';
 		}
 
+		// @since SmartCampus Force TLS for Supabase pooler (port 6543) and
+		// any host requiring encrypted connections. $SupabaseSSLMode is set in
+		// config.inc.php (entrypoint default 'require').
+		$sslmode = isset( $SupabaseSSLMode ) && $SupabaseSSLMode !== '' ?
+			$SupabaseSSLMode : 'require';
+
+		$connectstring .= 'sslmode=' . $sslmode . ' ';
+
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 
-                $connectstring .= " options='--search_path=rosariosis,public'";
+                // RosarioSIS tables are installed in the public schema (the SQL
+                // dumps use no custom schema), so search_path must be public.
+                $connectstring .= " options='--search_path=public'";
 
 		if ( $DatabasePassword !== '' )
 		{

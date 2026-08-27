@@ -9,6 +9,17 @@
  * @since   1.0
  */
 
+// Direct-access guard: this file requires the RosarioSIS bootstrap (functions such as
+// AllowUse() are loaded by Warehouse.php/Modules.php). If opened directly (e.g. a
+// bookmarked raw URL), route to the proper in-app entry instead of fatalling.
+if ( ! function_exists( 'AllowUse' ) ) {
+	if ( PHP_SAPI !== 'cli' ) {
+		$modfunc = isset( $_REQUEST['modfunc'] ) && $_REQUEST['modfunc'] !== '' ? '&modfunc=' . urlencode( (string) $_REQUEST['modfunc'] ) : '';
+		header( 'Location: ../Modules.php?modname=SmartCampus/' . basename( __FILE__ ) . $modfunc );
+	}
+	exit;
+}
+
 if ( ! isset( $_REQUEST['modfunc'] ) ) {
         $_REQUEST['modfunc'] = false;
 }

@@ -18,6 +18,17 @@
  * @since   1.1
  */
 
+// Direct-access guard: requires the RosarioSIS bootstrap. If opened directly, return a
+// clean 403 JSON instead of a fatal "undefined function AllowUse" error.
+if ( ! function_exists( 'AllowUse' ) ) {
+	if ( PHP_SAPI !== 'cli' ) {
+		http_response_code( 403 );
+		header( 'Content-Type: application/json' );
+		echo json_encode( [ 'error' => 'Direct access not allowed. Open via the SmartCampus portal.' ] );
+	}
+	exit;
+}
+
 if ( ! isset( $_REQUEST['modfunc'] ) ) {
 	$_REQUEST['modfunc'] = false;
 }

@@ -8,6 +8,16 @@
  * @since   1.2
  */
 
+// Direct-access guard: this file requires the RosarioSIS bootstrap. If opened directly,
+// route to the proper in-app entry instead of fatalling.
+if ( ! function_exists( 'AllowUse' ) ) {
+	if ( PHP_SAPI !== 'cli' ) {
+		$modfunc = isset( $_REQUEST['modfunc'] ) && $_REQUEST['modfunc'] !== '' ? '&modfunc=' . urlencode( (string) $_REQUEST['modfunc'] ) : '';
+		header( 'Location: ../Modules.php?modname=SmartCampus/' . basename( __FILE__ ) . $modfunc );
+	}
+	exit;
+}
+
 if ( ! isset( $_REQUEST['modfunc'] ) ) {
         $_REQUEST['modfunc'] = false;
 }

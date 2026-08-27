@@ -231,7 +231,7 @@ $cookie_path = dirname( $_SERVER['SCRIPT_NAME'] ) === DIRECTORY_SEPARATOR ?
 
 // Fix #316 CSRF security issue set cookie samesite to strict.
 // @link https://www.php.net/manual/en/function.session-set-cookie-params.php#125072
-$cookie_samesite = 'Strict';
+$cookie_samesite = 'Lax';
 
 // Cookie secure flag for https.
 $cookie_https_only = ( ! empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] !== 'off' ) ||

@@ -47,14 +47,23 @@ EOF
 # --- Swap landing page in as the docroot (idempotent, at container start) ---
 # Render build-time `mv` silently failed on the deployed instance, so the login
 # screen kept serving as `/`. This runs every start but only once thanks to the guard.
+echo "[SWAP] checking entry-point swap (index.php <-> login.php)..."
 if [ ! -f /var/www/html/login.php ]; then
-    mv /var/www/html/index.php /var/www/html/login.php
-    mv /var/www/html/public/index.php /var/www/html/index.php
+    if [ -f /var/www/html/index.php ] && [ -f /var/www/html/public/index.php ]; then
+        mv /var/www/html/index.php /var/www/html/login.php
+        mv /var/www/html/public/index.php /var/www/html/index.php
+        echo "[SWAP] done: / is now the landing page, /login.php is the RosarioSIS login."
+    else
+        echo "[SWAP] SKIPPED: source files missing (index.php=$([ -f /var/www/html/index.php ] && echo yes || echo no), public/index.php=$([ -f /var/www/html/public/index.php ] && echo yes || echo no))"
+    fi
+else
+    echo "[SWAP] already applied (login.php exists)."
 fi
 
 # --- Expose landing-page photos at /assets/images (survives the Render disk
 # mount at /var/www/html/assets, which would otherwise shadow the image tree) ---
 chmod 755 /var/www/html/public /var/www/html/public/assets 2>/dev/null || true
 ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
+echo "[SWAP] landing images symlinked to /assets/images."
 
 exec "$@"

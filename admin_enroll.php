@@ -14,7 +14,10 @@
 require_once 'database.inc.php';
 require_once 'Warehouse.php';
 
-session_start();
+// Warehouse.php (RosarioSIS) already starts the session; only start if none is active.
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 $ADMIN_PASSWORD = getenv('ADMIN_PASSWORD') ?: '4n=AgYHXO?%ESEKv';
 

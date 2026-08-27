@@ -98,18 +98,18 @@ function esc($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Enrollment Admin — SmartCampus K-12</title>
 <style>
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#0c1e3a;color:#cbd5e1;margin:0;padding:2rem;}
-  .box{background:#16294a;border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:1.5rem;max-width:1000px;margin:0 auto 1.5rem;}
-  h1,h2{color:#f8fafc;}
-  label{display:block;margin:0.5rem 0 0.2rem;color:#94a3b8;font-size:0.85rem;}
-  input,select,textarea{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #2a3f63;background:#0c1e3a;color:#f8fafc;}
+  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;margin:0;padding:2rem;}
+  .box{background:#ffffff;border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:1.5rem;max-width:1000px;margin:0 auto 1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06);}
+  h1,h2{color:#0f172a;}
+  label{display:block;margin:0.5rem 0 0.2rem;color:#475569;font-size:0.85rem;}
+  input,select,textarea{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #cbd5e1;background:#ffffff;color:#1e293b;}
   button{background:#0e7490;color:#fff;border:none;padding:0.6rem 1.2rem;border-radius:4px;cursor:pointer;font-weight:600;margin-top:0.75rem;}
   table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-  th,td{text-align:left;padding:0.5rem;border-bottom:1px solid rgba(255,255,255,.08);}
-  th{color:#f8fafc;}
+  th,td{text-align:left;padding:0.5rem;border-bottom:1px solid rgba(0,0,0,.08);}
+  th{color:#0f172a;}
   .msg{background:#0e7490;color:#fff;padding:0.6rem 1rem;border-radius:4px;margin-bottom:1rem;}
   .err{background:#b91c1c;color:#fff;padding:0.4rem 0.8rem;border-radius:4px;}
-  a{color:#0ea5b7;}
+  a{color:#0e7490;}
   .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;}
 </style>
 </head>
@@ -117,8 +117,8 @@ function esc($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
 <?php if (!$authed): ?>
   <div class="box" style="max-width:480px;">
     <h1>Enrollment Admin</h1>
-    <p style="color:#cbd5e1;">Access restricted. This dashboard is available to authenticated RosarioSIS administrators only.</p>
-    <p style="font-size:0.85rem;color:#94a3b8;margin-top:1rem;">
+    <p style="color:#475569;">Access restricted. This dashboard is available to authenticated RosarioSIS administrators only.</p>
+    <p style="font-size:0.85rem;color:#64748b;margin-top:1rem;">
       If you are an administrator, please <a href="login.php">sign in to the SmartCampus Portal</a> first, then return to this page.
       <br><br>
       <a href="login.php?modfunc=logout">Log out</a>

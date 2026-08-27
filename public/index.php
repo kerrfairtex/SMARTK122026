@@ -664,22 +664,85 @@ $img_base = 'assets/images/';
             font-size: 0.88rem;
         }
 
-        /* About photo row */
-        .about-photos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 0.75rem;
-            margin: 0 auto 2rem;
+        /* About photo slider */
+        .about-slider {
+            position: relative;
             max-width: 700px;
+            margin: 0 auto 2rem;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
 
-        .about-photos img {
+        .about-slides {
+            position: relative;
             width: 100%;
-            height: 150px;
+            height: 320px;
+        }
+
+        .about-slides img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 320px;
             object-fit: cover;
-            border-radius: 6px;
-            display: block;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        .about-slides img.active {
+            opacity: 1;
+        }
+
+        .about-slider .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(8,24,43,0.6);
+            color: var(--white);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.25rem;
+            cursor: pointer;
+            z-index: 3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .about-slider .nav-btn:hover {
+            background: var(--accent);
+        }
+
+        .about-slider .prev { left: 10px; }
+        .about-slider .next { right: 10px; }
+
+        .about-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 3;
+        }
+
+        .about-dots .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.4);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .about-dots .dot.active {
+            background: var(--white);
         }
 
         /* Contact */
@@ -844,11 +907,21 @@ $img_base = 'assets/images/';
             <div class="about-content">
                 <h2 class="section-title">About Batu-Batu NIHS</h2>
                 <img src="assets/images/img-campus.jpg" alt="Batu-Batu National Integrated High School campus" style="width:100%;max-width:700px;margin:1.5rem auto 1rem;border-radius:8px;display:block;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
-                <div class="about-photos">
-                    <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National Integrated High School">
-                    <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National Integrated High School">
-                    <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National Integrated High School">
-                    <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National Integrated High School">
+                <div class="about-slider" id="aboutSlider">
+                    <div class="about-slides">
+                        <img class="active" src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National Integrated High School">
+                        <img src="assets/images/Batu-batu2.jpeg" alt="Batu-Batu National Integrated High School">
+                        <img src="assets/images/Batu-batu3.jpeg" alt="Batu-Batu National Integrated High School">
+                        <img src="assets/images/Batu-batu4.jpeg" alt="Batu-Batu National Integrated High School">
+                    </div>
+                    <button class="nav-btn prev" aria-label="Previous photo">&#10094;</button>
+                    <button class="nav-btn next" aria-label="Next photo">&#10095;</button>
+                    <div class="about-dots">
+                        <span class="dot active" data-i="0"></span>
+                        <span class="dot" data-i="1"></span>
+                        <span class="dot" data-i="2"></span>
+                        <span class="dot" data-i="3"></span>
+                    </div>
                 </div>
 
                 <p><strong><?php echo htmlspecialchars($school_name); ?></strong> (School ID <?php echo $school_id; ?>) is a public National Integrated High School in Batu-Batu, Turtle Islands, Tawi-Tawi, within the Bangsamoro Autonomous Region in Muslim Mindanao (BARMM).</p>
@@ -1110,6 +1183,38 @@ $img_base = 'assets/images/';
         <p style="margin-top: 1rem; font-size: 0.75rem;">School ID 305053 &bull; DepEd Philippines &bull; Batu-Batu, Panglima Sugala, Tawi-Tawi</p>
         <p class="license-note">Community population data: PSA 2024 POPCEN. Verify image licenses before republishing.</p>
     </footer>
+
+    <script>
+    (function () {
+        var slider = document.getElementById('aboutSlider');
+        if (!slider) return;
+        var slides = slider.querySelectorAll('.about-slides img');
+        var dots = slider.querySelectorAll('.about-dots .dot');
+        var idx = 0, timer = null;
+        var DELAY = 3000; // change every 3 seconds
+
+        function show(n) {
+            idx = (n + slides.length) % slides.length;
+            slides.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
+            dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+        }
+        function next() { show(idx + 1); }
+        function prev() { show(idx - 1); }
+        function start() { stop(); timer = setInterval(next, DELAY); }
+        function stop() { if (timer) { clearInterval(timer); timer = null; } }
+
+        slider.querySelector('.next').addEventListener('click', function () { next(); start(); });
+        slider.querySelector('.prev').addEventListener('click', function () { prev(); start(); });
+        dots.forEach(function (d) {
+            d.addEventListener('click', function () { show(parseInt(d.getAttribute('data-i'), 10)); start(); });
+        });
+        // Pause auto-play when hovering the slider
+        slider.addEventListener('mouseenter', stop);
+        slider.addEventListener('mouseleave', start);
+
+        start();
+    })();
+    </script>
 
 </body>
 </html>

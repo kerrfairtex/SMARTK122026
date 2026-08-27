@@ -74,10 +74,14 @@ function db_start( $show_error = true )
 
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 
-                // RosarioSIS tables are installed in the public schema (the SQL
-                // dumps use no custom schema). Widen to include postgres + "$user"
-                // so a dump loaded under the Supabase 'postgres' role is still found.
-                $connectstring .= " options='--search_path=public,postgres,\"\$user\"'";
+                // SMARTK12 (Batu-Batu NIHS) RosarioSIS tables live in the
+                // 'kerrfairtex' schema on the shared Supabase DB (verified:
+                // kerrfairtex.schools id=1 = 'Batu-Batu National Integrated
+                // High School'; kerrfairtex.config has TITLE/NAME/THEME).
+                // The shared DB also has rosariosis/public schemas; search_path
+                // MUST lead with kerrfairtex or unqualified queries (e.g.
+                // SELECT FROM config) fail with "relation does not exist".
+                $connectstring .= " options='--search_path=kerrfairtex,public'";
 
 		if ( $DatabasePassword !== '' )
 		{

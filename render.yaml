@@ -10,7 +10,7 @@ services:
     healthCheckPath: /healthz.php
     envVars:
       - key: DB_SERVER
-        value: aws-0-us-east-1.pooler.supabase.com
+        value: aws-0-ap-northeast-1.pooler.supabase.com
       - key: DB_PORT
         value: "6543"
       - key: DB_NAME

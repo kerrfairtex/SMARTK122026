@@ -2072,10 +2072,6 @@ $img_base = 'assets/images/';
             </div>
             <div class="footer-col">
                 <h4>CONTACT</h4>
-                <p>Kerr Fairtex<br><span class="footer-muted">SmartCampus K&ndash;12</span></p>
-                <p><a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
-                   <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
-                   <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a></p>
             </div>
             <div class="footer-col">
                 <h4>DEVELOPERS</h4>

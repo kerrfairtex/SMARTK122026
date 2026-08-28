@@ -596,6 +596,23 @@ dialog#searchDialog::backdrop { background: rgba(0, 0, 0, 0.65); }
     letter-spacing: 0.04em;
     z-index: 2;
 }
+.photo-strip figure p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.6rem var(--space-3);
+    margin: 0;
+    background: linear-gradient(180deg, transparent, rgba(10, 20, 32, 0.92));
+    color: var(--sand);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-standard);
+}
+.photo-strip figure:hover p,
+.photo-strip figure:focus-within p { opacity: 1; }
+.photo-strip figure p em { color: var(--sun-gold); font-style: italic; }
 
 /* ---------- Reveal on scroll (Tier 1) ---------- */
 .reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }

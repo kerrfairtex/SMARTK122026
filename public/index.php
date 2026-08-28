@@ -56,8 +56,8 @@
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>
-                <p class="hero__location">Barangay Batu-Batu, Poblacion · Panglima Sugala</p>
-                <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290).</p>
+                <p class="hero__location">Barangay Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi</p>
+                <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290). The 3D scene above renders real Tawi-Tawi island geometry from OpenStreetMap.</p>
                 <div class="hero__actions">
                     <a href="#about" class="btn btn--primary">Discover Our School</a>
                     <a href="#enroll-form" class="btn btn--ghost">Start Enrollment</a>
@@ -171,63 +171,165 @@
                 </div>
 
                 <h3 style="margin-top: var(--space-5);">School History</h3>
-                <p class="form-note" style="margin-bottom: var(--space-3);">Real photos of the school and surrounding community (vision-verified).</p>
+                <p style="margin-bottom: var(--space-3); color: var(--foam);">
+                    Batu-Batu National High School traces its roots to a barangay high school serving the Batu-Batu community, and was formally converted into a national high school on <strong>14 November 1982</strong> by Batas Pambansa Blg. 290. The full history is captured in the timeline below. The photos on this page are the visual record: <strong>verified photos</strong> are vision-checked; <strong>unverified photos</strong> are presented as-provided and will be moved to the verified section once the school registrar confirms the subject of each.
+                </p>
+
+                <!-- ============================================================
+                     PHOTO BANK (merged from former "Additional Photo Bank — Unverified"
+                     and "Community Photo Bank" blocks). All photos live together
+                     as one gallery, with verified photos at the top and unverified
+                     photos below under a clear "As provided" callout.
+                     ============================================================ -->
+                <h4 style="margin-top: var(--space-4); color: var(--sand);">Verified photos &mdash; campus and community</h4>
+                <p class="form-note" style="margin-bottom: var(--space-3);">These four photos are vision-verified and depict the BBNIHS campus, learners, and the surrounding Tawi-Tawi stilt-house coastal community.</p>
                 <div class="photo-strip">
-                    <figure><img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School campus building" loading="lazy"></figure>
-                    <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village" loading="lazy"></figure>
-                    <figure><img src="assets/images/Batu-batu3.jpeg" alt="BBNIHS classroom during a school event" loading="lazy"></figure>
-                    <figure><img src="assets/images/Batu-batu4.jpeg" alt="BBNIHS learners in a school group setting" loading="lazy"></figure>
+                    <figure>
+                        <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School campus building, two-story concrete with cream and blue trim, trellised grounds in front." loading="lazy">
+                        <figcaption>Batu-Batu National High School &mdash; the campus building as documented this academic year.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village with mountains in the background." loading="lazy">
+                        <figcaption>An aerial view of the surrounding coastal community, showing the stilt-house architecture typical of Tawi-Tawi.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="assets/images/Batu-batu3.jpeg" alt="BBNIHS classroom or activity room with learners during a school event, tropical ceiling fans visible." loading="lazy">
+                        <figcaption>A BBNIHS classroom or activity room during a school event.</figcaption>
+                    </figure>
+                    <figure>
+                        <img src="assets/images/Batu-batu4.jpeg" alt="Group photo of BBNIHS learners in a school setting." loading="lazy">
+                        <figcaption>A BBNIHS learner group photo, taken on campus.</figcaption>
+                    </figure>
                 </div>
 
-                <h3 style="margin-top: var(--space-4);">Additional Photo Bank &mdash; Unverified</h3>
-                <p class="form-note" style="margin-bottom: var(--space-3); padding: var(--space-3); background: rgba(232, 115, 74, 0.08); border-left: 3px solid var(--reef-coral); border-radius: 2px;">
+                <h4 style="margin-top: var(--space-4); color: var(--sand);">Photo bank &mdash; as provided (unverified)</h4>
+                <p style="margin-bottom: var(--space-3); padding: var(--space-3); background: rgba(232, 115, 74, 0.08); border-left: 3px solid var(--reef-coral); border-radius: 2px; color: var(--sand);">
                     <strong style="color: var(--reef-coral);">Unverified &mdash; pending school confirmation.</strong>
-                    These photos are presented as provided to the SmartCampus team. Their authenticity, date, and connection to Batu-Batu National High School or Tawi-Tawi have not been independently verified. They will be moved to the verified section above once the school registrar confirms the subject of each photo.
+                    These photos are presented as provided to the SmartCampus team. Their authenticity, date, and connection to Batu-Batu National High School or Tawi-Tawi have not been independently verified. They will be moved to the verified section above once the school registrar confirms the subject of each photo. Each is captioned with the filename, the likely subject based on the filename, and the confirmation question we need the school to answer.
                 </p>
                 <div class="photo-strip">
-                    <figure class="unverified"><img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/bbnihs-legacy.jpg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/bbnihs-staff.jpeg" alt="Staff group photo, vision-verified" loading="lazy"><figcaption class="unverified-tag">Vision-verified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/classroom1.jpeg" alt="Classroom photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/classroom2.jpeg" alt="Classroom photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-01.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-02.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-03.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-04.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-05.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-06.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-08.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-09.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-campus.jpg" alt="Campus photo as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/img-education.jpg" alt="Education photo as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified">
+                        <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
+                    </figure>
+                    <figure>
+                        <img src="assets/images/bbnihs-staff.jpeg" alt="BBNIHS faculty and staff group photo." loading="lazy">
+                        <figcaption>BBNIHS faculty and staff group photo (vision-verified). Individual names are listed in the faculty directory, pending confirmation from the school registrar.</figcaption>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/classroom1.jpeg" alt="Classroom photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/classroom2.jpeg" alt="Classroom photo, as provided &mdash; unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-01.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-02.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-03.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-04.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-05.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-06.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-08.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-09.jpeg" alt="Image as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-campus.jpg" alt="Campus photo as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a campus shot. <em>To confirm: is this BBNIHS or another school, and is the date recent?</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/img-education.jpg" alt="Education photo as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests an education-themed photo. <em>To confirm: subject, date, and source of this image.</em></p>
+                    </figure>
+                    <figure>
+                        <img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance." loading="lazy">
+                        <figcaption>Bongao, Tawi-Tawi &mdash; the provincial capital (vision-verified). Tawi-Tawi is the southernmost province of the Philippines, an archipelago of over 100 islands.</figcaption>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau / Sama children, Tawi-Tawi &mdash; as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests Bajau or Sama children. <em>To confirm: location, year, and source. (Important: visual depictions of indigenous children in Tawi-Tawi must be handled with care and with community consent for public use.)</em></p>
+                    </figure>
+                    <figure class="unverified">
+                        <img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; as provided, unverified." loading="lazy">
+                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
+                        <p>Filename suggests a boat race. <em>To confirm: event name, date, and whether it took place in Tawi-Tawi or another province.</em></p>
+                    </figure>
                 </div>
 
-                <h3 style="margin-top: var(--space-4);">Community Photo Bank &mdash; Unverified</h3>
-                <p class="form-note" style="margin-bottom: var(--space-3);">Regionally-tagged photos from the Tawi-Tawi archipelago (vision verification pending for individual photos).</p>
-                <div class="photo-strip">
-                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance" loading="lazy"></figure>
-                    <figure class="unverified"><img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau children, Tawi-Tawi &mdash; as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                    <figure class="unverified"><img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
-                </div>
+                <h4 style="margin-top: var(--space-4); color: var(--sand);">Timeline</h4>
                 <ol class="history-timeline">
                     <li class="history-timeline__item reveal">
                         <p class="history-timeline__year">1966 (candidate)</p>
-                        <p class="history-timeline__text">Barangay high school serving the Batu-Batu community founded (school Facebook page handle reads <code>BatuBatu1966</code>; to be confirmed by the school head before publishing as fact).</p>
+                        <p class="history-timeline__text">A barangay high school serving the Batu-Batu community is established. The school's official Facebook page handle, <code>facebook.com/BatuBatu1966</code>, points to this as a likely founding year. <em>Pending confirmation by the school head before this date is published as a fact.</em></p>
                     </li>
                     <li class="history-timeline__item reveal">
                         <p class="history-timeline__year">14 November 1982</p>
-                        <p class="history-timeline__text">Batas Pambansa Blg. 290, &ldquo;An Act Converting the Batu-Batu Barangay High School in the Municipality of Balimbing, Province of Tawi-Tawi, into a National High School,&rdquo; takes effect. The school is renamed <strong>Batu-Batu National High School</strong>.</p>
+                        <p class="history-timeline__text">Batas Pambansa Blg. 290, &ldquo;An Act Converting the Batu-Batu Barangay High School in the Municipality of Balimbing, Province of Tawi-Tawi, into a National High School, to be known as Batu-Batu National High School,&rdquo; takes effect. The school is formally renamed and brought under the national school system, with funding and oversight from the Department of Education, Culture and Sports (DECS, the predecessor of DepEd).</p>
                         <p class="history-timeline__cite">Source: Supreme Court E-Library / thecorpusjuris.com transcription of B.P. Blg. 290.</p>
                     </li>
                     <li class="history-timeline__item reveal">
-                        <p class="history-timeline__year">1991</p>
-                        <p class="history-timeline__text">The municipality is renamed from Balimbing to <strong>Panglima Sugala</strong> by Muslim Mindanao Autonomy Act No. 7.</p>
+                        <p class="history-timeline__year">4 July 1991</p>
+                        <p class="history-timeline__text">The municipality is renamed from <strong>Balimbing</strong> to <strong>Panglima Sugala</strong> by Muslim Mindanao Autonomy Act No. 7, enacted as part of the broader administrative reorganization of the autonomous region. The school retains the &ldquo;Batu-Batu&rdquo; in its name because the barangay of Batu-Batu itself was not renamed &mdash; only the surrounding municipality.</p>
+                    </li>
+                    <li class="history-timeline__item reveal">
+                        <p class="history-timeline__year">Pre-1979</p>
+                        <p class="history-timeline__text">Batu-Batu itself served as the provincial capital of Tawi-Tawi before the seat of provincial government was transferred to Bongao in 1979. The school is therefore older than the conversion to a national high school in 1982, and predates the post-1979 provincial reorganization. This is part of why the community context of BBNIHS includes both the local (Batu-Batu, the former capital) and the provincial (Tawi-Tawi, the southernmost province) layers.</p>
                     </li>
                     <li class="history-timeline__item reveal">
                         <p class="history-timeline__year">Today</p>
-                        <p class="history-timeline__text">A recognized K-12 public high school (TESDA registry) serving a rural maritime population under the Tawi-Tawi Schools Division Office, with the SmartCampus K-12 digital platform providing enrolment, attendance, and grade services.</p>
+                        <p class="history-timeline__text">Batu-Batu National High School is a recognized K-12 public high school (TESDA registry) serving a rural maritime population under the Tawi-Tawi Schools Division Office. It offers Grades 7 through 12, with a track and strand structure to be confirmed by the school registrar. The SmartCampus K-12 digital platform provides online enrollment, attendance, grade, schedule, library, announcement, and parent communication services to the school community, while still respecting the &ldquo;submit physically at the school if connectivity is limited&rdquo; fallback that has been the school's de facto operational policy since long before the platform existed.</p>
                     </li>
                 </ol>
 

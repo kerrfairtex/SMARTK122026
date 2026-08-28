@@ -1429,6 +1429,92 @@ $img_base = 'assets/images/';
             margin-left: 0.4rem;
         }
 
+        /* ===== PR-3: Floating Viber/WhatsApp button ===== */
+        .float-contact {
+            position: fixed;
+            right: 1.25rem;
+            bottom: 1.25rem;
+            z-index: 50;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: flex-end;
+            gap: 0.6rem;
+        }
+        .float-contact .fc-launch {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+            cursor: pointer;
+            border: 0;
+            font-size: 1.5rem;
+            transition: transform 0.15s ease, background 0.15s ease;
+        }
+        .float-contact .fc-launch:hover { background: var(--accent-hover); transform: scale(1.05); }
+        .float-contact .fc-launch:focus-visible { outline: 2px solid #fbbf24; outline-offset: 3px; }
+        .float-contact .fc-pills {
+            display: none;
+            flex-direction: column;
+            gap: 0.4rem;
+            align-items: flex-end;
+        }
+        .float-contact.open .fc-pills { display: flex; }
+        .float-contact .fc-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.85rem;
+            border-radius: 999px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            white-space: nowrap;
+        }
+        .float-contact .fc-pill.viber   { background: #7360F2; }
+        .float-contact .fc-pill.viber:hover   { background: #5a48d1; }
+        .float-contact .fc-pill.whatsapp { background: #25D366; }
+        .float-contact .fc-pill.whatsapp:hover { background: #1ebd57; }
+        .float-contact .fc-pill svg { width: 18px; height: 18px; flex: none; }
+        @media (prefers-reduced-motion: reduce) {
+            .float-contact .fc-launch { transition: none; }
+        }
+        @media print {
+            .float-contact { display: none !important; }
+        }
+        @media (max-width: 480px) {
+            .float-contact .fc-pill { font-size: 0.8rem; padding: 0.5rem 0.7rem; }
+        }
+
+        /* ===== PR-3: OSM iframe ===== */
+        .osm-wrap {
+            margin: 1.25rem 0 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: var(--navy);
+        }
+        .osm-wrap iframe {
+            display: block;
+            width: 100%;
+            height: 280px;
+            border: 0;
+        }
+        .osm-caption {
+            font-size: 0.8rem;
+            color: var(--gray-500);
+            text-align: right;
+            padding: 0.4rem 0.6rem;
+            background: var(--navy-light);
+        }
+        .osm-caption a { color: var(--gray-300); }
+
         /* ===== Tier 1 PR-1: Interactive additions (non-destructive) ===== */
 
         /* Sub-scroll ribbon (top progress bar) */
@@ -2330,7 +2416,20 @@ $img_base = 'assets/images/';
                 <div class="contact-card">
                     <h4>Where We Are</h4>
                     <p>Batu-Batu, Poblacion<br>Panglima Sugala<br>Tawi-Tawi<br>BARMM, Philippines</p>
-                    <a class="btn btn-outline" href="<?php echo htmlspecialchars($school_maps); ?>" target="_blank" rel="noopener">Open in Google Maps</a>
+                    <!-- PR-3: OSM embed (no third-party tracking, no API key) -->
+                    <div class="osm-wrap">
+                        <iframe
+                            title="Map of Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi"
+                            loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade"
+                            sandbox=""
+                            src="https://www.openstreetmap.org/export/embed.html?bbox=119.85%2C4.65%2C119.95%2C4.75&amp;layer=mapnik&amp;marker=4.7%2C119.9"></iframe>
+                        <div class="osm-caption">
+                            Map data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a> contributors &middot;
+                            <a href="https://www.openstreetmap.org/?mlat=4.7&amp;mlon=119.9#map=14/4.7/119.9" target="_blank" rel="noopener">Open in OpenStreetMap &rarr;</a>
+                        </div>
+                    </div>
+                    <p style="margin-top:0.75rem;"><a class="btn btn-outline" href="<?php echo htmlspecialchars($school_maps); ?>" target="_blank" rel="noopener">Open in Google Maps</a></p>
                 </div>
 
                 <!-- SmartCampus Support (project / developer) -->
@@ -2359,6 +2458,11 @@ $img_base = 'assets/images/';
             <div class="contact-form-wrap">
                 <h3>Contact the SmartCampus Team</h3>
                 <form id="contactForm" novalidate>
+                    <!-- PR-3: honeypot field. Hidden from real users; bots fill it. -->
+                    <div style="position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden;" aria-hidden="true">
+                        <label for="hp_url">Leave this field empty</label>
+                        <input type="text" id="hp_url" name="website_url" tabindex="-1" autocomplete="off" value="">
+                    </div>
                     <div class="form-field"><label>Full Name *</label><input name="name" required></div>
                     <div class="form-field"><label>Email Address *</label><input type="email" name="email" required></div>
                     <div class="form-field"><label>Mobile Number</label><input name="mobile"></div>
@@ -3310,6 +3414,59 @@ $img_base = 'assets/images/';
                 });
             })
             .catch(function () { /* keep all-on */ });
+    })();
+    </script>
+
+    <!-- ===== PR-3: Floating Viber/WhatsApp contact button (non-destructive) ===== -->
+    <div class="float-contact" id="floatContact" role="region" aria-label="Quick contact">
+        <div class="fc-pills" id="fcPills">
+            <a class="fc-pill viber" href="viber://chat?number=%2B639637130812" target="_blank" rel="noopener" aria-label="Chat on Viber">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M11.4 0C5.1 0 0 5.1 0 11.4c0 2.4.8 4.7 2.2 6.6L.7 24l6.2-1.6c1.8 1 3.9 1.5 6 1.5 6.3 0 11.4-5.1 11.4-11.4S17.7 0 11.4 0zm0 20.9c-1.9 0-3.8-.5-5.4-1.5l-.4-.2-3.7 1 1-3.6-.2-.4c-1.2-1.7-1.8-3.7-1.8-5.7 0-5.6 4.6-10.1 10.1-10.1 5.6 0 10.1 4.6 10.1 10.1.1 5.5-4.5 10.4-9.7 10.4zm5.6-7.7c-.3-.2-1.8-.9-2.1-1-.3-.1-.5-.2-.7.2-.2.3-.8 1-1 1.2-.2.2-.4.2-.6.1-.3-.2-1.3-.5-2.4-1.5-.9-.8-1.5-1.8-1.7-2.1-.2-.3 0-.5.1-.6.1-.1.3-.3.4-.5.1-.1.2-.2.2-.4.1-.1 0-.5-.1-1-.8-.5-1.3-1.6-1.4-1.7-.2-.3-.4-.3-.6-.1-.3.1-1.1 1.1-1.1 1.1s-1 1.1-.2 2.2c.8 1.1 1.5 1.8 3.4 3.3 2.2 1.7 2.2 1.1 2.6 1 .4-.1 1.3-.5 1.5-1 .2-.5.2-.9.1-1-.1-.1-.3-.2-.6-.4z"/></svg>
+                <span>Viber</span>
+            </a>
+            <a class="fc-pill whatsapp" href="https://wa.me/639637130812?text=Hi%20Batu-Batu%20NHS%20(BBNIHS)" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.5 14.4c-.3-.1-1.7-.8-2-.9-.3-.1-.5-.1-.7.1-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.8-.7-1.4-1.6-1.6-1.9-.2-.3 0-.4.1-.6.1-.1.2-.3.3-.5.4-.2.2-.3.3-.5.5s-.4.2-.6.1c-.3-.1-1.1-.4-2.1-1.3-.8-.7-1.3-1.5-1.5-1.8-.2-.3 0-.4.1-.5.1-.1.3-.7 1-1.4.2-.3.3-.6.5-.8.1-.1.2-.2.2-.3.1-.1 0-.2 0-.3-.1-.2-.7-1.7-.9-2.3-.2-.6-.5-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.7 1.2 2.9c.1.2 2.1 3.2 5 4.5.7.3 1.3.5 1.7.6.7.2 1.4.2 1.9.1.6-.1 1.7-.7 2-1.4.2-.7.2-1.2.2-1.4-.2-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5.1-1.4c1.5.8 3.2 1.2 4.9 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.1c-1.6 0-3.1-.4-4.5-1.3l-.3-.2-3 .8.8-2.9-.2-.3c-.9-1.4-1.4-3-1.4-4.6 0-4.7 3.8-8.5 8.5-8.5s8.5 3.8 8.5 8.5-3.7 8.5-8.4 8.5z"/></svg>
+                <span>WhatsApp</span>
+            </a>
+        </div>
+        <button type="button" class="fc-launch" id="fcLaunch" aria-label="Open quick contact" aria-expanded="false" aria-controls="fcPills">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22" aria-hidden="true"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg>
+        </button>
+    </div>
+
+    <!-- ===== PR-3: Floating button + contact-click beacon (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+        var root = document.getElementById('floatContact');
+        var launch = document.getElementById('fcLaunch');
+        if (root && launch) {
+            launch.addEventListener('click', function () {
+                var open = root.classList.toggle('open');
+                launch.setAttribute('aria-expanded', open ? 'true' : 'false');
+            });
+            document.addEventListener('click', function (e) {
+                if (!root.contains(e.target)) {
+                    root.classList.remove('open');
+                    launch.setAttribute('aria-expanded', 'false');
+                }
+            });
+        }
+        // Fire a 1x1 beacon per channel click. The endpoint is engagement.php
+        // (extended in PR-3) which writes status='contact_click:<channel>'
+        // to access_log, surfaced in the admin snapshot.
+        var contactBtns = document.querySelectorAll('.float-contact .fc-pill');
+        contactBtns.forEach(function (a) {
+            a.addEventListener('click', function () {
+                var channel = a.classList.contains('viber') ? 'viber' : (a.classList.contains('whatsapp') ? 'whatsapp' : 'unknown');
+                var img = new Image(1, 1);
+                img.alt = '';
+                img.style.cssText = 'position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;';
+                img.src = 'engagement.php?action=contact_click&channel=' + channel;
+                document.body.appendChild(img);
+                setTimeout(function () { if (img.parentNode) img.parentNode.removeChild(img); }, 5000);
+            });
+        });
     })();
     </script>
 

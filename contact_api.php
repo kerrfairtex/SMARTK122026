@@ -45,6 +45,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => 'Please enter a valid email address.']);
         exit;
     }
+    // PR-3: honeypot. Real users never fill 'website_url'; bots do.
+    // Silently drop the message but return success so bots don't learn the rule.
+    if (!empty($posted['website_url'])) {
+        echo json_encode(['ok' => true, 'message' => 'Message received. The SmartCampus team will respond via your provided email or mobile.']);
+        exit;
+    }
 
     $esc = function ($v) use ($conn) { return $v === '' ? 'NULL' : "'" . pg_escape_string($conn, $v) . "'"; };
     $sql = "INSERT INTO contact_messages (full_name, email, mobile, concern, message) VALUES ("

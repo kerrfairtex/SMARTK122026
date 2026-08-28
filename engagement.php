@@ -50,6 +50,33 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'OPTIONS') {
     exit;
 }
 
+// PR-3: contact_click beacon (?action=contact_click&channel=viber|whatsapp)
+// Writes a single row to access_log with status='contact_click:<channel>'.
+// This is the read-only beacon used by the floating Viber/WhatsApp button
+// to surface channel-level analytics in the admin snapshot.
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'GET' && ($_GET['action'] ?? '') === 'contact_click') {
+    $channel = strtolower(preg_replace('/[^a-z]/', '', (string)($_GET['channel'] ?? '')));
+    if (!in_array($channel, ['viber', 'whatsapp', 'sms', 'email'], true)) {
+        $channel = 'unknown';
+    }
+    try {
+        $conn = db_conn();
+        $ip_esc = pg_escape_string($conn, substr($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0', 0, 50));
+        $ua_esc = pg_escape_string($conn, substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500));
+        @pg_query(
+            $conn,
+            "INSERT INTO kerrfairtex.access_log
+                (syear, username, profile, ip_address, user_agent, status, created_at, updated_at)
+             VALUES (2026, '', '', '$ip_esc', '$ua_esc', '" .
+                pg_escape_string($conn, 'contact_click:' . $channel) . "', now(), now())"
+        );
+        header('Content-Type: image/gif');
+        // 1x1 transparent GIF, 43 bytes
+        echo base64_decode('R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7');
+    } catch (Throwable $t) { /* silent */ }
+    exit;
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     engagement_reply(405, ['error' => 'Method not allowed']);
 }

@@ -2330,7 +2330,7 @@ $img_base = 'assets/images/';
             </div>
 
             <!-- Who should I contact? -->
-            <div class="contact-who">
+            <div class="contact-who" id="who">
                 <h3>Who Should I Contact?</h3>
                 <table class="who-table">
                     <thead><tr><th>Concern</th><th>Contact</th></tr></thead>

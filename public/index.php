@@ -1307,6 +1307,192 @@ $img_base = 'assets/images/';
             border-top: 1px solid rgba(255,255,255,0.06);
         }
 
+        /* ===== Tier 1 PR-1: Interactive additions (non-destructive) ===== */
+
+        /* Sub-scroll ribbon (top progress bar) */
+        .scroll-ribbon {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), #4ade80);
+            z-index: 1001;
+            transition: width 80ms linear;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .scroll-ribbon { transition: none; }
+        }
+
+        /* School clock (hero) */
+        .school-clock {
+            position: absolute;
+            bottom: 1rem;
+            right: 1.25rem;
+            color: var(--gray-300);
+            font-size: 0.85rem;
+            font-variant-numeric: tabular-nums;
+            background: rgba(8,24,43,0.55);
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            backdrop-filter: blur(4px);
+            z-index: 2;
+        }
+        .school-clock .clock-label {
+            color: var(--gray-500);
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-right: 0.4rem;
+        }
+
+        /* Office hours badge */
+        .office-hours {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: var(--gray-300);
+        }
+        .office-hours .oh-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 6px rgba(74,222,128,0.5);
+        }
+        .office-hours.closed .oh-dot { background: #6b7280; box-shadow: none; }
+
+        /* Gallery filter chips */
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin: 1rem 0 1.5rem;
+        }
+        .filter-chips .chip {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--gray-300);
+            padding: 0.4rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .filter-chips .chip:hover { border-color: var(--accent); color: var(--white); }
+        .filter-chips .chip.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--white);
+        }
+        .cg-stage img.hidden { display: none !important; }
+
+        /* Accessibility toggles bar */
+        .a11y-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            padding: 1rem 1.5rem;
+            background: var(--navy-light);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: var(--gray-300);
+            font-size: 0.85rem;
+        }
+        .a11y-bar .a11y-label {
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            font-size: 0.7rem;
+            margin-right: 0.5rem;
+        }
+        .a11y-bar button {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.2);
+            color: var(--gray-300);
+            padding: 0.35rem 0.7rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.15s ease;
+        }
+        .a11y-bar button:hover { border-color: var(--accent); color: var(--white); }
+        .a11y-bar button[aria-pressed="true"] {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: var(--white);
+        }
+        /* High-contrast mode (AA → AAA palette) */
+        html.a11y-hc {
+            --navy-deep: #000000;
+            --navy: #0a0a0a;
+            --navy-light: #141414;
+            --gray-100: #ffffff;
+            --gray-300: #f5f5f5;
+            --gray-500: #d4d4d4;
+            --accent: #ffd400;
+            --accent-hover: #ffe34d;
+        }
+        /* OpenDyslexic (lazy-loaded only when toggled) */
+        @font-face {
+            font-family: 'OpenDyslexicLocal';
+            src: local('OpenDyslexic'), local('OpenDyslexic-Regular');
+            font-display: swap;
+        }
+        html.a11y-dyslexic body,
+        html.a11y-dyslexic button,
+        html.a11y-dyslexic input,
+        html.a11y-dyslexic select,
+        html.a11y-dyslexic textarea {
+            font-family: 'OpenDyslexicLocal', 'Lato', -apple-system, BlinkMacSystemFont, sans-serif;
+            letter-spacing: 0.02em;
+            line-height: 1.75;
+        }
+        /* Large text */
+        html.a11y-large { font-size: 115%; }
+
+        /* Print stylesheet */
+        @media print {
+            .scroll-ribbon, .nav-bar, .a11y-bar, .hero-bg, .filter-chips,
+            .cg-arrow, .cg-controls, .cg-dots, .about-dots, .about-slider .nav-btn,
+            footer .footer-grid { display: none !important; }
+            body { background: #fff !important; color: #000 !important; }
+            .hero { min-height: auto !important; padding: 1.5rem !important; }
+            .hero::after { display: none !important; }
+            .hero h1, .hero .tagline, .hero .location, .hero .supporting { color: #000 !important; text-shadow: none !important; }
+            .hero-buttons { display: none !important; }
+            .school-clock { display: none !important; }
+            section { padding: 1rem !important; background: #fff !important; }
+            .glance-card, .stat-card, .academic-card, .ecard, .contact-card,
+            .assist-office, .form-field, .enroll-status, .value-item,
+            .grade-item, .feature-item, .req, .enroll-form-wrap, .contact-form-wrap {
+                background: #fff !important; color: #000 !important;
+                border: 1px solid #ccc !important; page-break-inside: avoid;
+            }
+            h1, h2, h3, h4 { color: #000 !important; page-break-after: avoid; }
+            a { color: #000 !important; text-decoration: underline; }
+            .photo-section::before, .photo-section::after { display: none !important; }
+            .photo-section { min-height: auto !important; color: #000 !important; background: #f5f5f5 !important; }
+            .photo-content h2, .photo-content p { color: #000 !important; text-shadow: none !important; }
+            .enroll-result, .ms-progress, .ms-step, .pipeline, .enroll-form-wrap,
+            .contact-form-wrap, .enroll-cta, .enroll-cards, .enroll-sub, .status-legend,
+            .faq, .dates-grid, .who-table, .offline-enroll, .timeline-track,
+            .values-grid, .grade-list, .steps, .glance-grid, .stats-grid,
+            .academics-grid, .contact-grid, .filter-chips, .about-slider,
+            .photo-content, .steps, .about-content, .island-content,
+            .glance-card .label, .glance-card .value, .stat-card .context,
+            .stat-card .label, .stat-card .number, .academic-card h3,
+            .academic-card p, .ecard h4, .ecard p, .contact-card h4,
+            .contact-card p, .contact-source, .form-field label, .form-note {
+                color: #000 !important;
+            }
+            .footer-copy { color: #000 !important; border-top: 1px solid #000 !important; }
+            .btn { display: none !important; }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
@@ -1332,6 +1518,9 @@ $img_base = 'assets/images/';
     </style>
 </head>
 <body>
+
+    <!-- Sub-scroll progress ribbon (PR-1, non-destructive) -->
+    <div class="scroll-ribbon" id="scrollRibbon" aria-hidden="true"></div>
 
     <!-- Navigation Bar -->
     <nav class="nav-bar">
@@ -1359,6 +1548,12 @@ $img_base = 'assets/images/';
                 <a href="#contact" class="btn btn-outline">Contact the School</a>
             </div>
         </div>
+
+        <!-- School clock (PR-1, non-destructive) -->
+        <time id="schoolClock" class="school-clock" datetime="" aria-label="Current time in Tawi-Tawi">
+            <span class="clock-label">Tawi-Tawi</span>
+            <span id="clockTime">--:--:--</span>
+        </time>
     </section>
 
     <!-- School at a Glance -->
@@ -1892,31 +2087,55 @@ $img_base = 'assets/images/';
             <h2 class="section-title">Campus Life &amp; Community Gallery</h2>
             <p class="section-subtitle">Real moments from Batu-Batu National High School and the island communities of Tawi-Tawi.</p>
 
+            <!-- Gallery filter chips (PR-1, non-destructive) -->
+            <div class="filter-chips" role="toolbar" aria-label="Gallery filter">
+                <button class="chip active" type="button" data-filter="all" aria-pressed="true">All</button>
+                <button class="chip" type="button" data-filter="campus" aria-pressed="false">Campus</button>
+                <button class="chip" type="button" data-filter="community" aria-pressed="false">Community</button>
+                <button class="chip" type="button" data-filter="events" aria-pressed="false">Events</button>
+            </div>
+
             <div class="cg-stage" id="cgStage">
                 <img class="active" src="assets/images/bbnihs-staff.jpeg" alt="Batu-Batu National High School teachers and staff group photo"
                      data-title="Our Faculty &amp; Staff"
-                     data-desc="Teachers and school personnel of Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, posed in front of the school building.">
+                     data-desc="Teachers and school personnel of Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, posed in front of the school building."
+                     data-cat="campus"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="Batu-Batu Integrated High School Joint Baccalaureate Service Recognition Day"
                      data-title="Baccalaureate Recognition Day"
-                     data-desc="Students and faculty of Batu-Batu Integrated High School during their Joint Baccalaureate Service Recognition Day, celebrating learner achievement.">
+                     data-desc="Students and faculty of Batu-Batu Integrated High School during their Joint Baccalaureate Service Recognition Day, celebrating learner achievement."
+                     data-cat="events"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/bbnihs-graduation.jpeg" alt="Batu Integrated High School 52nd Graduation Exercises"
                      data-title="52nd Graduation Exercises"
-                     data-desc="The graduating class, faculty, and staff of Batu Integrated High School on stage for the 52nd Graduation Exercises.">
+                     data-desc="The graduating class, faculty, and staff of Batu Integrated High School on stage for the 52nd Graduation Exercises."
+                     data-cat="events"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/bbnihs-legacy.jpg" alt="Batu-Batu National High School named NMYL Legacy Program Site"
                      data-title="Legacy Program Site"
-                     data-desc="Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, recognized as a Legacy Program Site by the National Movement of Young Legislators (February 4, 2025).">
+                     data-desc="Batu-Batu National High School in Panglima Sugala, Tawi-Tawi, recognized as a Legacy Program Site by the National Movement of Young Legislators (February 4, 2025)."
+                     data-cat="campus"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/bbnihs-scholarship.jpeg" alt="Bangsamoro Scholarship Program induction in Tawi-Tawi"
                      data-title="Scholarship &amp; Training Induction"
-                     data-desc="Participants in a Training Induction Program for the Bangsamoro Scholarship Program for Technical-Vocational Education, Tawi-Tawi &mdash; expanding access to learning beyond the classroom.">
+                     data-desc="Participants in a Training Induction Program for the Bangsamoro Scholarship Program for Technical-Vocational Education, Tawi-Tawi &mdash; expanding access to learning beyond the classroom."
+                     data-cat="events"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/classroom1.jpeg" alt="A teacher leading a classroom lesson"
                      data-title="In the Classroom"
-                     data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education.">
+                     data-desc="A teacher guides young learners through a lesson at their desks &mdash; the daily heart of basic education."
+                     data-cat="campus"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/tawi-bajau-children.jpeg" alt="Children on a coastal stilt-village walkway"
                      data-title="Island Community Life"
-                     data-desc="Children cross a bamboo walkway over the sea in a Tawi-Tawi coastal community &mdash; the everyday reality of island living.">
+                     data-desc="Children cross a bamboo walkway over the sea in a Tawi-Tawi coastal community &mdash; the everyday reality of island living."
+                     data-cat="community"
+                     loading="lazy" decoding="async">
                 <img src="assets/images/tawi-bongao.jpg" alt="Bongao coastal stilt village with mountain backdrop"
                      data-title="Our Region: Tawi-Tawi"
-                     data-desc="Stilt homes and fish farms along the coastline beneath Tawi-Tawi's rugged mountains &mdash; the province Batu-Batu calls home.">
+                     data-desc="Stilt homes and fish farms along the coastline beneath Tawi-Tawi's rugged mountains &mdash; the province Batu-Batu calls home."
+                     data-cat="community"
+                     loading="lazy" decoding="async">
 
                 <button class="cg-arrow cg-prev" aria-label="Previous photo">&#10094;</button>
                 <button class="cg-arrow cg-next" aria-label="Next photo">&#10095;</button>
@@ -1947,6 +2166,11 @@ $img_base = 'assets/images/';
                     <h4>School Information</h4>
                     <p><strong><?php echo htmlspecialchars($school_name); ?></strong><br>School ID: <?php echo htmlspecialchars($school_id); ?></p>
                     <p><?php echo htmlspecialchars($school_address); ?><br><?php echo $school_classification; ?></p>
+                    <!-- Office hours badge (PR-1, non-destructive) -->
+                    <p class="office-hours" id="officeHours" aria-live="polite">
+                        <span class="oh-dot" aria-hidden="true"></span>
+                        <span id="officeHoursLabel">Office hours: Mon&ndash;Fri 7:30 AM &ndash; 4:30 PM (Tawi-Tawi)</span>
+                    </p>
                     <p class="contact-source">Source: DepEd School Masterlist (National Inventory Dashboard).</p>
                 </div>
 
@@ -2057,6 +2281,14 @@ $img_base = 'assets/images/';
             <p class="assist-note">Don't rely exclusively on email. A phone / SMS / in-person visit is more practical for many island residents.</p>
         </div>
     </section>
+
+    <!-- Accessibility toggle bar (PR-1, non-destructive) -->
+    <div class="a11y-bar" role="region" aria-label="Accessibility options">
+        <span class="a11y-label">Accessibility</span>
+        <button type="button" id="a11yHc" aria-pressed="false">High contrast</button>
+        <button type="button" id="a11yDys" aria-pressed="false">Dyslexia-friendly font</button>
+        <button type="button" id="a11yLarge" aria-pressed="false">Larger text</button>
+    </div>
 
     <!-- Footer -->
     <footer>
@@ -2395,6 +2627,154 @@ $img_base = 'assets/images/';
                 imgs[i].classList.add('active');
             }, delay);
         });
+    })();
+    </script>
+
+    <!-- ===== Tier 1 PR-1: Interactive behaviors (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+
+        // --- Sub-scroll ribbon ---
+        var ribbon = document.getElementById('scrollRibbon');
+        var docEl = document.documentElement;
+        function updateRibbon() {
+            var h = docEl.scrollHeight - docEl.clientHeight;
+            var pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+            if (ribbon) ribbon.style.width = Math.min(100, Math.max(0, pct)) + '%';
+        }
+        window.addEventListener('scroll', updateRibbon, { passive: true });
+        window.addEventListener('resize', updateRibbon);
+        updateRibbon();
+
+        // --- School clock (Asia/Manila) ---
+        var clockEl = document.getElementById('clockTime');
+        var clockTime = document.getElementById('schoolClock');
+        function updateClock() {
+            try {
+                var now = new Date();
+                var fmt = new Intl.DateTimeFormat('en-GB', {
+                    timeZone: 'Asia/Manila',
+                    hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false
+                });
+                var parts = fmt.formatToParts(now);
+                var hh = '', mm = '', ss = '';
+                for (var i = 0; i < parts.length; i++) {
+                    if (parts[i].type === 'hour') hh = parts[i].value;
+                    else if (parts[i].type === 'minute') mm = parts[i].value;
+                    else if (parts[i].type === 'second') ss = parts[i].value;
+                }
+                var txt = hh + ':' + mm + ':' + ss;
+                if (clockEl) clockEl.textContent = txt;
+                if (clockTime) clockTime.setAttribute('datetime', now.toISOString());
+            } catch (e) {
+                if (clockEl) clockEl.textContent = '--:--:--';
+            }
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+
+        // --- Office hours (Mon-Fri 07:30-16:30 Asia/Manila) ---
+        var ohBadge = document.getElementById('officeHours');
+        var ohLabel = document.getElementById('officeHoursLabel');
+        function updateOfficeHours() {
+            if (!ohBadge || !ohLabel) return;
+            var now = new Date();
+            // Asia/Manila day-of-week: 0=Sun..6=Sat; get via Intl
+            var dowFmt = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Manila', weekday: 'short' });
+            var hourFmt = new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Manila', hour: '2-digit', minute: '2-digit', hour12: false });
+            var dowStr = dowFmt.format(now);
+            var hrStr = hourFmt.format(now);
+            var dowMap = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
+            var dow = dowMap[dowStr];
+            var hh = parseInt(hrStr.split(':')[0], 10);
+            var mm = parseInt(hrStr.split(':')[1], 10);
+            var mins = hh * 60 + mm;
+            var open = (dow >= 1 && dow <= 5 && mins >= 7 * 60 + 30 && mins <= 16 * 60 + 30);
+            if (open) {
+                ohBadge.classList.remove('closed');
+                ohLabel.textContent = 'Office open now · Mon\u2013Fri 7:30 AM \u2013 4:30 PM (Tawi-Tawi)';
+            } else {
+                ohBadge.classList.add('closed');
+                ohLabel.textContent = 'Office closed · Mon\u2013Fri 7:30 AM \u2013 4:30 PM (Tawi-Tawi)';
+            }
+        }
+        updateOfficeHours();
+        setInterval(updateOfficeHours, 60000);
+
+        // --- Gallery filter chips ---
+        var chips = document.querySelectorAll('.filter-chips .chip');
+        var galleryImgs = document.querySelectorAll('#cgStage img');
+        chips.forEach(function (chip) {
+            chip.addEventListener('click', function () {
+                var f = chip.getAttribute('data-filter');
+                chips.forEach(function (c) {
+                    c.classList.remove('active');
+                    c.setAttribute('aria-pressed', 'false');
+                });
+                chip.classList.add('active');
+                chip.setAttribute('aria-pressed', 'true');
+                galleryImgs.forEach(function (img) {
+                    var cat = img.getAttribute('data-cat') || '';
+                    if (f === 'all' || cat === f) {
+                        img.classList.remove('hidden');
+                    } else {
+                        img.classList.add('hidden');
+                    }
+                });
+                // If active image is now hidden, advance to first visible
+                var active = document.querySelector('#cgStage img.active');
+                if (active && active.classList.contains('hidden')) {
+                    active.classList.remove('active');
+                    var firstVisible = document.querySelector('#cgStage img:not(.hidden)');
+                    if (firstVisible) firstVisible.classList.add('active');
+                }
+            });
+        });
+
+        // --- Accessibility toggles (state persisted to localStorage) ---
+        var A11Y_KEYS = { hc: 'a11y_hc', dys: 'a11y_dys', large: 'a11y_large' };
+        function readA11y() {
+            try {
+                return {
+                    hc: localStorage.getItem(A11Y_KEYS.hc) === '1',
+                    dys: localStorage.getItem(A11Y_KEYS.dys) === '1',
+                    large: localStorage.getItem(A11Y_KEYS.large) === '1'
+                };
+            } catch (e) { return { hc: false, dys: false, large: false }; }
+        }
+        function writeA11y(state) {
+            try {
+                localStorage.setItem(A11Y_KEYS.hc, state.hc ? '1' : '0');
+                localStorage.setItem(A11Y_KEYS.dys, state.dys ? '1' : '0');
+                localStorage.setItem(A11Y_KEYS.large, state.large ? '1' : '0');
+            } catch (e) {}
+        }
+        function applyA11y(state) {
+            var html = document.documentElement;
+            html.classList.toggle('a11y-hc', state.hc);
+            html.classList.toggle('a11y-dyslexic', state.dys);
+            html.classList.toggle('a11y-large', state.large);
+            var btnHc = document.getElementById('a11yHc');
+            var btnDys = document.getElementById('a11yDys');
+            var btnLarge = document.getElementById('a11yLarge');
+            if (btnHc) btnHc.setAttribute('aria-pressed', state.hc ? 'true' : 'false');
+            if (btnDys) btnDys.setAttribute('aria-pressed', state.dys ? 'true' : 'false');
+            if (btnLarge) btnLarge.setAttribute('aria-pressed', state.large ? 'true' : 'false');
+        }
+        function toggleA11y(key) {
+            var s = readA11y();
+            s[key] = !s[key];
+            writeA11y(s);
+            applyA11y(s);
+        }
+        var b1 = document.getElementById('a11yHc');
+        var b2 = document.getElementById('a11yDys');
+        var b3 = document.getElementById('a11yLarge');
+        if (b1) b1.addEventListener('click', function () { toggleA11y('hc'); });
+        if (b2) b2.addEventListener('click', function () { toggleA11y('dys'); });
+        if (b3) b3.addEventListener('click', function () { toggleA11y('large'); });
+        applyA11y(readA11y());
     })();
     </script>
 

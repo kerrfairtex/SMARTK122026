@@ -2084,6 +2084,7 @@ $img_base = 'assets/images/';
                 <p>JAMES KENNETH CAGANG</p>
                 <p>AVON MADALI</p>
                 <p>SAFRY MANALO</p>
+                <p>ALAWADDIN JR I. BUDDIN</p>
             </div>
             <div class="footer-col">
                 <h4>QUICK LINKS</h4>

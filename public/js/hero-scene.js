@@ -66,10 +66,10 @@
 
   function timeOfDayTint() {
     var h = new Date().getHours();
-    if (h < 8)  return { sky: 0x1a3850, water: 0x2d6a6a, sun: 0xfff0c0 };
-    if (h < 17) return { sky: 0x0E4F4F, water: 0x1a5a5a, sun: 0xF4B400 };
-    if (h < 19) return { sky: 0x4a2a3a, water: 0x4a3a4a, sun: 0xff7a4a };
-    return { sky: 0x08142a, water: 0x0E4F4F, sun: 0xcfe8e4 };
+    if (h < 8)  return { sky: 0x2a4a68, water: 0x3a8a8a, sun: 0xfff0c0 };
+    if (h < 17) return { sky: 0x1a6b6b, water: 0x2fa3a3, sun: 0xF4B400 };
+    if (h < 19) return { sky: 0x5a3a4a, water: 0x6a5468, sun: 0xff7a4a };
+    return { sky: 0x102a42, water: 0x1a6b6b, sun: 0xcfe8e4 };
   }
 
   function computeWorldScale(meta) {
@@ -92,8 +92,8 @@
 
   function frameCamera(camera, bounds) {
     if (!isFinite(bounds.minX)) {
-      camera.position.set(8, 38, 60);
-      camera.lookAt(0, 0, -8);
+      camera.position.set(6, 20, 34);
+      camera.lookAt(0, 0, -6);
       return;
     }
     var cx = (bounds.minX + bounds.maxX) / 2;
@@ -101,8 +101,8 @@
     var spanX = Math.max(bounds.maxX - bounds.minX, 8);
     var spanZ = Math.max(bounds.maxZ - bounds.minZ, 8);
     var span = Math.max(spanX, spanZ);
-    camera.position.set(cx + span * 0.15, span * 0.9, cz + span * 1.1);
-    camera.lookAt(cx, 0, cz - span * 0.1);
+    camera.position.set(cx + span * 0.12, span * 0.5, cz + span * 0.65);
+    camera.lookAt(cx, 0, cz - span * 0.05);
   }
 
   function startScene(wrap, meta, islandData, roadData, landuseData, schoolData) {
@@ -125,7 +125,7 @@
     renderer.setSize(wrap.clientWidth, wrap.clientHeight);
     var scene = new THREE.Scene();
     scene.background = new THREE.Color(tint.sky);
-    scene.fog = new THREE.Fog(tint.sky, 80, 320);
+    scene.fog = new THREE.Fog(tint.sky, 40, 180);
     var camera = new THREE.PerspectiveCamera(60, wrap.clientWidth / wrap.clientHeight, 0.1, 600);
     var bounds = { minX: Infinity, maxX: -Infinity, minZ: Infinity, maxZ: -Infinity };
 
@@ -144,7 +144,7 @@
     var waterMat = new THREE.ShaderMaterial({
       uniforms: { uTime: { value: 0 }, uColor: { value: new THREE.Color(tint.water) } },
       vertexShader: 'uniform float uTime; varying float vY; void main() { vec3 p = position; float wave = sin(p.x*0.15+uTime*0.5)*0.5 + cos(p.z*0.18+uTime*0.4)*0.5; p.y += wave; vY = wave; gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0); }',
-      fragmentShader: 'uniform vec3 uColor; varying float vY; void main() { float s = smoothstep(-1.0, 1.0, vY); gl_FragColor = vec4(uColor * (0.7 + s * 0.4), 1.0); }'
+      fragmentShader: 'uniform vec3 uColor; varying float vY; void main() { float s = smoothstep(-1.0, 1.0, vY); gl_FragColor = vec4(uColor * (0.85 + s * 0.55), 1.0); }'
     });
     scene.add(new THREE.Mesh(waterGeo, waterMat));
     disposers.push(function () { waterGeo.dispose(); waterMat.dispose(); });

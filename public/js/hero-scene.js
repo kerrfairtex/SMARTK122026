@@ -82,8 +82,12 @@
         scene.fog = new THREE.Fog(tint.sky, 80, 280);
 
         var camera = new THREE.PerspectiveCamera(60, wrap.clientWidth / wrap.clientHeight, 0.1, 600);
-        camera.position.set(0, 60, 90);
-        camera.lookAt(0, 0, 0);
+        // Camera positioned to see school + main island together
+        // School is at world (0,0); main island centroid at projected (-8.3, -32.6)
+        // Camera 30 units above and 70 back, looking at (0, 0, -8) - a midpoint
+        // that frames both the school pin and the southern island.
+        camera.position.set(8, 38, 60);
+        camera.lookAt(0, 0, -8);
 
         // ---- Sun ----
         var sun = new THREE.Mesh(
@@ -223,11 +227,11 @@
             scene.add(new THREE.Mesh(geo, mat));
         });
 
-        // ---- 4. SCHOOL MARKER PIN ----
+        // ---- 4. SCHOOL MARKER PIN (with landmark roof) ----
         if (school && school.projected) {
             var sx = school.projected[0] * worldScale;
             var sz = school.projected[1] * worldScale;
-            // Pin = red sphere on a yellow post
+            // Yellow post
             var post = new THREE.Mesh(
                 new THREE.CylinderGeometry(0.08, 0.08, 1.5, 8),
                 new THREE.MeshBasicMaterial({ color: 0xF4B400 })
@@ -241,7 +245,33 @@
             );
             beacon.position.set(sx, 1.7, sz);
             scene.add(beacon);
-            // Pulsing ring (cosmetic)
+            // LANDMARK: school icon - a stylized house/building on top of the beacon
+            // Made of: a cube (the building) + a pyramid (the roof) + a small flag pole
+            var schoolGroup = new THREE.Group();
+            // Building
+            var buildingMat = new THREE.MeshBasicMaterial({ color: 0xEDE6D6 }); // sand
+            var building = new THREE.Mesh(new THREE.BoxGeometry(0.6, 0.5, 0.6), buildingMat);
+            building.position.y = 0.25;
+            schoolGroup.add(building);
+            // Roof - 4-sided pyramid (cone with 4 segments)
+            var roofMat = new THREE.MeshBasicMaterial({ color: 0xe8734a }); // reef-coral
+            var roof = new THREE.Mesh(new THREE.ConeGeometry(0.55, 0.4, 4), roofMat);
+            roof.position.y = 0.7;
+            roof.rotation.y = Math.PI / 4;
+            schoolGroup.add(roof);
+            // Flag pole + flag
+            var poleMat = new THREE.MeshBasicMaterial({ color: 0xcfe8e4 }); // foam
+            var pole = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.5, 4), poleMat);
+            pole.position.set(0.2, 1.0, 0.0);
+            schoolGroup.add(pole);
+            var flagMat = new THREE.MeshBasicMaterial({ color: 0xF4B400 }); // sun-gold
+            var flag = new THREE.Mesh(new THREE.PlaneGeometry(0.3, 0.18), flagMat);
+            flag.position.set(0.35, 1.18, 0.0);
+            schoolGroup.add(flag);
+            // Position the whole school icon on top of the beacon
+            schoolGroup.position.set(sx, 2.2, sz);
+            scene.add(schoolGroup);
+            // Pulsing ring on the ground (kept from before)
             var ringGeo = new THREE.RingGeometry(0.6, 0.8, 24);
             var ringMat = new THREE.MeshBasicMaterial({ color: 0xe8734a, transparent: true, opacity: 0.5, side: THREE.DoubleSide });
             var ring = new THREE.Mesh(ringGeo, ringMat);
@@ -262,7 +292,8 @@
             function updateLabel() {
                 var sx = school.projected[0] * worldScale;
                 var sz = school.projected[1] * worldScale;
-                var v = new THREE.Vector3(sx, 2.2, sz);
+                // Project the school roof top (y=2.6) so the label sits above the icon
+                var v = new THREE.Vector3(sx, 2.6, sz);
                 v.project(camera);
                 var w = wrap.clientWidth, h = wrap.clientHeight;
                 var x = (v.x + 1) / 2 * w;
@@ -279,10 +310,10 @@
         function frame(now) {
             var t = (now - t0) / 1000;
             waterMat.uniforms.uTime.value = t;
-            // Subtle camera drift
-            camera.position.x = Math.sin(t * 0.04) * 3;
-            camera.position.z = 90 + Math.cos(t * 0.04) * 3;
-            camera.lookAt(0, 0, 0);
+            // Subtle camera drift around the framing midpoint
+            camera.position.x = 8 + Math.sin(t * 0.04) * 2;
+            camera.position.z = 60 + Math.cos(t * 0.04) * 2;
+            camera.lookAt(0, 0, -8);
             // Pulse the school ring
             if (ring) {
                 var s = 1 + Math.sin(t * 2) * 0.2;

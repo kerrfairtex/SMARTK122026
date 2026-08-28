@@ -1,0 +1,72 @@
+/* =====================================================================
+ * SmartCampus K-12 / Batu-Batu NHS — Design Tokens
+ * Spec Part 1: 6 color tokens (maritime, not generic SaaS navy-and-yellow)
+ * 3 type roles: Display (serif) / Body (humanist sans) / Utility (mono)
+ * 5 spacing steps, 4 radius steps, 3 elevation steps
+ * ===================================================================== */
+
+:root {
+    /* Color tokens (6) */
+    --ink-deep: #0A1420;       /* base background, near-black navy */
+    --tide-teal: #0E4F4F;      /* secondary surfaces, section alternation */
+    --sun-gold: #F4B400;       /* institutional gold (Philippine-flag warm yellow) */
+    --reef-coral: #E8734A;     /* live / active state accent */
+    --sand: #EDE6D6;           /* warm off-white for light surfaces */
+    --foam: #CFE8E4;           /* hairlines, dividers, low-emphasis text */
+
+    /* Translucent overlays (derived) */
+    --ink-overlay-90: rgba(10, 20, 32, 0.90);
+    --ink-overlay-70: rgba(10, 20, 32, 0.70);
+    --ink-overlay-40: rgba(10, 20, 32, 0.40);
+    --foam-overlay-08: rgba(207, 232, 228, 0.08);
+    --foam-overlay-16: rgba(207, 232, 228, 0.16);
+    --sun-gold-overlay-12: rgba(244, 180, 0, 0.12);
+
+    /* Type roles (3) */
+    --font-display: 'Fraunces', 'Source Serif 4', 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Inter', 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-utility: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+    /* Spacing scale (5 steps) */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 1rem;      /* 16px */
+    --space-4: 1.5rem;    /* 24px */
+    --space-5: 3rem;      /* 48px */
+
+    /* Radius scale (4 steps) */
+    --radius-1: 2px;
+    --radius-2: 6px;
+    --radius-3: 12px;
+    --radius-4: 24px;
+
+    /* Elevation scale (3 steps) */
+    --elev-1: 0 2px 4px rgba(0, 0, 0, 0.20);
+    --elev-2: 0 4px 12px rgba(0, 0, 0, 0.30);
+    --elev-3: 0 12px 32px rgba(0, 0, 0, 0.40);
+
+    /* Motion tokens (5 durations, 3 easings) */
+    --dur-micro: 120ms;
+    --dur-hover: 180ms;
+    --dur-base: 300ms;
+    --dur-reveal: 500ms;
+    --dur-hero: 900ms;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* High-contrast a11y toggle: palette override (DepEd yellow → pure black/white) */
+html.a11y-hc {
+    --ink-deep: #000000;
+    --tide-teal: #0a2f2f;
+    --sun-gold: #ffd400;
+    --reef-coral: #ff5a1f;
+    --sand: #ffffff;
+    --foam: #f5f5f5;
+    --ink-overlay-90: rgba(0, 0, 0, 0.95);
+    --ink-overlay-70: rgba(0, 0, 0, 0.85);
+    --ink-overlay-40: rgba(0, 0, 0, 0.60);
+    --foam-overlay-08: rgba(255, 255, 255, 0.10);
+    --foam-overlay-16: rgba(255, 255, 255, 0.20);
+}

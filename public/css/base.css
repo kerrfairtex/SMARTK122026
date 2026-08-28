@@ -1,0 +1,89 @@
+/* =====================================================================
+ * SmartCampus K-12 — Base styles
+ * Resets, document-level typography, section rhythm, container widths
+ * ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+@import url('tokens.css');
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--foam);
+    background: var(--ink-deep);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+img, svg, video, canvas { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+a { color: var(--sun-gold); text-decoration: none; transition: color var(--dur-hover) var(--ease-standard); }
+a:hover { color: var(--reef-coral); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+
+/* Document-level typography */
+h1 { font-size: clamp(2.2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+h3 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); }
+h4 { font-size: clamp(1.05rem, 2vw, 1.2rem); }
+
+/* Section rhythm */
+section { padding: var(--space-5) var(--space-3); }
+section + section { border-top: 1px solid var(--foam-overlay-08); }
+
+/* Alternating surface treatment: every other section gets a tide-teal tint */
+section.surface-tide { background: var(--tide-teal); }
+
+/* Container */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 var(--space-3);
+}
+.container-narrow { max-width: 760px; margin: 0 auto; padding: 0 var(--space-3); }
+
+/* Section heading rhythm */
+.section-title { margin-bottom: var(--space-2); color: var(--sand); }
+.section-subtitle { color: var(--foam); opacity: 0.8; margin-bottom: var(--space-4); max-width: 60ch; }
+
+/* A11y: skip-link, focus visibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: var(--space-3);
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    padding: var(--space-2) var(--space-3);
+    font-weight: 600;
+    border-radius: var(--radius-1);
+    z-index: 1000;
+    transition: top var(--dur-hover) var(--ease-standard);
+}
+.skip-link:focus { top: var(--space-2); }
+:focus-visible { outline: 2px solid var(--sun-gold); outline-offset: 2px; border-radius: var(--radius-1); }
+
+/* A11y motion gates */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+html.save-data *, html.save-data *::before, html.save-data *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* A11y type roles */
+html.a11y-dyslexic body, html.a11y-dyslexic h1, html.a11y-dyslexic h2, html.a11y-dyslexic h3, html.a11y-dyslexic p {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', var(--font-body);
+    letter-spacing: 0.02em;
+    line-height: 1.75;
+}
+html.a11y-large { font-size: 115%; }

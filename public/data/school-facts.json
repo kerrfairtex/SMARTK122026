@@ -1,0 +1,92 @@
+{
+  "school": {
+    "legal_name": "Batu-Batu National High School",
+    "short_name": "Batu-Batu NHS",
+    "alias": "BBNIHS",
+    "school_id": "305053",
+    "address": "Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi",
+    "region": "BARMM (Bangsamoro Autonomous Region in Muslim Mindanao)",
+    "province": "Tawi-Tawi",
+    "municipality": "Panglima Sugala",
+    "barangay": "Batu-Batu"
+  },
+  "founding": {
+    "origin_year_candidate": 1966,
+    "origin_year_source": "Facebook page handle facebook.com/BatuBatu1966 (school to confirm)",
+    "national_conversion_date": "1982-11-14",
+    "national_conversion_law": "Batas Pambansa Blg. 290",
+    "national_conversion_citation": "Supreme Court E-Library / thecorpusjuris.com transcription",
+    "municipality_rename": "Balimbing -> Panglima Sugala (Muslim Mindanao Autonomy Act No. 7, 1991-07-04)",
+    "former_provincial_capital": "Batu-Batu was provincial capital of Tawi-Tawi until 1979 (seat moved to Bongao)"
+  },
+  "vision_mission_frame": {
+    "source": "DepEd Vision, Mission, Core Values and Mandate (deped.gov.ph/about-deped/vision-mission-core-values-and-mandate)",
+    "note": "Adapted from the DepEd national Mission/Vision, pending the school's own board-approved statement.",
+    "vision": "Filipinos who love their country and whose values and competencies enable them to realize their full potential and contribute meaningfully to building the nation.",
+    "mission": "To protect and promote the right of every Filipino to quality, equitable, culture-based, and complete basic education that: (a) makes them globally competitive, (b) fosters a deep sense of patriotism and national pride, and (c) prepares them for productive civic engagement and meaningful participation in the broader community.",
+    "core_values": ["Maka-Diyos (God-loving)", "Maka-tao (People-oriented)", "Makakalikasan (Nature-loving)", "Makabansa (Nation-loving)"]
+  },
+  "community": {
+    "barangay_population_2024": 3936,
+    "municipality_population_2024": 52657,
+    "province_population_2024": 482645,
+    "source": "Philippine Statistics Authority 2024 Census",
+    "cultural_groups": ["Sama", "Jama Mapun", "Badjao", "Tausug"],
+    "cultural_attribution": "per PSA / provincial cultural profile"
+  },
+  "academics": {
+    "grade_levels_offered": ["Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12"],
+    "tracks_and_strands": "School-configured (pending confirmation from the school registrar).",
+    "disclaimer": "Actual grade-level availability and strand offerings are configured from the SmartCampus dashboard rather than hardcoded here."
+  },
+  "admissions": {
+    "status": "OPEN",
+    "school_year": "2026-2027",
+    "period": "2026-06-01 to 2026-08-15",
+    "classes_begin": "2026-08-17",
+    "enrollment_grade_levels": "Kinder, Grade 1-12",
+    "pipeline_states": [
+      "Submitted",
+      "Under Review",
+      "Documents Needed",
+      "Verified",
+      "Approved",
+      "Enrolled",
+      "Rejected"
+    ],
+    "wizard_steps": [
+      "Learner Information",
+      "Parent / Guardian",
+      "Previous School",
+      "Documents",
+      "Review & Submit"
+    ]
+  },
+  "empty_states": {
+    "faculty": "Faculty directory \u2014 coming soon, pending confirmation from the school registrar.",
+    "leadership": "School leadership roster \u2014 coming soon, pending confirmation from the school head."
+  },
+  "contact": {
+    "smartcampus_team": {
+      "role": "SmartCampus project team (technology & website support)",
+      "phone": "09637130812",
+      "email": "kerrfairtex@gmail.com",
+      "facebook": "https://www.facebook.com/KerrFairtex",
+      "disclosure": "The SmartCampus team is not the school. For enrollment decisions, learner records, or school administration, contact the school directly."
+    },
+    "school": {
+      "address": "Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi",
+      "deped_division": "Tawi-Tawi Schools Division Office",
+      "deped_division_phone": "(062) 992-4151"
+    }
+  },
+  "geolocation": {
+    "barangay": "Batu-Batu",
+    "municipality": "Panglima Sugala",
+    "province": "Tawi-Tawi",
+    "approximate_coordinates": {
+      "lat": 4.7,
+      "lon": 119.9
+    }
+  }
+}

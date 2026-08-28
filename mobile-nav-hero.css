@@ -1,0 +1,107 @@
+/* =====================================================================
+ * SmartCampus K-12 — Mobile breakpoint patch
+ * Append this block to the END of components.css (after the existing
+ * .top-nav and .hero rules). It does not modify any existing selector —
+ * it only adds mobile overrides, so it's safe to drop in as-is.
+ *
+ * Requires ONE small HTML change in the nav markup — see the note
+ * below the CSS for the exact markup to add.
+ * ===================================================================== */
+
+/* ---------- Hero fallback: brighter, visible before Three.js loads ---------- */
+.hero__fallback {
+    background: linear-gradient(
+        180deg,
+        var(--ink-deep) 0%,
+        var(--tide-teal) 45%,
+        #1a6b6b 65%,
+        var(--ink-deep) 100%
+    );
+}
+
+@media (max-width: 720px) {
+    /* Shrink the hero on small screens so the fallback gradient doesn't
+       read as a giant block of near-empty color before content appears */
+    .hero { min-height: 60vh; }
+    .hero__content { padding: var(--space-4) var(--space-3); }
+}
+
+/* ---------- Accessibility bar: wrap instead of overflow ---------- */
+@media (max-width: 720px) {
+    .a11y-bar {
+        flex-wrap: wrap;
+        row-gap: var(--space-2);
+    }
+    .a11y-bar__conn {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+    }
+}
+
+/* ---------- Top nav: collapse to hamburger + slide-down drawer ---------- */
+@media (max-width: 860px) {
+    .top-nav {
+        position: sticky;
+        top: 0;               /* let the a11y bar scroll away instead of
+                                  pinning nav at a hardcoded offset */
+        flex-wrap: wrap;
+    }
+
+    /* Hide the inline link row by default on mobile */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        order: 3;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__link {
+        padding: var(--space-2) var(--space-1);
+        width: 100%;
+    }
+
+    /* Checkbox-driven toggle (no JS required) */
+    .top-nav__toggle-input { display: none; }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__toggle-label .top-nav__burger-icon {
+        transform: rotate(90deg);
+    }
+
+    .top-nav__toggle-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-1);
+        border: 1px solid var(--foam-overlay-16);
+        color: var(--foam);
+        cursor: pointer;
+        order: 2;
+        margin-left: auto;
+        transition: background var(--dur-hover) var(--ease-standard);
+    }
+    .top-nav__toggle-label:hover { background: var(--foam-overlay-08); }
+    .top-nav__burger-icon {
+        font-family: var(--font-utility);
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: transform var(--dur-base) var(--ease-standard);
+    }
+
+    /* Search button stays visible, brand stays visible, links + toggle
+       reflow beneath */
+    .top-nav__brand { order: 1; }
+    #searchLaunch { order: 4; margin-left: var(--space-2); }
+}
+
+@media (min-width: 861px) {
+    /* Make sure the toggle never shows on desktop even if markup is present */
+    .top-nav__toggle-label { display: none; }
+}

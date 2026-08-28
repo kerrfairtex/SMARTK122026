@@ -729,3 +729,111 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
     /* Make sure the toggle never shows on desktop even if markup is present */
     .top-nav__toggle-label { display: none; }
 }
+
+
+/* =====================================================================
+ * SmartCampus K-12 — Unified mobile header patch
+ * Replaces the "two stacked bars + inconsistent overflow" header with
+ * ONE sticky bar on mobile: [Brand] ... [Hamburger] [Search]
+ * The hamburger drawer contains BOTH nav links AND accessibility
+ * toggles, in that order, so nothing competes for space above the fold.
+ *
+ * Desktop (>860px) is untouched — a11y bar + nav still render as your
+ * original two rows there, since there's room for them.
+ * ===================================================================== */
+
+/* ---------- 1. Harden the checkbox hiding (was: display:none only,
+   which can render briefly as a raw browser checkbox before CSS
+   applies). Visually hidden but still focusable/toggleable, and can
+   never flash visible even mid-paint. ---------- */
+.top-nav__toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 860px) {
+
+    /* ---------- 2. Collapse the a11y bar into the drawer instead of
+       showing as its own sticky row ---------- */
+    .a11y-bar {
+        display: none;
+    }
+
+    /* Re-show the a11y toggles, but now INSIDE the nav drawer */
+    .top-nav__links .a11y-bar__btn,
+    .top-nav__links .a11y-bar__conn {
+        display: inline-flex;
+    }
+
+    /* ---------- 3. Single unified sticky bar ---------- */
+    .top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        flex-wrap: wrap;
+        background: var(--ink-overlay-90);
+    }
+    .top-nav__brand { order: 1; }
+    .top-nav__toggle-label {
+        order: 2;
+        margin-left: auto;
+    }
+    #searchLaunch { order: 3; margin-left: var(--space-2); }
+
+    /* Drawer: nav links + a11y controls together, in document order */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        order: 4;
+        gap: 0;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__link {
+        width: 100%;
+        padding: var(--space-2) var(--space-1);
+    }
+
+    /* A11y controls, once moved into the drawer, get their own
+       labeled section with a divider so they read as a distinct
+       group rather than more nav links */
+    .top-nav__links .a11y-bar__label {
+        display: block;
+        width: 100%;
+        padding: var(--space-2) var(--space-1) var(--space-1);
+        color: var(--foam);
+        opacity: 0.6;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-1);
+    }
+    .top-nav__links .a11y-bar__btn {
+        width: 100%;
+        justify-content: flex-start;
+        margin: 0.15rem 0;
+    }
+    .top-nav__links .a11y-bar__conn {
+        margin: var(--space-2) 0 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: 861px) {
+    /* Desktop: keep original two-bar layout, ignore all of the above */
+    .top-nav__toggle-label { display: none; }
+    .a11y-bar { display: flex; }
+}

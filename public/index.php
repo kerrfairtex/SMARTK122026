@@ -17,24 +17,21 @@
          ACCESSIBILITY TOOLBAR (sticky top)
          Per Part 2: these toggles gate the 3D tier.
          ============================================================ -->
-    <div class="a11y-bar" role="toolbar" aria-label="Accessibility and connection">
-        <span class="a11y-bar__label">Accessibility:</span>
-        <button class="a11y-bar__btn" id="a11yHc" type="button" aria-pressed="false">High contrast</button>
-        <button class="a11y-bar__btn" id="a11yDys" type="button" aria-pressed="false">Dyslexia-friendly font</button>
-        <button class="a11y-bar__btn" id="a11yLarge" type="button" aria-pressed="false">Larger text</button>
-        <span class="a11y-bar__conn" id="connBadge" data-state="online"><span class="dot"></span>Online</span>
-    </div>
-
-    <!-- ============================================================
-         TOP NAVIGATION
-         ============================================================ -->
+    <!-- Unified header: single <nav> with brand, hamburger, search, and
+         (inside the drawer) nav links + accessibility toggles + conn badge.
+         Replaces the previous two-row header (a11y-bar + top-nav). On
+         desktop the drawer is just always-open; on mobile it's
+         checkbox-toggled. -->
     <nav class="top-nav" aria-label="Primary">
         <a href="#home" class="top-nav__brand">BBNIHS</a>
-        <!-- Mobile nav toggle (checkbox-hack, no JS needed) -->
+
         <input type="checkbox" id="navToggle" class="top-nav__toggle-input">
         <label for="navToggle" class="top-nav__toggle-label" aria-label="Toggle navigation menu">
-            <span class="top-nav__burger-icon">&#9776;</span>
+            <span class="top-nav__burger-icon">☰</span>
         </label>
+
+        <button class="a11y-bar__btn" id="searchLaunch" type="button" aria-label="Open search (/)">Search /</button>
+
         <div class="top-nav__links">
             <a class="top-nav__link" href="#glance">At a Glance</a>
             <a class="top-nav__link" href="#community">Community</a>
@@ -43,8 +40,13 @@
             <a class="top-nav__link" href="#admissions">Admissions</a>
             <a class="top-nav__link" href="#features">Features</a>
             <a class="top-nav__link" href="#contact">Contact</a>
+
+            <span class="a11y-bar__label">Accessibility</span>
+            <button class="a11y-bar__btn" id="a11yHc" type="button" aria-pressed="false">High contrast</button>
+            <button class="a11y-bar__btn" id="a11yDys" type="button" aria-pressed="false">Dyslexia-friendly font</button>
+            <button class="a11y-bar__btn" id="a11yLarge" type="button" aria-pressed="false">Larger text</button>
+            <span class="a11y-bar__conn" id="connBadge" data-state="online"><span class="dot"></span>Online</span>
         </div>
-        <button class="a11y-bar__btn" type="button" id="searchLaunch" aria-label="Open search (/)">Search /</button>
     </nav>
 
     <main id="main">

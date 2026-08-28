@@ -279,11 +279,23 @@
 
     function updateLabel() {
       if (!label) return;
+      if (window.matchMedia && window.matchMedia('(max-width: 860px)').matches) {
+        label.style.display = 'none';
+        return;
+      }
+      label.style.display = '';
       var v = new THREE.Vector3(sx, 2.6, sz);
       v.project(camera);
       var w = wrap.clientWidth, h = wrap.clientHeight;
-      label.style.left = ((v.x + 1) / 2 * w) + 'px';
-      label.style.top = ((-v.y + 1) / 2 * h) + 'px';
+      var x = (v.x + 1) / 2 * w;
+      var y = (-v.y + 1) / 2 * h;
+      // Clamp so the label can never sit outside the canvas bounds, even
+      // if the projected 3D point falls off-frame after a camera change.
+      var pad = 8;
+      x = Math.max(pad, Math.min(w - pad, x));
+      y = Math.max(pad, Math.min(h - pad, y));
+      label.style.left = x + 'px';
+      label.style.top = y + 'px';
       label.style.transform = 'translate(-50%, -100%)';
     }
 

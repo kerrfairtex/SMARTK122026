@@ -503,6 +503,21 @@ $img_base = 'assets/images/';
             font-size: 0.85rem;
             color: var(--gray-300);
         }
+        .feature-item .module-dot {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4ade80;
+            box-shadow: 0 0 6px rgba(74,222,128,0.5);
+        }
+        .feature-item.off .module-dot {
+            background: #6b7280;
+            box-shadow: none;
+        }
+        .feature-item { position: relative; }
 
         /* Island Community */
         .island {
@@ -709,6 +724,13 @@ $img_base = 'assets/images/';
         }
 
         /* Values */
+        .values-intro {
+            color: var(--gray-300);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.25rem;
+            max-width: 60ch;
+        }
         .values-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1757,9 +1779,11 @@ $img_base = 'assets/images/';
 
                 <p><strong>Educational mandate:</strong> As a National Integrated High School, the institution delivers the K&ndash;12 basic education program &mdash; Junior High School (Grades 7&ndash;10) and Senior High School (Grades 11&ndash;12) &mdash; under the Department of Education (DepEd), Republic of the Philippines.</p>
 
-                <p><strong>Mission:</strong> <em>[To be configured from verified school records &mdash; insert the official DepEd/BARMM mission statement.]</em></p>
+                <p><strong>Mission:</strong> <em id="missionBody" data-untouched="1">[To be configured from verified school records &mdash; insert the official DepEd/BARMM mission statement.]</em></p>
 
-                <p><strong>Vision:</strong> <em>[To be configured from verified school records &mdash; insert the official school vision.]</em></p>
+                <p><strong>Vision:</strong> <em id="visionBody" data-untouched="1">[To be configured from verified school records &mdash; insert the official school vision.]</em></p>
+
+                <p id="valuesIntroBody" data-untouched="1" class="values-intro">The values below describe how Batu-Batu National Integrated High School approaches its work every day.</p>
 
                 <div class="values-grid">
                     <div class="value-item">
@@ -2135,37 +2159,45 @@ $img_base = 'assets/images/';
             <h2 class="section-title">Smart Campus K12</h2>
             <p class="section-subtitle">Digital school services for students, teachers, parents, and administrators</p>
             <div class="features-grid">
-                <div class="feature-item">
+                <div class="feature-item" data-module="Students">
                     <div class="icon">📋</div>
                     <div class="name">Student Information</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Students">
                     <div class="icon">📝</div>
                     <div class="name">Enrollment</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Attendance">
                     <div class="icon">✅</div>
                     <div class="name">Attendance</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Grades">
                     <div class="icon">📊</div>
                     <div class="name">Grades</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Scheduling">
                     <div class="icon">📅</div>
                     <div class="name">Class Schedules</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Custom">
                     <div class="icon">📢</div>
                     <div class="name">Announcements</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Resources">
                     <div class="icon">📚</div>
                     <div class="name">Library</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
-                <div class="feature-item">
+                <div class="feature-item" data-module="Custom">
                     <div class="icon">👨‍👩‍👧</div>
                     <div class="name">Parent Communication</div>
+                    <div class="module-dot" aria-label="Module status"></div>
                 </div>
             </div>
             <div style="text-align: center; margin-top: 2rem;">
@@ -2575,10 +2607,56 @@ $img_base = 'assets/images/';
         prevBtn.addEventListener('click', function () { showStep(step - 1); });
 
         saveBtn.addEventListener('click', function () {
-            localStorage.setItem('bbnihs_draft', JSON.stringify(gather()));
-            res.textContent = 'Progress saved on this device. Return and continue later.';
+            var payload = gather();
+            // Local fallback (offline) — preserved from before Tier 3
+            try { localStorage.setItem('bbnihs_draft', JSON.stringify(payload)); } catch (e) {}
+            // Server-side draft (cross-device) — new in Tier 3
+            res.textContent = 'Saving your progress\u2026';
             res.classList.add('show');
+            fetch('enroll_api.php?action=draft_save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                keepalive: true
+            })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                if (data && data.url) {
+                    res.innerHTML = 'Saved on the server. To continue on another device, copy this link: <br><input type="text" value="' + data.url + '" readonly style="width:100%;font-family:ui-monospace,monospace;margin-top:0.4rem;padding:0.4rem;">';
+                } else {
+                    res.textContent = 'Saved on this device only (server unreachable).';
+                }
+            })
+            .catch(function () {
+                res.textContent = 'Saved on this device only (server unreachable).';
+            });
         });
+        // restore draft from server-side token (Tier 3, ?action=draft_resume&token=...)
+        (function () {
+            var url = new URL(window.location.href);
+            var action = url.searchParams.get('action');
+            var token = url.searchParams.get('token');
+            if (action !== 'draft_resume' || !token || !/^[a-f0-9]{64}$/.test(token)) return;
+            fetch('enroll_api.php?action=draft_resume&token=' + encodeURIComponent(token))
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (!data || !data.payload) return;
+                    var d = data.payload;
+                    Object.keys(d).forEach(function (k) {
+                        if (k === 'documents') return;
+                        if (form[k]) { if (form[k].type === 'checkbox') form[k].checked = true; else form[k].value = d[k]; }
+                    });
+                    if (d.documents) {
+                        form.doc_bc.checked = !!d.documents.bc; form.doc_rc.checked = !!d.documents.rc;
+                        form.doc_tc.checked = !!d.documents.tc; form.doc_other.checked = !!d.documents.other;
+                    }
+                    res.textContent = 'Draft restored from server. Review and submit, or save again to keep going.';
+                    res.classList.add('show');
+                    showStep(0);
+                })
+                .catch(function () { /* fall through to localStorage */ });
+        })();
+
         // restore draft
         try {
             var d = JSON.parse(localStorage.getItem('bbnihs_draft') || 'null');
@@ -3211,6 +3289,56 @@ $img_base = 'assets/images/';
         if (b2) b2.addEventListener('click', function () { toggleA11y('dys'); });
         if (b3) b3.addEventListener('click', function () { toggleA11y('large'); });
         applyA11y(readA11y());
+    })();
+    </script>
+
+    <!-- ===== Tier 3: module status dots (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+        var items = document.querySelectorAll('.features-grid .feature-item[data-module]');
+        if (!items.length) return;
+        // Default to "on" (green dot) so a network failure still looks fine.
+        items.forEach(function (it) { it.classList.remove('off'); });
+        fetch('modules_api.php', { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .then(function (data) {
+                if (!data || !data.modules) return;
+                items.forEach(function (it) {
+                    var m = it.getAttribute('data-module');
+                    if (m && data.modules[m] === false) it.classList.add('off');
+                });
+            })
+            .catch(function () { /* keep all-on */ });
+    })();
+    </script>
+
+    <!-- ===== Tier 3: about_content fetch (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+        // Fetch the current mission / vision / values_intro from the
+        // about_content API. Placeholder text inside <em> tags stays
+        // visible until the API responds, so users with JS disabled or
+        // a slow connection still see something.
+        var PLACES = [
+            { section: 'mission',     placeholderId: 'missionBody' },
+            { section: 'vision',      placeholderId: 'visionBody' },
+            { section: 'values_intro',placeholderId: 'valuesIntroBody' }
+        ];
+        PLACES.forEach(function (p) {
+            var el = document.getElementById(p.placeholderId);
+            if (!el) return;
+            fetch('about_content_api.php?section=' + encodeURIComponent(p.section), { cache: 'no-store' })
+                .then(function (r) { return r.ok ? r.json() : null; })
+                .then(function (data) {
+                    if (data && data.body && data.body.length > 0) {
+                        el.textContent = data.body;
+                        el.removeAttribute('data-untouched');
+                    }
+                })
+                .catch(function () { /* keep placeholder */ });
+        });
     })();
     </script>
 

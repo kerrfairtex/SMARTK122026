@@ -1680,14 +1680,19 @@ $img_base = 'assets/images/';
         }
 
         /* ===== Spec §7a: Carousel crossfade + active-dot scale ===== */
-        .about-slider { position: relative; }
-        .about-slider .slide {
+        /* The existing carousel uses <div class="about-slides"><img class="active">…</div>.
+           We crossfade images and use the existing .about-dots .dot structure. */
+        .about-slides { position: relative; }
+        .about-slides img {
             opacity: 0;
             transition: opacity var(--dur-base) var(--ease-standard);
             position: absolute; inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             pointer-events: none;
         }
-        .about-slider .slide.active {
+        .about-slides img.active {
             opacity: 1;
             position: relative;
             pointer-events: auto;
@@ -1700,7 +1705,7 @@ $img_base = 'assets/images/';
             transform: scale(1.3);
         }
         @media (prefers-reduced-motion: reduce) {
-            .about-slider .slide { transition: none; }
+            .about-slides img { transition: none; }
             .about-dots .dot { transition: none; }
         }
 
@@ -4117,9 +4122,11 @@ $img_base = 'assets/images/';
         }
 
         // ---------- §7a: Carousel crossfade + auto-advance + touch-pause + swipe ----------
+        // The carousel's slides are <img> children of <div class="about-slides">,
+        // not <div class="slide"> children. Adjust the selector accordingly.
         var slider = document.querySelector('.about-slider');
         if (slider) {
-            var slides = slider.querySelectorAll('.slide');
+            var slides = slider.querySelectorAll('.about-slides img');
             var dots = slider.querySelectorAll('.about-dots .dot');
             var idx = 0, timer = null;
             function show(n) {
@@ -4154,10 +4161,8 @@ $img_base = 'assets/images/';
             slider.addEventListener('mouseleave', startTimer);
             slider.addEventListener('focusin', stopTimer);
             slider.addEventListener('focusout', startTimer);
-            // Initial state
-            if (slides.length > 0 && !slides[0].classList.contains('active')) {
-                slides.forEach(function (s, i) { s.classList.toggle('active', i === 0); });
-            }
+            // Initial state — ensure first image is active, others are not
+            slides.forEach(function (s, i) { s.classList.toggle('active', i === 0); });
             startTimer();
         }
 

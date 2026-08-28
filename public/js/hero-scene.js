@@ -337,20 +337,35 @@
         fetchJSON(DATA_BASE + '/landuse.json').catch(function () { return null; }),
         fetchJSON(DATA_BASE + '/school.json').catch(function () { return null; })
       ]).then(function (results) {
-        var THREE = results[0];
         startScene(wrap, results[1], results[2], results[3], results[4], results[5]);
       }).catch(function () { /* keep fallback visible */ });
     }
+
+    // --- Mobile check: small viewport arms immediately ---
+    var isMobile = window.matchMedia && window.matchMedia('(max-width: 720px)').matches;
+
     var onScroll = function () { arm(); };
     var onPointer = function () { arm(); };
-    var timeoutId = setTimeout(arm, 2500);
+    var timeoutId = null;
+
     function teardownArmTriggers() {
       window.removeEventListener('scroll', onScroll);
       window.removeEventListener('pointerdown', onPointer);
-      clearTimeout(timeoutId);
+      if (timeoutId) clearTimeout(timeoutId);
     }
-    window.addEventListener('scroll', onScroll, { passive: true, once: true });
-    window.addEventListener('pointerdown', onPointer, { passive: true, once: true });
+
+    if (isMobile) {
+      // Skip the scroll/pointer wait entirely. Defer to the next paint
+      // (rAF) instead of firing perfectly synchronously, so the fallback
+      // gradient still paints first and the page doesn't jank on load.
+      requestAnimationFrame(function () { arm(); });
+    } else {
+      // Desktop: unchanged behavior — first of scroll, pointerdown, or 2.5s
+      timeoutId = setTimeout(arm, 2500);
+      window.addEventListener('scroll', onScroll, { passive: true, once: true });
+      window.addEventListener('pointerdown', onPointer, { passive: true, once: true });
+    }
+
     state.cleanupFns.push(teardownArmTriggers);
   }
 

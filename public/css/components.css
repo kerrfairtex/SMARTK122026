@@ -559,6 +559,44 @@ dialog#searchDialog::backdrop { background: rgba(0, 0, 0, 0.65); }
 .photo-strip figure:hover figcaption,
 .photo-strip figure:focus-within figcaption { opacity: 1; }
 
+/* Unverified figures get a coral border and always-visible tag */
+.photo-strip figure.unverified {
+    border: 1px solid var(--reef-coral);
+    position: relative;
+}
+.photo-strip figure.unverified::before {
+    content: '?';
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 22px;
+    text-align: center;
+    z-index: 2;
+    box-shadow: var(--elev-1);
+}
+.photo-strip figcaption.unverified-tag {
+    opacity: 1;
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    z-index: 2;
+}
+
 /* ---------- Reveal on scroll (Tier 1) ---------- */
 .reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
 .reveal.is-in { opacity: 1; transform: translateY(0); }

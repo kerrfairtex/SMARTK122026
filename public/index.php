@@ -132,10 +132,10 @@
                 <p style="margin-top: var(--space-4); color: var(--foam); opacity: 0.8; max-width: 60ch;">
                     Tawi-Tawi is the Philippines&rsquo; southernmost province &mdash; a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.
                 </p>
-                <p class="form-note" style="margin-top: var(--space-4); margin-bottom: var(--space-3);">Real photos from the Tawi-Tawi archipelago (vision-verified).</p>
+                <p class="form-note" style="margin-top: var(--space-4); margin-bottom: var(--space-3);">Real photos from the Tawi-Tawi archipelago. The first is vision-verified; the others are region-tagged but pending verification.</p>
                 <div class="photo-strip">
-                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance" loading="lazy"></figure>
-                    <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village" loading="lazy"></figure>
+                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance (vision-verified)" loading="lazy"></figure>
+                    <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village (vision-verified)" loading="lazy"></figure>
                 </div>
             </div>
         </section>
@@ -177,6 +177,39 @@
                     <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village" loading="lazy"></figure>
                     <figure><img src="assets/images/Batu-batu3.jpeg" alt="BBNIHS classroom during a school event" loading="lazy"></figure>
                     <figure><img src="assets/images/Batu-batu4.jpeg" alt="BBNIHS learners in a school group setting" loading="lazy"></figure>
+                </div>
+
+                <h3 style="margin-top: var(--space-4);">Additional Photo Bank &mdash; Unverified</h3>
+                <p class="form-note" style="margin-bottom: var(--space-3); padding: var(--space-3); background: rgba(232, 115, 74, 0.08); border-left: 3px solid var(--reef-coral); border-radius: 2px;">
+                    <strong style="color: var(--reef-coral);">Unverified &mdash; pending school confirmation.</strong>
+                    These photos are presented as provided to the SmartCampus team. Their authenticity, date, and connection to Batu-Batu National High School or Tawi-Tawi have not been independently verified. They will be moved to the verified section above once the school registrar confirms the subject of each photo.
+                </p>
+                <div class="photo-strip">
+                    <figure class="unverified"><img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/bbnihs-legacy.jpg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/bbnihs-staff.jpeg" alt="Staff group photo, vision-verified" loading="lazy"><figcaption class="unverified-tag">Vision-verified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/classroom1.jpeg" alt="Classroom photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/classroom2.jpeg" alt="Classroom photo, as provided &mdash; unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-01.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-02.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-03.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-04.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-05.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-06.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-08.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-09.jpeg" alt="Image as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-campus.jpg" alt="Campus photo as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/img-education.jpg" alt="Education photo as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                </div>
+
+                <h3 style="margin-top: var(--space-4);">Community Photo Bank &mdash; Unverified</h3>
+                <p class="form-note" style="margin-bottom: var(--space-3);">Regionally-tagged photos from the Tawi-Tawi archipelago (vision verification pending for individual photos).</p>
+                <div class="photo-strip">
+                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance" loading="lazy"></figure>
+                    <figure class="unverified"><img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau children, Tawi-Tawi &mdash; as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
+                    <figure class="unverified"><img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; as provided, unverified" loading="lazy"><figcaption class="unverified-tag">As provided &middot; unverified</figcaption></figure>
                 </div>
                 <ol class="history-timeline">
                     <li class="history-timeline__item reveal">

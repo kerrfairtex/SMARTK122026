@@ -2078,6 +2078,14 @@ $img_base = 'assets/images/';
                    <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a></p>
             </div>
             <div class="footer-col">
+                <h4>DEVELOPERS</h4>
+                <p>KADIL, AL-KHALID I.</p>
+                <p>FATIMA JAHARA MENDOZA</p>
+                <p>JAMES KENNETH CAGANG</p>
+                <p>AVON MADALI</p>
+                <p>SAFRY MANALO</p>
+            </div>
+            <div class="footer-col">
                 <h4>QUICK LINKS</h4>
                 <p><a href="#about">About</a></p>
                 <p><a href="#admissions">Academics</a></p>

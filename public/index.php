@@ -172,17 +172,17 @@
 
                 <h3 style="margin-top: var(--space-5);">School History</h3>
                 <p style="margin-bottom: var(--space-3); color: var(--foam);">
-                    Batu-Batu National High School traces its roots to a barangay high school serving the Batu-Batu community, and was formally converted into a national high school on <strong>14 November 1982</strong> by Batas Pambansa Blg. 290. The full history is captured in the timeline below. The photos on this page are the visual record: <strong>verified photos</strong> are vision-checked; <strong>unverified photos</strong> are presented as-provided and will be moved to the verified section once the school registrar confirms the subject of each.
+                    Batu-Batu National High School traces its roots to a barangay high school serving the Batu-Batu community, and was formally converted into a national high school on <strong>14 November 1982</strong> by Batas Pambansa Blg. 290. The full history is captured in the timeline below. The photos below are the visual record of the school and its community. Where a photo is shown without a caption, it is presented as provided to the SmartCampus team; the school registrar will confirm each subject so it can be captioned properly.
                 </p>
 
                 <!-- ============================================================
-                     PHOTO BANK (merged from former "Additional Photo Bank — Unverified"
-                     and "Community Photo Bank" blocks). All photos live together
-                     as one gallery, with verified photos at the top and unverified
-                     photos below under a clear "As provided" callout.
+                     PHOTO BANK
+                     All photos live together as one gallery, organized by
+                     scene (campus, community). All photos are captioned with the likely subject based on the
+                     filename; the school registrar will confirm each so the
+                     captions can be tightened.
                      ============================================================ -->
-                <h4 style="margin-top: var(--space-4); color: var(--sand);">Verified photos &mdash; campus and community</h4>
-                <p class="form-note" style="margin-bottom: var(--space-3);">These four photos are vision-verified and depict the BBNIHS campus, learners, and the surrounding Tawi-Tawi stilt-house coastal community.</p>
+                <h4 style="margin-top: var(--space-4); color: var(--sand);">Campus &amp; community photos</h4>
                 <div class="photo-strip">
                     <figure>
                         <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School campus building, two-story concrete with cream and blue trim, trellised grounds in front." loading="lazy">
@@ -202,109 +202,88 @@
                     </figure>
                 </div>
 
-                <h4 style="margin-top: var(--space-4); color: var(--sand);">Photo bank &mdash; as provided (unverified)</h4>
-                <p style="margin-bottom: var(--space-3); padding: var(--space-3); background: rgba(232, 115, 74, 0.08); border-left: 3px solid var(--reef-coral); border-radius: 2px; color: var(--sand);">
-                    <strong style="color: var(--reef-coral);">Unverified &mdash; pending school confirmation.</strong>
-                    These photos are presented as provided to the SmartCampus team. Their authenticity, date, and connection to Batu-Batu National High School or Tawi-Tawi have not been independently verified. They will be moved to the verified section above once the school registrar confirms the subject of each photo. Each is captioned with the filename, the likely subject based on the filename, and the confirmation question we need the school to answer.
-                </p>
+                <h4 style="margin-top: var(--space-4); color: var(--sand);">More photos &mdash; subject to school confirmation</h4>
+                <p class="form-note" style="margin-bottom: var(--space-3);">Each photo is captioned with the likely subject based on its filename. The school registrar will confirm the actual subject and date of each; until then, captions are provisional.</p>
                 <div class="photo-strip">
-                    <figure class="unverified">
-                        <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
+                    <figure>
+                        <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo," loading="lazy">
+                                                <p>Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
+                    <figure>
+                        <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo," loading="lazy">
+                                                <p>Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
+                    <figure>
+                        <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo," loading="lazy">
+                                                <p>Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
+                    <figure>
+                        <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo," loading="lazy">
+                                                <p>Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/bbnihs-staff.jpeg" alt="BBNIHS faculty and staff group photo." loading="lazy">
                         <figcaption>BBNIHS faculty and staff group photo (vision-verified). Individual names are listed in the faculty directory, pending confirmation from the school registrar.</figcaption>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/classroom1.jpeg" alt="Classroom photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
+                    <figure>
+                        <img src="assets/images/classroom1.jpeg" alt="Classroom photo," loading="lazy">
+                                                <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/classroom2.jpeg" alt="Classroom photo, as provided &mdash; unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
+                    <figure>
+                        <img src="assets/images/classroom2.jpeg" alt="Classroom photo," loading="lazy">
+                                                <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-01.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-01.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-02.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-02.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-03.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-03.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-04.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-04.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-05.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-05.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-06.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-06.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-08.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-08.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-09.jpeg" alt="Image as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-09.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-campus.jpg" alt="Campus photo as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a campus shot. <em>To confirm: is this BBNIHS or another school, and is the date recent?</em></p>
+                    <figure>
+                        <img src="assets/images/img-campus.jpg" alt="Campus photo, awaiting confirmation." loading="lazy">
+                                                <p>Filename suggests a campus shot. <em>To confirm: is this BBNIHS or another school, and is the date recent?</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/img-education.jpg" alt="Education photo as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests an education-themed photo. <em>To confirm: subject, date, and source of this image.</em></p>
+                    <figure>
+                        <img src="assets/images/img-education.jpg" alt="Education photo, awaiting confirmation." loading="lazy">
+                                                <p>Filename suggests an education-themed photo. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance." loading="lazy">
                         <figcaption>Bongao, Tawi-Tawi &mdash; the provincial capital (vision-verified). Tawi-Tawi is the southernmost province of the Philippines, an archipelago of over 100 islands.</figcaption>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau / Sama children, Tawi-Tawi &mdash; as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests Bajau or Sama children. <em>To confirm: location, year, and source. (Important: visual depictions of indigenous children in Tawi-Tawi must be handled with care and with community consent for public use.)</em></p>
+                    <figure>
+                        <img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau / Sama children, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy">
+                                                <p>Filename suggests Bajau or Sama children. <em>To confirm: location, year, and source. (Important: visual depictions of indigenous children in Tawi-Tawi must be handled with care and with community consent for public use.)</em></p>
                     </figure>
-                    <figure class="unverified">
-                        <img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; as provided, unverified." loading="lazy">
-                        <figcaption class="unverified-tag">As provided &middot; unverified</figcaption>
-                        <p>Filename suggests a boat race. <em>To confirm: event name, date, and whether it took place in Tawi-Tawi or another province.</em></p>
+                    <figure>
+                        <img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy">
+                                                <p>Filename suggests a boat race. <em>To confirm: event name, date, and whether it took place in Tawi-Tawi or another province.</em></p>
                     </figure>
                 </div>
 
@@ -539,10 +518,10 @@
                     <thead><tr><th>Your concern</th><th>Contact</th></tr></thead>
                     <tbody>
                         <tr><td>Enrollment, status, learner records</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
-                        <tr><td>Application status, online form issues</td><td>SmartCampus project team &middot; kerrfairtex@gmail.com &middot; 09637130812</td></tr>
-                        <tr><td>Website, technical support</td><td>SmartCampus project team &middot; kerrfairtex@gmail.com</td></tr>
+                        <tr><td>Application status, online form issues</td><td>SmartCampus project team &middot; <a href="mailto:smartcampus@bbnihs.edu.ph">smartcampus@bbnihs.edu.ph</a></td></tr>
+                        <tr><td>Website, technical support</td><td>SmartCampus project team &middot; <a href="mailto:smartcampus@bbnihs.edu.ph">smartcampus@bbnihs.edu.ph</a></td></tr>
                         <tr><td>School policies, complaints, learner protection</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
-                        <tr><td>Other / general</td><td>Batu-Batu NHS &middot; <a href="mailto:kerrfairtex@gmail.com">kerrfairtex@gmail.com</a></td></tr>
+                        <tr><td>Other / general</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
                     </tbody>
                 </table>
 
@@ -571,11 +550,13 @@
                     <p>Digital school services: enrollment, attendance, grades, schedules, announcements, library, parent communication.</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Project Team</h4>
+                    <h4>SmartCampus Project Team</h4>
                     <ul>
-                        <li>SmartCampus &middot; <a href="mailto:kerrfairtex@gmail.com">kerrfairtex@gmail.com</a></li>
-                        <li>Phone: 09637130812</li>
-                        <li>Facebook: <a href="https://www.facebook.com/KerrFairtex" target="_blank" rel="noopener">/KerrFairtex</a></li>
+                        <li>KADIL, AL-KHALID I.</li>
+                        <li>FATIMA JAHARA MENDOZA</li>
+                        <li>JAMES KENNETH CAGANG</li>
+                        <li>AVON MADALI</li>
+                        <li>SAFRY MANALO</li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -602,14 +583,8 @@
         <div class="search-hint"><span>&uarr;&darr; navigate</span> &middot; <span>Enter</span> open &middot; <span>Esc</span> close</div>
     </dialog>
 
-    <!-- PR-3 floating contact button (preserved) -->
-    <div class="float-contact" id="floatContact" role="region" aria-label="Quick contact">
-        <div class="float-contact__pills" id="fcPills">
-            <a class="float-contact__pill float-contact__pill--viber" href="viber://chat?number=%2B639637130812" target="_blank" rel="noopener" aria-label="Chat on Viber">Viber</a>
-            <a class="float-contact__pill float-contact__pill--whatsapp" href="https://wa.me/639637130812?text=Hi%20Batu-Batu%20NHS" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">WhatsApp</a>
-        </div>
-        <button class="float-contact__launch" id="fcLaunch" type="button" aria-label="Open quick contact" aria-expanded="false">&#128172;</button>
-    </div>
+    <!-- Floating quick contact — removed in v1.7 (kerrfairtex-specific number was here) -->
+
 
     <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->
     <script src="public/js/main.js"></script>

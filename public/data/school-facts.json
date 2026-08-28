@@ -69,10 +69,15 @@
   "contact": {
     "smartcampus_team": {
       "role": "SmartCampus project team (technology & website support)",
-      "phone": "09637130812",
-      "email": "kerrfairtex@gmail.com",
-      "facebook": "https://www.facebook.com/KerrFairtex",
-      "disclosure": "The SmartCampus team is not the school. For enrollment decisions, learner records, or school administration, contact the school directly."
+      "members": [
+        "KADIL, AL-KHALID I.",
+        "FATIMA JAHARA MENDOZA",
+        "JAMES KENNETH CAGANG",
+        "AVON MADALI",
+        "SAFRY MANALO"
+      ],
+      "email": "smartcampus@bbnihs.edu.ph",
+      "disclosure": "The SmartCampus team is not the school. For enrollment decisions, learner records, or school administration, contact the school directly at (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)."
     },
     "school": {
       "address": "Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi",

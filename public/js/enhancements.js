@@ -36,7 +36,11 @@
         requestAnimationFrame(step);
     }
 
-    // ---------- Floating contact (PR-3, preserved) ----------
+    // ---------- Floating contact (PR-3, removed in v1.7 - the personal
+    // phone number was here, and the design now uses the contact section
+    // routing table for all enquiries) ----------
+    // The block below is a no-op; the elements no longer exist in the
+    // DOM but the JS stays safe in case of cached pages.
     var fcLaunch = document.getElementById('fcLaunch');
     var fcContact = document.getElementById('floatContact');
     if (fcLaunch && fcContact) {

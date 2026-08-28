@@ -1641,8 +1641,28 @@ $img_base = 'assets/images/';
             <p class="tagline">Learning, growing, and building the future of Tawi-Tawi</p>
             <p class="location">Batu-Batu, Panglima Sugala, Tawi-Tawi &bull; BARMM</p>
             <p class="supporting">A public high school serving learners in Batu-Batu, Panglima Sugala, supported by SmartCampus K&ndash;12 digital services.</p>
+            <?php
+                // PR-4: smart CTA copy rotation. Default behavior unchanged.
+                // Supported ?for= values: parent, teacher, deped. Anything else falls through to default.
+                $for_raw   = isset($_GET['for']) ? (string)$_GET['for'] : '';
+                $for_clean = strtolower(preg_replace('/[^a-z]/', '', $for_raw));
+                $cta_label  = 'Discover Our School';
+                $cta_href   = '#about';
+                $cta_aria   = '';
+                if ($for_clean === 'teacher') {
+                    $cta_label = 'Teacher Login';
+                    $cta_href  = 'login.php';
+                } elseif ($for_clean === 'parent') {
+                    $cta_label = 'Apply for SY 2026&ndash;27';
+                    $cta_href  = '#enroll';
+                } elseif ($for_clean === 'deped') {
+                    $cta_label = 'Contact DepEd Tawi-Tawi';
+                    $cta_href  = 'mailto:' . (isset($deped_division_phone) ? htmlspecialchars($deped_division_phone) : 'kerrfairtex@gmail.com');
+                    $cta_aria  = ' (opens email)';
+                }
+            ?>
             <div class="hero-buttons">
-                <a href="#about" class="btn btn-primary">Discover Our School</a>
+                <a href="<?php echo htmlspecialchars($cta_href); ?>" class="btn btn-primary"<?php if ($cta_aria !== '') echo ' aria-label="' . htmlspecialchars($cta_label . $cta_aria) . '"'; ?>><?php echo htmlspecialchars($cta_label); ?></a>
                 <a href="login.php" class="btn btn-outline">SmartCampus Portal</a>
                 <a href="#enroll" class="btn btn-outline">Admissions / Enrollment</a>
                 <a href="#contact" class="btn btn-outline">Contact the School</a>
@@ -3191,6 +3211,75 @@ $img_base = 'assets/images/';
         if (b2) b2.addEventListener('click', function () { toggleA11y('dys'); });
         if (b3) b3.addEventListener('click', function () { toggleA11y('large'); });
         applyA11y(readA11y());
+    })();
+    </script>
+
+    <!-- ===== Tier 1 PR-4: Engagement signals (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+        // Section IDs that count as engagement events. Same set PR-2 uses for search.
+        // Mirrors nav anchors + FAQ section + action targets.
+        var SECTIONS = ['glance', 'community', 'about', 'admissions', 'enroll', 'features', 'contact', 'who'];
+        var sent = {};   // sent[sectionId] = true
+        var entered = {}; // entered[sectionId] = timestamp (ms)
+
+        function fire(section, duration) {
+            if (sent[section]) return;
+            sent[section] = true;
+            try {
+                var body = JSON.stringify({ section: section, duration: duration || 0 });
+                if (navigator.sendBeacon) {
+                    navigator.sendBeacon('engagement.php', new Blob([body], { type: 'application/json' }));
+                } else {
+                    fetch('engagement.php', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: body, keepalive: true });
+                }
+            } catch (e) { /* silent: engagement is best-effort, never block UX */ }
+        }
+
+        function setup() {
+            if (!('IntersectionObserver' in window)) return;
+            var io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    var id = entry.target && entry.target.id;
+                    if (SECTIONS.indexOf(id) === -1) return;
+                    if (entry.isIntersecting) {
+                        entered[id] = Date.now();
+                    } else if (entered[id]) {
+                        // Fired only after at least 1s of dwell to filter out glance-bys
+                        var dwell = Date.now() - entered[id];
+                        if (dwell >= 1000) fire(id, dwell);
+                        delete entered[id];
+                    }
+                });
+            }, { threshold: 0.25 });
+            SECTIONS.forEach(function (id) {
+                var el = document.getElementById(id);
+                if (el) io.observe(el);
+            });
+        }
+
+        // Page-hide: fire any sections the user is still dwelling on
+        function flushOnHide() {
+            var now = Date.now();
+            for (var id in entered) {
+                if (Object.prototype.hasOwnProperty.call(entered, id)) {
+                    var dwell = now - entered[id];
+                    if (dwell >= 1000) fire(id, dwell);
+                    delete entered[id];
+                }
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setup);
+        } else {
+            setup();
+        }
+        window.addEventListener('pagehide', flushOnHide);
+        document.addEventListener('visibilitychange', function () {
+            if (document.visibilityState === 'hidden') flushOnHide();
+        });
     })();
     </script>
 

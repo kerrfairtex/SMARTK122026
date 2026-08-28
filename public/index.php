@@ -1515,6 +1515,473 @@ $img_base = 'assets/images/';
         }
         .osm-caption a { color: var(--gray-300); }
 
+        /* ===== Spec §0: Motion tokens (shared across all sections) ===== */
+        :root {
+            --dur-micro: 120ms;
+            --dur-hover: 180ms;
+            --dur-base: 300ms;
+            --dur-reveal: 500ms;
+            --dur-hero: 900ms;
+            --ease-standard: cubic-bezier(.4, 0, .2, 1);
+            --ease-out: cubic-bezier(.2, 0, 0, 1);
+            --ease-in: cubic-bezier(.4, 0, 1, 1);
+            --stagger-step: 70ms;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            :root {
+                --dur-micro: 0ms; --dur-hover: 0ms; --dur-base: 0ms;
+                --dur-reveal: 0ms; --dur-hero: 0ms;
+            }
+        }
+        html.motion-reduced, html.motion-reduced * {
+            animation-duration: 0ms !important;
+            transition-duration: 0ms !important;
+        }
+        /* Save-data gate: kill all custom-property transitions on low data. */
+        html.save-data, html.save-data * {
+            transition: none !important;
+            animation: none !important;
+        }
+
+        /* ===== Spec §2a: Sticky nav backdrop + sliding active-link underline ===== */
+        .nav-bar {
+            transition: background-color var(--dur-base) var(--ease-standard),
+                        backdrop-filter var(--dur-base) var(--ease-standard);
+        }
+        .nav-bar.scrolled {
+            background: rgba(8, 24, 43, 0.92);
+            backdrop-filter: blur(8px);
+        }
+        .nav-bar { position: relative; }
+        .nav-bar a { position: relative; transition: color var(--dur-hover) var(--ease-standard); }
+        .nav-bar a::after {
+            content: '';
+            position: absolute;
+            left: 12px; right: 12px; bottom: 6px;
+            height: 2px;
+            background: #fbbf24;
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform var(--dur-base) var(--ease-standard);
+        }
+        .nav-bar a.active::after, .nav-bar a:hover::after, .nav-bar a:focus-visible::after {
+            transform: scaleX(1);
+        }
+
+        /* ===== Spec §2c: Tawi-Tawi clock tick pulse on the seconds digit ===== */
+        .school-clock .clock-tick { display: inline-block; transition: opacity var(--dur-micro) linear; }
+        .school-clock.tick .clock-tick { opacity: 0.55; }
+        @media (prefers-reduced-motion: reduce) {
+            .school-clock .clock-tick { transition: none; }
+        }
+
+        /* ===== Spec §2d: FAB contextual pulse ===== */
+        .float-contact .fc-launch {
+            transition: transform var(--dur-hover) var(--ease-standard),
+                        background var(--dur-hover) var(--ease-standard);
+        }
+        .float-contact.context-pulse .fc-launch {
+            animation: fab-attention var(--dur-hover) var(--ease-standard) 1;
+        }
+        @keyframes fab-attention {
+            0%   { transform: scale(1); }
+            50%  { transform: scale(1.08); }
+            100% { transform: scale(1); }
+        }
+
+        /* ===== Spec §2b: Progress bar uses native scroll-timeline where possible ===== */
+        .scroll-ribbon {
+            transform-origin: left;
+            transform: scaleX(var(--scroll-progress, 0));
+            transition: width 80ms linear; /* legacy fallback */
+        }
+        @supports (animation-timeline: scroll()) {
+            .scroll-ribbon {
+                animation: progress-grow linear;
+                animation-timeline: scroll(root);
+                transition: none;
+            }
+            @keyframes progress-grow {
+                from { transform: scaleX(0); }
+                to   { transform: scaleX(1); }
+            }
+        }
+
+        /* ===== Spec §3: Hero staggered load (one-per-session, fades+rises) ===== */
+        @keyframes hero-rise {
+            from { opacity: 0; transform: translateY(12px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .hero h1, .hero .tagline, .hero .location, .hero .hero-buttons, .hero .supporting {
+            opacity: 0;
+        }
+        html.hero-armed .hero h1 {
+            animation: hero-rise var(--dur-hero) var(--ease-out) 0ms forwards;
+        }
+        html.hero-armed .hero .tagline {
+            animation: hero-rise var(--dur-hero) var(--ease-out) 100ms forwards;
+        }
+        html.hero-armed .hero .location {
+            animation: hero-rise var(--dur-hero) var(--ease-out) 180ms forwards;
+        }
+        html.hero-armed .hero .hero-buttons {
+            animation: hero-rise var(--dur-base) var(--ease-out) 260ms forwards;
+        }
+        html.hero-armed .hero .supporting {
+            animation: hero-rise var(--dur-base) var(--ease-out) 360ms forwards;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero h1, .hero .tagline, .hero .location, .hero .hero-buttons, .hero .supporting { opacity: 1; }
+            html.hero-armed .hero h1, html.hero-armed .hero .tagline,
+            html.hero-armed .hero .location, html.hero-armed .hero .hero-buttons,
+            html.hero-armed .hero .supporting { animation: none; }
+        }
+
+        /* ===== Spec §4/§7c/§12: Shared card-stagger entrance ===== */
+        .stagger-card {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        html.stagger-armed .stagger-card {
+            animation: card-rise var(--dur-reveal) var(--ease-out) forwards;
+        }
+        html.stagger-armed .stagger-card:nth-child(1) { animation-delay: 0ms; }
+        html.stagger-armed .stagger-card:nth-child(2) { animation-delay: calc(var(--stagger-step) * 1); }
+        html.stagger-armed .stagger-card:nth-child(3) { animation-delay: calc(var(--stagger-step) * 2); }
+        html.stagger-armed .stagger-card:nth-child(4) { animation-delay: calc(var(--stagger-step) * 3); }
+        html.stagger-armed .stagger-card:nth-child(5) { animation-delay: calc(var(--stagger-step) * 4); }
+        html.stagger-armed .stagger-card:nth-child(6) { animation-delay: calc(var(--stagger-step) * 5); }
+        @keyframes card-rise {
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .stagger-card { opacity: 1; transform: none; }
+            html.stagger-armed .stagger-card { animation: none; }
+        }
+
+        /* ===== Spec §5: Count-up target gets hidden until armed (rAF in JS) ===== */
+        .countup { font-variant-numeric: tabular-nums; }
+        .countup:not(.armed) { /* nothing special, but keeps a hook for SSR */ }
+
+        /* ===== Spec §6, §18: Parallax via animation-timeline: view() ===== */
+        .parallax-bg {
+            background-attachment: fixed;
+        }
+        @supports (animation-timeline: view()) {
+            .parallax-bg {
+                animation: parallax-slide linear both;
+                animation-timeline: view();
+                animation-range: cover 0% cover 100%;
+            }
+            @keyframes parallax-slide {
+                from { transform: translateY(0); }
+                to   { transform: translateY(40%); }
+            }
+        }
+
+        /* ===== Spec §7a: Carousel crossfade + active-dot scale ===== */
+        .about-slider { position: relative; }
+        .about-slider .slide {
+            opacity: 0;
+            transition: opacity var(--dur-base) var(--ease-standard);
+            position: absolute; inset: 0;
+            pointer-events: none;
+        }
+        .about-slider .slide.active {
+            opacity: 1;
+            position: relative;
+            pointer-events: auto;
+        }
+        .about-dots .dot {
+            transition: transform var(--dur-hover) var(--ease-standard),
+                        opacity var(--dur-hover) var(--ease-standard);
+        }
+        .about-dots .dot.active {
+            transform: scale(1.3);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .about-slider .slide { transition: none; }
+            .about-dots .dot { transition: none; }
+        }
+
+        /* ===== Spec §8: Timeline line draw via stroke-dashoffset ===== */
+        .timeline-svg path.line {
+            stroke-dasharray: 1000;
+            stroke-dashoffset: 1000;
+            transition: stroke-dashoffset 1ms linear;
+        }
+        .timeline-svg.armed path.line {
+            transition: stroke-dashoffset 600ms linear;
+            stroke-dashoffset: 0;
+        }
+        .timeline-svg .dot-fill { opacity: 0; transition: opacity var(--dur-base) var(--ease-standard); }
+        .timeline-svg .dot-fill.armed { opacity: 1; }
+        @media (prefers-reduced-motion: reduce) {
+            .timeline-svg path.line, .timeline-svg .dot-fill { transition: none; }
+            .timeline-svg.armed path.line { stroke-dashoffset: 0; }
+        }
+
+        /* ===== Spec §9: Grade buttons: tap/hover feedback only ===== */
+        .grade-item, .grade-list .grade-item {
+            transition: border-color var(--dur-hover) var(--ease-standard);
+        }
+        .grade-item:active { transform: scale(0.98); transition: transform var(--dur-micro) var(--ease-standard); }
+
+        /* ===== Spec §10: OPEN badge breathing opacity (one allowed ambient loop) ===== */
+        .status-badge.live {
+            animation: badge-breathe 2.5s ease-in-out infinite;
+        }
+        @keyframes badge-breathe {
+            0%, 100% { opacity: 1; }
+            50%      { opacity: 0.85; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .status-badge.live { animation: none; }
+        }
+
+        /* ===== Spec §11: 5-step process stepper line fill + number→checkmark morph ===== */
+        .ms-step { transition: background var(--dur-base) var(--ease-standard),
+                              border-color var(--dur-base) var(--ease-standard),
+                              color var(--dur-base) var(--ease-standard); }
+        .ms-step .ms-num, .ms-step .ms-check { transition: opacity var(--dur-base) var(--ease-standard); }
+        .ms-step.done .ms-num { opacity: 0; }
+        .ms-step.done .ms-check { opacity: 1; }
+        .ms-step.done { background: var(--accent); color: var(--navy); border-color: var(--accent); }
+        .ms-progress { background: rgba(255,255,255,0.12); }
+        .ms-progress .ms-bar {
+            transition: width var(--dur-base) var(--ease-standard);
+            background: var(--accent);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ms-step, .ms-step .ms-num, .ms-step .ms-check,
+            .ms-progress .ms-bar { transition: none; }
+            .status-badge.live { animation: none; }
+        }
+
+        /* ===== Spec §13: Accordions via grid-template-rows 0fr→1fr ===== */
+        details.accordion {
+            display: grid;
+            grid-template-rows: 0fr;
+            transition: grid-template-rows var(--dur-base) var(--ease-standard);
+        }
+        details.accordion[open] {
+            grid-template-rows: 1fr;
+        }
+        details.accordion > .accordion-inner {
+            overflow: hidden;
+            min-height: 0;
+            opacity: 0;
+            transition: opacity 60% var(--ease-standard);
+        }
+        details.accordion[open] > .accordion-inner {
+            opacity: 1;
+        }
+        details.accordion > summary {
+            list-style: none;
+            cursor: pointer;
+            transition: color var(--dur-hover) var(--ease-standard);
+        }
+        details.accordion > summary::-webkit-details-marker { display: none; }
+        details.accordion > summary::after {
+            content: '+';
+            display: inline-block;
+            margin-left: 0.5rem;
+            transition: transform var(--dur-base) var(--ease-standard);
+            color: var(--accent);
+            font-weight: 700;
+        }
+        details.accordion[open] > summary::after {
+            transform: rotate(45deg);
+        }
+        @media (prefers-reduced-motion: reduce) {
+            details.accordion, details.accordion > .accordion-inner,
+            details.accordion > summary::after { transition: none; }
+        }
+
+        /* ===== Spec §14: Enrollment step slide + save-toast ===== */
+        .ms-step-panel {
+            transition: transform var(--dur-base) var(--ease-standard),
+                        opacity var(--dur-base) var(--ease-standard);
+        }
+        .ms-step-panel.leaving-forward { transform: translateX(-100%); opacity: 0; }
+        .ms-step-panel.leaving-back    { transform: translateX(100%);  opacity: 0; }
+        .ms-step-panel.entering-forward { transform: translateX(100%);  opacity: 0; }
+        .ms-step-panel.entering-back    { transform: translateX(-100%); opacity: 0; }
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 1.5rem;
+            transform: translateX(-50%) translateY(120%);
+            background: var(--accent);
+            color: var(--navy);
+            padding: 0.7rem 1.1rem;
+            border-radius: 6px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+            font-weight: 600;
+            z-index: 60;
+            transition: transform var(--dur-base) var(--ease-out);
+            pointer-events: none;
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); }
+        @media (prefers-reduced-motion: reduce) {
+            .ms-step-panel, .toast { transition: none; }
+        }
+
+        /* ===== Spec §15: 3-dot pulse on Check Status + result slide-down ===== */
+        .pulse-dots span {
+            display: inline-block;
+            animation: dot-pulse 1.2s ease-in-out infinite;
+        }
+        .pulse-dots span:nth-child(2) { animation-delay: 0.15s; }
+        .pulse-dots span:nth-child(3) { animation-delay: 0.3s; }
+        @keyframes dot-pulse {
+            0%, 80%, 100% { opacity: 0.3; transform: scale(0.9); }
+            40%           { opacity: 1;   transform: scale(1.1); }
+        }
+        .result-slide {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height var(--dur-base) var(--ease-standard),
+                        opacity var(--dur-base) var(--ease-standard);
+        }
+        .result-slide.show {
+            max-height: 600px;
+            opacity: 1;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .pulse-dots span { animation: none; }
+            .result-slide, .result-slide.show { transition: none; max-height: none; }
+        }
+
+        /* ===== Spec §16: Offline-flow nodes + live online/offline badge ===== */
+        .offline-flow-node {
+            opacity: 0;
+            transform: translateY(8px);
+        }
+        .offline-flow.armed .offline-flow-node {
+            animation: card-rise var(--dur-reveal) var(--ease-out) forwards;
+        }
+        .offline-flow.armed .offline-flow-node:nth-child(1) { animation-delay: 0ms; }
+        .offline-flow.armed .offline-flow-node:nth-child(2) { animation-delay: 100ms; }
+        .offline-flow.armed .offline-flow-node:nth-child(3) { animation-delay: 200ms; }
+        .offline-flow.armed .offline-flow-node:nth-child(4) { animation-delay: 300ms; }
+        .offline-flow.armed .offline-flow-node:nth-child(5) { animation-delay: 400ms; }
+        .offline-flow svg.connector { stroke-dasharray: 1000; stroke-dashoffset: 1000; }
+        .offline-flow.armed svg.connector { animation: connector-draw 800ms linear forwards; }
+        @keyframes connector-draw { to { stroke-dashoffset: 0; } }
+        .conn-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            background: rgba(255,255,255,0.06);
+            color: var(--gray-300);
+            transition: background var(--dur-hover) var(--ease-standard),
+                        color var(--dur-hover) var(--ease-standard);
+        }
+        .conn-badge .dot {
+            width: 8px; height: 8px; border-radius: 50%;
+            background: #4ade80;
+            transition: background var(--dur-hover) var(--ease-standard);
+        }
+        .conn-badge.offline { color: var(--gray-500); }
+        .conn-badge.offline .dot { background: #6b7280; }
+        @media (prefers-reduced-motion: reduce) {
+            .offline-flow.armed .offline-flow-node,
+            .offline-flow.armed svg.connector { animation: none; transform: none; opacity: 1; }
+            .offline-flow svg.connector { stroke-dashoffset: 0; }
+        }
+
+        /* ===== Spec §19: Filter tab sliding underline (reuse §2a pattern) ===== */
+        .filter-chips { position: relative; }
+        .filter-chips .chip { position: relative; overflow: hidden; }
+        .filter-chips .chip::after {
+            content: '';
+            position: absolute;
+            left: 12px; right: 12px; bottom: 6px;
+            height: 2px;
+            background: var(--white);
+            transform: scaleX(0);
+            transform-origin: center;
+            transition: transform var(--dur-base) var(--ease-standard);
+        }
+        .filter-chips .chip.active::after { transform: scaleX(1); }
+
+        /* ===== Spec §20: Floating-label form + map gate + submit morph ===== */
+        .form-field { position: relative; }
+        .form-field label {
+            position: absolute;
+            left: 0.6rem;
+            top: 0.7rem;
+            color: var(--gray-500);
+            pointer-events: none;
+            transition: transform var(--dur-hover) var(--ease-standard),
+                        color var(--dur-hover) var(--ease-standard);
+            background: var(--navy);
+            padding: 0 0.3rem;
+        }
+        .form-field input:focus + label,
+        .form-field input:not(:placeholder-shown) + label,
+        .form-field textarea:focus + label,
+        .form-field textarea:not(:placeholder-shown) + label,
+        .form-field select:focus + label {
+            transform: translateY(-1.4rem);
+            color: var(--accent);
+            font-size: 0.78rem;
+        }
+        .form-field input, .form-field textarea, .form-field select {
+            padding: 0.6rem;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.18);
+            color: var(--white);
+            border-radius: 4px;
+            transition: border-color var(--dur-hover) var(--ease-standard),
+                        box-shadow var(--dur-hover) var(--ease-standard);
+            width: 100%;
+        }
+        .form-field input:focus, .form-field textarea:focus, .form-field select:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+        }
+        .form-field input::placeholder, .form-field textarea::placeholder { color: transparent; }
+        .map-gate {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 200px;
+            background: var(--navy-light);
+            border-radius: 6px;
+            border: 1px dashed rgba(255,255,255,0.18);
+            color: var(--gray-300);
+            text-align: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: border-color var(--dur-hover) var(--ease-standard),
+                        background var(--dur-hover) var(--ease-standard);
+        }
+        .map-gate:hover, .map-gate:focus-visible {
+            border-color: var(--accent);
+            background: rgba(42,155,208,0.08);
+        }
+        .osm-wrap.armed { display: block; }
+        .btn.submit-morph { transition: background var(--dur-base) var(--ease-standard), color var(--dur-base) var(--ease-standard); }
+        .btn.submit-success { background: #22c55e; color: #fff; }
+        @media (prefers-reduced-motion: reduce) {
+            .form-field label, .form-field input, .form-field textarea, .form-field select,
+            .filter-chips .chip::after, .map-gate, .btn.submit-morph { transition: none; }
+        }
+
+        /* ===== Spec §23: a11y toggle cross-fade via custom-property transitions ===== */
+        html {
+            transition: background-color var(--dur-base) var(--ease-standard),
+                        color var(--dur-base) var(--ease-standard);
+        }
+        .a11y-bar button { transition: background var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard), color var(--dur-hover) var(--ease-standard); }
+
         /* ===== Tier 1 PR-1: Interactive additions (non-destructive) ===== */
 
         /* Sub-scroll ribbon (top progress bar) */
@@ -1789,7 +2256,7 @@ $img_base = 'assets/images/';
         <div class="container">
             <h2 class="section-title">School at a Glance</h2>
             <p class="section-subtitle">Verified institutional information</p>
-            <div class="glance-grid">
+            <div class="glance-grid stagger-group">
                 <div class="glance-card">
                     <div class="label">School ID</div>
                     <div class="value"><?php echo $school_id; ?></div>
@@ -1815,10 +2282,10 @@ $img_base = 'assets/images/';
         <div class="container">
             <h2 class="section-title">Our Community</h2>
             <p class="section-subtitle">Philippine Statistics Authority, 2024 Population Census</p>
-            <div class="stats-grid">
+            <div class="stats-grid stagger-group">
                 <?php foreach ($community_stats as $key => $stat): ?>
                 <div class="stat-card">
-                    <div class="number"><?php echo number_format($stat['population']); ?></div>
+                    <div class="number countup" data-target="<?php echo (int)$stat['population']; ?>"><?php echo number_format($stat['population']); ?></div>
                     <div class="context"><?php echo $stat['context']; ?></div>
                     <div class="label"><?php echo $stat['label']; ?></div>
                 </div>
@@ -1828,7 +2295,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Island Community Photo Section -->
-    <section class="photo-section island-section">
+    <section class="photo-section island-section parallax-bg">
         <div class="photo-content">
             <h2>Our Island Home</h2>
             <p>Tawi-Tawi is the Philippines' southernmost province — a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.</p>
@@ -1871,7 +2338,7 @@ $img_base = 'assets/images/';
 
                 <p id="valuesIntroBody" data-untouched="1" class="values-intro">The values below describe how Batu-Batu National Integrated High School approaches its work every day.</p>
 
-                <div class="values-grid">
+                <div class="values-grid stagger-group">
                     <div class="value-item">
                         <h4>Learner-Centered</h4>
                         <p>Education rooted in the needs of island-community learners.</p>
@@ -1963,7 +2430,7 @@ $img_base = 'assets/images/';
             <div class="enroll-status">
                 <div class="stat">
                     <div class="k">Enrollment Status</div>
-                    <div class="v open">OPEN</div>
+                    <div class="v open status-badge live">OPEN</div>
                 </div>
                 <div class="stat">
                     <div class="k">School Year</div>
@@ -2037,7 +2504,7 @@ $img_base = 'assets/images/';
 
             <div class="enroll-sub">
                 <h3>Who Can Enroll?</h3>
-                <div class="enroll-cards">
+                <div class="enroll-cards stagger-group">
                     <div class="ecard">
                         <h4>Kindergarten</h4>
                         <p>For eligible incoming Kindergarten learners.</p>
@@ -2058,7 +2525,7 @@ $img_base = 'assets/images/';
                 <p class="config-note">Actual grade-level availability is configured from the SmartCampus dashboard rather than hardcoded here.</p>
 
                 <h3>Enrollment Categories</h3>
-                <div class="enroll-cards">
+                <div class="enroll-cards stagger-group">
                     <div class="ecard">
                         <h4>New Student</h4>
                         <p>Enrolling at Batu-Batu for the first time.</p>
@@ -2079,8 +2546,10 @@ $img_base = 'assets/images/';
                 <p class="config-note">Categories are configurable according to the school's actual policies.</p>
 
                 <h3>Requirements</h3>
-                <details class="req">
+                <div id="requirementsAccordion">
+                <details class="req accordion">
                     <summary>New Learner</summary>
+                    <div class="accordion-inner">
                     <ul>
                         <li>Learner information</li>
                         <li>PSA / NSO birth certificate, where required</li>
@@ -2089,9 +2558,11 @@ $img_base = 'assets/images/';
                         <li>Parent / guardian information</li>
                         <li>Supporting documents</li>
                     </ul>
+                    </div>
                 </details>
-                <details class="req">
+                <details class="req accordion">
                     <summary>Transferee</summary>
+                    <div class="accordion-inner">
                     <ul>
                         <li>Birth certificate</li>
                         <li>Previous school records</li>
@@ -2100,16 +2571,20 @@ $img_base = 'assets/images/';
                         <li>Transfer credentials</li>
                         <li>Parent / guardian information</li>
                     </ul>
+                    </div>
                 </details>
-                <details class="req">
+                <details class="req accordion">
                     <summary>Returning Learner</summary>
+                    <div class="accordion-inner">
                     <ul>
                         <li>Existing learner information</li>
                         <li>Previous school records</li>
                         <li>Updated parent / guardian information</li>
                         <li>Required enrollment forms</li>
                     </ul>
+                    </div>
                 </details>
+                </div>
                 <p class="config-note">Requirements are configurable per school year, grade level, and enrollment category from the dashboard.</p>
             </div>
 
@@ -2206,28 +2681,28 @@ $img_base = 'assets/images/';
 
             <div class="faq">
                 <h3 style="color:var(--white);border-left:4px solid var(--accent);padding-left:0.75rem;margin-bottom:1rem;">Frequently Asked Questions</h3>
-                <details><summary>Who can enroll at Batu-Batu NIHS?</summary><p>Kindergarten, elementary, junior high (Grades 7&ndash;10), and senior high (Grades 11&ndash;12) learners, subject to the school's grade-level coverage for the school year.</p></details>
-                <details><summary>What documents are required?</summary><p>Requirements vary by enrollment category (New Learner, Transferee, Returning Learner). See the Requirements section above for the typical documents. The school configures the exact list per school year.</p></details>
-                <details><summary>Can I enroll without an internet connection?</summary><p>Yes. You can begin the application online and submit required documents physically at the school if connectivity is limited. Use "Save &amp; Continue Later" to keep your progress on this device.</p></details>
-                <details><summary>Can I submit documents physically?</summary><p>Yes. If online upload isn't possible, bring the required documents to the school. The application records which documents you will submit.</p></details>
-                <details><summary>How do I check my application?</summary><p>Use "Check Application Status" with the reference number you received (e.g. BATU-2026-001284). No full account is required.</p></details>
-                <details><summary>What happens after I submit my application?</summary><p>The school reviews your information and documents, then verifies and approves. You can track each stage via your reference number.</p></details>
-                <details><summary>Can I edit my application after submission?</summary><p>Contact the school with your reference number to request changes; the school can update records on your behalf.</p></details>
-                <details><summary>How do transferees enroll?</summary><p>Choose "Transferee" as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section.</p></details>
-                <details><summary>Where can I get assistance?</summary><p>Visit <?php echo htmlspecialchars($school_name); ?> in Batu-Batu, Panglima Sugala, Tawi-Tawi, or use the Contact section below.</p></details>
+                <details class="accordion"><summary>Who can enroll at Batu-Batu NIHS?</summary><div class="accordion-inner"><p>Kindergarten, elementary, junior high (Grades 7&ndash;10), and senior high (Grades 11&ndash;12) learners, subject to the school's grade-level coverage for the school year.</p></div></details>
+                <details class="accordion"><summary>What documents are required?</summary><div class="accordion-inner"><p>Requirements vary by enrollment category (New Learner, Transferee, Returning Learner). See the Requirements section above for the typical documents. The school configures the exact list per school year.</p></div></details>
+                <details class="accordion"><summary>Can I enroll without an internet connection?</summary><div class="accordion-inner"><p>Yes. You can begin the application online and submit required documents physically at the school if connectivity is limited. Use "Save &amp; Continue Later" to keep your progress on this device.</p></div></details>
+                <details class="accordion"><summary>Can I submit documents physically?</summary><div class="accordion-inner"><p>Yes. If online upload isn't possible, bring the required documents to the school. The application records which documents you will submit.</p></div></details>
+                <details class="accordion"><summary>How do I check my application?</summary><div class="accordion-inner"><p>Use "Check Application Status" with the reference number you received (e.g. BATU-2026-001284). No full account is required.</p></div></details>
+                <details class="accordion"><summary>What happens after I submit my application?</summary><div class="accordion-inner"><p>The school reviews your information and documents, then verifies and approves. You can track each stage via your reference number.</p></div></details>
+                <details class="accordion"><summary>Can I edit my application after submission?</summary><div class="accordion-inner"><p>Contact the school with your reference number to request changes; the school can update records on your behalf.</p></div></details>
+                <details class="accordion"><summary>How do transferees enroll?</summary><div class="accordion-inner"><p>Choose "Transferee" as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section.</p></div></details>
+                <details class="accordion"><summary>Where can I get assistance?</summary><div class="accordion-inner"><p>Visit <?php echo htmlspecialchars($school_name); ?> in Batu-Batu, Panglima Sugala, Tawi-Tawi, or use the Contact section below.</p></div></details>
             </div>
 
             <div class="offline-enroll">
                 <h3>Enrollment for Intermittent Connectivity</h3>
                 <p style="text-align:center;color:var(--gray-300);">Designed for Turtle Islands / Tawi-Tawi, where connections can be slow or unreliable.</p>
                 <div class="offline-flow">
-                    <span class="step">Start Application</span>
+                    <span class="step offline-flow-node">Start Application</span>
                     <span class="arrow">&rarr;</span>
-                    <span class="step">Save &amp; Continue</span>
+                    <span class="step offline-flow-node">Save &amp; Continue</span>
                     <span class="arrow">&rarr;</span>
-                    <span class="step">Submit When Connected</span>
+                    <span class="step offline-flow-node">Submit When Connected</span>
                     <span class="arrow">&rarr;</span>
-                    <span class="step">Need Offline Assistance?</span>
+                    <span class="step offline-flow-node">Need Offline Assistance?</span>
                     <span class="arrow">&rarr;</span>
                     <span class="step">School Enrollment Office</span>
                 </div>
@@ -2293,7 +2768,7 @@ $img_base = 'assets/images/';
     </section>
 
     <!-- Community Photo Section -->
-    <section class="photo-section community-section">
+    <section class="photo-section community-section parallax-bg">
         <div class="photo-content">
             <h2>In Our Community</h2>
             <p>From the sea to the classroom, our community is shaped by knowledge, work, and cooperation.</p>
@@ -2416,8 +2891,16 @@ $img_base = 'assets/images/';
                 <div class="contact-card">
                     <h4>Where We Are</h4>
                     <p>Batu-Batu, Poblacion<br>Panglima Sugala<br>Tawi-Tawi<br>BARMM, Philippines</p>
-                    <!-- PR-3: OSM embed (no third-party tracking, no API key) -->
-                    <div class="osm-wrap">
+                    <!-- PR-3: OSM embed. Wrapped in a tap-to-load gate per spec §20 to save data on the
+                         low-bandwidth audience. The .map-gate placeholder is visible by default;
+                         clicking it (or pressing Enter) swaps in the iframe via .armed. -->
+                    <div class="map-gate" data-target="#osmMap" role="button" tabindex="0" aria-label="Tap to load the OpenStreetMap embed">
+                        <div>
+                            <strong style="display:block;font-size:1.05rem;margin-bottom:0.3rem;color:var(--white);">📍 Tap to load map — uses data</strong>
+                            <span style="color:var(--gray-500);font-size:0.85rem;">The interactive map will only load if you tap here. Lightweight, no tracking.</span>
+                        </div>
+                    </div>
+                    <div class="osm-wrap" id="osmMap" hidden>
                         <iframe
                             title="Map of Batu-Batu, Poblacion, Panglima Sugala, Tawi-Tawi"
                             loading="lazy"
@@ -2548,6 +3031,10 @@ $img_base = 'assets/images/';
         <button type="button" class="search-launch" id="searchLaunch" aria-label="Open search">
             Search<kbd>/</kbd>
         </button>
+        <!-- Spec §16: live online/offline badge -->
+        <span id="connBadge" class="conn-badge" role="status" aria-live="polite">
+            <span class="dot"></span>Online
+        </span>
     </div>
 
     <!-- Footer -->
@@ -3467,6 +3954,381 @@ $img_base = 'assets/images/';
                 setTimeout(function () { if (img.parentNode) img.parentNode.removeChild(img); }, 5000);
             });
         });
+    })();
+    </script>
+
+    <!-- ===== Spec §0–§23: Motion behaviors (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+
+        // ---------- §0: Reduced-motion + save-data gates ----------
+        var root = document.documentElement;
+        if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            root.classList.add('motion-reduced');
+        }
+        if (navigator.connection && (navigator.connection.saveData ||
+            ['slow-2g', '2g'].indexOf(navigator.connection.effectiveType) !== -1)) {
+            root.classList.add('save-data');
+        }
+        // If user already armed the hero this session, skip the load sequence
+        var sessionArmed = false;
+        try { sessionArmed = sessionStorage.getItem('bbnihs-hero-armed') === '1'; } catch (e) {}
+        if (sessionArmed) root.classList.add('hero-armed');
+        else requestAnimationFrame(function () { root.classList.add('hero-armed'); try { sessionStorage.setItem('bbnihs-hero-armed', '1'); } catch (e) {} });
+
+        // ---------- §2a: Sticky nav backdrop on scroll ----------
+        var nav = document.querySelector('.nav-bar');
+        if (nav) {
+            var lastScrolled = false;
+            function onScroll() {
+                var scrolled = window.scrollY > 40;
+                if (scrolled !== lastScrolled) {
+                    nav.classList.toggle('scrolled', scrolled);
+                    lastScrolled = scrolled;
+                }
+                // §2b: legacy scroll-progress fallback
+                var ribbon = document.getElementById('scrollRibbon');
+                if (ribbon && !CSS.supports('(animation-timeline: scroll())')) {
+                    var h = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                    var pct = h > 0 ? (window.scrollY / h) * 100 : 0;
+                    ribbon.style.width = Math.min(100, Math.max(0, pct)) + '%';
+                }
+            }
+            window.addEventListener('scroll', onScroll, { passive: true });
+            onScroll();
+
+            // Active-link class via IO on each section
+            try {
+                var links = nav.querySelectorAll('a[href^="#"]');
+                var map = {};
+                links.forEach(function (a) {
+                    var id = a.getAttribute('href').slice(1);
+                    var t = document.getElementById(id);
+                    if (t) map[id] = a;
+                });
+                if (Object.keys(map).length) {
+                    var io = new IntersectionObserver(function (entries) {
+                        entries.forEach(function (e) {
+                            var a = map[e.target.id];
+                            if (!a) return;
+                            if (e.isIntersecting) {
+                                links.forEach(function (l) { l.classList.remove('active'); });
+                                a.classList.add('active');
+                            }
+                        });
+                    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+                    Object.keys(map).forEach(function (id) {
+                        var t = document.getElementById(id);
+                        if (t) io.observe(t);
+                    });
+                }
+            } catch (e) {}
+        }
+
+        // ---------- §2c: Clock tick pulse (CSS does the work, this just adds the .tick class once per second) ----------
+        var clock = document.getElementById('schoolClock');
+        var lastSec = -1;
+        setInterval(function () {
+            if (!clock) return;
+            var s = new Date().getSeconds();
+            if (s !== lastSec) {
+                lastSec = s;
+                clock.classList.add('tick');
+                setTimeout(function () { clock.classList.remove('tick'); }, 100);
+            }
+        }, 250);
+
+        // ---------- §2d: FAB contextual pulse on first scroll-into-view of the offline-flow section ----------
+        var offlineFlow = document.querySelector('.offline-flow');
+        if (offlineFlow && 'IntersectionObserver' in window) {
+            var fabPulsed = false;
+            new IntersectionObserver(function (entries) {
+                entries.forEach(function (e) {
+                    if (e.isIntersecting && !fabPulsed) {
+                        fabPulsed = true;
+                        var fc = document.getElementById('floatContact');
+                        if (fc) {
+                            fc.classList.add('context-pulse');
+                            setTimeout(function () { fc.classList.remove('context-pulse'); }, 220);
+                        }
+                    }
+                });
+            }, { threshold: 0.4 }).observe(offlineFlow);
+        }
+
+        // ---------- §3: Hero arm is handled above (in §0 init). Nothing more to do.
+
+        // ---------- §4/§7c/§12: Shared card-stagger arm via IO ----------
+        if ('IntersectionObserver' in window) {
+            var staggerGroups = document.querySelectorAll('.stagger-group');
+            staggerGroups.forEach(function (g) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            g.classList.add('stagger-armed');
+                            // Add stagger-card class to direct children
+                            Array.prototype.forEach.call(g.children, function (c) { c.classList.add('stagger-card'); });
+                        }
+                    });
+                }, { threshold: 0.15 }).observe(g);
+            });
+        } else {
+            // No IO support: just show everything
+            document.querySelectorAll('.stagger-group').forEach(function (g) {
+                g.classList.add('stagger-armed');
+                Array.prototype.forEach.call(g.children, function (c) { c.classList.add('stagger-card'); });
+            });
+        }
+
+        // ---------- §5: Count-up animation on .countup elements ----------
+        function formatNum(n) {
+            return n.toLocaleString('en-PH');
+        }
+        function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+        function countUp(el) {
+            var target = parseInt(el.getAttribute('data-target') || '0', 10);
+            if (target <= 0) return;
+            el.classList.add('armed');
+            var dur = Math.min(1200, 700 + Math.log10(Math.max(10, target)) * 200);
+            var start = performance.now();
+            function step(now) {
+                var t = Math.min(1, (now - start) / dur);
+                var v = Math.floor(easeOutCubic(t) * target);
+                el.textContent = formatNum(v);
+                if (t < 1) requestAnimationFrame(step);
+                else el.textContent = formatNum(target);
+            }
+            requestAnimationFrame(step);
+        }
+        if ('IntersectionObserver' in window) {
+            document.querySelectorAll('.countup').forEach(function (el) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            countUp(e.target);
+                            e.target._io && e.target._io.disconnect();
+                        }
+                    });
+                }, { threshold: 0.4 }).observe(el);
+            });
+        } else {
+            document.querySelectorAll('.countup').forEach(countUp);
+        }
+
+        // ---------- §7a: Carousel crossfade + auto-advance + touch-pause + swipe ----------
+        var slider = document.querySelector('.about-slider');
+        if (slider) {
+            var slides = slider.querySelectorAll('.slide');
+            var dots = slider.querySelectorAll('.about-dots .dot');
+            var idx = 0, timer = null;
+            function show(n) {
+                idx = (n + slides.length) % slides.length;
+                slides.forEach(function (s, i) { s.classList.toggle('active', i === idx); });
+                dots.forEach(function (d, i) { d.classList.toggle('active', i === idx); });
+            }
+            function tick() { show(idx + 1); }
+            function startTimer() { stopTimer(); timer = setInterval(tick, 6000); }
+            function stopTimer() { if (timer) { clearInterval(timer); timer = null; } }
+            dots.forEach(function (d, i) {
+                d.addEventListener('click', function () { show(i); startTimer(); });
+            });
+            var prev = slider.querySelector('.nav-btn.prev');
+            var next = slider.querySelector('.nav-btn.next');
+            if (prev) prev.addEventListener('click', function () { show(idx - 1); startTimer(); });
+            if (next) next.addEventListener('click', function () { show(idx + 1); startTimer(); });
+            // Touch-pause + swipe
+            var touchStartX = 0, touchStartY = 0;
+            slider.addEventListener('touchstart', function (e) { stopTimer(); touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: true });
+            slider.addEventListener('touchend', function (e) {
+                var dx = (e.changedTouches[0].clientX - touchStartX);
+                var dy = Math.abs(e.changedTouches[0].clientY - touchStartY);
+                if (dy < 30) {
+                    if (dx > 40) show(idx - 1);
+                    else if (dx < -40) show(idx + 1);
+                }
+                startTimer();
+            });
+            // Hover/focus pause
+            slider.addEventListener('mouseenter', stopTimer);
+            slider.addEventListener('mouseleave', startTimer);
+            slider.addEventListener('focusin', stopTimer);
+            slider.addEventListener('focusout', startTimer);
+            // Initial state
+            if (slides.length > 0 && !slides[0].classList.contains('active')) {
+                slides.forEach(function (s, i) { s.classList.toggle('active', i === 0); });
+            }
+            startTimer();
+        }
+
+        // ---------- §8: Timeline arm via IO ----------
+        if ('IntersectionObserver' in window) {
+            document.querySelectorAll('.timeline-svg').forEach(function (svg) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            svg.classList.add('armed');
+                            svg.querySelectorAll('.dot-fill').forEach(function (d, i) {
+                                setTimeout(function () { d.classList.add('armed'); }, 400 + i * 200);
+                            });
+                        }
+                    });
+                }, { threshold: 0.2 }).observe(svg);
+            });
+        } else {
+            document.querySelectorAll('.timeline-svg').forEach(function (svg) {
+                svg.classList.add('armed');
+                svg.querySelectorAll('.dot-fill').forEach(function (d) { d.classList.add('armed'); });
+            });
+        }
+
+        // ---------- §11: 5-step process stepper: mark .done on completed dots ----------
+        // The form already manages step state; we just add the visual done class
+        // when a step's data-done attr is set or when the step number < current.
+        document.querySelectorAll('.ms-step').forEach(function (s, i) {
+            // No-op default; the enrollment form's JS will toggle .done on prev steps
+            // and the ms-progress .ms-bar width will be set inline.
+        });
+
+        // ---------- §14: Save-toast on Save & Continue Later ----------
+        function showToast(msg, ms) {
+            var t = document.getElementById('bbnihsToast');
+            if (!t) {
+                t = document.createElement('div');
+                t.id = 'bbnihsToast';
+                t.className = 'toast';
+                t.setAttribute('role', 'status');
+                t.setAttribute('aria-live', 'polite');
+                document.body.appendChild(t);
+            }
+            t.textContent = msg;
+            requestAnimationFrame(function () { t.classList.add('show'); });
+            setTimeout(function () { t.classList.remove('show'); }, ms || 3000);
+        }
+        // Hook into the existing save button by listening for click on #msSave
+        var msSave = document.getElementById('msSave');
+        if (msSave) {
+            msSave.addEventListener('click', function () {
+                // Defer slightly to let the existing localStorage + draft_save fire
+                setTimeout(function () {
+                    showToast('Saved on this device. Resume anytime by reopening this link.', 3000);
+                }, 200);
+            });
+        }
+
+        // ---------- §15: 3-dot pulse + result slide-down on Check Status ----------
+        // The existing code shows a result in #statusResult. We add the dot-pulse
+        // markup to the button while waiting, then trigger the result-slide class.
+        var statusForm = document.getElementById('statusForm');
+        var statusResult = document.getElementById('statusResult');
+        if (statusForm && statusResult) {
+            // Wrap the result with result-slide class on first show
+            statusResult.classList.add('result-slide');
+            statusForm.addEventListener('submit', function () {
+                var btn = statusForm.querySelector('button[type="submit"]');
+                if (btn) {
+                    var orig = btn.innerHTML;
+                    btn.innerHTML = '<span class="pulse-dots"><span></span><span></span><span></span></span>';
+                    btn.disabled = true;
+                    setTimeout(function () {
+                        btn.innerHTML = orig;
+                        btn.disabled = false;
+                        statusResult.classList.add('show');
+                    }, 900);
+                }
+            });
+        }
+
+        // ---------- §16: Online/offline badge ----------
+        var connBadge = document.getElementById('connBadge');
+        function updateConn() {
+            if (!connBadge) return;
+            if (navigator.onLine) {
+                connBadge.classList.remove('offline');
+                connBadge.innerHTML = '<span class="dot"></span>Online';
+            } else {
+                connBadge.classList.add('offline');
+                connBadge.innerHTML = '<span class="dot"></span>Offline &mdash; saved locally';
+            }
+        }
+        if (connBadge) {
+            updateConn();
+            window.addEventListener('online', updateConn);
+            window.addEventListener('offline', updateConn);
+        }
+        // Offline-flow reveal
+        if ('IntersectionObserver' in window) {
+            document.querySelectorAll('.offline-flow').forEach(function (f) {
+                new IntersectionObserver(function (entries) {
+                    entries.forEach(function (e) {
+                        if (e.isIntersecting) {
+                            f.classList.add('armed');
+                            Array.prototype.forEach.call(f.querySelectorAll('.offline-flow-node'), function (n) { n.classList.add('offline-flow-node'); });
+                        }
+                    });
+                }, { threshold: 0.2 }).observe(f);
+            });
+        }
+
+        // ---------- §20: Map tap-to-load gate ----------
+        document.querySelectorAll('.map-gate').forEach(function (gate) {
+            function openMap() {
+                var sel = gate.getAttribute('data-target') || '.osm-wrap';
+                var target = document.querySelector(sel);
+                if (!target) return;
+                target.classList.add('armed');
+                target.removeAttribute('hidden');
+                gate.style.display = 'none';
+            }
+            gate.addEventListener('click', openMap);
+            gate.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openMap(); }
+            });
+        });
+
+        // ---------- §13: Single-open accordion for the Requirements group (FAQ stays multi-open) ----------
+        var reqGroup = document.getElementById('requirementsAccordion');
+        if (reqGroup) {
+            reqGroup.querySelectorAll('details.accordion').forEach(function (d) {
+                d.addEventListener('toggle', function () {
+                    if (!d.open) return;
+                    reqGroup.querySelectorAll('details.accordion').forEach(function (other) {
+                        if (other !== d && other.open) other.removeAttribute('open');
+                    });
+                });
+            });
+        }
+
+        // ---------- §20: Submit-button morph on success ----------
+        var contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            var origText = null;
+            var submitBtn = contactForm.querySelector('button[type="submit"], input[type="submit"]');
+            if (submitBtn) origText = submitBtn.value || submitBtn.textContent;
+            var observer = new MutationObserver(function () {
+                var result = document.getElementById('contactResult');
+                if (!result) return;
+                if (result.classList.contains('show') && /received/i.test(result.textContent) && submitBtn) {
+                    submitBtn.classList.add('btn', 'submit-morph', 'submit-success');
+                    if (submitBtn.tagName === 'INPUT') submitBtn.value = '✓ Sent';
+                    else submitBtn.textContent = '✓ Sent';
+                    setTimeout(function () {
+                        submitBtn.classList.remove('submit-success');
+                        if (submitBtn.tagName === 'INPUT') submitBtn.value = origText;
+                        else submitBtn.textContent = origText;
+                    }, 2200);
+                }
+            });
+            observer.observe(document.getElementById('contactResult') || document.body, { childList: true, subtree: true, attributes: true });
+        }
+
+        // ---------- §23: a11y toggle cross-fade is CSS-only via custom-property transitions
+        // (see html { transition: ... } above). The PR-1 toggle handlers already
+        // mutate body classes which the CSS picks up automatically.
+
+        // ---------- §13 / §10 / §16: Expose helper for inline page JS to call ----------
+        window.__bbnihs = window.__bbnihs || {};
+        window.__bbnihs.toast = showToast;
     })();
     </script>
 

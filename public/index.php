@@ -1961,11 +1961,11 @@ $img_base = 'assets/images/';
                 <div class="contact-card">
                     <h4>SmartCampus Support</h4>
                     <p>Need help with the SmartCampus portal?<br><br>
-                    <strong>Kerr Fairtex</strong></p>
+                    &nbsp;</p>
                     <p>
                         <a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
                         <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
-                        <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook &mdash; Kerr Fairtex</a>
+                        <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a>
                     </p>
                     <p class="contact-source">Support topics: login, enrollment application, application status, website/portal errors, account assistance, technical feedback.</p>
                 </div>
@@ -2015,8 +2015,8 @@ $img_base = 'assets/images/';
                         <tr><td>Student records</td><td>School registrar</td></tr>
                         <tr><td>Academic concerns</td><td>School / teacher</td></tr>
                         <tr><td>Parent concerns</td><td>School administration</td></tr>
-                        <tr><td>SmartCampus technical issue</td><td>Kerr Fairtex (SmartCampus team)</td></tr>
-                        <tr><td>Website issue</td><td>Kerr Fairtex (SmartCampus team)</td></tr>
+                        <tr><td>SmartCampus technical issue</td><td>SmartCampus team</td></tr>
+                        <tr><td>Website issue</td><td>SmartCampus team</td></tr>
                         <tr><td>Application system issue</td><td>SmartCampus support</td></tr>
                         <tr><td>DepEd concern</td><td>Tawi-Tawi Schools Division Office</td></tr>
                         <tr><td>Learner protection concern</td><td>School / DepEd appropriate channel</td></tr>
@@ -2051,7 +2051,7 @@ $img_base = 'assets/images/';
                     <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a>
                     <a href="<?php echo htmlspecialchars($school_maps); ?>" target="_blank" rel="noopener">Get Directions</a>
                 </div>
-                <p class="assist-note">SmartCampus K&ndash;12 developer contact: Kerr Fairtex. For school administrative matters, contact the school or DepEd.</p>
+                <p class="assist-note">For school administrative matters, contact the school or DepEd.</p>
             </div>
 
             <p class="assist-note">Don't rely exclusively on email. A phone / SMS / in-person visit is more practical for many island residents.</p>
@@ -2071,6 +2071,10 @@ $img_base = 'assets/images/';
                 <p class="footer-muted">Digital school services for learning, administration, communication, and community engagement.</p>
             </div>
             <div class="footer-col">
+                <h4>ADVISER</h4>
+                <p>ALAWADDIN JR I. BUDDIN</p>
+            </div>
+            <div class="footer-col">
                 <h4>CONTACT</h4>
             </div>
             <div class="footer-col">
@@ -2080,7 +2084,6 @@ $img_base = 'assets/images/';
                 <p>JAMES KENNETH CAGANG</p>
                 <p>AVON MADALI</p>
                 <p>SAFRY MANALO</p>
-                <p>ALAWADDIN JR I. BUDDIN</p>
             </div>
             <div class="footer-col">
                 <h4>QUICK LINKS</h4>

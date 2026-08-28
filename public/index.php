@@ -1307,6 +1307,106 @@ $img_base = 'assets/images/';
             border-top: 1px solid rgba(255,255,255,0.06);
         }
 
+        /* ===== Tier 1 PR-2: Cmd/K search (non-destructive) ===== */
+
+        /* Search dialog */
+        dialog#searchDialog {
+            padding: 0;
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            background: var(--navy);
+            color: var(--gray-100);
+            max-width: 600px;
+            width: calc(100% - 2rem);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        dialog#searchDialog::backdrop {
+            background: rgba(0,0,0,0.65);
+        }
+        .search-wrap { padding: 0; }
+        .search-input {
+            width: 100%;
+            background: transparent;
+            border: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            color: var(--white);
+            font: inherit;
+            font-size: 1.1rem;
+            padding: 1rem 1.25rem;
+            outline: none;
+        }
+        .search-input::placeholder { color: var(--gray-500); }
+        .search-results {
+            list-style: none;
+            margin: 0;
+            padding: 0.5rem 0;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+        .search-results li {
+            padding: 0.65rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            align-items: baseline;
+            gap: 0.6rem;
+        }
+        .search-results li[aria-selected="true"],
+        .search-results li:hover { background: var(--navy-light); }
+        .search-results .type {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            padding: 0.15rem 0.45rem;
+            border-radius: 3px;
+            background: rgba(255,255,255,0.08);
+            color: var(--gray-300);
+            flex: none;
+        }
+        .search-results .type.faq     { background: rgba(74,222,128,0.15); color: #4ade80; }
+        .search-results .type.section { background: rgba(42,155,208,0.15); color: var(--accent); }
+        .search-results .type.action  { background: rgba(234,179,8,0.15); color: #fbbf24; }
+        .search-results .title { font-weight: 600; }
+        .search-results .empty {
+            padding: 1.25rem;
+            text-align: center;
+            color: var(--gray-500);
+            font-size: 0.9rem;
+        }
+        .search-results .hint {
+            padding: 0.75rem 1.25rem;
+            border-top: 1px solid rgba(255,255,255,0.08);
+            color: var(--gray-500);
+            font-size: 0.75rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+        }
+        .search-results .hint kbd {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 3px;
+            padding: 0.1rem 0.4rem;
+            font-family: ui-monospace, monospace;
+            font-size: 0.7rem;
+            color: var(--gray-300);
+        }
+        .a11y-bar .search-launch {
+            margin-left: auto;
+            padding-left: 0.75rem;
+            border-left: 1px solid rgba(255,255,255,0.15);
+            color: var(--gray-500);
+        }
+        .a11y-bar .search-launch kbd {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 3px;
+            padding: 0.1rem 0.4rem;
+            font-family: ui-monospace, monospace;
+            font-size: 0.7rem;
+            color: var(--gray-300);
+            margin-left: 0.4rem;
+        }
+
         /* ===== Tier 1 PR-1: Interactive additions (non-destructive) ===== */
 
         /* Sub-scroll ribbon (top progress bar) */
@@ -2288,6 +2388,10 @@ $img_base = 'assets/images/';
         <button type="button" id="a11yHc" aria-pressed="false">High contrast</button>
         <button type="button" id="a11yDys" aria-pressed="false">Dyslexia-friendly font</button>
         <button type="button" id="a11yLarge" aria-pressed="false">Larger text</button>
+        <!-- Search launcher (PR-2, non-destructive) -->
+        <button type="button" class="search-launch" id="searchLaunch" aria-label="Open search">
+            Search<kbd>/</kbd>
+        </button>
     </div>
 
     <!-- Footer -->
@@ -2627,6 +2731,318 @@ $img_base = 'assets/images/';
                 imgs[i].classList.add('active');
             }, delay);
         });
+    })();
+    </script>
+
+    <!-- ===== Tier 1 PR-2: Cmd/K search dialog (non-destructive) ===== -->
+    <dialog id="searchDialog" aria-label="Search this page">
+        <div class="search-wrap">
+            <input type="search" class="search-input" id="searchInput"
+                   placeholder="Search this page&hellip; (e.g. enrollment, contact, Grade 11)"
+                   aria-label="Search query" autocomplete="off" spellcheck="false">
+            <ul class="search-results" id="searchResults" role="listbox" aria-label="Search results"></ul>
+            <div class="hint">
+                <span><kbd>&uarr;</kbd><kbd>&darr;</kbd> navigate</span>
+                <span><kbd>Enter</kbd> open</span>
+                <span><kbd>Esc</kbd> close</span>
+            </div>
+        </div>
+    </dialog>
+
+    <!-- ===== PR-2: inline search index (non-destructive) ===== -->
+    <script type="application/json" id="searchIndex">
+{
+  "sections": [
+    {
+      "id": "glance",
+      "title": "School at a Glance",
+      "type": "section",
+      "keywords": ["school id", "BBNIHS", "Tawi-Tawi", "Batu-Batu", "Poblacion", "Panglima Sugala", "305053", "DepEd", "public", "integrated", "high school"]
+    },
+    {
+      "id": "community",
+      "title": "Our Community",
+      "type": "section",
+      "keywords": ["PSA", "POPCEN", "2024", "population", "3936", "52657", "482645", "barangay", "municipality", "province", "Tawi-Tawi", "census"]
+    },
+    {
+      "id": "about",
+      "title": "About Batu-Batu NHS",
+      "type": "section",
+      "keywords": ["K-12", "barangay", "island", "Panglima Sugala", "mission", "vision", "learner", "teacher", "inclusion", "inclusive", "resilience", "community", "K to 12"]
+    },
+    {
+      "id": "admissions",
+      "title": "Academic Programs",
+      "type": "section",
+      "keywords": ["junior high", "senior high", "Grade 7", "Grade 8", "Grade 9", "Grade 10", "Grade 11", "Grade 12", "JHS", "SHS", "K-12", "track", "strand", "academic", "DepEd"]
+    },
+    {
+      "id": "enroll",
+      "title": "Admissions &amp; Enrollment",
+      "type": "section",
+      "keywords": ["enroll", "apply", "application", "transferee", "balik-aral", "returning learner", "requirements", "birth certificate", "form 137", "form 138", "LRN", "reference number", "status", "school year", "2026", "2027"]
+    },
+    {
+      "id": "features",
+      "title": "Smart Campus K12",
+      "type": "section",
+      "keywords": ["student information", "attendance", "grades", "schedule", "announcements", "library", "parent communication", "SmartCampus", "portal", "module"]
+    },
+    {
+      "id": "contact",
+      "title": "Contact",
+      "type": "section",
+      "keywords": ["phone", "email", "facebook", "viber", "whatsapp", "DepEd", "Tawi-Tawi", "Panglima Sugala", "Batu-Batu", "092-4151", "Schools Division", "Tawi-Tawi Schools Division", "office hours", "Mon-Fri", "7:30", "4:30"]
+    },
+    {
+      "id": "who",
+      "title": "Who Should I Contact?",
+      "type": "section",
+      "keywords": ["enrollment", "registrar", "academic", "parent", "SmartCampus team", "SmartCampus", "DepEd", "Tawi-Tawi Schools Division", "learner protection", "concerns", "routing"]
+    },
+    {
+      "id": "faq-1",
+      "title": "Who can enroll at Batu-Batu NIHS?",
+      "type": "faq",
+      "text": "Kindergarten, elementary, junior high (Grades 7-10), and senior high (Grades 11-12) learners, subject to the school's grade-level coverage for the school year."
+    },
+    {
+      "id": "faq-2",
+      "title": "What documents are required?",
+      "type": "faq",
+      "text": "Requirements vary by enrollment category (New Learner, Transferee, Returning Learner). New: birth certificate, previous school records, enrollment forms. Transferee: form 137, form 138, transfer credentials."
+    },
+    {
+      "id": "faq-3",
+      "title": "Can I enroll without an internet connection?",
+      "type": "faq",
+      "text": "Yes. You can begin the application online and submit required documents physically at the school if connectivity is limited. Use 'Save &amp; Continue Later' to keep your progress on this device."
+    },
+    {
+      "id": "faq-4",
+      "title": "Can I submit documents physically?",
+      "type": "faq",
+      "text": "Yes. If online upload isn't possible, bring the required documents to the school. The application records which documents you will submit."
+    },
+    {
+      "id": "faq-5",
+      "title": "How do I check my application status?",
+      "type": "faq",
+      "text": "Use 'Check Application Status' with the reference number you received (for example BATU-2026-001284). No full account is required."
+    },
+    {
+      "id": "faq-6",
+      "title": "What happens after I submit my application?",
+      "type": "faq",
+      "text": "The school reviews your information and documents, then verifies and approves. You can track each stage via your reference number."
+    },
+    {
+      "id": "faq-7",
+      "title": "Can I edit my application after submission?",
+      "type": "faq",
+      "text": "Contact the school with your reference number to request changes; the school can update records on your behalf."
+    },
+    {
+      "id": "faq-8",
+      "title": "How do transferees enroll?",
+      "type": "faq",
+      "text": "Choose 'Transferee' as the enrollment type and provide previous-school records (Form 137/138, transfer credentials) in the Requirements section."
+    },
+    {
+      "id": "faq-9",
+      "title": "Where can I get assistance?",
+      "type": "faq",
+      "text": "Visit Batu-Batu National Integrated High School in Batu-Batu, Panglima Sugala, Tawi-Tawi, or use the Contact section."
+    },
+    {
+      "id": "contact-form",
+      "title": "Contact the SmartCampus Team",
+      "type": "action",
+      "text": "Send a message to the project team. For enrollment decisions or school records, contact the school directly."
+    },
+    {
+      "id": "enroll-form",
+      "title": "Start Your Enrollment",
+      "type": "action",
+      "text": "Begin the 5-step enrollment form. New, Returning, Transferee, or Balik-Aral categories. Save and continue later is supported on this device."
+    },
+    {
+      "id": "status-form",
+      "title": "Check Application Status",
+      "type": "action",
+      "text": "Look up your application by reference number (for example BATU-2026-001284). See which stage your application has reached."
+    }
+  ]
+}
+    </script>
+
+    <!-- ===== Tier 1 PR-2: Cmd/K search behavior (non-destructive) ===== -->
+    <script>
+    (function () {
+        'use strict';
+
+        var dialog = document.getElementById('searchDialog');
+        var input = document.getElementById('searchInput');
+        var results = document.getElementById('searchResults');
+        var launch = document.getElementById('searchLaunch');
+        var indexNode = document.getElementById('searchIndex');
+        if (!dialog || !input || !results || !launch || !indexNode) return;
+
+        var indexData;
+        try { indexData = JSON.parse(indexNode.textContent); }
+        catch (e) { indexData = { sections: [] }; }
+        var sections = indexData.sections || [];
+
+        var selectedIdx = 0;
+        var lastQuery = '';
+
+        function score(entry, q) {
+            var t = (entry.title || '').toLowerCase();
+            var k = (entry.keywords || []).join(' ').toLowerCase();
+            var x = (entry.text || '').toLowerCase();
+            if (t.indexOf(q) >= 0) return 3;          // title hit
+            if (k.indexOf(q) >= 0) return 2;          // keyword hit
+            if (x.indexOf(q) >= 0) return 1;          // text hit
+            return 0;
+        }
+
+        function render(query) {
+            results.innerHTML = '';
+            selectedIdx = 0;
+            if (!query) { showEmpty('Start typing to search\u2026'); return; }
+            var q = query.toLowerCase().trim();
+            if (!q) { showEmpty('Start typing to search\u2026'); return; }
+            var hits = [];
+            for (var i = 0; i < sections.length; i++) {
+                var s = sections[i];
+                var sc = score(s, q);
+                if (sc > 0) hits.push({ e: s, sc: sc, i: i });
+            }
+            hits.sort(function (a, b) {
+                if (b.sc !== a.sc) return b.sc - a.sc;
+                return a.i - b.i;
+            });
+            if (hits.length === 0) { showEmpty('No matches for \u201c' + escapeHtml(query) + '\u201d'); return; }
+            hits = hits.slice(0, 8);
+            for (var j = 0; j < hits.length; j++) {
+                (function (h, idx) {
+                    var li = document.createElement('li');
+                    li.setAttribute('role', 'option');
+                    li.setAttribute('data-id', h.e.id);
+                    li.setAttribute('data-type', h.e.type);
+                    if (idx === 0) li.setAttribute('aria-selected', 'true');
+                    var typeSpan = document.createElement('span');
+                    typeSpan.className = 'type ' + h.e.type;
+                    typeSpan.textContent = h.e.type;
+                    var titleSpan = document.createElement('span');
+                    titleSpan.className = 'title';
+                    titleSpan.textContent = h.e.title;
+                    li.appendChild(typeSpan);
+                    li.appendChild(titleSpan);
+                    li.addEventListener('click', function () { activate(h.e); });
+                    li.addEventListener('mouseenter', function () { setSelected(idx); });
+                    results.appendChild(li);
+                })(hits[j], j);
+            }
+        }
+
+        function showEmpty(msg) {
+            var li = document.createElement('li');
+            li.className = 'empty';
+            li.setAttribute('role', 'presentation');
+            li.textContent = msg;
+            results.appendChild(li);
+        }
+
+        function escapeHtml(s) {
+            return String(s).replace(/[&<>"']/g, function (c) {
+                return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+            });
+        }
+
+        function setSelected(i) {
+            var items = results.querySelectorAll('li[role="option"]');
+            if (!items.length) return;
+            if (i < 0) i = items.length - 1;
+            if (i >= items.length) i = 0;
+            selectedIdx = i;
+            for (var k = 0; k < items.length; k++) {
+                if (k === i) items[k].setAttribute('aria-selected', 'true');
+                else items[k].removeAttribute('aria-selected');
+            }
+            items[i].scrollIntoView({ block: 'nearest' });
+        }
+
+        function activate(entry) {
+            close();
+            if (entry.type === 'action') {
+                if (entry.id === 'enroll-form') {
+                    var el = document.getElementById('enroll-form');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' }); else location.hash = '#enroll';
+                } else if (entry.id === 'status-form') {
+                    var el2 = document.getElementById('enroll-status');
+                    if (el2) el2.scrollIntoView({ behavior: 'smooth' }); else location.hash = '#enroll';
+                } else if (entry.id === 'contact-form') {
+                    var el3 = document.getElementById('contact');
+                    if (el3) el3.scrollIntoView({ behavior: 'smooth' }); else location.hash = '#contact';
+                }
+            } else {
+                var target = document.getElementById(entry.id);
+                if (target) target.scrollIntoView({ behavior: 'smooth' });
+                else location.hash = '#' + entry.id;
+            }
+        }
+
+        function open() {
+            if (typeof dialog.showModal === 'function') dialog.showModal();
+            else dialog.setAttribute('open', '');
+            input.value = '';
+            render('');
+            setTimeout(function () { input.focus(); }, 30);
+        }
+        function close() {
+            if (typeof dialog.close === 'function') dialog.close();
+            else dialog.removeAttribute('open');
+        }
+
+        launch.addEventListener('click', open);
+        input.addEventListener('input', function () {
+            lastQuery = input.value;
+            render(lastQuery);
+        });
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'ArrowDown') { e.preventDefault(); setSelected(selectedIdx + 1); }
+            else if (e.key === 'ArrowUp') { e.preventDefault(); setSelected(selectedIdx - 1); }
+            else if (e.key === 'Enter') {
+                e.preventDefault();
+                var items = results.querySelectorAll('li[role="option"]');
+                if (items[selectedIdx]) items[selectedIdx].click();
+            }
+            else if (e.key === 'Escape') { e.preventDefault(); close(); }
+        });
+
+        // Global hotkeys: '/' or Cmd/Ctrl-K
+        document.addEventListener('keydown', function (e) {
+            if (e.defaultPrevented) return;
+            var tag = (e.target && e.target.tagName) || '';
+            var inField = tag === 'INPUT' || tag === 'TEXTAREA' || (e.target && e.target.isContentEditable);
+            if (e.key === '/' && !inField) {
+                e.preventDefault();
+                if (dialog.open) close(); else open();
+            } else if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) {
+                e.preventDefault();
+                if (dialog.open) close(); else open();
+            }
+        });
+
+        // Click outside the dialog content to close
+        dialog.addEventListener('click', function (e) {
+            var r = dialog.getBoundingClientRect();
+            var inside = e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+            if (!inside) close();
+        });
+        // Native dialog also fires 'cancel' on Esc; nothing extra needed.
     })();
     </script>
 

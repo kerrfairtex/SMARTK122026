@@ -3,7 +3,7 @@
  * Modules Status API (Tier 3 / re-categorized Tier 2, public read endpoint)
  *
  * Returns the current enabled/disabled state of the 13 RosarioSIS
- * modules from kerrfairtex.config.MODULES as JSON. The public landing
+ * modules from the school config table as JSON. The public landing
  * page uses this to render "active / not yet active" dots on the
  * feature tiles without needing the RosarioSIS session.
  *

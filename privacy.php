@@ -6,8 +6,8 @@
 $school_name = 'Batu-Batu National High School';
 $school_id = '305053';
 $project_phone = '09637130812';
-$project_email = 'kerrfairtex@gmail.com';
-$project_facebook = 'https://www.facebook.com/KerrFairtex';
+$project_email = 'info@batu-batunhs.edu.ph';
+$project_facebook = 'https://www.facebook.com/SMARTCAMPK12';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -77,7 +77,7 @@ $project_facebook = 'https://www.facebook.com/KerrFairtex';
     <h2>Contact</h2>
     <div class="card">
         <p><strong>SmartCampus K&ndash;12 Project Contact</strong><br>
-        Kerr Fairtex — Developer / Project Contact<br>
+        Batu-Batu National High School — Project Contact<br>
         <a href="tel:<?php echo htmlspecialchars($project_phone); ?>"><?php echo htmlspecialchars($project_phone); ?></a><br>
         <a href="mailto:<?php echo htmlspecialchars($project_email); ?>"><?php echo htmlspecialchars($project_email); ?></a><br>
         <a href="<?php echo htmlspecialchars($project_facebook); ?>" target="_blank" rel="noopener">Facebook</a></p>

@@ -3,7 +3,7 @@
  * Admin Snapshot (Tier 3 + PR-3, read-only dashboard)
  *
  * Auth: shared-secret token in ?token=<hex>. Reuses the ABOUT_EDIT_TOKEN
- * stored in kerrfairtex.config. If the token is missing or invalid the
+ * stored in the school config table. If the token is missing or invalid the
  * page renders an empty placeholder so a casual visitor doesn't even know
  * the URL exists.
  *

@@ -3,7 +3,7 @@
  * About Content Read API (Tier 3, public read endpoint)
  *
  * Lets the public landing page fetch the current mission / vision /
- * values_intro copy from kerrfairtex.about_content.
+ * values_intro copy from the school schema about_content table.
  *
  * GET /about_content_api.php?section=mission
  *   -> 200 { section: "mission", body: "...", updated_at: "..." }

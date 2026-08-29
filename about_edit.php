@@ -22,7 +22,7 @@
  *      is updated and a "Saved" page is shown.
  *
  * Security:
- *   - Master token is stored in kerrfairtex.config row titled
+ *   - Master token is stored in the school config table row titled
  *     'ABOUT_EDIT_TOKEN'. It is NOT in the URL — the URL only carries
  *     a 32-hex signature derived from it.
  *   - The token never leaves the DB except at write time (now).

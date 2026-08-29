@@ -22,12 +22,22 @@
 // clean 403 JSON instead of a fatal "undefined function AllowUse" error.
 if ( ! function_exists( 'AllowUse' ) ) {
 	if ( PHP_SAPI !== 'cli' ) {
+
+		// CORS preflight must still respond even for unauthenticated direct access.
+		require_once dirname( __DIR__, 2 ) . '/cors-headers.php';
+
 		http_response_code( 403 );
 		header( 'Content-Type: application/json' );
 		echo json_encode( [ 'error' => 'Direct access not allowed. Open via the SmartCampus portal.' ] );
+
 	}
+
 	exit;
 }
+
+// CORS headers — must run BEFORE the AllowUse() auth check so preflight
+// OPTIONS requests from the Vercel frontend can complete the handshake.
+require_once dirname( __DIR__, 2 ) . '/cors-headers.php';
 
 if ( ! isset( $_REQUEST['modfunc'] ) ) {
 	$_REQUEST['modfunc'] = false;

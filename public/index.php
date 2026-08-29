@@ -4,10 +4,755 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batu-Batu National High School — SmartCampus K-12</title>
+    <link rel="canonical" href="https://smartcampk12.onrender.com/">
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "School",
+      "name": "Batu-Batu National High School",
+      "alternateName": "BBNIHS",
+      "description": "A public K-12 national high school in Panglima Sugala, Tawi-Tawi, BARMM, serving the Batu-Batu community since 1982.",
+      "url": "https://smartcampk12.onrender.com/",
+      "telephone": "(062) 992-4151",
+      "email": "smartcampus@bbnihs.edu.ph",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Barangay Batu-Batu, Poblacion",
+        "addressLocality": "Panglima Sugala",
+        "addressRegion": "BARMM",
+        "addressCountry": "PH"
+      },
+      "department": {
+        "@type": "Organization",
+        "name": "Department of Education (DepEd) - Tawi-Tawi Schools Division"
+      },
+      "foundingDate": "1982-11-14",
+      "legalName": "Batu-Batu National High School",
+      "sameAs": "https://www.deped.gov.ph/"
+    }
+    </script>
+    <meta property="og:title" content="Batu-Batu National High School — SmartCampus K-12">
+    <meta property="og:description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://smartcampk12.onrender.com/">
+    <meta property="og:image" content="https://smartcampk12.onrender.com/apple-touch-icon.png">
+    <meta property="og:image:width" content="180">
+    <meta property="og:image:height" content="180">
+    <meta property="og:site_name" content="SmartCampus K-12">
+    <meta property="og:locale" content="en_PH">
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Batu-Batu National High School — SmartCampus K-12">
+    <meta name="twitter:description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM.">
+    <link rel="preload" as="image" href="assets/images/Batu-batu1.jpeg" imagesizes="(max-width: 1100px) 100vw, 1100px" fetchpriority="high">
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
-    <link rel="stylesheet" href="public/css/tokens.css">
-    <link rel="stylesheet" href="public/css/base.css">
-    <link rel="stylesheet" href="public/css/components.css">
+    <style>
+/* ============================================================
+ * CRITICAL CSS — inlined for first paint
+ * tokens + base + above-the-fold components
+ * Non-critical components loaded async below
+ * ============================================================ */
+/* =====================================================================
+ * SmartCampus K-12 / Batu-Batu NHS — Design Tokens
+ * Spec Part 1: 6 color tokens (maritime, not generic SaaS navy-and-yellow)
+ * 3 type roles: Display (serif) / Body (humanist sans) / Utility (mono)
+ * 5 spacing steps, 4 radius steps, 3 elevation steps
+ * ===================================================================== */
+
+:root {
+    /* Color tokens (6) */
+    --ink-deep: #0A1420;       /* base background, near-black navy */
+    --tide-teal: #0E4F4F;      /* secondary surfaces, section alternation */
+    --sun-gold: #F4B400;       /* institutional gold (Philippine-flag warm yellow) */
+    --reef-coral: #E8734A;     /* live / active state accent */
+    --sand: #EDE6D6;           /* warm off-white for light surfaces */
+    --foam: #CFE8E4;           /* hairlines, dividers, low-emphasis text */
+
+    /* Translucent overlays (derived) */
+    --ink-overlay-90: rgba(10, 20, 32, 0.90);
+    --ink-overlay-70: rgba(10, 20, 32, 0.70);
+    --ink-overlay-40: rgba(10, 20, 32, 0.40);
+    --foam-overlay-08: rgba(207, 232, 228, 0.08);
+    --foam-overlay-16: rgba(207, 232, 228, 0.16);
+    --sun-gold-overlay-12: rgba(244, 180, 0, 0.12);
+
+    /* Type roles (3) */
+    --font-display: 'Fraunces', 'Source Serif 4', 'Georgia', 'Times New Roman', serif;
+    --font-body: 'Inter', 'Public Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-utility: 'IBM Plex Mono', 'SFMono-Regular', Menlo, Consolas, monospace;
+
+    /* Spacing scale (5 steps) */
+    --space-1: 0.25rem;   /* 4px */
+    --space-2: 0.5rem;    /* 8px */
+    --space-3: 1rem;      /* 16px */
+    --space-4: 1.5rem;    /* 24px */
+    --space-5: 3rem;      /* 48px */
+
+    /* Radius scale (4 steps) */
+    --radius-1: 2px;
+    --radius-2: 6px;
+    --radius-3: 12px;
+    --radius-4: 24px;
+
+    /* Elevation scale (3 steps) */
+    --elev-1: 0 2px 4px rgba(0, 0, 0, 0.20);
+    --elev-2: 0 4px 12px rgba(0, 0, 0, 0.30);
+    --elev-3: 0 12px 32px rgba(0, 0, 0, 0.40);
+
+    /* Motion tokens (5 durations, 3 easings) */
+    --dur-micro: 120ms;
+    --dur-hover: 180ms;
+    --dur-base: 300ms;
+    --dur-reveal: 500ms;
+    --dur-hero: 900ms;
+    --ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+}
+
+/* High-contrast a11y toggle: palette override (DepEd yellow → pure black/white) */
+html.a11y-hc {
+    --ink-deep: #000000;
+    --tide-teal: #0a2f2f;
+    --sun-gold: #ffd400;
+    --reef-coral: #ff5a1f;
+    --sand: #ffffff;
+    --foam: #f5f5f5;
+    --ink-overlay-90: rgba(0, 0, 0, 0.95);
+    --ink-overlay-70: rgba(0, 0, 0, 0.85);
+    --ink-overlay-40: rgba(0, 0, 0, 0.60);
+    --foam-overlay-08: rgba(255, 255, 255, 0.10);
+    --foam-overlay-16: rgba(255, 255, 255, 0.20);
+}
+
+
+/* ------------------------------------------------------------------ */
+/* =====================================================================
+ * SmartCampus K-12 — Base styles
+ * Resets, document-level typography, section rhythm, container widths
+ * ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+/* Reset */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--foam);
+    background: var(--ink-deep);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+img, svg, video, canvas { display: block; max-width: 100%; }
+button { font: inherit; cursor: pointer; border: 0; background: none; color: inherit; }
+a { color: var(--sun-gold); text-decoration: none; transition: color var(--dur-hover) var(--ease-standard); }
+a:hover { color: var(--reef-coral); }
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); font-weight: 600; line-height: 1.2; }
+
+/* Document-level typography */
+h1 { font-size: clamp(2.2rem, 5vw, 4rem); }
+h2 { font-size: clamp(1.6rem, 3.5vw, 2.6rem); }
+h3 { font-size: clamp(1.3rem, 2.5vw, 1.7rem); }
+h4 { font-size: clamp(1.05rem, 2vw, 1.2rem); }
+
+/* Section rhythm */
+section { padding: var(--space-5) var(--space-3); }
+section + section { border-top: 1px solid var(--foam-overlay-08); }
+
+/* Alternating surface treatment: every other section gets a tide-teal tint */
+section.surface-tide { background: var(--tide-teal); }
+
+/* Container */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 var(--space-3);
+}
+.container-narrow { max-width: 760px; margin: 0 auto; padding: 0 var(--space-3); }
+
+/* Section heading rhythm */
+.section-title { margin-bottom: var(--space-2); color: var(--sand); }
+.section-subtitle { color: var(--foam); opacity: 0.8; margin-bottom: var(--space-4); max-width: 60ch; }
+
+/* A11y: skip-link, focus visibility */
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: var(--space-3);
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    padding: var(--space-2) var(--space-3);
+    font-weight: 600;
+    border-radius: var(--radius-1);
+    z-index: 1000;
+    transition: top var(--dur-hover) var(--ease-standard);
+}
+.skip-link:focus { top: var(--space-2); }
+:focus-visible { outline: 2px solid var(--sun-gold); outline-offset: 2px; border-radius: var(--radius-1); }
+
+/* A11y motion gates */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+html.save-data *, html.save-data *::before, html.save-data *::after {
+    animation: none !important;
+    transition: none !important;
+}
+
+/* A11y type roles */
+html.a11y-dyslexic body, html.a11y-dyslexic h1, html.a11y-dyslexic h2, html.a11y-dyslexic h3, html.a11y-dyslexic p {
+    font-family: 'OpenDyslexic', 'Comic Sans MS', var(--font-body);
+    letter-spacing: 0.02em;
+    line-height: 1.75;
+}
+html.a11y-large { font-size: 115%; }
+
+
+/* ------------------------------------------------------------------ */
+/* Critical components (above-the-fold) */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.7rem 1.25rem;
+    border-radius: var(--radius-2);
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: transform var(--dur-hover) var(--ease-standard),
+                background var(--dur-hover) var(--ease-standard),
+                box-shadow var(--dur-hover) var(--ease-standard);
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+.btn--primary {
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    box-shadow: var(--elev-1);
+}
+.btn--primary:hover, .btn--primary:focus-visible {
+    background: #ffce3f;
+    transform: translateY(-2px);
+    box-shadow: var(--elev-2);
+}
+.btn--primary:active { transform: translateY(0); box-shadow: var(--elev-1); }
+.btn--ghost {
+    background: transparent;
+    color: var(--foam);
+    border-color: var(--foam-overlay-16);
+}
+.btn--ghost:hover, .btn--ghost:focus-visible {
+    background: var(--foam-overlay-08);
+    color: var(--sand);
+    border-color: var(--foam);
+}
+
+/* ---------- Stat tiles (At a Glance) ---------- */
+.tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+}
+.tile {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-3);
+    padding: var(--space-4);
+    transition: transform 220ms var(--ease-out), border-color 220ms var(--ease-standard);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+.tile:hover { border-color: var(--sun-gold); transform: translateY(-3px); }
+.tile__label { color: var(--foam); opacity: 0.7; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.tile__value { color: var(--sand); font-family: var(--font-utility); font-size: 1.6rem; margin-top: var(--space-2); word-break: break-word; }
+.tile__source { color: var(--foam); opacity: 0.6; font-size: 0.75rem; margin-top: var(--space-1); }
+
+/* ---------- Stat counters (Community population) ---------- */
+.counter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+}
+.counter {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-3);
+    padding: var(--space-4);
+    text-align: center;
+}
+.counter__number { font-family: var(--font-utility); font-size: 2.5rem; font-weight: 500; color: var(--sun-gold); }
+.counter__label { color: var(--sand); margin-top: var(--space-2); }
+.counter__context { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-1); }
+
+/* ---------- Grade cards (Academics) ---------- */
+.grade-grid {
+.a11y-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--ink-overlay-90);
+    border-bottom: 1px solid var(--foam-overlay-16);
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.85rem;
+}
+.a11y-bar__label { color: var(--foam); opacity: 0.7; }
+.a11y-bar__btn {
+    padding: 0.4rem 0.8rem;
+    background: var(--foam-overlay-08);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-1);
+    color: var(--foam);
+    transition: background var(--dur-hover) var(--ease-standard),
+                border-color var(--dur-hover) var(--ease-standard);
+}
+.a11y-bar__btn[aria-pressed="true"] {
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    border-color: var(--sun-gold);
+}
+.a11y-bar__btn:hover { background: var(--foam-overlay-16); }
+.a11y-bar__conn { margin-left: auto; display: inline-flex; align-items: center; gap: 0.4rem; color: var(--foam); opacity: 0.7; }
+.a11y-bar__conn .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+.a11y-bar__conn[data-state="offline"] .dot { background: #6b7280; }
+
+/* ---------- Top navigation ---------- */
+.top-nav {
+    position: sticky;
+    top: 42px; /* below a11y-bar */
+    z-index: 40;
+    background: var(--ink-overlay-90);
+    border-bottom: 1px solid var(--foam-overlay-08);
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+.top-nav__brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--sun-gold);
+    font-size: 1rem;
+    text-decoration: none;
+}
+.top-nav__links { display: flex; gap: var(--space-3); flex: 1; }
+.top-nav__link {
+    color: var(--foam);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-1);
+    transition: color var(--dur-hover) var(--ease-standard);
+}
+.top-nav__link:hover, .top-nav__link.is-active { color: var(--sun-gold); }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--ink-deep);
+}
+.hero__canvas-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.hero__canvas-wrap canvas { width: 100%; height: 100%; }
+.hero__fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--ink-deep) 0%, var(--tide-teal) 60%, var(--ink-deep) 100%);
+    z-index: -1;
+}
+.hero__fallback::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background:
+        radial-gradient(ellipse 60% 40% at 30% 80%, rgba(14,79,79,0.6), transparent),
+        radial-gradient(ellipse 50% 30% at 70% 90%, rgba(14,79,79,0.5), transparent);
+}
+.hero__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    padding: var(--space-5) var(--space-3);
+}
+.hero__eyebrow {
+    color: var(--sun-gold);
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-2);
+}
+.hero__title { color: var(--sand); margin-bottom: var(--space-3); text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.hero__sub { color: var(--foam); font-size: 1.2rem; margin-bottom: var(--space-3); }
+.hero__location { color: var(--foam); opacity: 0.7; font-size: 0.9rem; margin-bottom: var(--space-4); font-family: var(--font-utility); }
+.hero__credibility { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-bottom: var(--space-4); font-style: italic; }
+.hero__actions { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; }
+.hero__clock { position: absolute; top: 1rem; right: 1rem; color: var(--foam); opacity: 0.7; font-family: var(--font-utility); font-size: 0.85rem; z-index: 3; }
+
+/* ---------- Signature horizon line ---------- */
+.horizon-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sun-gold), transparent);
+    margin: 0;
+    opacity: 0.5;
+    position: relative;
+}
+.horizon-line::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--reef-coral), transparent);
+    animation: horizon-shimmer 6s ease-in-out infinite;
+}
+@keyframes horizon-shimmer {
+    0%, 100% { opacity: 0.3; transform: translateX(-30%); }
+    50% { opacity: 0.8; transform: translateX(30%); }
+}
+
+/* ---------- Module grid (Features) ---------- */
+.module-grid {
+.photo-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-3) 0 var(--space-5);
+}
+.photo-strip figure {
+    margin: 0;
+    border-radius: var(--radius-2);
+    overflow: hidden;
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    aspect-ratio: 4 / 3;
+    position: relative;
+}
+.photo-strip figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur-base) var(--ease-standard);
+}
+.photo-strip figure:hover img { transform: scale(1.04); }
+.photo-strip figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(180deg, transparent, rgba(10, 20, 32, 0.85));
+    color: var(--sand);
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-standard);
+}
+.photo-strip figure:hover figcaption,
+.photo-strip figure:focus-within figcaption { opacity: 1; }
+
+/* Unverified figures get a coral border and always-visible tag */
+.photo-strip figure.unverified {
+    border: 1px solid var(--reef-coral);
+    position: relative;
+}
+.photo-strip figure.unverified::before {
+    content: '?';
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 22px;
+    text-align: center;
+    z-index: 2;
+    box-shadow: var(--elev-1);
+}
+.photo-strip figcaption.unverified-tag {
+    opacity: 1;
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    z-index: 2;
+}
+.photo-strip figure p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.6rem var(--space-3);
+    margin: 0;
+    background: linear-gradient(180deg, transparent, rgba(10, 20, 32, 0.92));
+    color: var(--sand);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-standard);
+}
+.photo-strip figure:hover p,
+.photo-strip figure:focus-within p { opacity: 1; }
+.photo-strip figure p em { color: var(--sun-gold); font-style: italic; }
+
+/* ---------- Reveal on scroll (Tier 1) ---------- */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* Tier 0/1 visibility gate */
+html.tier-static .hero__canvas-wrap { display: none; }
+html.tier-static .hero__fallback { z-index: 0; }
+html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
+/* =====================================================================
+ * SmartCampus K-12 — Mobile breakpoint patch
+ * Appended at end of components.css. It does not modify any existing
+ * selector — it only adds mobile overrides, so it's safe to drop in.
+ *
+ * Requires ONE small HTML change in the nav markup — see comment at the
+ * top of the file. The checkbox + label were already added in the
+ * previous turn.
+ * ===================================================================== */
+
+/* ---------- Hero fallback: brighter, visible before Three.js loads ---------- */
+.hero__fallback {
+    background: linear-gradient(
+        180deg,
+        var(--ink-deep) 0%,
+        var(--tide-teal) 45%,
+        #1a6b6b 65%,
+        var(--ink-deep) 100%
+    );
+}
+
+@media (max-width: 720px) {
+    /* Shrink the hero on small screens so the fallback gradient doesn't
+       read as a giant block of near-empty color before content appears */
+    .hero { min-height: 60vh; }
+    .hero__content { padding: var(--space-4) var(--space-3); }
+}
+
+/* ---------- Accessibility bar: wrap instead of overflow ---------- */
+@media (max-width: 720px) {
+    .a11y-bar {
+        flex-wrap: wrap;
+        row-gap: var(--space-2);
+    }
+    .a11y-bar__conn {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+    }
+}
+
+/* ---------- Top nav: collapse to hamburger + slide-down drawer ---------- */
+@media (max-width: 860px) {
+    .top-nav {
+        position: sticky;
+        top: 0;               /* let the a11y bar scroll away instead of
+                                  pinning nav at a hardcoded offset */
+        flex-wrap: wrap;
+    }
+
+    /* Hide the inline link row by default on mobile */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        order: 3;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__link {
+        padding: var(--space-2) var(--space-1);
+        width: 100%;
+    }
+
+    /* Checkbox-driven toggle (no JS required) */
+    .top-nav__toggle-input { display: none; }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__toggle-label .top-nav__burger-icon {
+        transform: rotate(90deg);
+    }
+
+    .top-nav__toggle-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-1);
+        border: 1px solid var(--foam-overlay-16);
+        color: var(--foam);
+        cursor: pointer;
+        order: 2;
+        margin-left: auto;
+        transition: background var(--dur-hover) var(--ease-standard);
+    }
+    .top-nav__toggle-label:hover { background: var(--foam-overlay-08); }
+    .top-nav__burger-icon {
+        font-family: var(--font-utility);
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: transform var(--dur-base) var(--ease-standard);
+    }
+
+    /* Search button stays visible, brand stays visible, links + toggle
+       reflow beneath */
+    .top-nav__brand { order: 1; }
+    #searchLaunch { order: 4; margin-left: var(--space-2); }
+}
+
+@media (min-width: 861px) {
+    /* Make sure the toggle never shows on desktop even if markup is present */
+    .top-nav__toggle-label { display: none; }
+}
+
+
+/* =====================================================================
+ * SmartCampus K-12 — Unified mobile header patch
+ * Replaces the "two stacked bars + inconsistent overflow" header with
+ * ONE sticky bar on mobile: [Brand] ... [Hamburger] [Search]
+ * The hamburger drawer contains BOTH nav links AND accessibility
+ * toggles, in that order, so nothing competes for space above the fold.
+ *
+ * Desktop (>860px) is untouched — a11y bar + nav still render as your
+ * original two rows there, since there's room for them.
+ * ===================================================================== */
+
+/* ---------- 1. Harden the checkbox hiding (was: display:none only,
+   which can render briefly as a raw browser checkbox before CSS
+   applies). Visually hidden but still focusable/toggleable, and can
+   never flash visible even mid-paint. ---------- */
+.top-nav__toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 860px) {
+
+    /* ---------- 2. Collapse the a11y bar into the drawer instead of
+       showing as its own sticky row ---------- */
+    .a11y-bar {
+        display: none;
+    }
+
+    /* Re-show the a11y toggles, but now INSIDE the nav drawer */
+    .top-nav__links .a11y-bar__btn,
+    .top-nav__links .a11y-bar__conn {
+        display: inline-flex;
+    }
+
+    /* ---------- 3. Single unified sticky bar ---------- */
+    .top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        flex-wrap: wrap;
+        background: var(--ink-overlay-90);
+    }
+    .top-nav__brand { order: 1; }
+    .top-nav__toggle-label {
+        order: 2;
+        margin-left: auto;
+    }
+    #searchLaunch { order: 3; margin-left: var(--space-2); }
+
+    /* Drawer: nav links + a11y controls together, in document order */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        order: 4;
+        gap: 0;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__link {
+        width: 100%;
+        padding: var(--space-2) var(--space-1);
+    }
+
+    /* A11y controls, once moved into the drawer, get their own
+       labeled section with a divider so they read as a distinct
+       group rather than more nav links */
+    .top-nav__links .a11y-bar__label {
+        display: block;
+        width: 100%;
+        padding: var(--space-2) var(--space-1) var(--space-1);
+        color: var(--foam);
+        opacity: 0.6;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-1);
+    }
+    .top-nav__links .a11y-bar__btn {
+        width: 100%;
+        justify-content: flex-start;
+        margin: 0.15rem 0;
+    }
+    .top-nav__links .a11y-bar__conn {
+        margin: var(--space-2) 0 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: 861px) {
+    /* Desktop: keep original two-bar layout, ignore all of the above */
+    .top-nav__toggle-label { display: none; }
+    .a11y-bar { display: flex; }
+}
+
+
+    </style>
+    <link rel="stylesheet" href="public/css/components.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="public/css/components.css"></noscript>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4B400'/%3E%3Ctext x='16' y='22' font-size='20' text-anchor='middle' font-family='serif' font-weight='700' fill='%230A1420'%3EB%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -141,8 +886,8 @@
                 </p>
                 <p class="form-note" style="margin-top: var(--space-4); margin-bottom: var(--space-3);">Real photos from the Tawi-Tawi archipelago. The first is vision-verified; the others are region-tagged but pending verification.</p>
                 <div class="photo-strip">
-                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance (vision-verified)" loading="lazy"></figure>
-                    <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village (vision-verified)" loading="lazy"></figure>
+                    <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance (vision-verified)" loading="lazy" width="1600" height="1201" ></figure>
+                    <figure><img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village (vision-verified)" loading="lazy" width="479" height="640" ></figure>
                 </div>
             </div>
         </section>
@@ -192,19 +937,19 @@
                 <h4 style="margin-top: var(--space-4); color: var(--sand);">Campus &amp; community photos</h4>
                 <div class="photo-strip">
                     <figure>
-                        <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School campus building, two-story concrete with cream and blue trim, trellised grounds in front." loading="lazy">
+                        <img src="assets/images/Batu-batu1.jpeg" alt="Batu-Batu National High School campus building, two-story concrete with cream and blue trim, trellised grounds in front." loading="lazy" width="738" height="415" >
                         <figcaption>Batu-Batu National High School &mdash; the campus building as documented this academic year.</figcaption>
                     </figure>
                     <figure>
-                        <img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village with mountains in the background." loading="lazy">
+                        <img src="assets/images/Batu-batu2.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village with mountains in the background." loading="lazy" width="479" height="640" >
                         <figcaption>An aerial view of the surrounding coastal community, showing the stilt-house architecture typical of Tawi-Tawi.</figcaption>
                     </figure>
                     <figure>
-                        <img src="assets/images/Batu-batu3.jpeg" alt="BBNIHS classroom or activity room with learners during a school event, tropical ceiling fans visible." loading="lazy">
+                        <img src="assets/images/Batu-batu3.jpeg" alt="BBNIHS classroom or activity room with learners during a school event, tropical ceiling fans visible." loading="lazy" width="720" height="405" >
                         <figcaption>A BBNIHS classroom or activity room during a school event.</figcaption>
                     </figure>
                     <figure>
-                        <img src="assets/images/Batu-batu4.jpeg" alt="Group photo of BBNIHS learners in a school setting." loading="lazy">
+                        <img src="assets/images/Batu-batu4.jpeg" alt="Group photo of BBNIHS learners in a school setting." loading="lazy" width="640" height="480" >
                         <figcaption>A BBNIHS learner group photo, taken on campus.</figcaption>
                     </figure>
                 </div>
@@ -213,83 +958,83 @@
                 <p class="form-note" style="margin-bottom: var(--space-3);">Each photo is captioned with the likely subject based on its filename. The school registrar will confirm the actual subject and date of each; until then, captions are provisional.</p>
                 <div class="photo-strip">
                     <figure>
-                        <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo," loading="lazy">
+                        <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo," loading="lazy" width="640" height="480" >
                                                 <p>Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo," loading="lazy">
+                        <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo," loading="lazy" width="640" height="480" >
                                                 <p>Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo," loading="lazy">
+                        <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo," loading="lazy" width="554" height="554" >
                                                 <p>Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo," loading="lazy">
+                        <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo," loading="lazy" width="738" height="415" >
                                                 <p>Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/bbnihs-staff.jpeg" alt="BBNIHS faculty and staff group photo." loading="lazy">
+                        <img src="assets/images/bbnihs-staff.jpeg" alt="BBNIHS faculty and staff group photo." loading="lazy" width="720" height="405" >
                         <figcaption>BBNIHS faculty and staff group photo (vision-verified). Individual names are listed in the faculty directory, pending confirmation from the school registrar.</figcaption>
                     </figure>
                     <figure>
-                        <img src="assets/images/classroom1.jpeg" alt="Classroom photo," loading="lazy">
+                        <img src="assets/images/classroom1.jpeg" alt="Classroom photo," loading="lazy" width="800" height="533" >
                                                 <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/classroom2.jpeg" alt="Classroom photo," loading="lazy">
+                        <img src="assets/images/classroom2.jpeg" alt="Classroom photo," loading="lazy" width="480" height="640" >
                                                 <p>Classroom interior. <em>To confirm: which grade level and subject, and is this BBNIHS or another school?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-01.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-01.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-02.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-02.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="601" height="510" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-03.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-03.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-04.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-04.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-05.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-05.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-06.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-06.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-08.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-08.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="465" height="659" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-09.jpeg" alt="School photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-09.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
                                                 <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-campus.jpg" alt="Campus photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-campus.jpg" alt="Campus photo, awaiting confirmation." loading="lazy" width="1600" height="1200" >
                                                 <p>Filename suggests a campus shot. <em>To confirm: is this BBNIHS or another school, and is the date recent?</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/img-education.jpg" alt="Education photo, awaiting confirmation." loading="lazy">
+                        <img src="assets/images/img-education.jpg" alt="Education photo, awaiting confirmation." loading="lazy" width="1600" height="1066" >
                                                 <p>Filename suggests an education-themed photo. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance." loading="lazy">
+                        <img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance." loading="lazy" width="1600" height="1201" >
                         <figcaption>Bongao, Tawi-Tawi &mdash; the provincial capital (vision-verified). Tawi-Tawi is the southernmost province of the Philippines, an archipelago of over 100 islands.</figcaption>
                     </figure>
                     <figure>
-                        <img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau / Sama children, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy">
+                        <img src="assets/images/tawi-bajau-children.jpeg" alt="Bajau / Sama children, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy" width="601" height="510" >
                                                 <p>Filename suggests Bajau or Sama children. <em>To confirm: location, year, and source. (Important: visual depictions of indigenous children in Tawi-Tawi must be handled with care and with community consent for public use.)</em></p>
                     </figure>
                     <figure>
-                        <img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy">
+                        <img src="assets/images/tawi-boatrace.jpeg" alt="Boat race, Tawi-Tawi &mdash; awaiting confirmation." loading="lazy" width="678" height="452" >
                                                 <p>Filename suggests a boat race. <em>To confirm: event name, date, and whether it took place in Tawi-Tawi or another province.</em></p>
                     </figure>
                 </div>
@@ -594,10 +1339,10 @@
 
 
     <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->
-    <script src="public/js/main.js"></script>
-    <script src="public/js/reveal.js"></script>
-    <script src="public/js/stepper.js"></script>
-    <script src="public/js/hero-scene.js"></script>
+    <script src="public/js/main.js" defer></script>
+    <script src="public/js/reveal.js" defer></script>
+    <script src="public/js/stepper.js" defer></script>
+    <script src="public/js/hero-scene.js" defer></script>
     <script src="public/js/enhancements.js" defer></script>
 </body>
 </html>

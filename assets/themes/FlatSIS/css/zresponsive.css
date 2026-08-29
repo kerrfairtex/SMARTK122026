@@ -216,7 +216,16 @@
 	.login,
 	.first-login,
 	.password-reset {
-		padding: 32px 2px;
+		padding: 32px 8px;
+	}
+
+	.login #loginform {
+		width: 100%;
+	}
+
+	.login .login-language {
+		align-items: flex-start;
+		flex-direction: column;
 	}
 	.password-reset {
 		padding-top: 0;

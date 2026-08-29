@@ -1380,17 +1380,111 @@ a > .button {
 
 /* Login form */
 
+.login #loginform {
+	width: min(100%, 430px);
+	max-width: 100%;
+	margin: 0 auto;
+	box-sizing: border-box;
+}
+
+.login #loginform * {
+	box-sizing: border-box;
+}
+
+.login-fields {
+	display: flex;
+	flex-direction: column;
+	gap: 14px;
+}
+
+.login-language {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	padding-bottom: 4px;
+}
+
+.login-language-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+}
+
+.login-language-links a {
+	display: inline-flex;
+	border-radius: 3px;
+}
+
+.login-field {
+	display: flex;
+	flex-direction: column;
+	gap: 5px;
+	min-width: 0;
+}
+
+.login-field > label {
+	font-weight: 600;
+}
+
 .login #loginform input[type=text],
 .login #loginform input[type=password] {
 	font-weight: 200;
 	font-size: 20px;
 	width: 100%;
 	max-width: 100%;
-	height: 34px;
-	padding: 3px 6px;
-	margin-top: 2px;
-	margin-right: 6px;
-	box-shadow: inset 1px 1px 2px rgba(200, 200, 200, .2)
+	height: 42px;
+	padding: 3px 10px;
+	margin: 0;
+	box-shadow: inset 1px 1px 2px rgba(200, 200, 200, .2);
+}
+
+.password-input {
+	display: flex;
+	align-items: stretch;
+	min-width: 0;
+}
+
+.password-input input {
+	min-width: 0;
+	flex: 1 1 auto;
+}
+
+.login-password-toggle {
+	flex: 0 0 auto;
+	min-width: 44px;
+	padding: 0 9px;
+	border: 1px solid #999;
+	background: transparent;
+	cursor: pointer;
+}
+
+.login-password-toggle-label {
+	font-size: 12px;
+	white-space: nowrap;
+}
+
+.login-submit-wrap {
+	margin-top: 18px;
+}
+
+.login-submit.is-submitting {
+	opacity: .65;
+	cursor: wait;
+}
+
+.login a:focus-visible,
+.login button:focus-visible,
+.login input:focus-visible,
+.login summary:focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 3px;
+}
+
+.login .about-rosariosis {
+	max-width: 100%;
+	overflow-wrap: anywhere;
 }
 
 /*bottom*/

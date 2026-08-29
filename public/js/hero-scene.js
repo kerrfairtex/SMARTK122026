@@ -276,6 +276,8 @@
     }
     var ro = ('ResizeObserver' in window) ? new ResizeObserver(handleResize) : null;
     if (ro) ro.observe(wrap); else window.addEventListener('resize', handleResize);
+    setTimeout(handleResize, 300);
+    setTimeout(handleResize, 1000);
 
     function updateLabel() {
       if (!label) return;

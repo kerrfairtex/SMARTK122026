@@ -837,3 +837,87 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
     .top-nav__toggle-label { display: none; }
     .a11y-bar { display: flex; }
 }
+
+/* =====================================================================
+ * Universal responsive hardening patch
+ * Fixes: horizontal overflow, hardcoded image dimensions, table overflow,
+ *        flex wrapping on small screens
+ * ===================================================================== */
+
+/* Foundation: prevent any horizontal overflow at the root */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Images with hardcoded width/height attributes: force responsive */
+img[width], img[height] {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Routing table: wrap in scrollable container on small screens */
+.routing-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: var(--space-3) 0;
+}
+
+/* Wizard button row: allow wrapping on small screens */
+.wizard button[type="button"] {
+    flex-shrink: 0;
+}
+
+/* Status bar: allow wrapping on very small screens */
+.status-bar {
+    flex-wrap: wrap;
+}
+.status-step {
+    flex: 1 1 min-content;
+    min-width: 100px;
+    font-size: 0.7rem;
+}
+.status-step__dot {
+    margin: 0 auto var(--space-1);
+    width: 10px;
+    height: 10px;
+}
+
+/* Grade grid: min width for very small screens */
+.grade-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+/* Module grid: min width for very small screens */
+.module-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* Footer grid: stack on very small screens */
+.footer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+/* Container: ensure it doesn't exceed viewport width */
+.container, .container-narrow {
+    max-width: min(1100px, 100% - 1rem);
+}
+
+/* Hero content: ensure text doesn't overflow on tiny screens */
+.hero__content {
+    padding: var(--space-4) var(--space-2);
+}
+
+/* Photo strip: ensure figures don't force overflow */
+.photo-strip figure {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Form fields: prevent label/input overflow */
+.form-field label,
+.form-field input,
+.form-field select,
+.form-field textarea {
+    max-width: 100%;
+}

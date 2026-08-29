@@ -58,7 +58,7 @@
       s.src = THREE_SRC;
       s.crossOrigin = 'anonymous';
       s.onload = function () { resolve(window.THREE); };
-      s.onerror = function () { reject(new Error('three.js failed')); };
+      s.onerror = function () { console.error('SmartCampusHero: three.js CDN load failed', THREE_SRC); reject(new Error('three.js failed at ' + THREE_SRC)); };
       document.head.appendChild(s);
       state.scriptEl = s;
     });
@@ -106,7 +106,7 @@
   }
 
   function startScene(wrap, meta, islandData, roadData, landuseData, schoolData) {
-    if (typeof THREE === 'undefined') return;
+    if (typeof THREE === 'undefined') { console.error('SmartCampusHero: THREE undefined — WebGL/canvas unavailable'); return; }
     if (wrap.clientWidth === 0 || wrap.clientHeight === 0) return;
     var disposers = [];
     var tint = timeOfDayTint();

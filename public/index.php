@@ -46,6 +46,13 @@
     <meta name="twitter:description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM.">
     <link rel="preload" as="image" href="assets/images/Batu-batu1.jpeg" imagesizes="(max-width: 1100px) 100vw, 1100px" fetchpriority="high">
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
+    <!-- PWA -->
+    <link rel="manifest" href="/public/manifest.json">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="SMARTCAMP-K12">
     <style>
 /* ============================================================
  * CRITICAL CSS — inlined for first paint
@@ -221,6 +228,16 @@ html.a11y-large { font-size: 115%; }
 
 /* ------------------------------------------------------------------ */
 /* Critical components (above-the-fold) */
+
+/* =====================================================================
+ * SmartCampus K-12 — Component styles
+ * Buttons · cards · stat tiles · stepper · a11y bar · modals · timeline
+ * BEM-ish naming. CSS custom properties come from tokens.css.
+ * ===================================================================== */
+
+@import url('base.css');
+
+/* ---------- Buttons ---------- */
 .btn {
     display: inline-flex;
     align-items: center;
@@ -297,6 +314,197 @@ html.a11y-large { font-size: 115%; }
 
 /* ---------- Grade cards (Academics) ---------- */
 .grade-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: var(--space-3);
+}
+.grade {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-2);
+    padding: var(--space-3);
+    text-align: center;
+    transition: border-color var(--dur-hover) var(--ease-standard),
+                transform var(--dur-hover) var(--ease-standard);
+    cursor: pointer;
+    user-select: none;
+}
+.grade:hover { border-color: var(--sun-gold); transform: translateY(-2px); }
+.grade__level { font-family: var(--font-utility); font-size: 1.4rem; color: var(--sand); }
+
+/* ---------- Status timeline (Admissions) ---------- */
+.status-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: var(--space-4) 0;
+    gap: var(--space-2);
+}
+.status-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    padding: var(--space-2) var(--space-1);
+    font-size: 0.75rem;
+    color: var(--foam);
+    opacity: 0.5;
+    transition: opacity var(--dur-base) var(--ease-standard);
+}
+.status-step--active { opacity: 1; color: var(--sand); }
+.status-step--done { opacity: 0.7; color: var(--reef-coral); }
+.status-step__dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: currentColor;
+    margin: 0 auto var(--space-1);
+}
+.status-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: var(--foam-overlay-16);
+    z-index: -1;
+}
+.status-step--done::after { background: var(--reef-coral); }
+
+/* ---------- Wizard stepper (Start Your Enrollment) ---------- */
+.wizard {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-3);
+    padding: var(--space-4);
+    margin: var(--space-4) 0;
+}
+.wizard__progress {
+    height: 4px;
+    background: var(--foam-overlay-16);
+    border-radius: 2px;
+    margin: var(--space-3) 0;
+    position: relative;
+    overflow: hidden;
+}
+.wizard__progress::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--sun-gold);
+    width: var(--progress, 0%);
+    transition: width var(--dur-base) var(--ease-standard);
+}
+.wizard__steps { display: flex; justify-content: space-between; }
+.wizard__step {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--foam-overlay-08);
+    color: var(--foam);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    transition: background var(--dur-base) var(--ease-standard),
+                color var(--dur-base) var(--ease-standard),
+                transform var(--dur-base) var(--ease-standard);
+}
+.wizard__step--done { background: var(--reef-coral); color: var(--ink-deep); }
+.wizard__step--active { background: var(--sun-gold); color: var(--ink-deep); transform: scale(1.1); }
+
+/* ---------- About / mission / vision / history ---------- */
+.about-card {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-left: 4px solid var(--sun-gold);
+    border-radius: var(--radius-2);
+    padding: var(--space-4);
+    margin: var(--space-3) 0;
+}
+.about-card__heading { color: var(--sun-gold); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-2); }
+.about-card__body { color: var(--sand); }
+.about-card__cite { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-2); font-style: italic; }
+.about-card__cite a { color: var(--foam); }
+
+.history-timeline { list-style: none; padding: 0; margin: var(--space-4) 0; }
+.history-timeline__item {
+    position: relative;
+    padding: var(--space-3) 0 var(--space-3) var(--space-5);
+    border-left: 2px solid var(--foam-overlay-16);
+    margin-left: var(--space-2);
+}
+.history-timeline__year { font-family: var(--font-utility); color: var(--sun-gold); font-weight: 500; }
+.history-timeline__text { color: var(--sand); margin-top: var(--space-1); }
+.history-timeline__cite { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-1); font-style: italic; }
+.history-timeline__item::before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: 1.5rem;
+    width: 10px;
+    height: 10px;
+    background: var(--reef-coral);
+    border-radius: 50%;
+}
+
+/* ---------- Empty state (Part 3, About) ---------- */
+.empty-state {
+    background: var(--ink-overlay-40);
+    border: 1px dashed var(--foam-overlay-16);
+    border-radius: var(--radius-2);
+    padding: var(--space-4);
+    text-align: center;
+    color: var(--foam);
+    font-style: italic;
+    opacity: 0.8;
+}
+
+/* ---------- Forms ---------- */
+.form-field { margin-bottom: var(--space-3); position: relative; }
+.form-field label {
+    display: block;
+    color: var(--foam);
+    margin-bottom: var(--space-1);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+.form-field input, .form-field select, .form-field textarea {
+    width: 100%;
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    color: var(--sand);
+    padding: 0.6rem 0.8rem;
+    border-radius: var(--radius-2);
+    font: inherit;
+    transition: border-color var(--dur-hover) var(--ease-standard);
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus {
+    outline: 0;
+    border-color: var(--sun-gold);
+    box-shadow: 0 0 0 2px var(--sun-gold-overlay-12);
+}
+.form-note { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-2); }
+
+/* ---------- Contact / routing table ---------- */
+.routing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: var(--space-3) 0;
+    background: var(--ink-overlay-40);
+    border-radius: var(--radius-2);
+    overflow: hidden;
+}
+.routing-table th, .routing-table td {
+    padding: var(--space-2) var(--space-3);
+    text-align: left;
+    border-bottom: 1px solid var(--foam-overlay-08);
+}
+.routing-table th { color: var(--sun-gold); font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.routing-table tr:last-child td { border-bottom: 0; }
+
+/* ---------- Accessibility toolbar ---------- */
 .a11y-bar {
     position: sticky;
     top: 0;
@@ -435,6 +643,115 @@ html.a11y-large { font-size: 115%; }
 
 /* ---------- Module grid (Features) ---------- */
 .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--space-3);
+}
+.module {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-2);
+    padding: var(--space-3);
+    text-align: center;
+    transition: border-color var(--dur-hover) var(--ease-standard);
+}
+.module:hover { border-color: var(--reef-coral); }
+.module__icon { font-size: 2rem; margin-bottom: var(--space-1); }
+.module__name { color: var(--sand); font-size: 0.9rem; }
+.module__dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; margin: 0 auto var(--space-1); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+    background: var(--tide-teal);
+    padding: var(--space-5) var(--space-3);
+    color: var(--foam);
+}
+.site-footer a { color: var(--sun-gold); }
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+}
+.footer-col h4 { color: var(--sand); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-2); }
+.footer-col p { color: var(--foam); font-size: 0.9rem; line-height: 1.5; }
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 0.4rem; font-size: 0.9rem; }
+.footer-credit { text-align: center; color: var(--foam); opacity: 0.6; font-size: 0.8rem; border-top: 1px solid var(--foam-overlay-08); padding-top: var(--space-3); }
+
+/* ---------- Search dialog (preserved from PR-2) ---------- */
+dialog#searchDialog {
+    padding: 0;
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-2);
+    background: var(--ink-deep);
+    color: var(--foam);
+    max-width: 600px;
+    width: calc(100% - 2rem);
+    box-shadow: var(--elev-3);
+}
+dialog#searchDialog::backdrop { background: rgba(0, 0, 0, 0.65); }
+.search-input {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--foam-overlay-16);
+    color: var(--sand);
+    font: inherit;
+    font-size: 1.1rem;
+    padding: var(--space-3);
+    outline: none;
+}
+.search-results { list-style: none; max-height: 60vh; overflow-y: auto; }
+.search-results li {
+    padding: 0.7rem var(--space-3);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+.search-results li[aria-selected="true"], .search-results li:hover { background: var(--tide-teal); }
+.search-results .type {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    padding: 0.1rem 0.4rem;
+    border-radius: var(--radius-1);
+    background: var(--foam-overlay-16);
+    color: var(--foam);
+}
+.search-results .empty { padding: var(--space-3); text-align: center; color: var(--foam); opacity: 0.6; }
+.search-hint { padding: 0.5rem var(--space-3); border-top: 1px solid var(--foam-overlay-08); color: var(--foam); opacity: 0.6; font-size: 0.75rem; }
+
+/* ---------- Floating contact button (preserved from PR-3) ---------- */
+.float-contact { position: fixed; right: 1.25rem; bottom: 1.25rem; z-index: 50; display: flex; flex-direction: column-reverse; align-items: flex-end; gap: 0.6rem; }
+.float-contact__launch {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: var(--elev-2);
+    font-size: 1.5rem;
+    transition: transform var(--dur-hover) var(--ease-standard);
+}
+.float-contact__launch:hover { transform: scale(1.05); }
+.float-contact__pills { display: none; flex-direction: column; gap: 0.4rem; align-items: flex-end; }
+.float-contact.open .float-contact__pills { display: flex; }
+.float-contact__pill {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.5rem 0.85rem;
+    border-radius: 999px;
+    color: var(--ink-deep);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    box-shadow: var(--elev-1);
+    white-space: nowrap;
+}
+.float-contact__pill--viber { background: #7360F2; color: white; }
+.float-contact__pill--whatsapp { background: #25D366; color: white; }
+
+/* ---------- Photo strip (About / Community sections) ---------- */
 .photo-strip {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -752,23 +1069,88 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
     .a11y-bar { display: flex; }
 }
 
+/* =====================================================================
+ * Universal responsive hardening patch
+ * Fixes: horizontal overflow, hardcoded image dimensions, table overflow,
+ *        flex wrapping on small screens
+ * ===================================================================== */
 
-    
-/* ============================================================
- * 2026 standard: replace inline styles with CSS classes
- * ============================================================ */
-.section-lead { margin-top: var(--space-4); color: var(--foam); opacity: 0.8; max-width: 60ch; }
-.section-spacer-sm { margin-top: var(--space-4); margin-bottom: var(--space-3); }
-.section-spacer-lg { margin-top: var(--space-5); }
-.section-spacer-bottom { margin-bottom: var(--space-3); color: var(--foam); }
-.section-title-inline { margin-top: var(--space-4); color: var(--sand); }
-.section-title-bottom { margin-bottom: var(--space-3); color: var(--foam); }
+/* Foundation: prevent any horizontal overflow at the root */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
 
-/* ============================================================
- * CLS containment on transform/absolute elements
- * ============================================================ */
-.hero-clock, .photo-strip figcaption, .history-timeline__item::before {
-    contain: layout;
+/* Images with hardcoded width/height attributes: force responsive */
+img[width], img[height] {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Routing table: wrap in scrollable container on small screens */
+.routing-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: var(--space-3) 0;
+}
+
+/* Wizard button row: allow wrapping on small screens */
+.wizard button[type="button"] {
+    flex-shrink: 0;
+}
+
+/* Status bar: allow wrapping on very small screens */
+.status-bar {
+    flex-wrap: wrap;
+}
+.status-step {
+    flex: 1 1 min-content;
+    min-width: 100px;
+    font-size: 0.7rem;
+}
+.status-step__dot {
+    margin: 0 auto var(--space-1);
+    width: 10px;
+    height: 10px;
+}
+
+/* Grade grid: min width for very small screens */
+.grade-grid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+}
+
+/* Module grid: min width for very small screens */
+.module-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+/* Footer grid: stack on very small screens */
+.footer-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+/* Container: ensure it doesn't exceed viewport width */
+.container, .container-narrow {
+    max-width: min(1100px, 100% - 1rem);
+}
+
+/* Hero content: ensure text doesn't overflow on tiny screens */
+.hero__content {
+    padding: var(--space-4) var(--space-2);
+}
+
+/* Photo strip: ensure figures don't force overflow */
+.photo-strip figure {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Form fields: prevent label/input overflow */
+.form-field label,
+.form-field input,
+.form-field select,
+.form-field textarea {
+    max-width: 100%;
 }
 </style>
     <link rel="stylesheet" href="public/css/components.css" media="print" onload="this.media='all'">
@@ -1286,6 +1668,7 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
                 <p class="section-subtitle">Who to contact for what, in a rural multi-office context</p>
 
                 <h3>Who Should I Contact?</h3>
+                <div class="routing-table-wrap">
                 <table class="routing-table">
                     <thead><tr><th>Your concern</th><th>Contact</th></tr></thead>
                     <tbody>
@@ -1296,6 +1679,7 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
                         <tr><td>Other / general</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
                     </tbody>
                 </table>
+                </div>
 
                 <h3 style="margin-top: var(--space-5);">Where We Are</h3>
                 <p>Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi &middot; BARMM, Philippines</p>

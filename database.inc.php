@@ -69,7 +69,7 @@ function db_start( $show_error = true )
 		$sslmode = isset( $SupabaseSSLMode ) && $SupabaseSSLMode !== '' ?
 			$SupabaseSSLMode : 'require';
 
-		$connectstring .= 'sslmode=' . $sslmode . ' ';
+		$connectstring .= ' sslmode=' . $sslmode . ' ';
 
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 

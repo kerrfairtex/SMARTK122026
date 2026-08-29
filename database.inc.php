@@ -63,7 +63,6 @@ function db_start( $show_error = true )
 			$connectstring .= ' port=' . $DatabasePort;
 		}
 
-<<<<<<< HEAD
 		// @since SmartCampus Force TLS for Supabase pooler (port 6543) and
 		// any host requiring encrypted connections. $SupabaseSSLMode is set in
 		// config.inc.php (entrypoint default 'require').
@@ -75,18 +74,10 @@ function db_start( $show_error = true )
 		$connectstring .= 'dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
 
                 // SMARTK12 (Batu-Batu NIHS) RosarioSIS tables live in the
-                // 'kerrfairtex' schema on the shared Supabase DB (verified:
-                // kerrfairtex.schools id=1 = 'Batu-Batu National Integrated
-                // High School'; kerrfairtex.config has TITLE/NAME/THEME).
-                // The shared DB also has rosariosis/public schemas; search_path
-                // MUST lead with kerrfairtex or unqualified queries (e.g.
-                // SELECT FROM config) fail with "relation does not exist".
+                // school schema on the shared Supabase DB.
+                // search_path MUST lead with the school schema or unqualified
+                // queries fail with "relation does not exist".
                 $connectstring .= " options='--search_path=kerrfairtex,public'";
-=======
-		$connectstring .= ' dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
-		$connectstring .= " options='--search_path=rosariosis,public'";
-		$connectstring .= ' sslmode=require';
->>>>>>> 03a0ce9194b18c513872b152952bacef8b141627
 
 		if ( $DatabasePassword !== '' )
 		{

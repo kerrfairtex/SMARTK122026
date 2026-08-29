@@ -11,7 +11,8 @@
 
 // CORS headers for Vercel frontend ↔ Render API communication.
 // Origin is configurable via env var so it can be updated without a code change.
-$vercel_origin = getenv( 'CORS_ORIGIN' ) ?: 'https://your-vercel-app.vercel.app';
+// Default is the actual Vercel production URL.
+$vercel_origin = getenv( 'CORS_ORIGIN' ) ?: 'https://smartk-122026.vercel.app';
 header("Access-Control-Allow-Origin: {$vercel_origin}");
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-CSRF-Token");

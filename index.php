@@ -486,32 +486,32 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	<img src="assets/themes/<?php echo URLEscape( Config( 'THEME' ) ); ?>/logo.png" class="logo center" alt="Logo" />
 	<h4 class="center">Batu-Batu National Integrated High School</h4>
 	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
-	<form name="loginform" id="loginform" method="post">
-	<table class="cellspacing-0 width-100p">
+		<form name="loginform" id="loginform" method="post">
+		<div class="login-fields">
 
-	<?php // Choose language.
-	if ( count( $RosarioLocales ) > 1 ) : ?>
+		<?php // Choose language.
+		if ( count( $RosarioLocales ) > 1 ) : ?>
 
-		<tr>
-			<td>
-			<?php foreach ( $RosarioLocales as $loc ) :
-				$language = function_exists( 'locale_get_display_language' ) ?
-					ucfirst( locale_get_display_language( $loc, $locale ) ) :
-					str_replace( '.utf8', '', $loc ); ?>
+			<div class="login-language">
+				<div class="login-language-links">
+				<?php foreach ( $RosarioLocales as $loc ) :
+					$language = function_exists( 'locale_get_display_language' ) ?
+						ucfirst( locale_get_display_language( $loc, $locale ) ) :
+						str_replace( '.utf8', '', $loc ); ?>
 
-				<a href="index.php?locale=<?php echo $loc; ?>" title="<?php echo AttrEscape( $language ); ?>">
-					<img src="locale/<?php echo $loc; ?>/flag.png" width="32" alt="<?php echo AttrEscape( $language ); ?>" />
-				</a>&nbsp;
+					<a href="index.php?locale=<?php echo $loc; ?>" title="<?php echo AttrEscape( $language ); ?>">
+						<img src="locale/<?php echo $loc; ?>/flag.png" width="32" alt="<?php echo AttrEscape( $language ); ?>" />
+					</a>
 
-			<?php endforeach; ?>
-			<br />
-			<?php echo _( 'Language' ); ?>
-			</td>
-		</tr>
+				<?php endforeach; ?>
+				</div>
+				<span><?php echo _( 'Language' ); ?></span>
+			</div>
 
-	<?php endif;
+		<?php endif;
 
-	$default_username = $default_password = '';
+		$default_username = $default_password = '';
+
 
 	if ( Config( 'LOGIN' ) === 'No'
 		&& DBGetOne( "SELECT 1 FROM staff
@@ -523,35 +523,32 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	}
 	?>
 
-		<tr>
-			<td>
-				<label>
-					<input type="text" name="USERNAME" id="USERNAME" value="<?php
-						echo AttrEscape( $default_username );
-					?>" size="20" maxlength="100" required <?php echo $default_username ? '' : 'autofocus'; ?> />
-					<?php echo _( 'Username' ); ?>
-				</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>
+			<div class="login-field">
+				<label for="USERNAME"><?php echo _( 'Username' ); ?></label>
+				<input type="text" name="USERNAME" id="USERNAME" value="<?php
+					echo AttrEscape( $default_username );
+				?>" size="20" maxlength="100" required <?php echo $default_username ? '' : 'autofocus'; ?> />
+			</div>
+			<div class="login-field">
+				<label for="PASSWORD"><?php echo _( 'Password' ); ?></label>
+				<div class="password-input">
 					<input type="password" name="PASSWORD" id="PASSWORD" value="<?php
 						echo AttrEscape( $default_password );
 					?>" size="20" maxlength="42" required />
-					<?php echo _( 'Password' ); ?>
-				</label>
+					<button type="button" class="login-password-toggle" aria-controls="PASSWORD" aria-pressed="false" data-show-label="<?php echo AttrEscape( _( 'Show password' ) ); ?>" data-hide-label="<?php echo AttrEscape( _( 'Hide password' ) ); ?>">
+						<span class="login-password-toggle-label"><?php echo _( 'Show password' ); ?></span>
+					</button>
+				</div>
 				<div class="align-right">
 					<a href="PasswordReset.php" rel="nofollow">
 						<?php echo _( 'Password help' ); ?>
 					</a>
 				</div>
-			</td>
-		</tr>
-	</table>
-	<p class="center">
-		<input type="submit" value="<?php echo AttrEscape( _( 'Login' ) ); ?>" class="button-primary" />
-	</p>
+			</div>
+		</div>
+		<p class="center login-submit-wrap">
+			<input type="submit" value="<?php echo AttrEscape( _( 'Login' ) ); ?>" class="button-primary login-submit" />
+		</p>
 
 	<?php // @since 7.6 Login form link action hook.
 	do_action( 'index.php|login_form_link' ); ?>
@@ -585,8 +582,30 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		?>
 		<input type="hidden" name="redirect_to" value="<?php echo URLEscape( $_REQUEST['redirect_to'] ); ?>" />
 	<?php endif; ?>
-	</form>
-	<details class="about-rosariosis">
+		</form>
+		<script>
+			(function () {
+				const form = document.getElementById('loginform');
+				const password = document.getElementById('PASSWORD');
+				const toggle = document.querySelector('.login-password-toggle');
+				if (!form || !password || !toggle) return;
+				toggle.addEventListener('click', function () {
+					const isVisible = password.type === 'text';
+					password.type = isVisible ? 'password' : 'text';
+					toggle.setAttribute('aria-pressed', String(!isVisible));
+					toggle.querySelector('.login-password-toggle-label').textContent =
+						isVisible ? toggle.dataset.showLabel : toggle.dataset.hideLabel;
+				});
+				form.addEventListener('submit', function () {
+					const submit = form.querySelector('.login-submit');
+					if (submit) {
+						submit.disabled = true;
+						submit.classList.add('is-submitting');
+					}
+				});
+			}());
+		</script>
+		<details class="about-rosariosis">
 		<summary><?php echo _( 'About' ); ?></summary>
 		<?php // System disclaimer. ?>
 		<p class="size-3">

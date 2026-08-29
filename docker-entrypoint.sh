@@ -58,6 +58,12 @@ if [ ! -f /var/www/html/login.php ]; then
     fi
 else
     echo "[SWAP] already applied (login.php exists)."
+    # Always sync public/index.php -> root index.php so subsequent deploys
+    # actually update the served landing page (the guard above blocks the mv).
+    if [ -f /var/www/html/public/index.php ]; then
+        cp /var/www/html/public/index.php /var/www/html/index.php
+        echo "[SWAP] synced public/index.php -> index.php ($(wc -c < /var/www/html/index.php) bytes)"
+    fi
 fi
 
 # --- Expose landing-page photos at /assets/images (survives the Render disk

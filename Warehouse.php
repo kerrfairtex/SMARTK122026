@@ -520,6 +520,7 @@ if ( version_compare( Config( 'VERSION' ), ROSARIO_VERSION, '<' ) )
  *
  * Core modules (packaged with RosarioSIS): cannot be deleted.
  */
+// Append Custom Dashboard link to the user section if desired or register in RosarioCoreModules
 $RosarioCoreModules = [
 	'School_Setup',
 	'Students',
@@ -534,9 +535,11 @@ $RosarioCoreModules = [
 	'Food_Service',
 	'Resources',
 	'Custom',
+	'SmartCampus',
 ];
 
-$RosarioModules = unserialize( Config( 'MODULES' ) );
+$RosarioModules = (array) unserialize( Config( 'MODULES' ) );
+$RosarioModules['SmartCampus'] = true;
 
 $non_core_modules = array_diff_key( $RosarioModules, array_flip( $RosarioCoreModules ) );
 
@@ -688,13 +691,18 @@ function Warehouse( $mode )
 
 			// @since 12.3 Cache killer: use file last modified time hash instead of RosarioSIS version
 			$stylesheet_css_hash = hash( 'adler32', filemtime( $stylesheet_css ) );
+			$title = 'Batu-Batu NIHS — Student Information System';
+			if ( $_ROSARIO['page'] === 'modules' && ! empty( $_ROSARIO['ProgramLoaded'] ) )
+			{
+				$title = ParseMLField( Config( 'TITLE' ) );
+			}
 			?>
 <!doctype html>
 <html lang="<?php echo $lang_2_chars; ?>"<?php echo $dir_RTL; ?>>
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width">
-	<title><?php echo ParseMLField( Config( 'TITLE' ) ); ?></title>
+	<title><?php echo $title; ?></title>
 	<link rel="icon" href="favicon.ico" sizes="32x32">
 	<link rel="icon" href="apple-touch-icon.png" sizes="128x128">
 	<meta name="apple-mobile-web-app-capable" content="yes">

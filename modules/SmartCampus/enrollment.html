@@ -36,4 +36,68 @@
 
     <div class="panel">
       <table class="data" id="enrTable">
-        <tr><th>Learner</th><th>Grade</th><th>Start</th><th>End</th
+        <tr><th>Learner</th><th>Grade</th><th>Start</th><th>End</th><th>Enroll Code</th><th>Drop Code</th></tr>
+        <tr><td colspan="6" style="color:var(--text-3)">Loading enrollments…</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  var BOOT = window.SMARTCAMPUS_BOOT || {
+    schoolId: 1, syear: 2026,
+    ajaxUrl: 'Modules.php?modname=SmartCampus/Ajax.php',
+    token: 'demo-token'
+  };
+
+  function showError(msg){
+    var b = document.getElementById('errorBanner');
+    b.textContent = msg;
+    b.style.display = 'block';
+  }
+
+  function callService(modfunc, params){
+    params = params || {};
+    var url = BOOT.ajaxUrl + '&modfunc=' + encodeURIComponent(modfunc);
+    Object.keys(params).forEach(function(k){ url += '&' + k + '=' + encodeURIComponent(params[k]); });
+    return fetch(url, { credentials: 'same-origin' }).then(function(res){
+      if (!res.ok) throw new Error('Service returned ' + res.status);
+      return res.json();
+    });
+  }
+
+  callService('enrollment_list').then(function(data){
+    var table = document.getElementById('enrTable');
+    var rows = '<tr><th>Learner</th><th>Grade</th><th>Start</th><th>End</th><th>Enroll Code</th><th>Drop Code</th></tr>';
+    var enrollments = data.enrollments || [];
+    if (enrollments.length === 0) {
+      table.innerHTML = '<tr><td colspan="6" style="color:var(--text-3)">No enrollment records found.</td></tr>';
+      return;
+    }
+    enrollments.forEach(function(e){
+      var firstName = e.first_name || e.FIRST_NAME || '';
+      var lastName = e.last_name || e.LAST_NAME || '';
+      var grade = e.grade_id || e.GRADE_ID || '—';
+      var startDate = e.start_date || e.START_DATE || '—';
+      var endDate = e.end_date || e.END_DATE || '—';
+      var enrollCode = e.enrollment_code !== null && e.enrollment_code !== undefined ? (e.enrollment_code || e.ENROLLMENT_CODE) : '—';
+      var dropCode = e.drop_code !== null && e.drop_code !== undefined ? (e.drop_code || e.DROP_CODE) : '—';
+
+      rows += '<tr>' +
+        '<td>' + firstName + ' ' + lastName + '</td>' +
+        '<td>' + grade + '</td>' +
+        '<td>' + startDate + '</td>' +
+        '<td>' + endDate + '</td>' +
+        '<td>' + (enrollCode || '—') + '</td>' +
+        '<td>' + (dropCode || '—') + '</td>' +
+      '</tr>';
+    });
+    table.innerHTML = rows;
+  }).catch(function(err){
+    showError('Could not load enrollments: ' + err.message);
+    document.getElementById('enrTable').innerHTML =
+      '<tr><td colspan="6" style="color:var(--coral)">Could not load enrollments: ' + err.message + '</td></tr>';
+  });
+</script>
+</body>
+</html>

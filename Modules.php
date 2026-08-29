@@ -28,7 +28,9 @@ if ( ! isset( $_REQUEST['modfunc'] ) )
 $_ROSARIO['page'] = 'modules';
 
 // Output Header HTML.
-Warehouse( 'header' );
+if ( $modname !== 'SmartCampus/Ajax.php' ) {
+	Warehouse( 'header' );
+}
 
 // Performance: up to 10% faster compared to loading Menu.php.
 if ( AllowUse() )
@@ -63,4 +65,6 @@ elseif ( User( 'USERNAME' ) )
 }
 
 // Output Footer HTML.
-Warehouse( 'footer' );
+if ( $modname !== 'SmartCampus/Ajax.php' ) {
+	Warehouse( 'footer' );
+}

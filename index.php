@@ -434,7 +434,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 	PopTable(
 		'header',
-		sprintf( _( '%s Login' ), Config( 'NAME' ) )
+		_( 'BATU-BATU NIHS LOGIN' )
 	);
 
 	if ( isset( $_REQUEST['reason'] ) )
@@ -484,7 +484,8 @@ if ( empty( $_SESSION['STAFF_ID'] )
 ?>
 
 	<img src="assets/themes/<?php echo URLEscape( Config( 'THEME' ) ); ?>/logo.png" class="logo center" alt="Logo" />
-	<h4 class="center"><?php echo ParseMLField( Config( 'TITLE' ) ); ?></h4>
+	<h4 class="center">Batu-Batu National Integrated High School</h4>
+	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
 	<form name="loginform" id="loginform" method="post">
 	<table class="cellspacing-0 width-100p">
 
@@ -590,17 +591,14 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		<?php // System disclaimer. ?>
 		<p class="size-3">
 			<?php
-				echo sprintf(
-					_( 'This is a restricted network. Use of this network, its equipment, and resources is monitored at all times and requires explicit permission from the network administrator and %s. If you do not have this permission in writing, you are violating the regulations of this network and can and will be prosecuted to the full extent of the law. By continuing into this system, you are acknowledging that you are aware of and agree to these terms.'),
-					ParseMLField( Config( 'TITLE' ) )
-				);
+				echo _( 'This is a restricted network. Use of this network, its equipment, and resources is monitored at all times and requires explicit permission from the network administrator. If you do not have this permission in writing, you are violating the regulations of this network and can and will be prosecuted to the full extent of the law. By continuing into this system, you are acknowledging that you are aware of and agree to these terms.' );
 			?>
 		</p>
 		<p class="center size-1">
-			&copy; 2004-2009 The Miller Group &amp; Learners Circle
-			<br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
-			<br />&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" rel="noreferrer">Kerr Fairtex</a> and Company
-		</p>
+                    &copy; 2004-2009 The Miller Group &amp; Learners Circle
+                    <br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
+                    <br />&copy; 2026 <a href="https://www.facebook.com/share/1DYQyL1mhS/" rel="noreferrer">Kerr Fairtex</a> and Company
+            </p>
 	</details>
 
 <?php PopTable( 'footer' );

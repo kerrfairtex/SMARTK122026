@@ -202,9 +202,9 @@ function AllowUse( $modname = false, $cache_all = false )
 
 	if ( ! $modname )
 	{
-		$modname = $_ROSARIO['ProgramLoaded'] = $_REQUEST['modname'];
+		$modname = $_ROSARIO['ProgramLoaded'] = $_REQUEST['modname'] ?? '';
 
-		$query_string = urldecode( $_SERVER['QUERY_STRING'] );
+		$query_string = isset( $_SERVER['QUERY_STRING'] ) ? urldecode( $_SERVER['QUERY_STRING'] ) : '';
 
 		if ( isset( $_REQUEST['bottomfunc'] )
 			&& $_REQUEST['bottomfunc'] === 'print' )
@@ -223,12 +223,13 @@ function AllowUse( $modname = false, $cache_all = false )
 		'misc/ChooseCourse.php',
 		'misc/Portal.php',
 		'misc/ViewContact.php',
+		'SmartCampus/Ajax.php',
 	];
 
 	if ( in_array( $modname, $allow_misc ) )
 	{
 		// @since 12.4 Security: allow everyone to use Portal, allow admin only to use popups
-		return $modname === 'misc/Portal.php' || User( 'PROFILE' ) === 'admin';
+		return $modname === 'misc/Portal.php' || $modname === 'SmartCampus/Ajax.php' || User( 'PROFILE' ) === 'admin';
 	}
 
 	if ( isset( $_REQUEST['modname'] ) && $modname === $_REQUEST['modname'] )

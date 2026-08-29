@@ -56,14 +56,14 @@ function db_start( $show_error = true )
 		 *
 		 * @since 3.5.2
 		 */
-		$connectstring = 'host=' . $DatabaseServer . ' ';
+		$connectstring = 'host=' . $DatabaseServer;
 
-		if ( isset( $DatabasePort )
-			&& $DatabasePort !== '5432' )
+		if ( isset( $DatabasePort ) && $DatabasePort !== '5432' )
 		{
-			$connectstring .= 'port=' . $DatabasePort . ' ';
+			$connectstring .= ' port=' . $DatabasePort;
 		}
 
+<<<<<<< HEAD
 		// @since SmartCampus Force TLS for Supabase pooler (port 6543) and
 		// any host requiring encrypted connections. $SupabaseSSLMode is set in
 		// config.inc.php (entrypoint default 'require').
@@ -82,6 +82,11 @@ function db_start( $show_error = true )
                 // MUST lead with kerrfairtex or unqualified queries (e.g.
                 // SELECT FROM config) fail with "relation does not exist".
                 $connectstring .= " options='--search_path=kerrfairtex,public'";
+=======
+		$connectstring .= ' dbname=' . $DatabaseName . ' user=' . $DatabaseUsername;
+		$connectstring .= " options='--search_path=rosariosis,public'";
+		$connectstring .= ' sslmode=require';
+>>>>>>> 03a0ce9194b18c513872b152952bacef8b141627
 
 		if ( $DatabasePassword !== '' )
 		{

@@ -117,6 +117,194 @@ echo ErrorMessage( $note, 'note' );
 
 echo ErrorMessage( $warning, 'warning' );
 
+/**
+  * SmartCampus Reusable KPI Card & Helpers
+  */
+if ( ! function_exists( 'renderKPICard' ) )
+{
+	function renderKPICard( $label, $value, $icon = '', $trend = '', $value_class = '', $ring_percent = null )
+	{
+		echo '<div class="sc-kpi-card">';
+		echo '  <div class="sc-kpi-header">';
+		echo '    <div class="sc-kpi-icon">' . $icon . '</div>';
+		if ( $trend )
+		{
+			echo '    <div class="sc-kpi-trend">' . $trend . '</div>';
+		}
+		echo '  </div>';
+		echo '  <div class="sc-kpi-body">';
+		echo '    <div class="sc-kpi-main">';
+		echo '      <div class="sc-kpi-value ' . AttrEscape( $value_class ) . '">' . $value . '</div>';
+		echo '      <div class="sc-kpi-label">' . $label . '</div>';
+		echo '    </div>';
+		if ( $ring_percent !== null )
+		{
+			$pct = max( 0, min( 100, (int) $ring_percent ) );
+			$offset = 125.6 - ( 125.6 * ( $pct / 100 ) );
+			echo '    <div class="sc-ring-wrapper" data-percent="' . $pct . '">';
+			echo '      <svg class="sc-ring-svg" viewBox="0 0 48 48">';
+			echo '        <circle class="sc-ring-bg" cx="24" cy="24" r="20"></circle>';
+			echo '        <circle class="sc-ring-progress" cx="24" cy="24" r="20" style="stroke-dashoffset: ' . $offset . ';"></circle>';
+			echo '      </svg>';
+			echo '      <span class="sc-ring-text sc-val-ring-text">' . $pct . '%</span>';
+			echo '    </div>';
+		}
+		echo '  </div>';
+		echo '</div>';
+	}
+}
+
+if ( ! function_exists( 'getEnrollCount' ) )
+{
+	function getEnrollCount( $school_id, $syear )
+	{
+		$res = DBGet( "SELECT COUNT(*) AS count
+			FROM student_enrollment
+			WHERE school_id='" . (int) $school_id . "'
+			AND syear='" . (int) $syear . "'
+			AND ( end_date IS NULL OR end_date >= CURRENT_DATE )" );
+		return ! empty( $res[1]['COUNT'] ) ? (int) $res[1]['COUNT'] : 0;
+	}
+}
+
+if ( ! function_exists( 'getTodayAttendanceRate' ) )
+{
+	function getTodayAttendanceRate( $school_id )
+	{
+		$tot_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND ap.school_date=CURRENT_DATE" );
+		$total = ! empty( $tot_res[1]['COUNT'] ) ? (int) $tot_res[1]['COUNT'] : 0;
+		if ( ! $total )
+		{
+			return 100;
+		}
+
+		$pres_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN student_enrollment se ON se.student_id = ap.student_id
+			INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+			WHERE se.school_id='" . (int) $school_id . "'
+			AND ap.school_date=CURRENT_DATE
+			AND ac.state_code='P'" );
+		$present = ! empty( $pres_res[1]['COUNT'] ) ? (int) $pres_res[1]['COUNT'] : 0;
+
+		return round( ( $present / $total ) * 100 );
+	}
+}
+
+if ( ! function_exists( 'getTeacherClassCount' ) )
+{
+	function getTeacherClassCount( $staff_id )
+	{
+		$res = DBGet( "SELECT COUNT(*) AS count
+			FROM course_periods
+			WHERE ( teacher_id='" . (int) $staff_id . "' OR secondary_teacher_id='" . (int) $staff_id . "' )
+			AND school_id='" . (int) UserSchool() . "'
+			AND syear='" . (int) UserSyear() . "'" );
+		return ! empty( $res[1]['COUNT'] ) ? (int) $res[1]['COUNT'] : 0;
+	}
+}
+
+if ( ! function_exists( 'getStudentAttendanceRate' ) )
+{
+	function getStudentAttendanceRate( $student_id )
+	{
+		$tot_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period
+			WHERE student_id='" . (int) $student_id . "'" );
+		$total = ! empty( $tot_res[1]['COUNT'] ) ? (int) $tot_res[1]['COUNT'] : 0;
+		if ( ! $total )
+		{
+			return 100;
+		}
+
+		$pres_res = DBGet( "SELECT COUNT(*) AS count
+			FROM attendance_period ap
+			INNER JOIN attendance_codes ac ON ac.id = ap.attendance_code
+			WHERE ap.student_id='" . (int) $student_id . "'
+			AND ac.state_code='P'" );
+		$present = ! empty( $pres_res[1]['COUNT'] ) ? (int) $pres_res[1]['COUNT'] : 0;
+
+		return round( ( $present / $total ) * 100 );
+	}
+}
+
+// Render role-specific KPI cards
+echo '<div class="sc-kpi-grid">';
+if ( User( 'PROFILE' ) === 'admin' )
+{
+	$att_today = getTodayAttendanceRate( UserSchool() );
+	renderKPICard( 'Enrolled Students', getEnrollCount( UserSchool(), UserSyear() ), '👥', 'Active', 'sc-val-enrolled' );
+	renderKPICard( 'Attendance Today', $att_today . '%', '📅', 'Daily Rate', 'sc-val-attendance', $att_today );
+}
+elseif ( User( 'PROFILE' ) === 'teacher' )
+{
+	renderKPICard( 'My Classes Today', getTeacherClassCount( User( 'STAFF_ID' ) ), '📚', 'Active Periods', 'sc-val-teacher-classes' );
+}
+elseif ( User( 'PROFILE' ) === 'student' )
+{
+	$my_att = getStudentAttendanceRate( User( 'STUDENT_ID' ) );
+	renderKPICard( 'My Attendance', $my_att . '%', '📊', 'Term Rate', 'sc-val-student-attendance', $my_att );
+}
+echo '</div>';
+
+?>
+<script>
+(function(){
+	function updateRing(pct) {
+		var ring = document.querySelector('.sc-ring-progress');
+		var ringText = document.querySelector('.sc-val-ring-text');
+		if (ring) {
+			var clamped = Math.max(0, Math.min(100, pct));
+			var offset = 125.6 - (125.6 * (clamped / 100));
+			ring.style.strokeDashoffset = offset;
+			if (clamped < 75) {
+				ring.style.stroke = 'var(--sc-coral)';
+			} else if (clamped < 90) {
+				ring.style.stroke = 'var(--sc-gold)';
+			} else {
+				ring.style.stroke = 'var(--sc-emerald)';
+			}
+		}
+		if (ringText) {
+			ringText.textContent = pct + '%';
+		}
+	}
+
+	async function refreshKPIs() {
+		try {
+			var token = window.SMARTCAMPUS_TOKEN || (document.querySelector('meta[name="token"]') ? document.querySelector('meta[name="token"]').getAttribute('content') : '');
+			var url = 'Modules.php?modname=SmartCampus/Ajax.php&modfunc=kpi_refresh' + (token ? '&token=' + encodeURIComponent(token) : '');
+			var res = await fetch(url, { 
+				credentials: 'same-origin',
+				headers: { 'X-CSRF-Token': token, 'X-Requested-With': 'XMLHttpRequest' }
+			});
+			if (!res.ok) return;
+			var data = await res.json();
+			var elEnrolled = document.querySelector('.sc-val-enrolled');
+			if (elEnrolled && data.enrolled !== undefined) elEnrolled.textContent = data.enrolled;
+			var elAtt = document.querySelector('.sc-val-attendance');
+			if (elAtt && data.attendance_today !== undefined) {
+				elAtt.textContent = data.attendance_today + '%';
+				updateRing(data.attendance_today);
+			}
+			var elTClasses = document.querySelector('.sc-val-teacher-classes');
+			if (elTClasses && data.teacher_classes !== undefined) elTClasses.textContent = data.teacher_classes;
+			var elSAtt = document.querySelector('.sc-val-student-attendance');
+			if (elSAtt && data.student_attendance !== undefined) {
+				elSAtt.textContent = data.student_attendance + '%';
+				updateRing(data.student_attendance);
+			}
+		} catch (e) {}
+	}
+	setInterval(refreshKPIs, 60000);
+})();
+</script>
+<?php
+
 if ( User( 'PROFILE' ) === 'admin' )
 {
 	// Dashboard.

@@ -47,7 +47,7 @@
     <link rel="preload" as="image" href="assets/images/Batu-batu1.jpeg" imagesizes="(max-width: 1100px) 100vw, 1100px" fetchpriority="high">
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
     <!-- PWA -->
-    <link rel="manifest" href="/public/manifest.json">
+    <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1153,8 +1153,8 @@ img[width], img[height] {
     max-width: 100%;
 }
 </style>
-    <link rel="stylesheet" href="public/css/components.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="public/css/components.css"></noscript>
+    <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4B400'/%3E%3Ctext x='16' y='22' font-size='20' text-anchor='middle' font-family='serif' font-weight='700' fill='%230A1420'%3EB%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -1211,7 +1211,7 @@ img[width], img[height] {
                 <h1 class="hero__title">BATU-BATU</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>
                 <p class="hero__location">Barangay Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi</p>
-                <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290). The 3D scene above renders real Tawi-Tawi island geometry from OpenStreetMap.</p>
+                <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290).</p>
                 <div class="hero__actions">
                     <a href="#about" class="btn btn--primary">Discover Our School</a>
                     <a href="#enroll-form" class="btn btn--ghost">Start Enrollment</a>
@@ -1744,10 +1744,9 @@ img[width], img[height] {
 
     <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->
     <!-- deploy-trigger: 2daef6038 -->
-    <script src="public/js/main.js" defer></script>
-    <script src="public/js/reveal.js" defer></script>
-    <script src="public/js/stepper.js" defer></script>
-    <script src="public/js/hero-scene.js" defer></script>
-    <script src="public/js/enhancements.js" defer></script>
+    <script src="/js/main.js" defer></script>
+    <script src="/js/reveal.js" defer></script>
+    <script src="/js/stepper.js" defer></script>
+    <script src="/js/enhancements.js" defer></script>
 </body>
 </html>

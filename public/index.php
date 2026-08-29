@@ -1739,7 +1739,7 @@ img[width], img[height] {
         <div class="search-hint"><span>&uarr;&darr; navigate</span> &middot; <span>Enter</span> open &middot; <span>Esc</span> close</div>
     </dialog>
 
-    <!-- Floating quick contact — removed in v1.7 (kerrfairtex-specific number was here) -->
+    <!-- Floating quick contact — removed in v1.7 -->
 
 
     <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->

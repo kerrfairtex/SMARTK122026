@@ -243,10 +243,10 @@ footer { color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; text-align: center
 
 <h2>Direct links</h2>
 <div class="links">
-    <a href="about_edit.php?token=<?php echo h($_GET['token']); ?>">Edit mission / vision</a>
-    <a href="enroll_api.php?action=config" target="_blank">Enrollment config (JSON)</a>
-    <a href="contact_api.php" target="_blank">Contact endpoint (info)</a>
-    <a href="engagement.php" target="_blank">Engagement endpoint (info)</a>
+    <a href="/about_edit.php?token=<?php echo h($_GET['token']); ?>">Edit mission / vision</a>
+    <a href="/enroll_api.php?action=config" target="_blank">Enrollment config (JSON)</a>
+    <a href="/contact_api.php" target="_blank">Contact endpoint (info)</a>
+    <a href="/engagement.php" target="_blank">Engagement endpoint (info)</a>
 </div>
 
 <footer>Read-only snapshot &middot; No writes from this page &middot; 50 lines of PHP, zero JS</footer>

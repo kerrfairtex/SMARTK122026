@@ -10,7 +10,7 @@
  * Actions:
  *   GET  ?action=config  -> current enrollment period (dates, status, grades)
  *   POST ?action=submit  -> create application, returns reference number
- *   GET  ?action=status&ref=XXX -> application + status pipeline
+ *   GET  ?action=status&ref=XXX&dob=YYYY-MM-DD -> application status (DOB-gated)
  */
 
 require_once 'database.inc.php';
@@ -62,13 +62,21 @@ if ($action === 'config') {
 
 if ($action === 'status') {
     $ref = isset($_GET['ref']) ? strtoupper(trim($_GET['ref'])) : '';
-    if (!$ref) {
+    $dob = isset($_GET['dob']) ? trim((string)$_GET['dob']) : '';
+    if (!$ref || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $dob)) {
         http_response_code(400);
-        echo json_encode(['error' => 'Reference required']);
+        echo json_encode(['error' => 'Reference and date of birth (YYYY-MM-DD) required']);
         exit;
     }
-    $ref = pg_escape_string($conn, $ref);
-    $res = @pg_query($conn, "SELECT ref, learner_name, grade_level, enrollment_type, status, created_at FROM enrollment_applications WHERE ref = '$ref'");
+    // Require DOB match so refs are not enumerable for learner PII.
+    $ref_esc = pg_escape_string($conn, $ref);
+    $dob_esc = pg_escape_string($conn, $dob);
+    $res = @pg_query(
+        $conn,
+        "SELECT ref, grade_level, enrollment_type, status, created_at
+         FROM enrollment_applications
+         WHERE ref = '$ref_esc' AND birth_date = '$dob_esc'::date"
+    );
     $row = $res ? pg_fetch_assoc($res) : null;
     if (!$row) {
         echo json_encode(['found' => false]);
@@ -85,9 +93,22 @@ if ($action === 'submit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $posted = $_POST;
     }
 
-    // Build reference: BATU-<year>-<random6>
+    // Build reference: BATU-<year>-<random6> (cryptographically random; retry on clash)
     $yr = date('Y');
-    $ref = 'BATU-' . $yr . '-' . str_pad(rand(0, 999999), 6, '0');
+    $ref = null;
+    for ($attempt = 0; $attempt < 8; $attempt++) {
+        $candidate = 'BATU-' . $yr . '-' . str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $check = @pg_query($conn, "SELECT 1 FROM enrollment_applications WHERE ref = '" . pg_escape_string($conn, $candidate) . "' LIMIT 1");
+        if (!$check || !pg_fetch_row($check)) {
+            $ref = $candidate;
+            break;
+        }
+    }
+    if ($ref === null) {
+        http_response_code(500);
+        echo json_encode(['error' => 'Could not allocate reference']);
+        exit;
+    }
 
     $status = 'Submitted';
     $documents = isset($posted['documents']) ? json_encode($posted['documents']) : null;
@@ -203,24 +224,37 @@ if ($action === 'draft_finalize' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     $token_esc = pg_escape_string($conn, $token);
-    // Mark the draft as finalized (status). The actual application row is
-    // created by reusing the existing submit logic: we synthesize a $_POST
-    // shape and call the submit path. To avoid duplicating, we hand off
-    // by mutating $_POST and falling through to a copy of the submit code
-    // is too invasive. Simpler: implement finalize as direct insert here.
+    // Finalize draft and insert application atomically so a failed insert
+    // does not leave the draft unresumable with no application row.
+    @pg_query($conn, 'BEGIN');
     $r = @pg_query(
         $conn,
         "UPDATE kerrfairtex.enrollment_drafts SET status = 'finalized', updated_at = now()
          WHERE token = '$token_esc' AND status = 'active' AND expires_at > now()"
     );
     if (!$r || pg_affected_rows($r) === 0) {
+        @pg_query($conn, 'ROLLBACK');
         http_response_code(404);
         echo json_encode(['error' => 'Draft not found or expired']);
         exit;
     }
     // Build reference and insert the real application row
     $yr = date('Y');
-    $ref = 'BATU-' . $yr . '-' . str_pad(rand(0, 999999), 6, '0');
+    $ref = null;
+    for ($attempt = 0; $attempt < 8; $attempt++) {
+        $candidate = 'BATU-' . $yr . '-' . str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
+        $check = @pg_query($conn, "SELECT 1 FROM enrollment_applications WHERE ref = '" . pg_escape_string($conn, $candidate) . "' LIMIT 1");
+        if (!$check || !pg_fetch_row($check)) {
+            $ref = $candidate;
+            break;
+        }
+    }
+    if ($ref === null) {
+        @pg_query($conn, 'ROLLBACK');
+        http_response_code(500);
+        echo json_encode(['error' => 'Could not allocate reference']);
+        exit;
+    }
     $status = 'Submitted';
     $documents = isset($posted['documents']) ? json_encode($posted['documents']) : null;
     $cols = ['ref','learner_name','birth_date','sex','birthplace','address','grade_level','school_year','enrollment_type','parent_name','parent_relationship','parent_contact','parent_address','parent_email','prev_school','prev_school_address','last_grade','prev_sy','learner_ref_no','documents','status'];
@@ -243,10 +277,12 @@ if ($action === 'draft_finalize' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $sql = "INSERT INTO enrollment_applications (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
     $r2 = @pg_query($conn, $sql);
     if (!$r2) {
+        @pg_query($conn, 'ROLLBACK');
         http_response_code(500);
         echo json_encode(['error' => 'Could not save application']);
         exit;
     }
+    @pg_query($conn, 'COMMIT');
     @pg_query(
         $conn,
         "INSERT INTO kerrfairtex.access_log

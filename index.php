@@ -17,19 +17,30 @@ require_once 'ProgramFunctions/FirstLogin.fnc.php';
 if ( isset( $_REQUEST['modfunc'] )
 	&& $_REQUEST['modfunc'] === 'logout' )
 {
-	// After logout, send the user to the PUBLIC landing page (index.php is the
-	// swapped-in landing page at the docroot). Preserve locale; drop login-only
-	// reason/redirect_to so we don't loop back to the login screen.
-	header( 'Location: ' . URLEscape( 'index.php?locale=' . $_SESSION['locale'] ) );
-
-	exit;
+	$locale = isset( $_SESSION['locale'] ) ? $_SESSION['locale'] : '';
 
 	if ( ! empty( $_REQUEST['token'] )
+		&& ! empty( $_SESSION['token'] )
 		&& $_SESSION['token'] === $_REQUEST['token'] )
 	{
 		session_unset();
 
 		session_destroy();
+	}
+
+	// Auth redirects (reason / redirect_to) must show the login form.
+	// Explicit logout (no reason/redirect_to) goes to the public landing.
+	if ( isset( $_REQUEST['reason'] ) || isset( $_REQUEST['redirect_to'] ) )
+	{
+		header( 'Location: ' . URLEscape( 'login.php?locale=' . $locale .
+			( isset( $_REQUEST['reason'] ) ? '&reason=' . $_REQUEST['reason'] : '' ) .
+			( isset( $_REQUEST['redirect_to'] ) ?
+				'&redirect_to=' . urlencode( $_REQUEST['redirect_to'] ) :
+				'' ) ) );
+	}
+	else
+	{
+		header( 'Location: ' . URLEscape( 'index.php?locale=' . $locale ) );
 	}
 
 	exit;

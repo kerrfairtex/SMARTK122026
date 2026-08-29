@@ -7,10 +7,10 @@
  * section and an expiry timestamp.
  *
  * Workflow:
- *   1. The school visits /about_edit.php (no token needed; just lists
- *      the editable sections with a "Generate edit link" form).
- *   2. They click "Edit Mission" — the page POSTs and redirects to
- *      a signed URL like:
+ *   1. The school visits /about_edit.php?token=<ABOUT_EDIT_TOKEN>
+ *      (master token required; lists sections with "Generate edit link").
+ *   2. They click "Edit Mission" — the page POSTs (with the same token)
+ *      and redirects to a signed URL like:
  *        /about_edit.php?section=mission&ts=...&exp=...&sig=...
  *      where sig = hex( hash_hmac( 'sha256',
  *                                    'edit|mission|<ts>|<exp>',
@@ -23,17 +23,17 @@
  *
  * Security:
  *   - Master token is stored in the school config table row titled
- *     'ABOUT_EDIT_TOKEN'. It is NOT in the URL — the URL only carries
- *     a 32-hex signature derived from it.
- *   - The token never leaves the DB except at write time (now).
+ *     'ABOUT_EDIT_TOKEN'. Minting a signed link requires presenting it
+ *     (same as /admin/?token=). The signed URL only carries a 32-hex
+ *     HMAC derived from it — not a signing oracle for anonymous visitors.
  *   - The signature is scoped (section, ts, exp), so a leak in
  *     screenshots / shared links only works until the expiry
  *     timestamp (default 7 days).
  *   - The same body is logged to access_log with the requester's IP.
  *
  * This file is one of two entry points:
- *   - GET  /about_edit.php             (landing page: list sections)
- *   - POST /about_edit.php             (landing: generate signed link)
+ *   - GET  /about_edit.php?token=...   (landing page: list sections)
+ *   - POST /about_edit.php             (landing: generate signed link; token required)
  *   - GET  /about_edit.php?signed...   (editor form)
  *   - POST /about_edit.php?signed...   (save body)
  */
@@ -78,6 +78,19 @@ function verify_sig($section, $ts, $exp, $sig, $token) {
     if ((int)$exp < time()) return false;  // expired
     $expected = make_sig($section, (int)$ts, (int)$exp, $token);
     return hash_equals($expected, $sig);
+}
+
+/** Caller must present ABOUT_EDIT_TOKEN to mint links (not a public signing oracle). */
+function provided_master_token() {
+    return (string)($_POST['token'] ?? $_GET['token'] ?? '');
+}
+
+function master_token_ok($provided = null) {
+    $token = load_token();
+    if ($provided === null) {
+        $provided = provided_master_token();
+    }
+    return $token && $provided !== '' && hash_equals($token, $provided);
 }
 
 function audit_save($conn, $section, $ip) {
@@ -144,7 +157,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    // Case B: generate a signed link (form posts section + ts; we sign)
+    // Case B: generate a signed link (requires master token; form posts section)
+    if (!master_token_ok()) {
+        http_response_code(403);
+        echo '<!doctype html><meta charset="utf-8"><title>403</title><p>Valid master token required to generate edit links.</p>';
+        exit;
+    }
     $section = preg_replace('/[^a-z_]/', '', strtolower((string)($_POST['section'] ?? '')));
     if (!in_array($section, ['mission', 'vision', 'values_intro'], true)) {
         http_response_code(400);
@@ -220,11 +238,12 @@ if (isset($_GET['section'], $_GET['ts'], $_GET['exp'], $_GET['sig'])) {
     exit;
 }
 
-// ----- GET: landing page (list editable sections) -----
+// ----- GET: landing page (list editable sections; master token required) -----
 $now = time();
-$exp = $now + 7 * 86400;
 $token = load_token();
-$token_ok = !!$token;
+$token_configured = !!$token;
+$authed = master_token_ok();
+$master = provided_master_token();
 
 echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">'
    . '<title>About Editor &mdash; SmartCampus</title>'
@@ -237,14 +256,17 @@ echo '<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=
    . '<h1>About Editor</h1>'
    . '<p>Generate a signed edit link for any section below. Each link is good for 7 days and works only for that section.</p>';
 
-if (!$token_ok) {
+if (!$token_configured) {
     echo '<p class="warn">ABOUT_EDIT_TOKEN is not set in the <code>config</code> table. Run a SQL INSERT to set it before editing.</p>';
+} elseif (!$authed) {
+    echo '<p class="warn">Open this page with <code>?token=</code> set to the ABOUT_EDIT_TOKEN value (same secret as the admin snapshot).</p>';
 } else {
     foreach (['mission', 'vision', 'values_intro'] as $s) {
         $title = ucfirst(str_replace('_', ' ', $s));
         echo '<div class="row">'
            . '<span class="label">' . h($title) . ' <code>(' . h($s) . ')</code></span>'
            . '<form method="post" style="display:inline">'
+           . '<input type="hidden" name="token" value="' . h($master) . '">'
            . '<input type="hidden" name="section" value="' . h($s) . '">'
            . '<button class="btn" type="submit">Generate edit link</button>'
            . '</form>'

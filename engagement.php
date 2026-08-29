@@ -16,9 +16,8 @@
  * Privacy:
  *   - No cookies set, no fingerprinting, no third-party calls.
  *   - IP recorded as-is (server logs already do this).
- *   - Lightweight in-process rate-limit: 1 row per (section, IP) per hour.
- *     The limit is in-memory only (per-process); acceptable for a single-
- *     instance Render service. Resets on process restart.
+ *   - DB-backed rate-limit: 1 row per (section, IP) per hour
+ *     (checks access_log for a recent scroll: row before insert).
  */
 
 require_once 'database.inc.php';
@@ -101,27 +100,28 @@ if ($section === '') {
 
 $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
-// In-process rate limit: 1 row per (section, IP) per hour.
-// Acceptable for a single-instance Render service. No external cache needed.
-static $rate_state = [];
-$rate_key = $ip . '|' . $section;
-$now      = time();
-foreach ($rate_state as $k => $t) {
-    if ($t <= $now - 3600) unset($rate_state[$k]);
-}
-if (isset($rate_state[$rate_key])) {
-    engagement_reply(429, ['error' => 'rate-limited']);
-}
-$rate_state[$rate_key] = $now;
-
 try {
     $conn = db_conn();
 } catch (Throwable $t) {
     engagement_reply(503, ['error' => 'Database unavailable']);
 }
 
-$syear     = 2026;  // Engagement events are landing-page-aggregate; not bound to a single syear.
+// DB-backed rate limit: 1 row per (section, IP) per hour.
 $ip_esc    = pg_escape_string($conn, substr($ip, 0, 50));
+$status_prefix = pg_escape_string($conn, 'scroll:' . $section);
+$rate_check = @pg_query(
+    $conn,
+    "SELECT 1 FROM kerrfairtex.access_log
+     WHERE ip_address = '$ip_esc'
+       AND status LIKE '$status_prefix%'
+       AND created_at > now() - interval '1 hour'
+     LIMIT 1"
+);
+if ($rate_check && pg_fetch_row($rate_check)) {
+    engagement_reply(429, ['error' => 'rate-limited']);
+}
+
+$syear     = 2026;  // Engagement events are landing-page-aggregate; not bound to a single syear.
 $ua        = isset($_SERVER['HTTP_USER_AGENT']) ? (string)$_SERVER['HTTP_USER_AGENT'] : '';
 $ua_esc    = pg_escape_string($conn, substr($ua, 0, 500));
 $status    = 'scroll:' . $section . ($duration > 0 ? ':' . $duration : '');

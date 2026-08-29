@@ -2,7 +2,7 @@
 /**
  * Enrollment Portal API (public landing page backend)
  *
- * Reads/writes enrollment data in the Supabase `kerrfairtex` schema.
+ * Reads/writes enrollment data in the school schema.
  * The public page calls this instead of relying on localStorage, so
  * applications persist server-side and status is driven from the DB
  * (the "dashboard" configuration lives in enrollment_periods).

@@ -1,7 +1,7 @@
 <?php
 /**
  * Contact form API (public landing page -> SmartCampus project team).
- * Stores messages in the Supabase `kerrfairtex` schema (contact_messages).
+ * Stores messages in the school schema (contact_messages).
  */
 require_once 'database.inc.php';
 require_once 'Warehouse.php';
@@ -67,14 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // access_log so the school can see which mailbox should answer.
     // The recipient is NEVER sent to the public submitter (no scraping).
     $routing = [
-        'Enrollment'        => 'kerrfairtex@gmail.com',  // placeholders; school fills real aliases
-        'SmartCampus'       => 'kerrfairtex@gmail.com',
-        'Website'           => 'kerrfairtex@gmail.com',
-        'Technical Support' => 'kerrfairtex@gmail.com',
-        'School Information'=> 'kerrfairtex@gmail.com',
-        'Other'             => 'kerrfairtex@gmail.com',
+        'Enrollment'        => 'info@batu-batunhs.edu.ph',
+        'SmartCampus'       => 'info@batu-batunhs.edu.ph',
+        'Website'           => 'info@batu-batunhs.edu.ph',
+        'Technical Support' => 'info@batu-batunhs.edu.ph',
+        'School Information'=> 'info@batu-batunhs.edu.ph',
+        'Other'             => 'info@batu-batunhs.edu.ph',
     ];
-    $recipient = isset($routing[$concern]) ? $routing[$concern] : 'kerrfairtex@gmail.com';
+    $recipient = isset($routing[$concern]) ? $routing[$concern] : 'info@batu-batunhs.edu.ph';
     @pg_query(
         $conn,
         "INSERT INTO kerrfairtex.access_log

@@ -4,7 +4,7 @@
  *
  * Receives a single POST from the public landing page when a visitor
  * scrolls a section into view for the first time in a session. Writes
- * one row to kerrfairtex.access_log with status='scroll:<section>'.
+ * one row to the school access_log with status='scroll:<section>'.
  * The existing access_log table already receives login events from the
  * SIS portal; engagement rows are distinguishable by the 'scroll:' prefix
  * on status.

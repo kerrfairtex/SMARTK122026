@@ -487,13 +487,13 @@ if ( empty( $_SESSION['STAFF_ID'] )
 	<h4 class="center">Batu-Batu National Integrated High School</h4>
 	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
 	<form name="loginform" id="loginform" method="post">
-	<table class="cellspacing-0 width-100p">
+	<div class="login-fields">
 
 	<?php // Choose language.
 	if ( count( $RosarioLocales ) > 1 ) : ?>
 
-		<tr>
-			<td>
+		<div class="login-language">
+			<div class="login-language-links">
 			<?php foreach ( $RosarioLocales as $loc ) :
 				$language = function_exists( 'locale_get_display_language' ) ?
 					ucfirst( locale_get_display_language( $loc, $locale ) ) :
@@ -501,56 +501,53 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 				<a href="login.php?locale=<?php echo $loc; ?>" title="<?php echo AttrEscape( $language ); ?>">
 					<img src="locale/<?php echo $loc; ?>/flag.png" width="32" alt="<?php echo AttrEscape( $language ); ?>" />
-				</a>&nbsp;
+				</a>
 
 			<?php endforeach; ?>
-			<br />
-			<?php echo _( 'Language' ); ?>
-			</td>
-		</tr>
+			</div>
+			<span><?php echo _( 'Language' ); ?></span>
+		</div>
 
 	<?php endif;
 
 	$default_username = $default_password = '';
 
+
 	if ( Config( 'LOGIN' ) === 'No'
 		&& DBGetOne( "SELECT 1 FROM staff
 			WHERE USERNAME='admin'
-			AND PASSWORD='$6\$dc51290a001671c6$97VSmw.Qu9sL6vpctFh62/YIbbR6b3DstJJxPXal2OndrtFszsxmVhdQaV2mJvb6Z38sPACXqDDQ7/uquwadd.'" ) )
+			AND PASSWORD='$6$dc51290a001671c6$97VSmw.Qu9sL6vpctFh62/YIbbR6b3DstJJxPXal2OndrtFszsxmVhdQaV2mJvb6Z38sPACXqDDQ7/uquwadd.'" ) )
 	{
 		// @since 12.9 First login, prefill form inputs with default "admin" username & password
 		$default_username = $default_password = 'admin';
 	}
 	?>
 
-		<tr>
-			<td>
-				<label>
-					<input type="text" name="USERNAME" id="USERNAME" value="<?php
-						echo AttrEscape( $default_username );
-					?>" size="20" maxlength="100" required <?php echo $default_username ? '' : 'autofocus'; ?> />
-					<?php echo _( 'Username' ); ?>
-				</label>
-			</td>
-		</tr>
-		<tr>
-			<td>
-				<label>
-					<input type="password" name="PASSWORD" id="PASSWORD" value="<?php
-						echo AttrEscape( $default_password );
-					?>" size="20" maxlength="42" required />
-					<?php echo _( 'Password' ); ?>
-				</label>
-				<div class="align-right">
-					<a href="PasswordReset.php" rel="nofollow">
-						<?php echo _( 'Password help' ); ?>
-					</a>
-				</div>
-			</td>
-		</tr>
-	</table>
-	<p class="center">
-		<input type="submit" value="<?php echo AttrEscape( _( 'Login' ) ); ?>" class="button-primary" />
+		<div class="login-field">
+			<label for="USERNAME"><?php echo _( 'Username' ); ?></label>
+			<input type="text" name="USERNAME" id="USERNAME" value="<?php
+				echo AttrEscape( $default_username );
+			?>" size="20" maxlength="100" required <?php echo $default_username ? '' : 'autofocus'; ?> />
+		</div>
+		<div class="login-field">
+			<label for="PASSWORD"><?php echo _( 'Password' ); ?></label>
+			<div class="password-input">
+				<input type="password" name="PASSWORD" id="PASSWORD" value="<?php
+					echo AttrEscape( $default_password );
+				?>" size="20" maxlength="42" required />
+				<button type="button" class="login-password-toggle" aria-controls="PASSWORD" aria-pressed="false" data-show-label="<?php echo AttrEscape( _( 'Show password' ) ); ?>" data-hide-label="<?php echo AttrEscape( _( 'Hide password' ) ); ?>">
+					<span class="login-password-toggle-label"><?php echo _( 'Show password' ); ?></span>
+				</button>
+			</div>
+			<div class="align-right">
+				<a href="PasswordReset.php" rel="nofollow">
+					<?php echo _( 'Password help' ); ?>
+				</a>
+			</div>
+		</div>
+	</div>
+	<p class="center login-submit-wrap">
+		<input type="submit" value="<?php echo AttrEscape( _( 'Login' ) ); ?>" class="button-primary login-submit" />
 	</p>
 
 	<?php // @since 7.6 Login form link action hook.
@@ -586,19 +583,41 @@ if ( empty( $_SESSION['STAFF_ID'] )
 		<input type="hidden" name="redirect_to" value="<?php echo URLEscape( $_REQUEST['redirect_to'] ); ?>" />
 	<?php endif; ?>
 	</form>
+	<script>
+		(function () {
+			const form = document.getElementById('loginform');
+			const password = document.getElementById('PASSWORD');
+			const toggle = document.querySelector('.login-password-toggle');
+			if (!form || !password || !toggle) return;
+			toggle.addEventListener('click', function () {
+				const isVisible = password.type === 'text';
+				password.type = isVisible ? 'password' : 'text';
+				toggle.setAttribute('aria-pressed', String(!isVisible));
+				toggle.querySelector('.login-password-toggle-label').textContent =
+					isVisible ? toggle.dataset.showLabel : toggle.dataset.hideLabel;
+			});
+			form.addEventListener('submit', function () {
+				const submit = form.querySelector('.login-submit');
+				if (submit) {
+					submit.disabled = true;
+					submit.classList.add('is-submitting');
+				}
+			});
+		}());
+	</script>
 	<details class="about-rosariosis">
 		<summary><?php echo _( 'About' ); ?></summary>
 		<?php // System disclaimer. ?>
 		<p class="size-3">
 			<?php
-				echo _( 'This is a restricted network. Use of this network, its equipment, and resources is monitored at all times and requires explicit permission from the network administrator. If you do not have this permission in writing, you are violating the regulations of this network and can and will be prosecuted to the full extent of the law. By continuing into this system, you are acknowledging that you are aware of and agree to these terms.' );
+			echo _( 'This is a restricted network. Use of this network, its equipment, and resources is monitored at all times and requires explicit permission from the network administrator. If you do not have this permission in writing, you are violating the regulations of this network and can and will be prosecuted to the full extent of the law. By continuing into this system, you are acknowledging that you are aware of and agree to these terms.' );
 			?>
 		</p>
 		<p class="center size-1">
-                    &copy; 2004-2009 The Miller Group &amp; Learners Circle
-                    <br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
-                    <br />&copy; 2026 <a href="https://www.facebook.com/SMARTCAMPK12" rel="noreferrer">Batu-Batu National High School</a>
-            </p>
+            &copy; 2004-2009 The Miller Group &amp; Learners Circle
+            <br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
+            <br />&copy; 2026 <a href="https://www.facebook.com/SMARTCAMPK12" rel="noreferrer">Batu-Batu National High School</a>
+        </p>
 	</details>
 
 <?php PopTable( 'footer' );

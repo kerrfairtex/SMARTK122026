@@ -131,7 +131,7 @@ html.a11y-hc {
  * Resets, document-level typography, section rhythm, container widths
  * ===================================================================== */
 
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+/* Google Fonts loaded via <link> in <head> */
 
 /* Reset */
 *, *::before, *::after { box-sizing: border-box; }
@@ -201,6 +201,8 @@ section.surface-tide { background: var(--tide-teal); }
         animation-duration: 0.01ms !important;
         transition-duration: 0.01ms !important;
     }
+    /* Fully disable decorative animations, don't just speed them up */
+    .horizon-line { animation: none; }
 }
 html.save-data *, html.save-data *::before, html.save-data *::after {
     animation: none !important;
@@ -750,7 +752,24 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 
-    </style>
+    
+/* ============================================================
+ * 2026 standard: replace inline styles with CSS classes
+ * ============================================================ */
+.section-lead { margin-top: var(--space-4); color: var(--foam); opacity: 0.8; max-width: 60ch; }
+.section-spacer-sm { margin-top: var(--space-4); margin-bottom: var(--space-3); }
+.section-spacer-lg { margin-top: var(--space-5); }
+.section-spacer-bottom { margin-bottom: var(--space-3); color: var(--foam); }
+.section-title-inline { margin-top: var(--space-4); color: var(--sand); }
+.section-title-bottom { margin-bottom: var(--space-3); color: var(--foam); }
+
+/* ============================================================
+ * CLS containment on transform/absolute elements
+ * ============================================================ */
+.hero-clock, .photo-strip figcaption, .history-timeline__item::before {
+    contain: layout;
+}
+</style>
     <link rel="stylesheet" href="public/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="public/css/components.css"></noscript>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4B400'/%3E%3Ctext x='16' y='22' font-size='20' text-anchor='middle' font-family='serif' font-weight='700' fill='%230A1420'%3EB%3C/text%3E%3C/svg%3E">
@@ -881,7 +900,7 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
                         <p class="counter__context">Province population</p>
                     </div>
                 </div>
-                <p style="margin-top: var(--space-4); color: var(--foam); opacity: 0.8; max-width: 60ch;">
+                <p class="section-lead">
                     Tawi-Tawi is the Philippines&rsquo; southernmost province &mdash; a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.
                 </p>
                 <p class="form-note" style="margin-top: var(--space-4); margin-bottom: var(--space-3);">Real photos from the Tawi-Tawi archipelago. The first is vision-verified; the others are region-tagged but pending verification.</p>
@@ -923,7 +942,7 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
                 </div>
 
                 <h3 style="margin-top: var(--space-5);">School History</h3>
-                <p style="margin-bottom: var(--space-3); color: var(--foam);">
+                <p class="section-spacer-bottom">
                     Batu-Batu National High School traces its roots to a barangay high school serving the Batu-Batu community, and was formally converted into a national high school on <strong>14 November 1982</strong> by Batas Pambansa Blg. 290. The full history is captured in the timeline below. The photos below are the visual record of the school and its community. Where a photo is shown without a caption, it is presented as provided to the SmartCampus team; the school registrar will confirm each subject so it can be captioned properly.
                 </p>
 
@@ -1207,10 +1226,10 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
                         <div data-wizard-step="3" hidden>
                             <h4>Documents</h4>
                             <p class="form-note">If online upload isn't possible, you may submit documents physically at the school.</p>
-                            <div class="form-field"><label><input type="checkbox" name="doc_bc"> Birth Certificate (PSA / NSO)</label></div>
-                            <div class="form-field"><label><input type="checkbox" name="doc_rc"> Report Card</label></div>
-                            <div class="form-field"><label><input type="checkbox" name="doc_tc"> Transfer Credentials</label></div>
-                            <div class="form-field"><label><input type="checkbox" name="doc_other"> Other Required Documents</label></div>
+                            <div class="form-field"><label><input type="checkbox" id="doc_bc" name="doc_bc"> Birth Certificate (PSA / NSO)</label></div>
+                            <div class="form-field"><label><input type="checkbox" id="doc_rc" name="doc_rc"> Report Card</label></div>
+                            <div class="form-field"><label><input type="checkbox" id="doc_tc" name="doc_tc"> Transfer Credentials</label></div>
+                            <div class="form-field"><label><input type="checkbox" id="doc_other" name="doc_other"> Other Required Documents</label></div>
                         </div>
                         <div data-wizard-step="4" hidden>
                             <h4>Review &amp; Submit</h4>

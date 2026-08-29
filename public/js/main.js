@@ -125,3 +125,16 @@
         Object.keys(map).forEach(function (id) { navIo.observe(document.getElementById(id)); });
     }
 })();
+
+// --- PWA Service Worker Registration ---
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/pwabuilder-sw.js')
+      .then(function(registration) {
+        console.log('SW registered:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('SW registration failed:', error);
+      });
+  });
+}

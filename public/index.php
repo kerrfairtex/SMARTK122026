@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
+  <!-- build: 220019fc2 2026-08-29T08:46:36.167090Z -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Batu-Batu National High School — SmartCampus K-12</title>

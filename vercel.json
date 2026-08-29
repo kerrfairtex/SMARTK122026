@@ -1,53 +1,10 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "(.*)",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": [
-          "index.php",
-          "login.php",
-          "privacy.php",
-          "contact_api.php",
-          "enroll_api.php",
-          "engagement.php",
-          "modules_api.php",
-          "about_content_api.php",
-          "about_edit.php",
-          "admin/index.php",
-          "healthz.php",
-          "cors-headers.php",
-          "favicon.ico",
-          "apple-touch-icon.png",
-          "pwabuilder-sw.js"
-        ]
-      }
-    }
-  ],
-  "routes": [
-    {
-      "src": "/(.*)",
-      "dest": "/api/proxy.js"
-    }
-  ],
-  "headers": [
+  "cleanOutputs": true,
+  "rewrites": [
     {
       "source": "/(.*)",
-      "headers": [
-        {
-          "key": "Access-Control-Allow-Origin",
-          "value": "*"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=0, must-revalidate"
-        }
-      ]
+      "destination": "https://smartcampk12.onrender.com/$1"
     }
-  ],
-  "cleanOutputs": true,
-  "github": {
-    "silent": false
-  }
+  ]
 }

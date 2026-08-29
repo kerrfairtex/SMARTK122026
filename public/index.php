@@ -1358,6 +1358,7 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
 
 
     <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->
+    <!-- deploy-trigger: 2daef6038 -->
     <script src="public/js/main.js" defer></script>
     <script src="public/js/reveal.js" defer></script>
     <script src="public/js/stepper.js" defer></script>

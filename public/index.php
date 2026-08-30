@@ -1162,7 +1162,7 @@ img[width], img[height] {
 
     <!-- ============================================================
          ACCESSIBILITY TOOLBAR (sticky top)
-         Per Part 2: these toggles gate the 3D tier.
+         Per Part 2: toggles gate the animated tier (motion/hover effects).
          ============================================================ -->
     <!-- Unified header: single <nav> with brand, hamburger, search, and
          (inside the drawer) nav links + accessibility toggles + conn badge.
@@ -1225,8 +1225,7 @@ img[width], img[height] {
 
         <!-- ============================================================
              AT A GLANCE (Part 3 §2)
-             3D-tilt stat tiles (CSS perspective + JS device-orientation),
-             animated count-up on population numbers below.
+             Stat tiles with CSS perspective tilt + count-up animation.
              ============================================================ -->
         <section id="glance" class="reveal">
             <div class="container">
@@ -1746,7 +1745,7 @@ img[width], img[height] {
     <!-- Floating quick contact — removed in v1.7 -->
 
 
-    <!-- Scripts: tier detection and main behaviors first, then 3D, then reveal/stepper -->
+    <!-- Scripts: tier detection and main behaviors first, then reveal/stepper -->
     <!-- deploy-trigger: 2daef6038 -->
     <script src="/js/main.js" defer></script>
     <script src="/js/reveal.js" defer></script>

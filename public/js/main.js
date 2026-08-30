@@ -50,7 +50,7 @@
         root.classList.toggle('a11y-hc', s.hc);
         root.classList.toggle('a11y-dyslexic', s.dys);
         root.classList.toggle('a11y-large', s.large);
-        // Per spec Part 2: a11y toggles also gate the 3D tier
+        // Per spec Part 2: a11y toggles gate the animated tier (reduce-motion friendly)
         if (s.hc || s.dys) applyTier('css-only');
         var btnHc = document.getElementById('a11yHc');
         var btnDys = document.getElementById('a11yDys');

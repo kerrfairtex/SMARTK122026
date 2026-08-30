@@ -4,7 +4,7 @@
  * Strategy: Cache First (assets) + Network First (API/HTML)
  */
 
-const CACHE_NAME = 'smartcamp-k12-220019fc2';
+const CACHE_NAME = 'smartcamp-k12-cleanup-1';
 const STATIC_ASSETS = [
   '/',
   '/index.php',
@@ -14,7 +14,6 @@ const STATIC_ASSETS = [
   '/public/js/main.js',
   '/public/js/reveal.js',
   '/public/js/stepper.js',
-  '/public/js/hero-scene.js',
   '/public/js/enhancements.js',
   '/public/icons/icon-192.png',
   '/public/icons/icon-512.png',

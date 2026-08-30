@@ -85,8 +85,14 @@ fi
 # --- Expose landing-page photos at /assets/images (survives the Render disk
 # mount at /var/www/html/assets, which would otherwise shadow the image tree) ---
 chmod 755 /var/www/html/public /var/www/html/public/assets 2>/dev/null || true
-ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
-echo "[SWAP] landing images symlinked to /assets/images."
+# Guard: if public/assets/images/ is missing (COPY failure, partial build),
+# create it from the source tree or skip the symlink to avoid dangling target.
+if [ -d /var/www/html/public/assets/images ]; then
+    ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
+    echo "[SWAP] landing images symlinked to /assets/images."
+else
+    echo "[SWAP] WARN: /var/www/html/public/assets/images missing; landing images NOT symlinked."
+fi
 
 # --- Expose landing-page CSS/JS bundles at /css and /js (the landing page
 # references /css/components.css and /js/{main,reveal,enhancements,stepper}.js

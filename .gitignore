@@ -355,3 +355,7 @@ functions/1GetMP.php
 assets/themes/CoolAdmin
 .vercel
 .env*
+
+# Sanitize backups — transient (content recoverable from git history at
+# 9159656a1 and earlier). Safe to delete locally.
+.sanitize_backup_*/

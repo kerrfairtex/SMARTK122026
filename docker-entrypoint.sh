@@ -101,7 +101,6 @@ ln -sfn /var/www/html/public/js/main.js         /var/www/html/js/main.js
 ln -sfn /var/www/html/public/js/reveal.js       /var/www/html/js/reveal.js
 ln -sfn /var/www/html/public/js/enhancements.js /var/www/html/js/enhancements.js
 ln -sfn /var/www/html/public/js/stepper.js      /var/www/html/js/stepper.js
-ln -sfn /var/www/html/public/manifest.json      /var/www/html/manifest.json
 echo "[SWAP] CSS/JS bundles symlinked."
 
 echo "[INFO] Entrypoint initialization complete. Starting Apache..."

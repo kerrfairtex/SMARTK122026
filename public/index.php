@@ -47,7 +47,7 @@
     <link rel="preload" as="image" href="assets/images/Batu-batu1_full.jpeg" imagesizes="(max-width: 1100px) 100vw, 1100px" fetchpriority="high">
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
     <!-- PWA -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="/public/manifest.json">
     <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">

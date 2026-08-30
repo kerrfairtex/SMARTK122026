@@ -48,6 +48,9 @@ LISTEN_PORT="${PORT:-10000}"
 echo "[INFO] Configuring Apache to listen on port ${LISTEN_PORT}..."
 echo "Listen ${LISTEN_PORT}" > /etc/apache2/ports.conf
 
+# Enable mod_expires (needed for ExpiresActive / ExpiresDefault directives)
+a2enmod expires 2>/dev/null || true
+
 cat << EOF > /etc/apache2/sites-available/000-default.conf
 <VirtualHost *:${LISTEN_PORT}>
     ServerAdmin webmaster@localhost
@@ -57,6 +60,35 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
         AllowOverride All
         Require all granted
     </Directory>
+
+    # --- Cache lifetimes for static assets ---
+    # PageSpeed flagged 1,158 KiB of re-downloaded static assets. These
+    # directives set Cache-Control + Expires so browsers cache for repeat
+    # visits. Service worker (pwabuilder-sw.js) handles cache invalidation
+    # via version-bumped CACHE_NAME on every deploy.
+    #
+    # TTL chosen as 1 day (86400s) rather than 1 year because the HTML
+    # references assets by bare path (no ?v=... query string). 1 day means
+    # unserviced visitors (no SW) get fresh content within 24h of deploy.
+    # 1 year would be wrong: stale forever for visitors without SW.
+    # To upgrade to 1 year, version every asset URL in public/index.php.
+    <LocationMatch "\.(jpg|jpeg|png|webp|gif|ico|svg)$">
+        Header set Cache-Control "public, max-age=86400"
+        ExpiresActive On
+        ExpiresDefault "access plus 1 day"
+    </LocationMatch>
+    <LocationMatch "\.(css|js|woff2?|ttf|eot)$">
+        Header set Cache-Control "public, max-age=86400"
+        ExpiresActive On
+        ExpiresDefault "access plus 1 day"
+    </LocationMatch>
+    # Service worker itself: never cache, so updates take effect immediately
+    <LocationMatch "pwabuilder-sw\.js$">
+        Header set Cache-Control "no-cache, no-store, must-revalidate"
+        Header set Pragma "no-cache"
+        Header set Expires "0"
+    </LocationMatch>
+
     ErrorLog \${APACHE_LOG_DIR}/error.log
     CustomLog \${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>

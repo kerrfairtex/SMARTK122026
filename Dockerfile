@@ -27,7 +27,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         opcache \
         xml \
         curl \
-    && a2enmod rewrite headers \
+    && a2enmod rewrite headers expires \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

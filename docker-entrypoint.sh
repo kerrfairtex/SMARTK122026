@@ -103,5 +103,29 @@ ln -sfn /var/www/html/public/js/enhancements.js /var/www/html/js/enhancements.js
 ln -sfn /var/www/html/public/js/stepper.js      /var/www/html/js/stepper.js
 echo "[SWAP] CSS/JS bundles symlinked."
 
+# --- Inject build version into cache-busting markers ---
+# Render exposes $RENDER_GIT_COMMIT (full SHA) at runtime. Use the short SHA
+# so every deploy automatically gets a unique CACHE_NAME and a matching
+# <!-- build: ... --> marker in the landing HTML. This way PWA users get
+# the new asset bundle on next visit (activate handler purges old cache)
+# and the rendered HTML source proves which commit is live.
+BUILD_SHA="${RENDER_GIT_COMMIT:-local-dev}"
+BUILD_SHORT="$(printf '%s' "$BUILD_SHA" | cut -c1-8)"
+CACHE_NAME="smartcamp-k12-${BUILD_SHORT}"
+BUILD_TS="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+echo "[BUILD] version=${BUILD_SHORT} cache=${CACHE_NAME} ts=${BUILD_TS}"
+
+for sw in /var/www/html/pwabuilder-sw.js /var/www/html/phone/download/pwabuilder-sw.js; do
+    if [ -f "$sw" ]; then
+        sed -i "s|const CACHE_NAME = 'smartcamp-k12-[a-zA-Z0-9-]*';|const CACHE_NAME = '${CACHE_NAME}';|" "$sw"
+        echo "[BUILD] injected CACHE_NAME into ${sw#/var/www/html/}"
+    fi
+done
+
+if [ -f /var/www/html/public/index.php ]; then
+    sed -i "s|<!-- build: [a-zA-Z0-9]* [0-9TZ:.-]* -->|<!-- build: ${BUILD_SHORT} ${BUILD_TS} -->|" /var/www/html/public/index.php
+    echo "[BUILD] injected build marker into public/index.php"
+fi
+
 echo "[INFO] Entrypoint initialization complete. Starting Apache..."
 exec "$@"

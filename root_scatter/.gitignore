@@ -1,0 +1,5 @@
+# Live session cookie jars — DO NOT COMMIT (contain active RosarioSIS auth tokens)
+jar.txt
+jar2.txt
+jar3.txt
+jar_auth.txt

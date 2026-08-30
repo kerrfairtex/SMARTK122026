@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management | TRAC JHS SARMS</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="/assets/css/style.css" rel="stylesheet">
+    <script>
+        window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/script.js"></script>
+</head>
+<body>
+    <div class="app-shell">
+
+        <!-- Mobile hamburger overlay -->
+        <div class="mobile-overlay" id="mobileOverlay"></div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand-block">
+                    <div class="brand-icon"><i class="bi bi-mortarboard-fill"></i></div>
+                    <div>
+                        <h1>TRAC JHS SARMS</h1>
+                        <p>Tawi-Tawi Regional Agricultural College Junior High School<br>Bongao, Tawi-Tawi · BARMM</p>
+                    </div>
+                </div>
+                <button class="sidebar-close" id="sidebarClose" aria-label="Close menu">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                                                                                <a class="nav-link "
+                           href="/dashboard.php">
+                            <i class="bi bi-bi-speedometer2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                                                                                <div class="sidebar-group-label">Admission &amp; Records</div>
+                                                                <a class="nav-link "
+                           href="/modules/admission/index.php">
+                            <i class="bi bi-bi-person-plus"></i>
+                            <span>Admission</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/enrollment/index.php">
+                            <i class="bi bi-bi-people"></i>
+                            <span>Enrollment</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/records/index.php">
+                            <i class="bi bi-bi-folder2-open"></i>
+                            <span>Records</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/search/index.php">
+                            <i class="bi bi-bi-search"></i>
+                            <span>Search &amp; Inquiry</span>
+                        </a>
+                                                                                <div class="sidebar-group-label">Transfers &amp; Reports</div>
+                                                                <a class="nav-link "
+                           href="/modules/transfers/index.php">
+                            <i class="bi bi-bi-arrow-left-right"></i>
+                            <span>Transfers</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/reports/index.php">
+                            <i class="bi bi-bi-file-earmark-text"></i>
+                            <span>Reporting</span>
+                        </a>
+                                                                                <div class="sidebar-group-label">Administration</div>
+                                                                <a class="nav-link active"
+                           href="/modules/admin/users.php">
+                            <i class="bi bi-bi-person-gear"></i>
+                            <span>Users</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/admin/settings.php">
+                            <i class="bi bi-bi-gear"></i>
+                            <span>Settings</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/admin/audit.php">
+                            <i class="bi bi-bi-journal-text"></i>
+                            <span>Audit Log</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/admin/lis.php">
+                            <i class="bi bi-bi-file-earmark-spreadsheet"></i>
+                            <span>LIS CSV</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/admin/backup.php">
+                            <i class="bi bi-bi-hdd-network"></i>
+                            <span>Database Backup</span>
+                        </a>
+                                            <a class="nav-link "
+                           href="/modules/admin/restore.php">
+                            <i class="bi bi-bi-arrow-counterclockwise"></i>
+                            <span>Database Restore</span>
+                        </a>
+                                                </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-chip">
+                    <i class="bi bi-person-circle"></i>
+                    <div>
+                        <strong>School Registrar</strong>
+                        <span>Registrar</span>
+                    </div>
+                </div>
+                <a href="/modules/account/password.php" class="btn btn-outline-light btn-sm w-100 mt-2">
+                    <i class="bi bi-key"></i> Change Password
+                </a>
+                <a href="/auth/logout.php" class="btn btn-outline-light btn-sm w-100 mt-2">
+                    <i class="bi bi-box-arrow-right"></i> Sign Out
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="main-content">
+            <!-- Top bar -->
+            <header class="topbar glass-panel">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                        <i class="bi bi-list"></i>
+                    </button>
+                    <h2>User Management</h2>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Academic Year Selector -->
+                    <div class="dropdown">
+                        <a href="#" class="topbar-link dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-calendar-range"></i>
+                            <span class="d-none d-sm-inline">
+                                2025-2026                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                                                            <a href="/modules/admin/set_year.php?year_id=1"
+                                   class="dropdown-item active">
+                                    2025-2026                                                                            <span class="badge bg-primary ms-1">Active</span>
+                                                                    </a>
+                                                    </div>
+                    </div>
+
+                    <!-- Notifications -->
+                    <div class="dropdown">
+                        <a href="#" class="topbar-link dropdown-toggle position-relative" data-bs-toggle="dropdown" aria-expanded="false"
+                           id="notificationToggle">
+                            <i class="bi bi-bell"></i>
+                                                    </a>
+                        <div class="dropdown-menu dropdown-menu-end notification-dropdown">
+                            <div class="notification-header">
+                                <h6>Notifications</h6>
+                                <span class="text-muted small">0 overdue</span>
+                            </div>
+
+                            
+                            
+                                                            <div class="notification-empty">
+                                    <i class="bi bi-bell-slash"></i>
+                                    <p>No notifications</p>
+                                </div>
+                                                    </div>
+                    </div>
+
+                    <!-- User avatar -->
+                    <div class="dropdown">
+                        <a href="#" class="topbar-avatar dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            <span class="avatar-sm">
+                                                                SR                            </span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-end">
+                            <div class="dropdown-item-text">
+                                <strong>School Registrar</strong>
+                                <span class="text-muted">Registrar</span>
+                            </div>
+                            <a href="/modules/account/password.php" class="dropdown-item">
+                                <i class="bi bi-key"></i> Change Password
+                            </a>
+                                                            <a href="/modules/admin/settings.php" class="dropdown-item">
+                                    <i class="bi bi-gear"></i> Settings
+                                </a>
+                                                        <a href="/auth/logout.php" class="dropdown-item">
+                                <i class="bi bi-box-arrow-right"></i> Sign Out
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <!-- LAN badge -->
+            <div class="lan-badge-row">
+                <span class="lan-badge"><i class="bi bi-shield-lock"></i> Intranet Only</span>
+            </div>
+
+            <!-- Flash messages -->
+                        <section class="content-area">
+    <div class="row g-3">
+    <div class="col-lg-5">
+        <div class="panel-card glass-panel">
+            <h3>Create User</h3>
+            <form method="post">
+                <input type="hidden" name="action" value="create">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" name="full_name" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Role</label>
+                    <select name="role" class="form-select">
+                        <option value="encoder">Data Encoder (Staff)</option>
+                        <option value="registrar">School Registrar (Admin)</option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Initial Password</label>
+                    <input type="password" name="password" class="form-control" minlength="8" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Create User</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-lg-7">
+        <div class="table-card glass-panel">
+            <h3>System Users</h3>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Name</th>
+                            <th>Role</th>
+                            <th>Last Active</th>
+                            <th>Status</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                                                    <tr>
+                                <td>registrar</td>
+                                <td>School Registrar</td>
+                                <td>Registrar</td>
+                                <td>2026-08-16 00:06:13</td>
+                                <td>Active</td>
+                                <td>
+                                                                    </td>
+                            </tr>
+                                                    <tr>
+                                <td>encoder</td>
+                                <td>Data Encoder</td>
+                                <td>Encoder</td>
+                                <td>Never</td>
+                                <td>Active</td>
+                                <td>
+                                                                            <form method="post" class="d-inline">
+                                            <input type="hidden" name="action" value="toggle">
+                                            <input type="hidden" name="user_id" value="2">
+                                            <button type="submit" class="btn btn-sm btn-outline-light">Disable</button>
+                                        </form>
+                                                                    </td>
+                            </tr>
+                                            </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mobile sidebar toggle
+        (function () {
+            const overlay = document.getElementById('mobileOverlay');
+            const sidebar = document.getElementById('sidebar');
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            const closeBtn = document.getElementById('sidebarClose');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            if (overlay) overlay.addEventListener('click', closeSidebar);
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') closeSidebar();
+            });
+        })();
+    </script>
+</body>
+</html>
+    

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width">
+	<title>Batu-Batu NIHS — Student Information System</title>
+	<link rel="icon" href="favicon.ico" sizes="32x32">
+	<link rel="icon" href="apple-touch-icon.png" sizes="128x128">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="token" content="9e4f2171e4a002408f8781da50534be2">
+	<link rel="stylesheet" href="assets/themes/FlatSIS/stylesheet.css?0b57020c">
+	<style>.highlight,.highlight-hover:hover{background-color:#FFFFFF !important;}</style>
+		<noscript>
+		<meta http-equiv="REFRESH" content="0; url=login.php?token=9e4f2171e4a002408f8781da50534be2&modfunc=logout&reason=javascript">
+	</noscript>
+</head>
+<body class="login">
+	<div id="body" tabindex="0" role="main" class="mod">
+<div class="postbox-wrapper"><table class="postbox cellspacing-0" >
+			<thead><tr><th class="center"><h3 class="title">BATU-BATU&nbsp;NIHS&nbsp;LOGIN</h3></th></tr></thead>
+			<tbody><tr><td class="popTable">
+	<img src="assets/themes/FlatSIS/logo.png" class="logo center" alt="Logo" />
+	<h4 class="center">Batu-Batu National Integrated High School</h4>
+	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
+	<form name="loginform" id="loginform" method="post">
+	<div class="login-fields">
+
+	
+		<div class="login-field">
+			<label for="USERNAME">Username</label>
+			<input type="text" name="USERNAME" id="USERNAME" value="" size="20" maxlength="100" required autofocus />
+		</div>
+		<div class="login-field">
+			<label for="PASSWORD">Password</label>
+			<div class="password-input">
+				<input type="password" name="PASSWORD" id="PASSWORD" value="" size="20" maxlength="42" required />
+				<button type="button" class="login-password-toggle" aria-controls="PASSWORD" aria-pressed="false" data-show-label="Show password" data-hide-label="Hide password">
+					<span class="login-password-toggle-label">Show password</span>
+				</button>
+			</div>
+			<div class="align-right">
+				<a href="PasswordReset.php" rel="nofollow">
+					Password help				</a>
+			</div>
+		</div>
+	</div>
+	<p class="center login-submit-wrap">
+		<input type="submit" value="Login" class="button-primary login-submit" />
+	</p>
+
+	
+		</form>
+	<script>
+		(function () {
+			const form = document.getElementById('loginform');
+			const password = document.getElementById('PASSWORD');
+			const toggle = document.querySelector('.login-password-toggle');
+			if (!form || !password || !toggle) return;
+			toggle.addEventListener('click', function () {
+				const isVisible = password.type === 'text';
+				password.type = isVisible ? 'password' : 'text';
+				toggle.setAttribute('aria-pressed', String(!isVisible));
+				toggle.querySelector('.login-password-toggle-label').textContent =
+					isVisible ? toggle.dataset.showLabel : toggle.dataset.hideLabel;
+			});
+			form.addEventListener('submit', function () {
+				const submit = form.querySelector('.login-submit');
+				if (submit) {
+					submit.disabled = true;
+					submit.classList.add('is-submitting');
+				}
+			});
+		}());
+	</script>
+	<details class="about-rosariosis">
+		<summary>About</summary>
+				<p class="size-3">
+			This is a restricted network. Use of this network, its equipment, and resources is monitored at all times and requires explicit permission from the network administrator. If you do not have this permission in writing, you are violating the regulations of this network and can and will be prosecuted to the full extent of the law. By continuing into this system, you are acknowledging that you are aware of and agree to these terms.		</p>
+		<p class="center size-1">
+            &copy; 2004-2009 The Miller Group &amp; Learners Circle
+            <br />&copy; 2012-2026 <a href="https://www.rosariosis.org" rel="noreferrer">RosarioSIS</a>
+            <br />&copy; 2026 <a href="https://www.facebook.com/SMARTCAMPK12" rel="noreferrer">Batu-Batu National High School</a>
+        </p>
+	</details>
+
+</td></tr></tbody></table></div><br>
+	</div><!-- #body -->
+</body></html>

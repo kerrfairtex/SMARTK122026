@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartCampus — Batu-Batu NIHS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div class="shell">
+  <div class="topbar">
+    <div class="brand">SmartCampus — Batu-Batu NIHS</div>
+  </div>
+  <div class="main">
+    <div class="error-banner" id="errorBanner"></div>
+    <h1 class="page-title">Portal</h1>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">Total enrollment</div><div class="value loading" id="kpiEnrolled">Loading…</div></div>
+      <div class="kpi"><div class="label">Discipline referrals this year</div><div class="value loading" id="kpiReferrals">Loading…</div></div>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:13.5px;margin-bottom:12px">Take Attendance — Course Period <span id="cpLabel"></span></h2>
+      <table class="data" id="attTable">
+        <tr><th>Learner</th><th>ID #</th><th>Mark</th></tr>
+        <tr><td colspan="3" style="color:var(--text-3)">Loading learners…</td></tr>
+      </table>
+      <div style="margin-top:12px;text-align:right"><button class="btn primary" id="saveAttBtn">Submit attendance</button></div>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:13.5px;margin-bottom:12px">Discipline — Referral Log</h2>
+      <table class="data" id="discTable">
+        <tr><th>Learner</th><th>Date</th><th>Category</th></tr>
+        <tr><td colspan="3" style="color:var(--text-3)">Loading referrals…</td></tr>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2 style="font-size:13.5px;margin-bottom:12px">Enrollment</h2>
+      <table class="data" id="enrollTable">
+        <tr><th>Learner</th><th>Grade</th><th>Start</th><th>Status</th></tr>
+        <tr><td colspan="4" style="color:var(--text-3)">Loading enrollments…</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

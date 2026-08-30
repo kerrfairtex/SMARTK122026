@@ -1,0 +1,530 @@
+/* ---------- Buttons ---------- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0.7rem 1.25rem;
+    border-radius: var(--radius-2);
+    font-weight: 600;
+    font-family: var(--font-body);
+    cursor: pointer;
+    transition: transform var(--dur-hover) var(--ease-standard),
+                background var(--dur-hover) var(--ease-standard),
+                box-shadow var(--dur-hover) var(--ease-standard);
+    border: 1px solid transparent;
+    text-decoration: none;
+}
+.btn--primary {
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    box-shadow: var(--elev-1);
+}
+.btn--primary:hover, .btn--primary:focus-visible {
+    background: #ffce3f;
+    transform: translateY(-2px);
+    box-shadow: var(--elev-2);
+}
+.btn--primary:active { transform: translateY(0); box-shadow: var(--elev-1); }
+.btn--ghost {
+    background: transparent;
+    color: var(--foam);
+    border-color: var(--foam-overlay-16);
+}
+.btn--ghost:hover, .btn--ghost:focus-visible {
+    background: var(--foam-overlay-08);
+    color: var(--sand);
+    border-color: var(--foam);
+}
+
+/* ---------- Stat tiles (At a Glance) ---------- */
+.tile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+}
+.tile {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-3);
+    padding: var(--space-4);
+    transition: transform 220ms var(--ease-out), border-color 220ms var(--ease-standard);
+    transform-style: preserve-3d;
+    will-change: transform;
+}
+.tile:hover { border-color: var(--sun-gold); transform: translateY(-3px); }
+.tile__label { color: var(--foam); opacity: 0.7; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.tile__value { color: var(--sand); font-family: var(--font-utility); font-size: 1.6rem; margin-top: var(--space-2); word-break: break-word; }
+.tile__source { color: var(--foam); opacity: 0.6; font-size: 0.75rem; margin-top: var(--space-1); }
+
+/* ---------- Stat counters (Community population) ---------- */
+.counter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-3);
+}
+.counter {
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-3);
+    padding: var(--space-4);
+    text-align: center;
+}
+.counter__number { font-family: var(--font-utility); font-size: 2.5rem; font-weight: 500; color: var(--sun-gold); }
+.counter__label { color: var(--sand); margin-top: var(--space-2); }
+.counter__context { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-1); }
+
+/* ---------- Grade cards (Academics) ---------- */
+/* ---------- Accessibility toolbar ---------- */
+.a11y-bar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--ink-overlay-90);
+    border-bottom: 1px solid var(--foam-overlay-16);
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: 0.85rem;
+}
+.a11y-bar__label { color: var(--foam); opacity: 0.7; }
+.a11y-bar__btn {
+    padding: 0.4rem 0.8rem;
+    background: var(--foam-overlay-08);
+    border: 1px solid var(--foam-overlay-16);
+    border-radius: var(--radius-1);
+    color: var(--foam);
+    transition: background var(--dur-hover) var(--ease-standard),
+                border-color var(--dur-hover) var(--ease-standard);
+}
+.a11y-bar__btn[aria-pressed="true"] {
+    background: var(--sun-gold);
+    color: var(--ink-deep);
+    border-color: var(--sun-gold);
+}
+.a11y-bar__btn:hover { background: var(--foam-overlay-16); }
+.a11y-bar__conn { margin-left: auto; display: inline-flex; align-items: center; gap: 0.4rem; color: var(--foam); opacity: 0.7; }
+.a11y-bar__conn .dot { width: 8px; height: 8px; border-radius: 50%; background: #4ade80; }
+.a11y-bar__conn[data-state="offline"] .dot { background: #6b7280; }
+
+/* ---------- Top navigation ---------- */
+.top-nav {
+    position: sticky;
+    top: 42px; /* below a11y-bar */
+    z-index: 40;
+    background: var(--ink-overlay-90);
+    border-bottom: 1px solid var(--foam-overlay-08);
+    padding: var(--space-2) var(--space-3);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+.top-nav__brand {
+    font-family: var(--font-display);
+    font-weight: 700;
+    color: var(--sun-gold);
+    font-size: 1rem;
+    text-decoration: none;
+}
+.top-nav__links { display: flex; gap: var(--space-3); flex: 1; }
+.top-nav__link {
+    color: var(--foam);
+    font-size: 0.85rem;
+    padding: 0.4rem 0.6rem;
+    border-radius: var(--radius-1);
+    transition: color var(--dur-hover) var(--ease-standard);
+}
+.top-nav__link:hover, .top-nav__link.is-active { color: var(--sun-gold); }
+
+/* ---------- Hero ---------- */
+.hero {
+    position: relative;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: var(--ink-deep);
+}
+.hero__canvas-wrap {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+}
+.hero__canvas-wrap canvas { width: 100%; height: 100%; }
+.hero__fallback {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--ink-deep) 0%, var(--tide-teal) 60%, var(--ink-deep) 100%);
+    z-index: -1;
+}
+.hero__fallback::after {
+    content: '';
+    position: absolute;
+    bottom: 20%;
+    left: 0;
+    right: 0;
+    height: 30%;
+    background:
+        radial-gradient(ellipse 60% 40% at 30% 80%, rgba(14,79,79,0.6), transparent),
+        radial-gradient(ellipse 50% 30% at 70% 90%, rgba(14,79,79,0.5), transparent);
+}
+.hero__content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    max-width: 900px;
+    padding: var(--space-5) var(--space-3);
+}
+.hero__eyebrow {
+    color: var(--sun-gold);
+    font-family: var(--font-utility);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: var(--space-2);
+}
+.hero__title { color: var(--sand); margin-bottom: var(--space-3); text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
+.hero__sub { color: var(--foam); font-size: 1.2rem; margin-bottom: var(--space-3); }
+.hero__location { color: var(--foam); opacity: 0.7; font-size: 0.9rem; margin-bottom: var(--space-4); font-family: var(--font-utility); }
+.hero__credibility { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-bottom: var(--space-4); font-style: italic; }
+.hero__actions { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; }
+.hero__clock { position: absolute; top: 1rem; right: 1rem; color: var(--foam); opacity: 0.7; font-family: var(--font-utility); font-size: 0.85rem; z-index: 3; }
+
+/* ---------- Signature horizon line ---------- */
+.horizon-line {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--sun-gold), transparent);
+    margin: 0;
+    opacity: 0.5;
+    position: relative;
+}
+.horizon-line::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, var(--reef-coral), transparent);
+    animation: horizon-shimmer 6s ease-in-out infinite;
+}
+@keyframes horizon-shimmer {
+    0%, 100% { opacity: 0.3; transform: translateX(-30%); }
+    50% { opacity: 0.8; transform: translateX(30%); }
+}
+
+/* ---------- Photo strip (About / Community sections) ---------- */
+.photo-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-3);
+    margin: var(--space-3) 0 var(--space-5);
+}
+.photo-strip figure {
+    margin: 0;
+    border-radius: var(--radius-2);
+    overflow: hidden;
+    background: var(--ink-overlay-40);
+    border: 1px solid var(--foam-overlay-16);
+    aspect-ratio: 4 / 3;
+    position: relative;
+}
+.photo-strip figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--dur-base) var(--ease-standard);
+}
+.photo-strip figure:hover img { transform: scale(1.04); }
+.photo-strip figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: var(--space-2) var(--space-3);
+    background: linear-gradient(180deg, transparent, rgba(10, 20, 32, 0.85));
+    color: var(--sand);
+    font-size: 0.75rem;
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-standard);
+}
+.photo-strip figure:hover figcaption,
+.photo-strip figure:focus-within figcaption { opacity: 1; }
+
+/* Unverified figures get a coral border and always-visible tag */
+.photo-strip figure.unverified {
+    border: 1px solid var(--reef-coral);
+    position: relative;
+}
+.photo-strip figure.unverified::before {
+    content: '?';
+    position: absolute;
+    top: 0.4rem;
+    right: 0.4rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    font-weight: 700;
+    font-size: 0.85rem;
+    line-height: 22px;
+    text-align: center;
+    z-index: 2;
+    box-shadow: var(--elev-1);
+}
+.photo-strip figcaption.unverified-tag {
+    opacity: 1;
+    position: absolute;
+    top: 0.4rem;
+    left: 0.4rem;
+    background: var(--reef-coral);
+    color: var(--ink-deep);
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    z-index: 2;
+}
+.photo-strip figure p {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.6rem var(--space-3);
+    margin: 0;
+    background: linear-gradient(180deg, transparent, rgba(10, 20, 32, 0.92));
+    color: var(--sand);
+    font-size: 0.78rem;
+    line-height: 1.4;
+    opacity: 0;
+    transition: opacity var(--dur-hover) var(--ease-standard);
+}
+.photo-strip figure:hover p,
+.photo-strip figure:focus-within p { opacity: 1; }
+.photo-strip figure p em { color: var(--sun-gold); font-style: italic; }
+
+/* ---------- Reveal on scroll (Tier 1) ---------- */
+.reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out); }
+.reveal.is-in { opacity: 1; transform: translateY(0); }
+
+/* Tier 0/1 visibility gate */
+html.tier-static .hero__canvas-wrap { display: none; }
+html.tier-static .hero__fallback { z-index: 0; }
+html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
+/* =====================================================================
+ * SmartCampus K-12 — Mobile breakpoint patch
+ * Appended at end of components.css. It does not modify any existing
+ * selector — it only adds mobile overrides, so it's safe to drop in.
+ *
+ * Requires ONE small HTML change in the nav markup — see comment at the
+ * top of the file. The checkbox + label were already added in the
+ * previous turn.
+ * ===================================================================== */
+
+/* ---------- Hero fallback: brighter, visible before Three.js loads ---------- */
+.hero__fallback {
+    background: linear-gradient(
+        180deg,
+        var(--ink-deep) 0%,
+        var(--tide-teal) 45%,
+        #1a6b6b 65%,
+        var(--ink-deep) 100%
+    );
+}
+
+@media (max-width: 720px) {
+    /* Shrink the hero on small screens so the fallback gradient doesn't
+       read as a giant block of near-empty color before content appears */
+    .hero { min-height: 60vh; }
+    .hero__content { padding: var(--space-4) var(--space-3); }
+}
+
+/* ---------- Accessibility bar: wrap instead of overflow ---------- */
+@media (max-width: 720px) {
+    .a11y-bar {
+        flex-wrap: wrap;
+        row-gap: var(--space-2);
+    }
+    .a11y-bar__conn {
+        margin-left: 0;
+        order: -1;
+        width: 100%;
+    }
+}
+
+/* ---------- Top nav: collapse to hamburger + slide-down drawer ---------- */
+@media (max-width: 860px) {
+    .top-nav {
+        position: sticky;
+        top: 0;               /* let the a11y bar scroll away instead of
+                                  pinning nav at a hardcoded offset */
+        flex-wrap: wrap;
+    }
+
+    /* Hide the inline link row by default on mobile */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        gap: 0;
+        order: 3;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__link {
+        padding: var(--space-2) var(--space-1);
+        width: 100%;
+    }
+
+    /* Checkbox-driven toggle (no JS required) */
+    .top-nav__toggle-input { display: none; }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__toggle-label .top-nav__burger-icon {
+        transform: rotate(90deg);
+    }
+
+    .top-nav__toggle-label {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius-1);
+        border: 1px solid var(--foam-overlay-16);
+        color: var(--foam);
+        cursor: pointer;
+        order: 2;
+        margin-left: auto;
+        transition: background var(--dur-hover) var(--ease-standard);
+    }
+    .top-nav__toggle-label:hover { background: var(--foam-overlay-08); }
+    .top-nav__burger-icon {
+        font-family: var(--font-utility);
+        font-size: 1.1rem;
+        line-height: 1;
+        transition: transform var(--dur-base) var(--ease-standard);
+    }
+
+    /* Search button stays visible, brand stays visible, links + toggle
+       reflow beneath */
+    .top-nav__brand { order: 1; }
+    #searchLaunch { order: 4; margin-left: var(--space-2); }
+}
+
+@media (min-width: 861px) {
+    /* Make sure the toggle never shows on desktop even if markup is present */
+    .top-nav__toggle-label { display: none; }
+}
+
+
+/* =====================================================================
+ * SmartCampus K-12 — Unified mobile header patch
+ * Replaces the "two stacked bars + inconsistent overflow" header with
+ * ONE sticky bar on mobile: [Brand] ... [Hamburger] [Search]
+ * The hamburger drawer contains BOTH nav links AND accessibility
+ * toggles, in that order, so nothing competes for space above the fold.
+ *
+ * Desktop (>860px) is untouched — a11y bar + nav still render as your
+ * original two rows there, since there's room for them.
+ * ===================================================================== */
+
+/* ---------- 1. Harden the checkbox hiding (was: display:none only,
+   which can render briefly as a raw browser checkbox before CSS
+   applies). Visually hidden but still focusable/toggleable, and can
+   never flash visible even mid-paint. ---------- */
+.top-nav__toggle-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 860px) {
+
+    /* ---------- 2. Collapse the a11y bar into the drawer instead of
+       showing as its own sticky row ---------- */
+    .a11y-bar {
+        display: none;
+    }
+
+    /* Re-show the a11y toggles, but now INSIDE the nav drawer */
+    .top-nav__links .a11y-bar__btn,
+    .top-nav__links .a11y-bar__conn {
+        display: inline-flex;
+    }
+
+    /* ---------- 3. Single unified sticky bar ---------- */
+    .top-nav {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        flex-wrap: wrap;
+        background: var(--ink-overlay-90);
+    }
+    .top-nav__brand { order: 1; }
+    .top-nav__toggle-label {
+        order: 2;
+        margin-left: auto;
+    }
+    #searchLaunch { order: 3; margin-left: var(--space-2); }
+
+    /* Drawer: nav links + a11y controls together, in document order */
+    .top-nav__links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        order: 4;
+        gap: 0;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-2);
+        padding-top: var(--space-2);
+    }
+    .top-nav__toggle-input:checked ~ .top-nav__links {
+        display: flex;
+    }
+    .top-nav__link {
+        width: 100%;
+        padding: var(--space-2) var(--space-1);
+    }
+
+    /* A11y controls, once moved into the drawer, get their own
+       labeled section with a divider so they read as a distinct
+       group rather than more nav links */
+    .top-nav__links .a11y-bar__label {
+        display: block;
+        width: 100%;
+        padding: var(--space-2) var(--space-1) var(--space-1);
+        color: var(--foam);
+        opacity: 0.6;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        border-top: 1px solid var(--foam-overlay-08);
+        margin-top: var(--space-1);
+    }
+    .top-nav__links .a11y-bar__btn {
+        width: 100%;
+        justify-content: flex-start;
+        margin: 0.15rem 0;
+    }
+    .top-nav__links .a11y-bar__conn {
+        margin: var(--space-2) 0 0;
+        width: 100%;
+    }
+}
+
+@media (min-width: 861px) {
+    /* Desktop: keep original two-bar layout, ignore all of the above */
+    .top-nav__toggle-label { display: none; }
+    .a11y-bar { display: flex; }
+}

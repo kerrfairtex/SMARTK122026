@@ -109,6 +109,11 @@ echo "[SWAP] CSS/JS bundles symlinked."
 # <!-- build: ... --> marker in the landing HTML. This way PWA users get
 # the new asset bundle on next visit (activate handler purges old cache)
 # and the rendered HTML source proves which commit is live.
+#
+# Note: the SWAP above mv's public/index.php → index.php on first start, then
+# cp's it on subsequent restarts. We edit BOTH paths so the build marker is
+# updated regardless of which one the SWAP left in place. Editing the source
+# also ensures the next cold-start SWAP picks up our marker.
 BUILD_SHA="${RENDER_GIT_COMMIT:-local-dev}"
 BUILD_SHORT="$(printf '%s' "$BUILD_SHA" | cut -c1-8)"
 CACHE_NAME="smartcamp-k12-${BUILD_SHORT}"
@@ -119,13 +124,18 @@ for sw in /var/www/html/pwabuilder-sw.js /var/www/html/phone/download/pwabuilder
     if [ -f "$sw" ]; then
         sed -i "s|const CACHE_NAME = 'smartcamp-k12-[a-zA-Z0-9-]*';|const CACHE_NAME = '${CACHE_NAME}';|" "$sw"
         echo "[BUILD] injected CACHE_NAME into ${sw#/var/www/html/}"
+    else
+        echo "[BUILD] WARN: ${sw#/var/www/html/} not found, skipping"
     fi
 done
 
-if [ -f /var/www/html/public/index.php ]; then
-    sed -i "s|<!-- build: [a-zA-Z0-9]* [0-9TZ:.-]* -->|<!-- build: ${BUILD_SHORT} ${BUILD_TS} -->|" /var/www/html/public/index.php
-    echo "[BUILD] injected build marker into public/index.php"
-fi
+# Edit the HTML build marker in BOTH possible locations.
+for html in /var/www/html/index.php /var/www/html/public/index.php; do
+    if [ -f "$html" ]; then
+        sed -i "s|<!-- build: [a-zA-Z0-9]* [0-9TZ:.-]* -->|<!-- build: ${BUILD_SHORT} ${BUILD_TS} -->|" "$html"
+        echo "[BUILD] injected build marker into ${html#/var/www/html/}"
+    fi
+done
 
 echo "[INFO] Entrypoint initialization complete. Starting Apache..."
 exec "$@"

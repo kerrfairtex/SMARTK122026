@@ -88,5 +88,21 @@ chmod 755 /var/www/html/public /var/www/html/public/assets 2>/dev/null || true
 ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
 echo "[SWAP] landing images symlinked to /assets/images."
 
+# --- Expose landing-page CSS/JS bundles at /css and /js (the landing page
+# references /css/components.css and /js/{main,reveal,enhancements,stepper}.js
+# at the docroot; without these symlinks every CSS/JS asset 404s and the page
+# renders unstyled with no JS. Mirror the image-symlink pattern above.
+echo "[SWAP] symlinking landing CSS/JS bundles from public/ -> docroot..."
+mkdir -p /var/www/html/css /var/www/html/js
+ln -sfn /var/www/html/public/css/components.css /var/www/html/css/components.css
+ln -sfn /var/www/html/public/css/base.css       /var/www/html/css/base.css
+ln -sfn /var/www/html/public/css/tokens.css     /var/www/html/css/tokens.css
+ln -sfn /var/www/html/public/js/main.js         /var/www/html/js/main.js
+ln -sfn /var/www/html/public/js/reveal.js       /var/www/html/js/reveal.js
+ln -sfn /var/www/html/public/js/enhancements.js /var/www/html/js/enhancements.js
+ln -sfn /var/www/html/public/js/stepper.js      /var/www/html/js/stepper.js
+ln -sfn /var/www/html/public/manifest.json      /var/www/html/manifest.json
+echo "[SWAP] CSS/JS bundles symlinked."
+
 echo "[INFO] Entrypoint initialization complete. Starting Apache..."
 exec "$@"

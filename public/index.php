@@ -1172,7 +1172,7 @@ img[width], img[height] {
     <nav class="top-nav" aria-label="Primary">
         <a href="#home" class="top-nav__brand">BBNIHS</a>
 
-        <input type="checkbox" id="navToggle" class="top-nav__toggle-input">
+        <input type="checkbox" id="navToggle" class="top-nav__toggle-input" aria-label="Toggle navigation menu">
         <label for="navToggle" class="top-nav__toggle-label" aria-label="Toggle navigation menu">
             <span class="top-nav__burger-icon">☰</span>
         </label>

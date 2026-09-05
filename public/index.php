@@ -1170,7 +1170,10 @@ img[width], img[height] {
          desktop the drawer is just always-open; on mobile it's
          checkbox-toggled. -->
     <nav class="top-nav" aria-label="Primary">
-        <a href="#home" class="top-nav__brand">BBNIHS</a>
+        <a href="#home" class="top-nav__brand">
+            <img src="assets/images/logo.png" alt="BBNIHS Logo" style="height:32px;vertical-align:middle;margin-right:8px;">
+            BBNIHS
+        </a>
 
         <input type="checkbox" id="navToggle" class="top-nav__toggle-input" aria-label="Toggle navigation menu">
         <label for="navToggle" class="top-nav__toggle-label" aria-label="Toggle navigation menu">
@@ -1207,6 +1210,9 @@ img[width], img[height] {
             <div class="hero__canvas-wrap" aria-hidden="true"></div>
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
+                <div style="margin-bottom: 1.5rem;">
+                    <img src="assets/images/batubatulogo.jpg" alt="Batu-Batu National High School Official Seal" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); display: inline-block;">
+                </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>

@@ -1210,8 +1210,9 @@ img[width], img[height] {
             <div class="hero__canvas-wrap" aria-hidden="true"></div>
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
-                <div style="margin-bottom: 1.5rem;">
-                    <img src="assets/images/logo.jpg" alt="Batu-Batu National High School Official Seal" style="width: clamp(90px, 12vw, 130px); height: clamp(90px, 12vw, 130px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); display: inline-block;">
+                <div style="margin-bottom: 1.5rem; position: relative; display: inline-block; width: clamp(280px, 35vw, 420px); height: clamp(280px, 35vw, 420px);">
+                    <img src="assets/images/logo.jpg" alt="Batu-Batu National High School Official Seal" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: clamp(120px, 15vw, 180px); height: clamp(120px, 15vw, 180px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
+                    <object data="assets/images/orbital-system.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></object>
                 </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>

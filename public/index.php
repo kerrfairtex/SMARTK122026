@@ -1210,9 +1210,9 @@ img[width], img[height] {
             <div class="hero__canvas-wrap" aria-hidden="true"></div>
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
-                <div style="margin-bottom: 1.5rem; position: relative; display: inline-block; width: clamp(280px, 35vw, 420px); height: clamp(280px, 35vw, 420px);">
-                    <img src="assets/images/logo.jpg" alt="Batu-Batu National High School Official Seal" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: clamp(120px, 15vw, 180px); height: clamp(120px, 15vw, 180px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
-                    <object data="assets/images/orbital-system.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3;"></object>
+                <div style="margin-bottom: 1.5rem; position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin-left: auto; margin-right: auto;">
+                    <object data="assets/images/orbital-system.svg" type="image/svg+xml" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 3; mix-blend-mode: screen;"></object>
+                    <img src="assets/images/logo.jpg" alt="Batu-Batu National High School Official Seal" style="position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
                 </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>

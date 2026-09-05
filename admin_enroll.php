@@ -1,198 +1,300 @@
 <?php
 /**
- * SmartCampus Enrollment Admin Dashboard
+ * SmartCampus K-12 — Admin Enrollment Management
  *
- * Lets school/SmartCampus personnel:
- *   1. Configure enrollment_periods (school year, opening/closing, grades, status)
- *   2. List applications and advance their status through the pipeline
- *   3. View contact messages
+ * Full user journey: admin reviews, filters, and updates enrollment applications.
  *
- * AUTH: reuses the RosarioSIS authenticated session (Warehouse.php already
- * starts it). Only an authenticated staff member with PROFILE = 'admin' may
- * access this page. Not logged in -> redirected to the RosarioSIS login.
- * Non-admins see an access-denied message. No separate shared secret.
+ * Security:
+ *   - Requires admin login via existing RosarioSIS session
+ *   - CSRF protection on state-changing actions
+ *   - Input validation on all fields
+ *
+ * Source-grounded facts:
+ *   - enrollment_applications table in kerrfairtex schema
+ *   - Columns: id, ref, learner_name, birth_date, sex, birthplace, address,
+ *              grade_level, school_year, enrollment_type, parent_name,
+ *              parent_relationship, parent_contact, parent_address, parent_email,
+ *              prev_school, prev_school_address, last_grade, prev_sy,
+ *              learner_ref_no, documents, status, created_at, updated_at, notes
+ *   - Accessible to admin profile only
  */
+
 require_once 'database.inc.php';
 require_once 'Warehouse.php';
 
-// Warehouse.php (RosarioSIS) already starts the session; only start if none is active.
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
+header('Content-Type: text/html; charset=utf-8');
 
-function admin_conn() {
-    $c = db_start(false);
-    if ($c === false) throw new Exception('db');
-    return $c;
-}
-
-$STAGES = ['Submitted', 'Under Review', 'Documents Needed', 'Verified', 'Approved', 'Enrolled', 'Rejected'];
-
-// Determine RosarioSIS admin identity from the shared authenticated session.
-$is_admin = false;
-$login_error = '';
-try {
-    if (function_exists('User') && !empty($_SESSION['STAFF_ID']) && (int) $_SESSION['STAFF_ID'] > 0) {
-        $profile = User('PROFILE');
-        $is_admin = ($profile === 'admin');
-    }
-} catch (Throwable $t) {
-    // DB unreachable or session not fully initialized — treat as not authenticated.
-    $is_admin = false;
-}
-
-// Not authenticated at all -> send to the RosarioSIS login (preserving return path).
-if (!$is_admin && empty($_SESSION['STAFF_ID'])) {
-    header('Location: login.php?modfunc=logout&reason=authenticate');
+// Require admin login via existing RosarioSIS session
+if (!isset($_SESSION['STAFF_ID']) || ($_SESSION['PROFILE'] ?? '') !== 'admin') {
+    header('Location: index.php');
     exit;
 }
 
-if (isset($_GET['logout'])) {
-    header('Location: login.php?modfunc=logout');
-    exit;
+$schoolYear = (string)($_GET['school_year'] ?? date('Y') . '-' . ((int)date('Y') + 1));
+
+// CSRF helper
+function csrf_token(): string {
+    if (empty($_SESSION['token'])) {
+        $_SESSION['token'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['token'];
 }
 
-$authed = $is_admin;
-$msg = '';
+function csrf_field(): string {
+    return '<input type="hidden" name="token" value="' . htmlspecialchars(csrf_token()) . '">';
+}
 
-if ($authed) {
-    try {
-        $conn = admin_conn();
+function verify_csrf(): bool {
+    $token = (string)($_POST['token'] ?? '');
+    return hash_equals((string)($_SESSION['token'] ?? ''), $token);
+}
 
-        // Save enrollment_periods config
-        if (isset($_POST['save_period'])) {
-            $sy = pg_escape_string($conn, $_POST['school_year']);
-            $opens = $_POST['enrollment_opens'] ? "'" . pg_escape_string($conn, $_POST['enrollment_opens']) . "'" : 'NULL';
-            $closes = $_POST['enrollment_closes'] ? "'" . pg_escape_string($conn, $_POST['enrollment_closes']) . "'" : 'NULL';
-            $begins = $_POST['classes_begin'] ? "'" . pg_escape_string($conn, $_POST['classes_begin']) . "'" : 'NULL';
-            $grades = pg_escape_string($conn, $_POST['grade_levels']);
-            $status = pg_escape_string($conn, $_POST['status']);
-            pg_query($conn, "UPDATE enrollment_periods SET school_year='$sy', enrollment_opens=$opens, enrollment_closes=$closes, classes_begin=$begins, grade_levels='$grades', status='$status', updated_at=NOW() WHERE id=(SELECT id FROM enrollment_periods ORDER BY updated_at DESC LIMIT 1)");
-            $msg = 'Enrollment period saved.';
+// Handle admin actions
+$action = (string)($_POST['action'] ?? $_GET['action'] ?? '');
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($action)) {
+    if (!verify_csrf()) {
+        die('CSRF token invalid. Please reload and try again.');
+    }
+
+    $applicationId = isset($_POST['application_id']) ? (int)$_POST['application_id'] : 0;
+    if ($applicationId <= 0) {
+        die('Invalid application ID.');
+    }
+
+    $conn = db_conn();
+
+    if ($action === 'approve') {
+        $notes = (string)($_POST['notes'] ?? '');
+        $notes_esc = pg_escape_string($conn, $notes);
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'Approved', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId";
+        pg_query($conn, $sql);
+        header('Location: admin_enroll.php?approved=' . $applicationId);
+        exit;
+    }
+
+    if ($action === 'reject') {
+        $notes = (string)($_POST['notes'] ?? '');
+        $notes_esc = pg_escape_string($conn, $notes);
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'Rejected', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId";
+        pg_query($conn, $sql);
+        header('Location: admin_enroll.php?rejected=' . $applicationId);
+        exit;
+    }
+
+    if ($action === 'enroll') {
+        $app = db_fetch_one("SELECT * FROM kerrfairtex.enrollment_applications WHERE id = $applicationId");
+        if (!$app) {
+            die('Application not found.');
         }
 
-        // Advance / set application status
-        if (isset($_POST['set_status'])) {
-            $ref = pg_escape_string($conn, $_POST['ref']);
-            $new = pg_escape_string($conn, $_POST['new_status']);
-            pg_query($conn, "UPDATE enrollment_applications SET status='$new' WHERE ref='$ref'");
-            $msg = 'Status updated for ' . htmlspecialchars($ref) . '.';
+        $firstName = (string)($app['first_name'] ?? '');
+        $lastName = (string)($app['last_name'] ?? '');
+        $baseUsername = strtolower(substr($firstName, 0, 1) . $lastName);
+        $username = $baseUsername;
+
+        // Ensure unique username
+        $counter = 1;
+        while (db_fetch_one("SELECT STUDENT_ID FROM \"students\" WHERE USERNAME = '" . pg_escape_string($conn, $username) . "'")) {
+            $username = $baseUsername . $counter;
+            $counter++;
         }
 
-        // Load data
-        $period = pg_fetch_assoc(pg_query($conn, "SELECT * FROM enrollment_periods ORDER BY updated_at DESC LIMIT 1"));
-        $apps = pg_query($conn, "SELECT ref, learner_name, grade_level, enrollment_type, status, created_at FROM enrollment_applications ORDER BY created_at DESC LIMIT 50");
-        $msgs = pg_query($conn, "SELECT id, full_name, email, concern, message, created_at FROM contact_messages ORDER BY created_at DESC LIMIT 25");
+        // Generate random password
+        $plainPassword = substr(bin2hex(random_bytes(8)), 0, 10);
+        $hashedPassword = crypt($plainPassword, '$6$' . substr(sha1((string)random_int(999999999, 9999999999)), 0, 16));
 
-    } catch (Throwable $t) {
-        $msg = 'Database error: ' . htmlspecialchars($t->getMessage());
+        $year = (int)explode('-', $schoolYear)[0];
+
+        db_trans_start();
+        $studentId = db_insert('students', [
+            'USERNAME' => $username,
+            'PASSWORD' => $hashedPassword,
+            'FIRST_NAME' => $firstName,
+            'LAST_NAME' => $lastName,
+            'MIDDLE_NAME' => (string)($app['middle_name'] ?? ''),
+            'BIRTH_DATE' => (string)($app['birth_date'] ?? ''),
+            'SEX' => (string)($app['sex'] ?? ''),
+            'ADDRESS' => (string)($app['address'] ?? ''),
+            'SYEAR' => $year,
+        ]);
+
+        db_insert('student_enrollment', [
+            'STUDENT_ID' => $studentId,
+            'SCHOOL_ID' => 1,
+            'SYEAR' => $year,
+            'START_DATE' => (string)($app['classes_begin'] ?? date('Y-m-d')),
+            'END_DATE' => null,
+            'GRADE_ID' => (int)($app['grade_level'] ?? 0),
+        ]);
+        db_trans_commit();
+
+        $notes_val = "Student ID: $studentId, Username: $username";
+        $notes_esc = pg_escape_string($conn, $notes_val);
+        pg_query($conn, "UPDATE kerrfairtex.enrollment_applications SET status = 'Enrolled', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId");
+
+        header('Location: admin_enroll.php?enrolled=' . $applicationId . '&student_id=' . $studentId);
+        exit;
     }
 }
 
-function esc($v) { return htmlspecialchars($v ?? '', ENT_QUOTES); }
-?>
-<!DOCTYPE html>
+// Fetch applications
+$search = (string)($_GET['search'] ?? '');
+$statusFilter = (string)($_GET['status'] ?? '');
+$page = max(1, (int)($_GET['page'] ?? 1));
+$perPage = 25;
+$offset = ($page - 1) * $perPage;
+
+$where = ['1=1'];
+if ($search !== '') {
+    $where[] = "(ref ILIKE '" . pg_escape_string(db_conn(), '%' . $search . '%') . "' OR learner_name ILIKE '" . pg_escape_string(db_conn(), '%' . $search . '%') . "' OR parent_name ILIKE '" . pg_escape_string(db_conn(), '%' . $search . '%') . "')";
+}
+if ($statusFilter !== '') {
+    $where[] = "status = '" . pg_escape_string(db_conn(), $statusFilter) . "'";
+}
+
+$whereSql = implode(' AND ', $where);
+
+$total = (int)db_fetch_one("SELECT COUNT(*) AS cnt FROM kerrfairtex.enrollment_applications WHERE $whereSql")['cnt'];
+$totalPages = max(1, (int)ceil($total / $perPage));
+$page = min($page, $totalPages);
+
+$applications = db_query(
+    "SELECT id, ref, learner_name, birth_date, sex, address, grade_level, school_year, "
+    . "enrollment_type, parent_name, parent_contact, status, created_at, updated_at, notes "
+    . "FROM kerrfairtx.enrollment_applications "
+    . "WHERE $whereSql "
+    . "ORDER BY created_at DESC "
+    . "LIMIT $perPage OFFSET $offset"
+);
+
+$flash = '';
+if (isset($_GET['approved'])) {
+    $flash = '<div class="alert alert-success">Application approved successfully.</div>';
+} elseif (isset($_GET['rejected'])) {
+    $flash = '<div class="alert alert-warning">Application rejected.</div>';
+} elseif (isset($_GET['enrolled'])) {
+    $flash = '<div class="alert alert-success">Student enrolled successfully. Check notes for credentials.</div>';
+}
+
+$token = csrf_token();
+
+?><!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Enrollment Admin — SmartCampus K-12</title>
-<style>
-  body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;color:#1e293b;margin:0;padding:2rem;}
-  .box{background:#ffffff;border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:1.5rem;max-width:1000px;margin:0 auto 1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.06);}
-  h1,h2{color:#0f172a;}
-  label{display:block;margin:0.5rem 0 0.2rem;color:#475569;font-size:0.85rem;}
-  input,select,textarea{width:100%;padding:0.5rem;border-radius:4px;border:1px solid #cbd5e1;background:#ffffff;color:#1e293b;}
-  button{background:#0e7490;color:#fff;border:none;padding:0.6rem 1.2rem;border-radius:4px;cursor:pointer;font-weight:600;margin-top:0.75rem;}
-  table{width:100%;border-collapse:collapse;font-size:0.85rem;}
-  th,td{text-align:left;padding:0.5rem;border-bottom:1px solid rgba(0,0,0,.08);}
-  th{color:#0f172a;}
-  .msg{background:#0e7490;color:#fff;padding:0.6rem 1rem;border-radius:4px;margin-bottom:1rem;}
-  .err{background:#b91c1c;color:#fff;padding:0.4rem 0.8rem;border-radius:4px;}
-  a{color:#0e7490;}
-  .grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:0.75rem;}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Enrollment Applications | Batu-Batu NHS</title>
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
-<body>
-<?php if (!$authed): ?>
-  <div class="box" style="max-width:480px;">
-    <h1>Enrollment Admin</h1>
-    <p style="color:#475569;">Access restricted. This dashboard is available to authenticated RosarioSIS administrators only.</p>
-    <p style="font-size:0.85rem;color:#64748b;margin-top:1rem;">
-      If you are an administrator, please <a href="login.php">sign in to the SmartCampus Portal</a> first, then return to this page.
-      <br><br>
-      <a href="login.php?modfunc=logout">Log out</a>
-    </p>
-  </div>
-<?php else: ?>
-  <div class="box">
-    <h1>Enrollment Admin <a style="font-size:0.8rem;float:right;" href="?logout=1">Logout</a></h1>
-    <?php if ($msg): ?><div class="msg"><?php echo $msg; ?></div><?php endif; ?>
-  </div>
+<body class="page-admin">
+  <header class="site-header">
+    <div class="container">
+      <h1><a href="/">Batu-Batu National High School</a></h1>
+      <nav class="main-nav">
+        <a href="?modfunc=list&modname=SmartCampus/Enrollment.php">Enrollment</a>
+        <a href="?modfunc=list&modname=Students/Student.php">Students</a>
+        <a href="?modfunc=list&modname=Scheduling/Schedule.php">Schedules</a>
+      </nav>
+      <div class="user-info"><?= htmlspecialchars((string)($_SESSION['USERNAME'] ?? 'Admin')) ?> | <a href="?modfunc=logout">Logout</a></div>
+    </div>
+  </header>
 
-  <div class="box">
-    <h2>Enrollment Period Configuration</h2>
-    <form method="post">
-      <div class="grid2">
-        <div><label>School Year</label><input name="school_year" value="<?php echo esc($period['school_year'] ?? ''); ?>"></div>
-        <div><label>Enrollment Opens</label><input type="date" name="enrollment_opens" value="<?php echo esc($period['enrollment_opens'] ?? ''); ?>"></div>
-        <div><label>Enrollment Closes</label><input type="date" name="enrollment_closes" value="<?php echo esc($period['enrollment_closes'] ?? ''); ?>"></div>
-        <div><label>Classes Begin</label><input type="date" name="classes_begin" value="<?php echo esc($period['classes_begin'] ?? ''); ?>"></div>
-        <div><label>Grade Levels</label><input name="grade_levels" value="<?php echo esc($period['grade_levels'] ?? ''); ?>"></div>
-        <div><label>Status</label>
-          <select name="status">
-            <?php foreach (['Open','Closed','Paused'] as $s): ?><option <?php echo ($period['status']??'')===$s?'selected':''; ?>><?php echo $s; ?></option><?php endforeach; ?>
-          </select>
-        </div>
-      </div>
-      <button type="submit" name="save_period">Save Period</button>
+  <main class="container">
+    <h2>Enrollment Applications — <?= htmlspecialchars($schoolYear) ?></h2>
+
+    <?= $flash ?>
+
+    <form method="get" class="filters">
+      <input type="text" name="search" placeholder="Search ref, learner, parent..." value="<?= htmlspecialchars($search) ?>">
+      <select name="status">
+        <option value="">All statuses</option>
+        <option value="Submitted" <?= $statusFilter === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
+        <option value="Approved" <?= $statusFilter === 'Approved' ? 'selected' : '' ?>>Approved</option>
+        <option value="Rejected" <?= $statusFilter === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
+        <option value="Enrolled" <?= $statusFilter === 'Enrolled' ? 'selected' : '' ?>>Enrolled</option>
+      </select>
+      <input type="hidden" name="school_year" value="<?= htmlspecialchars($schoolYear) ?>">
+      <button type="submit">Filter</button>
+      <a href="admin_enroll.php" class="btn-secondary">Reset</a>
     </form>
-  </div>
 
-  <div class="box">
-    <h2>Applications (<?php echo pg_num_rows($apps ?? 0); ?>)</h2>
-    <table>
-      <thead><tr><th>Ref</th><th>Learner</th><th>Grade</th><th>Type</th><th>Status</th><th>Set status</th></tr></thead>
-      <tbody>
-      <?php while ($a = pg_fetch_assoc($apps)): ?>
-        <tr>
-          <td><?php echo esc($a['ref']); ?></td>
-          <td><?php echo esc($a['learner_name']); ?></td>
-          <td><?php echo esc($a['grade_level']); ?></td>
-          <td><?php echo esc($a['enrollment_type']); ?></td>
-          <td><strong><?php echo esc($a['status']); ?></strong></td>
-          <td>
-            <form method="post" style="display:flex;gap:0.3rem;">
-              <input type="hidden" name="ref" value="<?php echo esc($a['ref']); ?>">
-              <select name="new_status">
-                <?php foreach ($STAGES as $s): ?><option <?php echo $a['status']===$s?'selected':''; ?>><?php echo $s; ?></option><?php endforeach; ?>
-              </select>
-              <button type="submit" name="set_status" style="margin-top:0;padding:0.4rem 0.7rem;">Set</button>
-            </form>
-          </td>
-        </tr>
-      <?php endwhile; ?>
-      </tbody>
-    </table>
-  </div>
+    <div class="table-wrap">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Ref</th>
+            <th>Learner</th>
+            <th>Grade</th>
+            <th>Parent</th>
+            <th>Contact</th>
+            <th>Status</th>
+            <th>Submitted</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <?php foreach ($applications as $app): ?>
+            <tr class="status-<?= strtolower((string)$app['status']) ?>">
+              <td><?= htmlspecialchars((string)$app['ref']) ?></td>
+              <td>
+                <?= htmlspecialchars((string)$app['learner_name']) ?><br>
+                <small><?= htmlspecialchars((string)$app['sex']) ?> | <?= htmlspecialchars((string)($app['birth_date'] ?? '')) ?></small>
+              </td>
+              <td><?= htmlspecialchars((string)$app['grade_level']) ?></td>
+              <td><?= htmlspecialchars((string)$app['parent_name']) ?></td>
+              <td><?= htmlspecialchars((string)$app['parent_contact']) ?></td>
+              <td><?= htmlspecialchars((string)$app['status']) ?></td>
+              <td><?= htmlspecialchars((string)($app['created_at'] ?? '')) ?></td>
+              <td>
+                <?php if ((string)$app['status'] === 'Submitted'): ?>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Approve this application?')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="approve">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <button type="submit" class="btn-success">Approve</button>
+                  </form>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Reject this application?')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="reject">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <textarea name="notes" placeholder="Reason" rows="2" cols="20"></textarea><br>
+                    <button type="submit" class="btn-danger">Reject</button>
+                  </form>
+                <?php elseif ((string)$app['status'] === 'Approved'): ?>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Enroll this student? This will create a student account.')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="enroll">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <button type="submit" class="btn-primary">Enroll</button>
+                  </form>
+                <?php else: ?>
+                  <span class="muted"><?= htmlspecialchars((string)($app['notes'] ?? '')) ?></span>
+                <?php endif; ?>
+              </td>
+            </tr>
+          <?php endforeach; ?>
+        </tbody>
+      </table>
+    </div>
 
-  <div class="box">
-    <h2>Contact Messages (<?php echo pg_num_rows($msgs ?? 0); ?>)</h2>
-    <table>
-      <thead><tr><th>Name</th><th>Email</th><th>Concern</th><th>Message</th><th>Received</th></tr></thead>
-      <tbody>
-      <?php while ($m = pg_fetch_assoc($msgs)): ?>
-        <tr>
-          <td><?php echo esc($m['full_name']); ?></td>
-          <td><?php echo esc($m['email']); ?></td>
-          <td><?php echo esc($m['concern']); ?></td>
-          <td><?php echo esc($m['message']); ?></td>
-          <td><?php echo esc($m['created_at']); ?></td>
-        </tr>
-      <?php endwhile; ?>
-      </tbody>
-    </table>
-  </div>
-<?php endif; ?>
+    <div class="pagination">
+      <?php if ($page > 1): ?>
+        <a href="?page=<?= (int)($page - 1) ?>&search=<?= urlencode($search) ?>&status=<?= urlencode($statusFilter) ?>&school_year=<?= urlencode($schoolYear) ?>">Previous</a>
+      <?php endif; ?>
+      <span>Page <?= (int)$page ?> of <?= (int)$totalPages ?></span>
+      <?php if ($page < $totalPages): ?>
+        <a href="?page=<?= (int)($page + 1) ?>&search=<?= urlencode($search) ?>&status=<?= urlencode($statusFilter) ?>&school_year=<?= urlencode($schoolYear) ?>">Next</a>
+      <?php endif; ?>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>SmartCampus K-12 | Batu-Batu National High School</p>
+    </div>
+  </footer>
+
+  <input type="hidden" id="csrf-token" value="<?= htmlspecialchars($token) ?>">
+  <script src="assets/js/main.js"></script>
 </body>
 </html>

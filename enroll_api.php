@@ -3,21 +3,20 @@
  * Enrollment Portal API (public landing page backend)
  *
  * Reads/writes enrollment data in the school schema.
- * The public page calls this instead of relying on localStorage, so
- * applications persist server-side and status is driven from the DB
- * (the "dashboard" configuration lives in enrollment_periods).
- *
  * Actions:
- *   GET  ?action=config  -> current enrollment period (dates, status, grades)
- *   POST ?action=submit  -> create application, returns reference number
- *   GET  ?action=status&ref=XXX -> application + status pipeline
+ *   GET  ?action=config       -> current enrollment period
+ *   POST ?action=submit       -> create enrollment_application
+ *   GET  ?action=status&ref=  -> read by reference token
+ *   POST ?action=draft_save   -> save draft
+ *   GET  ?action=draft_resume&token=XXX -> resume draft
+ *   POST ?action=draft_finalize -> finalize draft to application
  */
 
 require_once 'database.inc.php';
 require_once 'Warehouse.php';
 
 header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Origin: ' . (getenv('CORS_ORIGIN') ?: '*'));
 
 function db_conn() {
     static $c = null;
@@ -40,19 +39,26 @@ try {
     exit;
 }
 
-// Allow cross-origin POST (fetch from same origin anyway, but be safe)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
 if ($action === 'config') {
-    $res = @pg_query($conn, "SELECT school_year, enrollment_opens, enrollment_closes, classes_begin, grade_levels, status FROM enrollment_periods ORDER BY updated_at DESC LIMIT 1");
+    $res = @pg_query($conn, "SELECT school_year, enrollment_opens, enrollment_closes, classes_begin, grade_levels, status FROM kerrfairtex.enrollment_periods ORDER BY updated_at DESC LIMIT 1");
     $row = $res ? pg_fetch_assoc($res) : null;
     if (!$row) {
-        echo json_encode(['error' => 'No enrollment period configured']);
+        echo json_encode([
+            'period' => [
+                'school_year' => '2026-2027',
+                'enrollment_opens' => '2026-06-01',
+                'enrollment_closes' => '2026-08-15',
+                'classes_begin' => '2026-08-17',
+                'grade_levels' => 'Kinder, Grade 1-12',
+                'status' => 'Closed',
+            ],
+        ]);
         exit;
     }
-    // Normalize date fields to ISO strings
     foreach (['enrollment_opens', 'enrollment_closes', 'classes_begin'] as $k) {
         $row[$k] = $row[$k] ? date('Y-m-d', strtotime($row[$k])) : null;
     }
@@ -67,8 +73,8 @@ if ($action === 'status') {
         echo json_encode(['error' => 'Reference required']);
         exit;
     }
-    $ref = pg_escape_string($conn, $ref);
-    $res = @pg_query($conn, "SELECT ref, learner_name, grade_level, enrollment_type, status, created_at FROM enrollment_applications WHERE ref = '$ref'");
+    $ref_esc = pg_escape_string($conn, $ref);
+    $res = @pg_query($conn, "SELECT id, ref, learner_name, grade_level, enrollment_type, status, created_at, updated_at, notes FROM kerrfairtex.enrollment_applications WHERE UPPER(ref) = '$ref_esc'");
     $row = $res ? pg_fetch_assoc($res) : null;
     if (!$row) {
         echo json_encode(['found' => false]);
@@ -85,44 +91,97 @@ if ($action === 'submit' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         $posted = $_POST;
     }
 
-    // Build reference: BATU-<year>-<random6>
-    $yr = date('Y');
-    $ref = 'BATU-' . $yr . '-' . str_pad(rand(0, 999999), 6, '0');
-
+    $ref = 'BATU-' . date('Y') . '-' . str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     $status = 'Submitted';
-    $documents = isset($posted['documents']) ? json_encode($posted['documents']) : null;
 
-    $cols = ['ref','learner_name','birth_date','sex','birthplace','address','grade_level','school_year','enrollment_type','parent_name','parent_relationship','parent_contact','parent_address','parent_email','prev_school','prev_school_address','last_grade','prev_sy','learner_ref_no','documents','status'];
-    $vals = [];
-    $map = [
-        'lname' => 'learner_name', 'bdate' => 'birth_date', 'sex' => 'sex', 'bplace' => 'birthplace',
-        'laddress' => 'address', 'grade' => 'grade_level', 'sy' => 'school_year', 'etype' => 'enrollment_type',
-        'pname' => 'parent_name', 'prel' => 'parent_relationship', 'pcontact' => 'parent_contact',
-        'paddress' => 'parent_address', 'pemail' => 'parent_email', 'pschool' => 'prev_school',
-        'psaddress' => 'prev_school_address', 'plastgrade' => 'last_grade', 'psy' => 'prev_sy', 'lref' => 'learner_ref_no'
+    $cols = [
+        'ref',
+        'learner_name',
+        'birth_date',
+        'sex',
+        'birthplace',
+        'address',
+        'grade_level',
+        'school_year',
+        'enrollment_type',
+        'parent_name',
+        'parent_relationship',
+        'parent_contact',
+        'parent_address',
+        'parent_email',
+        'prev_school',
+        'prev_school_address',
+        'last_grade',
+        'prev_sy',
+        'learner_ref_no',
+        'documents',
+        'status',
     ];
+    $map = [
+        'lname' => 'learner_name',
+        'fname' => 'first_name',
+        'mname' => 'middle_name',
+        'bdate' => 'birth_date',
+        'sex' => 'sex',
+        'bplace' => 'birthplace',
+        'laddress' => 'address',
+        'grade' => 'grade_level',
+        'sy' => 'school_year',
+        'etype' => 'enrollment_type',
+        'pname' => 'parent_name',
+        'prel' => 'parent_relationship',
+        'pcontact' => 'parent_contact',
+        'paddress' => 'parent_address',
+        'pemail' => 'parent_email',
+        'pschool' => 'prev_school',
+        'psaddress' => 'prev_school_address',
+        'plastgrade' => 'last_grade',
+        'psy' => 'prev_sy',
+        'lref' => 'learner_ref_no',
+        'last_name' => 'learner_name',
+        'first_name' => 'first_name',
+        'middle_name' => 'middle_name',
+        'guardian_name' => 'parent_name',
+        'guardian_relationship' => 'parent_relationship',
+        'guardian_contact' => 'parent_contact',
+        'guardian_address' => 'parent_address',
+        'target_grade' => 'grade_level',
+    ];
+
+    $vals = [];
     foreach ($cols as $c) {
-        if ($c === 'ref') { $vals[] = "'" . pg_escape_string($conn, $ref) . "'"; continue; }
-        if ($c === 'status') { $vals[] = "'" . pg_escape_string($conn, $status) . "'"; continue; }
-        if ($c === 'documents') { $vals[] = $documents ? "'" . pg_escape_string($conn, $documents) . "'" : 'NULL'; continue; }
-        $srcKey = array_search($c, $map);
-        $v = ($srcKey !== false && isset($posted[$srcKey])) ? $posted[$srcKey] : '';
+        if ($c === 'ref') {
+            $vals[] = "'" . pg_escape_string($conn, $ref) . "'";
+            continue;
+        }
+        if ($c === 'status') {
+            $vals[] = "'" . pg_escape_string($conn, $status) . "'";
+            continue;
+        }
+        if ($c === 'documents') {
+            $doc = isset($posted['documents']) ? json_encode($posted['documents']) : null;
+            $vals[] = $doc ? "'" . pg_escape_string($conn, $doc) . "'" : 'NULL';
+            continue;
+        }
+        if ($c === 'learner_name') {
+            $v = trim((string)($posted['last_name'] ?? '') . ', ' . ($posted['first_name'] ?? '') . ' ' . ($posted['middle_name'] ?? ''));
+            $vals[] = $v === '' ? 'NULL' : "'" . pg_escape_string($conn, $v) . "'";
+            continue;
+        }
+        $srcKey = array_search($c, $map, true);
+        $v = ($srcKey !== false && isset($posted[$srcKey])) ? (string)$posted[$srcKey] : '';
         $vals[] = $v === '' ? 'NULL' : "'" . pg_escape_string($conn, $v) . "'";
     }
-    $sql = "INSERT INTO enrollment_applications (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
+    $sql = 'INSERT INTO kerrfairtex.enrollment_applications (' . implode(',', $cols) . ') VALUES (' . implode(',', $vals) . ')';
     $r = @pg_query($conn, $sql);
     if (!$r) {
         http_response_code(500);
-        echo json_encode(['error' => 'Could not save application']);
+        echo json_encode(['error' => 'Could not save application: ' . pg_last_error($conn)]);
         exit;
     }
     echo json_encode(['ref' => $ref, 'status' => $status]);
     exit;
 }
-
-// --- Tier 3: Save & resume draft flow ---
-// Three actions: draft_save (POST), draft_resume (GET, by token),
-// draft_finalize (POST, by token, creates the actual application).
 
 if ($action === 'draft_save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $raw = file_get_contents('php://input');
@@ -144,14 +203,6 @@ if ($action === 'draft_save' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         echo json_encode(['error' => 'Could not save draft']);
         exit;
     }
-    @pg_query(
-        $conn,
-        "INSERT INTO kerrfairtex.access_log
-            (syear, username, profile, ip_address, user_agent, status, created_at, updated_at)
-         VALUES (2026, '', '', '" . pg_escape_string($conn, substr($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0', 0, 50)) . "', '" .
-            pg_escape_string($conn, substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500)) . "', " .
-            "'enroll_draft:save', now(), now())"
-    );
     echo json_encode([
         'token'      => $token,
         'expires_at' => $expires,
@@ -168,11 +219,7 @@ if ($action === 'draft_resume' && $_SERVER['REQUEST_METHOD'] === 'GET') {
         exit;
     }
     $token_esc = pg_escape_string($conn, $token);
-    $r = @pg_query(
-        $conn,
-        "SELECT payload, expires_at, status FROM kerrfairtex.enrollment_drafts
-         WHERE token = '$token_esc' AND status = 'active' AND expires_at > now() LIMIT 1"
-    );
+    $r = @pg_query($conn, "SELECT payload, expires_at, status FROM kerrfairtex.enrollment_drafts WHERE token = '$token_esc' AND status = 'active' AND expires_at > now() LIMIT 1");
     $row = $r ? pg_fetch_assoc($r) : null;
     if (!$row) {
         http_response_code(404);
@@ -203,58 +250,99 @@ if ($action === 'draft_finalize' && $_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
     $token_esc = pg_escape_string($conn, $token);
-    // Mark the draft as finalized (status). The actual application row is
-    // created by reusing the existing submit logic: we synthesize a $_POST
-    // shape and call the submit path. To avoid duplicating, we hand off
-    // by mutating $_POST and falling through to a copy of the submit code
-    // is too invasive. Simpler: implement finalize as direct insert here.
-    $r = @pg_query(
-        $conn,
-        "UPDATE kerrfairtex.enrollment_drafts SET status = 'finalized', updated_at = now()
-         WHERE token = '$token_esc' AND status = 'active' AND expires_at > now()"
-    );
+    $r = @pg_query($conn, "UPDATE kerrfairtex.enrollment_drafts SET status = 'finalized', updated_at = now() WHERE token = '$token_esc' AND status = 'active' AND expires_at > now()");
     if (!$r || pg_affected_rows($r) === 0) {
         http_response_code(404);
         echo json_encode(['error' => 'Draft not found or expired']);
         exit;
     }
-    // Build reference and insert the real application row
     $yr = date('Y');
-    $ref = 'BATU-' . $yr . '-' . str_pad(rand(0, 999999), 6, '0');
+    $ref = 'BATU-' . $yr . '-' . str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     $status = 'Submitted';
-    $documents = isset($posted['documents']) ? json_encode($posted['documents']) : null;
-    $cols = ['ref','learner_name','birth_date','sex','birthplace','address','grade_level','school_year','enrollment_type','parent_name','parent_relationship','parent_contact','parent_address','parent_email','prev_school','prev_school_address','last_grade','prev_sy','learner_ref_no','documents','status'];
+    $cols = [
+        'ref',
+        'learner_name',
+        'birth_date',
+        'sex',
+        'birthplace',
+        'address',
+        'grade_level',
+        'school_year',
+        'enrollment_type',
+        'parent_name',
+        'parent_relationship',
+        'parent_contact',
+        'parent_address',
+        'parent_email',
+        'prev_school',
+        'prev_school_address',
+        'last_grade',
+        'prev_sy',
+        'learner_ref_no',
+        'documents',
+        'status',
+    ];
     $map = [
-        'lname' => 'learner_name', 'bdate' => 'birth_date', 'sex' => 'sex', 'bplace' => 'birthplace',
-        'laddress' => 'address', 'grade' => 'grade_level', 'sy' => 'school_year', 'etype' => 'enrollment_type',
-        'pname' => 'parent_name', 'prel' => 'parent_relationship', 'pcontact' => 'parent_contact',
-        'paddress' => 'parent_address', 'pemail' => 'parent_email', 'pschool' => 'prev_school',
-        'psaddress' => 'prev_school_address', 'plastgrade' => 'last_grade', 'psy' => 'prev_sy', 'lref' => 'learner_ref_no'
+        'lname' => 'learner_name',
+        'fname' => 'first_name',
+        'mname' => 'middle_name',
+        'bdate' => 'birth_date',
+        'sex' => 'sex',
+        'bplace' => 'birthplace',
+        'laddress' => 'address',
+        'grade' => 'grade_level',
+        'sy' => 'school_year',
+        'etype' => 'enrollment_type',
+        'pname' => 'parent_name',
+        'prel' => 'parent_relationship',
+        'pcontact' => 'parent_contact',
+        'paddress' => 'parent_address',
+        'pemail' => 'parent_email',
+        'pschool' => 'prev_school',
+        'psaddress' => 'prev_school_address',
+        'plastgrade' => 'last_grade',
+        'psy' => 'prev_sy',
+        'lref' => 'learner_ref_no',
+        'last_name' => 'learner_name',
+        'first_name' => 'first_name',
+        'middle_name' => 'middle_name',
+        'guardian_name' => 'parent_name',
+        'guardian_relationship' => 'parent_relationship',
+        'guardian_contact' => 'parent_contact',
+        'guardian_address' => 'parent_address',
+        'target_grade' => 'grade_level',
     ];
     $vals = [];
     foreach ($cols as $c) {
-        if ($c === 'ref') { $vals[] = "'" . pg_escape_string($conn, $ref) . "'"; continue; }
-        if ($c === 'status') { $vals[] = "'" . pg_escape_string($conn, $status) . "'"; continue; }
-        if ($c === 'documents') { $vals[] = $documents ? "'" . pg_escape_string($conn, $documents) . "'" : 'NULL'; continue; }
-        $srcKey = array_search($c, $map);
-        $v = ($srcKey !== false && isset($posted[$srcKey])) ? $posted[$srcKey] : '';
+        if ($c === 'ref') {
+            $vals[] = "'" . pg_escape_string($conn, $ref) . "'";
+            continue;
+        }
+        if ($c === 'status') {
+            $vals[] = "'" . pg_escape_string($conn, $status) . "'";
+            continue;
+        }
+        if ($c === 'documents') {
+            $doc = isset($posted['documents']) ? json_encode($posted['documents']) : null;
+            $vals[] = $doc ? "'" . pg_escape_string($conn, $doc) . "'" : 'NULL';
+            continue;
+        }
+        if ($c === 'learner_name') {
+            $v = trim((string)($posted['last_name'] ?? '') . ', ' . ($posted['first_name'] ?? '') . ' ' . ($posted['middle_name'] ?? ''));
+            $vals[] = $v === '' ? 'NULL' : "'" . pg_escape_string($conn, $v) . "'";
+            continue;
+        }
+        $srcKey = array_search($c, $map, true);
+        $v = ($srcKey !== false && isset($posted[$srcKey])) ? (string)$posted[$srcKey] : '';
         $vals[] = $v === '' ? 'NULL' : "'" . pg_escape_string($conn, $v) . "'";
     }
-    $sql = "INSERT INTO enrollment_applications (" . implode(',', $cols) . ") VALUES (" . implode(',', $vals) . ")";
+    $sql = 'INSERT INTO kerrfairtex.enrollment_applications (' . implode(',', $cols) . ') VALUES (' . implode(',', $vals) . ')';
     $r2 = @pg_query($conn, $sql);
     if (!$r2) {
         http_response_code(500);
         echo json_encode(['error' => 'Could not save application']);
         exit;
     }
-    @pg_query(
-        $conn,
-        "INSERT INTO kerrfairtex.access_log
-            (syear, username, profile, ip_address, user_agent, status, created_at, updated_at)
-         VALUES (2026, '', '', '" . pg_escape_string($conn, substr($_SERVER['REMOTE_ADDR'] ?? '0.0.0.0', 0, 50)) . "', '" .
-            pg_escape_string($conn, substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 500)) . "', " .
-            "'enroll_draft:finalize:" . pg_escape_string($conn, $ref) . "', now(), now())"
-    );
     echo json_encode(['ref' => $ref, 'status' => $status]);
     exit;
 }

@@ -12,8 +12,7 @@
     .tile__label { color: #6b7280; font-size: 14px; }
     button { padding: 10px 14px; border: none; border-radius: 8px; background: #0f172a; color: #fff; cursor: pointer; }
     button.secondary { background: #e5e7eb; color: #111827; }
-    table { width: 100%; border-collapse: collapse; }
-    th, td { text-align: left; padding: 8px; border-bottom: 1px solid #e5e7eb; }
+    ul { padding-left: 18px; }
     .muted { color: #6b7280; }
   </style>
 </head>
@@ -22,33 +21,35 @@
     <h1>SmartCampus</h1>
     <p class="muted">School: <span id="schoolId"></span> · SY: <span id="syear"></span></p>
     <div class="tile">
-      <p class="tile__label">Total Enrolled</p>
-      <p class="tile__value" id="totalEnrolled">—</p>
+      <p class="tile__label">Enrolled</p>
+      <p class="tile__value" id="enrolled">—</p>
     </div>
     <div class="tile">
-      <p class="tile__label">Referrals</p>
-      <p class="tile__value" id="referrals">—</p>
+      <p class="tile__label">Attendance Today</p>
+      <p class="tile__value" id="attendance">—</p>
     </div>
     <div class="tile">
-      <p class="tile__label">My Course Period</p>
-      <p class="tile__value" id="coursePeriod">—</p>
+      <p class="tile__label">My Classes</p>
+      <p class="tile__value" id="classes">—</p>
     </div>
     <div style="margin-top:12px;">
-      <button id="refreshStats">Refresh</button>
-      <button id="openAttendance" class="secondary">Attendance</button>
-      <button id="openDiscipline" class="secondary">Discipline</button>
+      <button id="refresh">Refresh</button>
+      <button id="toggleAttendance" class="secondary">Attendance</button>
+      <button id="toggleDiscipline" class="secondary">Discipline</button>
     </div>
   </div>
 
   <div class="card" id="attendanceCard" style="display:none;">
     <h2>Attendance</h2>
-    <p class="muted">Codes loaded from the server. Attendance capture is available in the core module.</p>
+    <p class="muted">Course period: <span id="cp"></span></p>
     <ul id="attendanceCodes"></ul>
+    <ul id="attendanceList"></ul>
   </div>
 
   <div class="card" id="disciplineCard" style="display:none;">
     <h2>Discipline</h2>
-    <form id="disciplineForm">
+    <ul id="disciplineList"></ul>
+    <form id="disciplineForm" style="margin-top:12px;">
       <input type="text" id="discTitle" placeholder="Title" required>
       <input type="text" id="discStudent" placeholder="Student name" required>
       <textarea id="discNotes" placeholder="Notes"></textarea>
@@ -67,37 +68,35 @@
 
       function ajax(modfunc, params) {
         const b = boot();
-        const url = new URL((b.ajaxUrl || 'Ajax.php'), window.location.href);
+        const url = new URL((b.ajaxUrl || 'Modules.php?modname=SmartCampus/Ajax.php'), window.location.href);
         url.searchParams.set('modfunc', modfunc);
         if (b.token) url.searchParams.set('token', b.token);
         for (const k in params) url.searchParams.set(k, params[k]);
         return fetch(url.toString(), { credentials: 'same-origin' }).then(r => r.json());
       }
 
-      function renderStats() {
-        const b = boot();
-        document.getElementById('schoolId').textContent = b.schoolId || '—';
-        document.getElementById('syear').textContent = b.syear || '—';
-        document.getElementById('coursePeriod').textContent = b.coursePeriodId || '—';
-        ajax('portal_stats').then(data => {
+      function renderKpis() {
+        ajax('kpi_refresh').then(function (data) {
           if (data && !data.error) {
-            document.getElementById('totalEnrolled').textContent = data.totalEnrolled ?? '—';
-            document.getElementById('referrals').textContent = data.referralsThisYear ?? '—';
+            document.getElementById('enrolled').textContent = data.enrolled ?? '—';
+            document.getElementById('attendance').textContent = data.attendance_today != null ? data.attendance_today + '%' : '—';
+            document.getElementById('classes').textContent = data.teacher_classes != null ? data.teacher_classes : (data.student_attendance != null ? data.student_attendance + '%' : '—');
           }
         });
       }
 
-      document.getElementById('refreshStats').addEventListener('click', renderStats);
+      document.getElementById('refresh').addEventListener('click', renderKpis);
 
-      document.getElementById('openAttendance').addEventListener('click', function () {
+      document.getElementById('toggleAttendance').addEventListener('click', function () {
         const card = document.getElementById('attendanceCard');
         card.style.display = card.style.display === 'none' ? 'block' : 'none';
         if (card.style.display !== 'none') {
-          ajax('attendance_codes').then(data => {
+          document.getElementById('cp').textContent = boot().coursePeriodId || '—';
+          ajax('attendance_codes').then(function (data) {
             const list = document.getElementById('attendanceCodes');
             list.innerHTML = '';
             if (data && Array.isArray(data.codes)) {
-              data.codes.forEach(function(c) {
+              data.codes.forEach(function (c) {
                 const li = document.createElement('li');
                 li.textContent = (c.title || c.code || c.id) + ' — ' + (c.state_code || '');
                 list.appendChild(li);
@@ -106,23 +105,49 @@
               list.innerHTML = '<li>No codes returned.</li>';
             }
           });
+          ajax('attendance_list', { course_period_id: boot().coursePeriodId || 0, period_id: boot().periodId || 0 }).then(function (data) {
+            const list = document.getElementById('attendanceList');
+            list.innerHTML = '';
+            if (data && Array.isArray(data.learners)) {
+              data.learners.forEach(function (ln) {
+                const li = document.createElement('li');
+                li.textContent = (ln.last_name || '') + ', ' + (ln.first_name || '') + ' — code: ' + (ln.attendance_code != null ? ln.attendance_code : 'none');
+                list.appendChild(li);
+              });
+            } else {
+              list.innerHTML = '<li>No learners returned.</li>';
+            }
+          });
         }
       });
 
-      document.getElementById('openDiscipline').addEventListener('click', function () {
+      document.getElementById('toggleDiscipline').addEventListener('click', function () {
         const card = document.getElementById('disciplineCard');
         card.style.display = card.style.display === 'none' ? 'block' : 'none';
+        if (card.style.display !== 'none') {
+          ajax('discipline_list').then(function (data) {
+            const list = document.getElementById('disciplineList');
+            list.innerHTML = '';
+            if (data && Array.isArray(data.referrals)) {
+              data.referrals.forEach(function (r) {
+                const li = document.createElement('li');
+                li.textContent = (r.referral_date || '') + ' — ' + (r.last_name || '') + ', ' + (r.first_name || '') + ' — ' + (r.category_1 || '');
+                list.appendChild(li);
+              });
+            } else {
+              list.innerHTML = '<li>No referrals returned.</li>';
+            }
+          });
+        }
       });
 
       document.getElementById('disciplineForm').addEventListener('submit', function (e) {
         e.preventDefault();
-        const b = boot();
-        const payload = {
+        ajax('discipline_save', {
           title: document.getElementById('discTitle').value,
           student_name: document.getElementById('discStudent').value,
           notes: document.getElementById('discNotes').value,
-        };
-        ajax('discipline_save', payload).then(data => {
+        }).then(function (data) {
           const status = document.getElementById('discStatus');
           if (data && !data.error) {
             status.textContent = 'Saved.';
@@ -133,7 +158,7 @@
         });
       });
 
-      renderStats();
+      renderKpis();
     })();
   </script>
 </body>

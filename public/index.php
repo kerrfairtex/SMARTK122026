@@ -1171,7 +1171,7 @@ img[width], img[height] {
          checkbox-toggled. -->
     <nav class="top-nav" aria-label="Primary">
         <a href="#home" class="top-nav__brand">
-            <img src="assets/images/logo.png" alt="BBNIHS Logo" style="height:32px;vertical-align:middle;margin-right:8px;">
+            <img src="assets/images/logo.jpg" alt="BBNIHS Logo" style="height:32px;width:32px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;">
             BBNIHS
         </a>
 
@@ -1211,7 +1211,7 @@ img[width], img[height] {
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
                 <div style="margin-bottom: 1.5rem;">
-                    <img src="assets/images/batubatulogo.jpg" alt="Batu-Batu National High School Official Seal" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); display: inline-block;">
+                    <img src="assets/images/logo.jpg" alt="Batu-Batu National High School Official Seal" style="width: clamp(90px, 12vw, 130px); height: clamp(90px, 12vw, 130px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); display: inline-block;">
                 </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>

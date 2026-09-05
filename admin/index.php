@@ -156,7 +156,7 @@ header('Cache-Control: no-store');
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Admin Snapshot &mdash; Batu-Batu National Integrated High School</title>
+<title>Admin Snapshot &mdash; Batu-Batu National High School</title>
 <meta name="robots" content="noindex,nofollow">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
@@ -176,7 +176,7 @@ footer { color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; text-align: center
 </style>
 </head>
 <body>
-<h1>Batu-Batu National Integrated High School &mdash; Admin Snapshot</h1>
+<h1>Batu-Batu National High School &mdash; Admin Snapshot</h1>
 <p class="meta">Generated: <?php echo h($now); ?></p>
 
 <h2>Engagement signals &mdash; last 7 days</h2>

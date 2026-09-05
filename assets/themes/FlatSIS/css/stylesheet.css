@@ -26,15 +26,19 @@
 #menu {
 	width: 223px;
 	border-width: 0 1px 0 0;
-	border-style: solid
+	border-style: solid;
+	background-color: #f4f4f9;
+	box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+	padding: 15px;
+	border-radius: 0 8px 8px 0;
 }
 
 #menu {
 	position: relative;
-	float: left;
+	float: none;
 	overflow: visible;
 	z-index: 1 !important;
-	min-height: 100vh;
+	min-height: auto;
 	/* 100% of browser screen height */
 }
 

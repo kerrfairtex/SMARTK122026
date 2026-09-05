@@ -485,7 +485,7 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 	<!-- Hero Image -->
 	<img src="assets/themes/<?php echo URLEscape( Config( 'THEME' ) ); ?>/images/hero.png" class="responsive-img center" alt="School Hero" style="max-width:100%;height:auto;margin-bottom:15px;border-radius:8px;" />
-	<h4 class="center">Batu-Batu National Integrated High School</h4>
+	<h4 class="center">Batu-Batu National High School</h4>
 	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
 	<form name="loginform" id="loginform" method="post">
 	<div class="login-fields">

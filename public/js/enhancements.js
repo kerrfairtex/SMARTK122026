@@ -148,7 +148,7 @@
             if (result) result.innerHTML = '<p class="form-note">Submitting&hellip;</p>';
             var data = {};
             new FormData(wizardForm).forEach(function (v, k) { data[k] = v; });
-            fetch('enroll_api.php?action=draft_finalize', {
+            fetch('enroll_api.php?action=submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -156,10 +156,10 @@
             .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
             .then(function (res) {
                 if (!result) return;
-                if (res.ok && res.j.ok) {
-                    result.innerHTML = '<p style="color: #4ade80;">Application received. Reference: <strong>' + (res.j.ref || '—') + '</strong></p>';
+                if (res.ok && res.j.ok && res.j.ref) {
+                    result.innerHTML = '<p style="color: #4ade80;">Application received. Reference: <strong>' + res.j.ref + '</strong></p>';
                 } else {
-                    result.innerHTML = '<p style="color: var(--reef-coral);">' + (res.j.error || 'Submission failed. Please try again.') + '</p>';
+                    result.innerHTML = '<p style="color: var(--reef-coral);">' + (res.j.error || res.j.message || 'Submission failed. Please try again.') + '</p>';
                 }
             })
             .catch(function () {

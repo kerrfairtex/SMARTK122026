@@ -1581,14 +1581,37 @@ img[width], img[height] {
                                 <input type="text" id="laddress" name="laddress" required placeholder="Batu-Batu, Poblacion">
                             </div>
                             <div class="form-field">
-                                <label for="etype">Enrollment type *</label>
-                                <select id="etype" name="etype" required>
+                                <label for="sex">Sex *</label>
+                                <select id="sex" name="sex" required>
                                     <option value="">Select&hellip;</option>
-                                    <option value="New">New Student</option>
-                                    <option value="Transferee">Transferee</option>
-                                    <option value="Returning">Returning Learner</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
                                 </select>
                             </div>
+                            <div class="form-field">
+                                <label for="birthplace">Birthplace *</label>
+                                <input type="text" id="birthplace" name="birthplace" required placeholder="Municipality/City, Province">
+                            </div>
+                            <div class="form-field">
+                                <label for="grade_level">Grade level to enroll *</label>
+                                <select id="grade_level" name="grade_level" required>
+                                    <option value="">Select&hellip;</option>
+                                    <option value="Kinder">Kinder</option>
+                                    <option value="Grade 1">Grade 1</option>
+                                    <option value="Grade 2">Grade 2</option>
+                                    <option value="Grade 3">Grade 3</option>
+                                    <option value="Grade 4">Grade 4</option>
+                                    <option value="Grade 5">Grade 5</option>
+                                    <option value="Grade 6">Grade 6</option>
+                                    <option value="Grade 7">Grade 7</option>
+                                    <option value="Grade 8">Grade 8</option>
+                                    <option value="Grade 9">Grade 9</option>
+                                    <option value="Grade 10">Grade 10</option>
+                                    <option value="Grade 11">Grade 11</option>
+                                    <option value="Grade 12">Grade 12</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="school_year" value="2026-2027">
                         </div>
                         <div data-wizard-step="1" hidden>
                             <h4>Parent / Guardian</h4>

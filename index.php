@@ -483,8 +483,22 @@ if ( empty( $_SESSION['STAFF_ID'] )
 
 ?>
 
-	<!-- Hero Image -->
-	<img src="assets/themes/<?php echo URLEscape( Config( 'THEME' ) ); ?>/images/hero.png" class="responsive-img center" alt="School Hero" style="max-width:100%;height:auto;margin-bottom:15px;border-radius:8px;" />
+	<!-- Navigation Header Placeholder -->
+	<div class="center" style="margin-bottom: 20px; border-bottom: 1px solid #ddd; padding: 10px;">
+        <nav>
+            <a href="#">Search</a> | 
+            <a href="#">At a Glance</a> | 
+            <a href="#">Community</a> | 
+            <a href="#">About</a> | 
+            <a href="#">Academics</a> | 
+            <a href="#">Admissions</a> | 
+            <a href="#">Features</a> | 
+            <a href="#">Contact</a>
+        </nav>
+        <div style="font-size: 11px; color: #888; margin-top: 5px;">
+            Accessibility: <a href="#">High contrast</a> | <a href="#">Dyslexia-friendly font</a> | <a href="#">Larger text</a> | <a href="#">Online</a>
+        </div>
+    </div>
 	<h4 class="center">Batu-Batu National High School</h4>
 	<p class="center legend-gray" style="margin-top:-6px;margin-bottom:12px;font-size:12px;">Turtle Islands, Tawi-Tawi, Philippines</p>
 	<form name="loginform" id="loginform" method="post">

@@ -48,7 +48,9 @@ function DashboardDefaultSmartCampus()
 
 	$current_quarter = '';
 	if ( ! empty( $mp_ret[1] ) ) {
-		$current_quarter = trim( (string) ( $mp_ret[1]['short_name'] ?: $mp_ret[1]['title'] ) );
+		$short_name = isset( $mp_ret[1]['short_name'] ) ? $mp_ret[1]['short_name'] : '';
+		$title = isset( $mp_ret[1]['title'] ) ? $mp_ret[1]['title'] : '';
+		$current_quarter = trim( (string) ( $short_name ?: $title ) );
 	}
 	$data[_( 'Current Quarter' )] = $current_quarter ?: null;
 

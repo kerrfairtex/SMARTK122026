@@ -543,6 +543,13 @@ $img_base = 'assets/images/';
         <div class="hero-bg"></div>
         <div class="hero-content">
             <h1><?php echo htmlspecialchars($school_name); ?></h1>
+            <div id="orbital-container" style="position: relative; width: 250px; height: 250px; margin: 20px auto;">
+                <!-- School Seal (Authoritative) -->
+                <img src="/assets/themes/FlatSIS/logo.png" style="position: absolute; width: 100%; height: 100%; z-index: 2; border-radius: 50%; object-fit: cover; border: 3px solid #bd9d65;">
+                
+                <!-- Orbital Animation System -->
+                <object data="/assets/images/orbital-system.svg" type="image/svg+xml" style="position: absolute; top: -50px; left: -50px; width: 350px; height: 350px; z-index: 1; pointer-events: none;"></object>
+            </div>
             <p class="tagline">Learning Beyond the Classroom</p>
             <p class="location">Batu-Batu &bull; Panglima Sugala &bull; Tawi-Tawi &bull; BARMM</p>
             <div class="hero-buttons">

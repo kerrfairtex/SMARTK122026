@@ -53,6 +53,9 @@ header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
     <meta name="twitter:title" content="Batu-Batu National High School — SmartCampus K-12">
     <meta name="twitter:description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM.">
     <link rel="preload" as="image" href="assets/images/Batu-batu1_full.jpeg" imagesizes="(max-width: 1100px) 100vw, 1100px" fetchpriority="high">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
     <!-- PWA -->
     <link rel="manifest" href="/public/manifest.json">

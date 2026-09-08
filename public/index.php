@@ -1171,7 +1171,7 @@ img[width], img[height] {
          checkbox-toggled. -->
     <nav class="top-nav" aria-label="Primary">
         <a href="#home" class="top-nav__brand">
-            <img src="assets/images/logo.jpg" alt="BBNIHS Logo" style="height:32px;width:32px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;">
+            <img src="assets/images/logo.png" alt="BBNIHS Logo" style="height:32px;width:32px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;">
             BBNIHS
         </a>
 

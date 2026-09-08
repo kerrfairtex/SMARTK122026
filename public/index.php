@@ -1,3 +1,11 @@
+<?php
+// Public landing page security headers.
+header('Content-Security-Policy: default-src \'self\'; script-src \'self\' \'unsafe-inline\' https://accounts.google.com https://apis.google.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://cdn.ampproject.org; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; connect-src \'self\' https://smartcampk12.onrender.com https://smartk-122026.vercel.app; frame-ancestors \'none\'; form-action \'self\'; base-uri \'self\'; object-src \'none\';');
+header('X-Frame-Options: DENY');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -1155,7 +1163,7 @@ img[width], img[height] {
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F4B400'/%3E%3Ctext x='16' y='22' font-size='20' text-anchor='middle' font-family='serif' font-weight='700' fill='%230A1420'%3EB%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='15' fill='%230A1420' stroke='%23F4B400' stroke-width='1.5'/%3E%3Ccircle cx='16' cy='16' r='10' fill='none' stroke='%23F4B400' stroke-width='1'/%3E%3Ctext x='16' y='20' font-size='10' text-anchor='middle' font-family='serif' font-weight='700' fill='%23F4B400'%3EB%3C/text%3E%3C/svg%3E">
 </head>
 <body>
     <a href="#main" class="skip-link">Skip to main content</a>

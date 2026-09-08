@@ -16,7 +16,7 @@
 if ( ! function_exists( 'DashboardDefaultSmartCampus' ) ) :
 
 /**
- * Batu-Batu National Integrated High School — dashboard summary cards.
+ * Batu-Batu National High School — dashboard summary cards.
  *
  * Shows the Philippine K-12 school the items requested in the migration
  * spec: total & active students, teacher & section counts, current school

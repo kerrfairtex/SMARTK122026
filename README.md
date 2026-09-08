@@ -1,4 +1,4 @@
-BATU-BATU National Integrated High School Student Information System
+BATU-BATU National High School Student Information System
 ===================================================================
 
 [<img src="assets/themes/FlatSIS/logo.png" width="144" />](.)

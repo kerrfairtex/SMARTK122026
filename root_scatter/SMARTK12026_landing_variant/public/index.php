@@ -1,6 +1,6 @@
 <?php
 /**
- * Public Landing Page — Batu-Batu National Integrated High School
+ * Public Landing Page — Batu-Batu National High School
  *
  * A standalone institutional page separate from the RosarioSIS login system.
  * Features real photography and PSA-verified community statistics.

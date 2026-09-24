@@ -1579,12 +1579,12 @@ img[width], img[height] {
                         <div data-wizard-step="0">
                             <h4>Learner Information</h4>
                             <div class="form-field">
-                                <label for="lname">Learner full name *</label>
-                                <input type="text" id="lname" name="lname" required placeholder="e.g. Aisha S. Indal">
+                                <label for="last_name">Learner full name *</label>
+                                <input type="text" id="last_name" name="last_name" required placeholder="e.g. Aisha S. Indal">
                             </div>
                             <div class="form-field">
-                                <label for="bdate">Date of birth *</label>
-                                <input type="date" id="bdate" name="bdate" required>
+                                <label for="birth_date">Date of birth *</label>
+                                <input type="date" id="birth_date" name="birth_date" required>
                             </div>
                             <div class="form-field">
                                 <label for="laddress">Home address *</label>
@@ -1622,6 +1622,7 @@ img[width], img[height] {
                                 </select>
                             </div>
                             <input type="hidden" name="school_year" value="2026-2027">
+                            <input type="hidden" name="etype" value="New">
                         </div>
                         <div data-wizard-step="1" hidden>
                             <h4>Parent / Guardian</h4>

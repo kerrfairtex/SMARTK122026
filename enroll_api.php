@@ -1,596 +1,551 @@
 <?php
 /**
- * SmartCampus K-12 Enrollment API Implementation
- * Production-ready enrollment system with comprehensive security and error handling
- * Based on verified database schema and user journey requirements
+ * SmartCampus K-12 Enrollment API
+ *
+ * Public enrollment submission endpoint. Uses the existing RosarioSIS
+ * PostgreSQL connection layer (database.inc.php + Warehouse.php) — NOT a
+ * separate MySQLi layer.
+ *
+ * Grounded in the live kerrfairtex schema:
+ *   - enrollment_applications: id, ref, learner_name, birth_date, sex, birthplace,
+ *     address, grade_level, school_year, enrollment_type, parent_name,
+ *     parent_relationship, parent_contact, parent_address, parent_email,
+ *     prev_school, prev_school_address, last_grade, prev_sy, learner_ref_no,
+ *     documents, status, notes, created_at, updated_at
+ *   - enrollment_periods: id, school_year, enrollment_opens, enrollment_closes,
+ *     classes_begin, grade_levels, status, updated_at
+ *   - enrollment_drafts: id, token, payload, status, expires_at, created_at, updated_at
  */
 
 declare(strict_types=1);
 
-// Error handling configuration
+require_once __DIR__ . '/database.inc.php';
+require_once __DIR__ . '/Warehouse.php';
+
+// Error handling — never display errors to applicants
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 ini_set('error_log', '/var/log/enroll_api_errors.log');
 
-// Database connection configuration using environment variables
-$DB_CONFIG = [
-    'host' => $_ENV['DB_HOST'] ?? 'aws-0-ap-northeast-1.pooler.supabase.com',
-    'port' => $_ENV['DB_PORT'] ?? 6543,
-    'dbname' => $_ENV['DB_NAME'] ?? 'postgres',
-    'user' => $_ENV['DB_USER'] ?? 'postgres.ebyepweqwihdvjecrufk',
-    'password' => $_ENV['DB_PASSWORD'] ?? '4n=AgYHXO?%ESEKv',
-    'charset' => 'utf8mb4',
-    'ssl_mode' => 'REQUIRED',
-];
-
-// Global database connection variable
-$mysqli = null;
+// ---------------------------------------------------------------------------
+// Database helpers (wrap the existing PostgreSQL connection)
+// ---------------------------------------------------------------------------
 
 /**
- * Establish database connection with retry logic and comprehensive error handling
- * Implements exponential backoff for connection failures
+ * Get a PostgreSQL connection reusing the RosarioSIS db_start() bootstrap.
  */
-function getDatabaseConnection() {
-    global $mysqli;
-    
-    // Return existing active connection if available
-    if ($mysqli !== null && $mysqli->ping()) {
-        return $mysqli;
-    }
-    
-    $max_retries = 3;
-    $retry_delay = 1;
-    $last_error = null;
-    
-    for ($attempt = 1; $attempt <= $max_retries; $attempt++) {
-        try {
-            $mysqli = new mysqli(
-                $GLOBALS['DB_CONFIG']['host'],
-                $GLOBALS['DB_CONFIG']['user'],
-                $GLOBALS['DB_CONFIG']['password'],
-                $GLOBALS['DB_CONFIG']['dbname'],
-                $GLOBALS['DB_CONFIG']['port']
-            );
-            
-            // Verify connection was established
-            if ($mysqli->connect_error) {
-                throw new Exception("Database connection failed: " . $mysqli->connect_error);
-            }
-            
-            // Set UTF-8 character encoding for proper Unicode support
-            $mysqli->set_charset("utf8mb4");
-            
-            // Configure connection options for optimal performance and compatibility
-            // Use set_option if available (PHP 7.0+)
-            if (method_exists($mysqli, 'set_option')) {
-                $mysqli->set_option(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
-            } elseif (method_exists($mysqli, 'options')) {
-                // Alternative method for older PHP versions
-                $mysqli->options(MYSQLI_OPT_INT_AND_FLOAT_NATIVE, true);
-            }
-            
-            // Enable strict SQL mode for better data integrity
-            $mysqli->query('SET sql_mode = REPLACE(@@sql_mode, "ONLY_FULL_GROUP_BY", "")');
-            
-            error_log("Database connection established successfully on attempt {$attempt}");
-            return $mysqli;
-            
-        } catch (Exception $e) {
-            $last_error = $e;
-            error_log("Database connection attempt {$attempt} failed: " . $e->getMessage());
-            
-            if ($attempt < $max_retries) {
-                sleep($retry_delay);
-                $retry_delay *= 2; // Exponential backoff
-            }
+function db_conn() {
+    static $c = null;
+    if ($c === null) {
+        $c = db_start(false);
+        if ($c === false) {
+            throw new Exception('Database unavailable');
         }
     }
-    
-    // If we get here, all attempts failed
-    $error_msg = "Unable to connect to database after {$max_retries} attempts";
-    if ($last_error) {
-        $error_msg .= ": " . $last_error->getMessage();
-    }
-    
-    error_log($error_msg);
-    throw new Exception($error_msg);
+    return $c;
 }
 
 /**
- * Execute database query with comprehensive error handling and parameterization
- * Provides both procedural and object-oriented support
+ * Execute a parameterized PostgreSQL query.
+ * Uses pg_query_params for safe parameter binding.
+ *
+ * @return resource|false PostgreSQL result resource
  */
 function dbQuery($sql, $params = []) {
-    try {
-        $conn = getDatabaseConnection();
-        
-        // Prepare the SQL statement
-        $stmt = $conn->prepare($sql);
-        if ($stmt === false) {
-            throw new Exception("Query preparation failed: " . $conn->error);
-        }
-        
-        // Bind parameters if provided
-        if (!empty($params)) {
-            $types = str_repeat('s', count($params)); // String parameters
-            $stmt->bind_param($types, ...$params);
-        }
-        
-        // Execute the query
-        $success = $stmt->execute();
-        if ($success === false) {
-            throw new Exception("Query execution failed: " . $stmt->error);
-        }
-        
-        // Handle different types of queries
-        if (strtoupper(substr($sql, 0, 6)) === 'SELECT') {
-            // For SELECT queries, return result set
-            $stmt->store_result();
-            $result = $stmt->get_result();
-        } elseif ($stmt->affected_rows > 0) {
-            // For INSERT, UPDATE, DELETE, return affected rows count
-            $result = $stmt->affected_rows;
-        } else {
-            // For other queries that don't return data
-            $result = true;
-        }
-        
-        // Clean up statement
-        $stmt->close();
-        
-        return $result;
-        
-    } catch (Exception $e) {
-        // Comprehensive error logging
-        $error_context = [
-            'sql' => $sql,
-            'params' => $params,
-            'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-            'script' => basename($_SERVER['SCRIPT_FILENAME'] ?? $_SERVER['PHP_SELF'] ?? 'unknown'),
-            'query_string' => $_SERVER['QUERY_STRING'] ?? 'unknown',
-            'timestamp' => date('Y-m-d H:i:s'),
-            'action' => $_GET['action'] ?? 'unknown'
-        ];
-        
-        error_log('[' . date('Y-m-d H:i:s') . '] Enrollment API Error: ' . $e->getMessage() . ' - Context: ' . json_encode($error_context));
-        
-        // Re-throw the exception for higher-level handling
-        throw $e;
+    $conn = db_conn();
+    if ($params !== null && count($params) > 0) {
+        $result = pg_query_params($conn, $sql, $params);
+    } else {
+        $result = pg_query($conn, $sql);
     }
+    return $result;
 }
 
 /**
- * Fetch a single row from database result as an associative array
- * Returns null if no rows are available
+ * Fetch a single row as an associative array.
  */
 function dbFetchRow($result) {
-    if (is_object($result)) {
-        $row = $result->fetch_assoc();
-        return $row ?: null;
-    }
-    return null;
+    if ($result === false) return null;
+    $row = pg_fetch_assoc($result);
+    return $row ?: null;
 }
 
 /**
- * Fetch all rows from database result as an array of associative arrays
- * Returns empty array if no rows are available
+ * Fetch all rows as an array of associative arrays.
  */
 function dbFetchAll($result) {
-    if (is_object($result)) {
-        $rows = [];
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
-        }
-        return $rows;
+    if ($result === false) return [];
+    $rows = [];
+    while ($row = pg_fetch_assoc($result)) {
+        $rows[] = $row;
     }
-    return [];
+    return $rows;
 }
 
-/**
- * Validate and sanitize input data based on type
- * Provides comprehensive input validation and sanitization
- */
+// ---------------------------------------------------------------------------
+// Input validation and sanitization
+// ---------------------------------------------------------------------------
+
 function sanitizeInput($data, $type = 'string') {
-    // Handle arrays recursively
     if (is_array($data)) {
         return array_map(function($item) use ($type) {
             return sanitizeInput($item, $type);
         }, $data);
     }
-    
-    // Handle empty values
-    if (empty($data) && $type !== 'date') {
+
+    if (empty($data) && $type !== 'date' && $type !== 'boolean') {
         return $data;
     }
-    
-    // Apply type-specific validation and sanitization
+
     switch ($type) {
         case 'string':
-            // Remove extra whitespace and escape HTML characters
-            $sanitized = htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
-            // Prevent SQL injection by escaping quotes
-            $sanitized = str_replace('"', '&quot;', $sanitized);
-            $sanitized = str_replace("'", '&#x27;', $sanitized);
-            return $sanitized;
-            
+            return trim(htmlspecialchars((string)$data, ENT_QUOTES, 'UTF-8'));
+
         case 'int':
-            // Convert to integer with validation
             $sanitized = (int) $data;
             if ($sanitized < 0) {
-                throw new Exception("Invalid integer value: {$data}");
+                throw new Exception("Invalid integer value");
             }
             return $sanitized;
-            
+
         case 'email':
-            // Validate email format using PHP's built-in filter
-            $sanitized = trim($data);
+            $sanitized = trim((string)$data);
             if (!filter_var($sanitized, FILTER_VALIDATE_EMAIL)) {
-                throw new Exception("Invalid email format: {$data}");
+                throw new Exception("Invalid email format");
             }
             return $sanitized;
-            
+
         case 'phone':
-            // Sanitize phone number (keep only valid phone characters)
-            $sanitized = preg_replace('/[^0-9+()\-\s]/', '', $data);
-            // Validate common phone number patterns
-            if (!preg_match('/^(\+?\d{1,3}[-\s]?)?\d{10,}$/', $sanitized)) {
-                throw new Exception("Invalid phone format: {$data}");
+            $sanitized = preg_replace('/[^0-9+()\-\s]/', '', (string)$data);
+            if (!preg_match('/^\+?[\d\s\-\(\)]{10,}$/', $sanitized)) {
+                throw new Exception("Invalid phone format. Please enter a valid phone number.");
             }
             return $sanitized;
-            
+
         case 'date':
-            // Validate date format and convert to YYYY-MM-DD
-            $timestamp = strtotime($data);
+            $timestamp = strtotime((string)$data);
             if ($timestamp === false) {
-                throw new Exception("Invalid date format: {$data}. Expected format: YYYY-MM-DD");
+                throw new Exception("Invalid date format. Expected YYYY-MM-DD.");
             }
             $sanitized = date('Y-m-d', $timestamp);
-            
-            // Validate that the date is not in the future (for enrollment applications)
             $today = date('Y-m-d');
             if ($sanitized > $today) {
-                throw new Exception("Birth date cannot be in the future: {$data}");
+                throw new Exception("Date of birth cannot be in the future.");
             }
-            
-            // Validate reasonable age range (typically 5-25 for enrollment)
             $min_age_date = date('Y-m-d', strtotime('-25 years'));
             if ($sanitized < $min_age_date) {
-                throw new Exception("Student age appears too old for current enrollment period: {$data}");
+                throw new Exception("Student age appears too old for current enrollment period.");
             }
-            
             return $sanitized;
-            
+
         case 'grade':
-            // Validate against official grade levels
             $valid_grades = [
                 'Kinder', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
                 'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9',
                 'Grade 10', 'Grade 11', 'Grade 12'
             ];
             if (!in_array($data, $valid_grades)) {
-                throw new Exception("Invalid grade level: {$data}. Must be one of: " . implode(', ', $valid_grades));
+                throw new Exception("Invalid grade level. Must be one of: " . implode(', ', $valid_grades));
             }
             return $data;
-            
+
+        case 'grade_or_text':
+            // For plastgrade: accept predefined grades OR free text
+            $valid_grades = [
+                'Kinder', 'Grade 1', 'Grade 2', 'Grade 3', 'Grade 4',
+                'Grade 5', 'Grade 6', 'Grade 7', 'Grade 8', 'Grade 9',
+                'Grade 10', 'Grade 11', 'Grade 12'
+            ];
+            if (in_array($data, $valid_grades)) {
+                return $data;
+            }
+            // Allow free text (e.g., "Grade 6", "4th Grade", "Nursery", etc.)
+            $sanitized = trim((string)$data);
+            if (strlen($sanitized) < 1 || strlen($sanitized) > 100) {
+                throw new Exception("Last grade completed must be 1-100 characters.");
+            }
+            return htmlspecialchars($sanitized, ENT_QUOTES, 'UTF-8');
+
         case 'boolean':
-            // Convert to boolean using strict comparison
             $sanitized = filter_var($data, FILTER_VALIDATE_BOOLEAN, FILTER_NULL_ON_FAILURE);
             if ($sanitized === null) {
-                throw new Exception("Invalid boolean value: {$data}");
+                throw new Exception("Invalid boolean value");
             }
             return $sanitized;
-            
+
         case 'text':
-            // Sanitize for HTML content (less strict than 'string')
-            $sanitized = trim($data);
-            $sanitized = str_replace('"', '&quot;', $sanitized);
+            return htmlspecialchars(trim((string)$data), ENT_QUOTES, 'UTF-8');
+
+        case 'school_year':
+            $sanitized = trim((string)$data);
+            if (!preg_match('/^\d{4}-\d{4}$/', $sanitized)) {
+                throw new Exception("Invalid school year format. Expected YYYY-YYYY (e.g., 2026-2027).");
+            }
+            $parts = explode('-', $sanitized);
+            if ((int)$parts[1] !== (int)$parts[0] + 1) {
+                throw new Exception("Invalid school year range. Must be consecutive years (e.g., 2026-2027).");
+            }
             return $sanitized;
-            
-        case 'slug':
-            // Generate URL-friendly slug
-            $sanitized = strtolower(trim($data));
-            $sanitized = preg_replace('/[^a-z0-9\s]/', '', $sanitized);
-            $sanitized = preg_replace('/\s+/', '-', $sanitized);
-            return $sanitized;
-            
+
+        case 'enrollment_type':
+            $valid_types = ['New', 'Transfer'];
+            if (!in_array($data, $valid_types)) {
+                throw new Exception("Invalid enrollment type. Must be 'New' or 'Transfer'.");
+            }
+            return $data;
+
         default:
-            // For unknown types, return the data as-is
             return $data;
     }
 }
 
 /**
- * Generate unique enrollment reference number
- * Format: BATU-YYYY-XXXXXXXX (8-character uppercase hex)
+ * Generate unique enrollment reference number.
+ * Format: BATU-YYYY-XXXXXX (6-digit numeric, matching existing data)
  */
 function generateReferenceNumber() {
     $year = date('Y');
-    // Generate random hexadecimal string
-    $random_part = strtoupper(substr(md5(time() . rand(1000, 9999)), 0, 8));
+    $random_part = str_pad((string)random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     return "BATU-{$year}-{$random_part}";
 }
 
 /**
- * Validate CSRF token from session
- * Ensures protection against Cross-Site Request Forgery attacks
+ * Resolve enrollment_period_id from school_year using the live schema.
+ * Throws if no period exists or if the period is not open.
  */
-function validateCsrfToken($token) {
-    // Check if token is provided and matches session token
-    if (empty($token) || empty($_SESSION['csrf_token']) || $token !== $_SESSION['csrf_token']) {
-        throw new Exception('Invalid or missing CSRF token');
+function resolveEnrollmentPeriod($schoolYear) {
+    $conn = db_conn();
+    $sql = "SELECT id, school_year, enrollment_opens, enrollment_closes, status
+            FROM kerrfairtex.enrollment_periods
+            WHERE school_year = $1
+            ORDER BY enrollment_opens DESC
+            LIMIT 1";
+    $result = pg_query_params($conn, $sql, [$schoolYear]);
+
+    if ($result === false) {
+        throw new Exception("Database error resolving enrollment period");
     }
-    return true;
+
+    $row = pg_fetch_assoc($result);
+    if (!$row) {
+        throw new Exception("No enrollment period found for school year " . htmlspecialchars($schoolYear));
+    }
+
+    // Determine if enrollment is currently open via date comparison
+    $isOpen = false;
+    if (!empty($row['enrollment_opens']) && !empty($row['enrollment_closes'])) {
+        $now = date('Y-m-d');
+        $isOpen = ($row['enrollment_opens'] <= $now && $row['enrollment_closes'] >= $now);
+    }
+    // Fallback: explicit 'Open' status column
+    if (!$isOpen && isset($row['status']) && $row['status'] === 'Open') {
+        $isOpen = true;
+    }
+
+    if (!$isOpen) {
+        throw new Exception("Enrollment period for " . htmlspecialchars($schoolYear) . " is not currently open.");
+    }
+
+    return (int)$row['id'];
 }
 
 /**
- * Comprehensive error logging function
- * Logs all errors with detailed context information
- */
-function logError($error_message, $context = []) {
-    // Create structured log entry
-    $log_entry = [
-        'timestamp' => date('Y-m-d H:i:s'),
-        'error_message' => $error_message,
-        'context' => $context,
-        'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-        'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-        'script_name' => basename($_SERVER['SCRIPT_FILENAME'] ?? $_SERVER['PHP_SELF'] ?? 'unknown'),
-        'query_string' => $_SERVER['QUERY_STRING'] ?? 'unknown',
-        'request_method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
-        'server_software' => $_SERVER['SERVER_SOFTWARE'] ?? 'unknown',
-    ];
-    
-    // Log to PHP error log with structured format
-    error_log('[' . date('Y-m-d H:i:s') . '] Enrollment API Error: ' . json_encode($log_entry));
-}
-
-/**
- * Process enrollment submission with comprehensive validation and error handling
- * Core business logic for student enrollment applications
+ * Process enrollment submission.
+ * Aligns to the live kerrfairtex.enrollment_applications schema.
  */
 function handleEnrollmentSubmission($data) {
-    try {
-        // Validate required fields - ensure all mandatory data is present
-        $required_fields = [
-            'last_name', 'first_name', 'birth_date', 'laddress',
-            'sex', 'birthplace', 'grade_level', 'school_year',
-            'etype', 'pname', 'pcontact', 'pschool', 'plastgrade'
-        ];
-        
-        foreach ($required_fields as $field) {
-            if (empty($data[$field])) {
-                throw new Exception("Missing required field: {$field}");
-            }
+    $conn = db_conn();
+
+    // Required fields (from the public form after rename)
+    $required_fields = [
+        'last_name', 'birth_date', 'laddress',
+        'sex', 'birthplace', 'grade_level', 'school_year',
+        'etype', 'pname', 'pcontact', 'pschool', 'plastgrade'
+    ];
+
+    foreach ($required_fields as $field) {
+        if (!isset($data[$field]) || empty($data[$field])) {
+            throw new Exception("Missing required field: " . $field);
         }
-        
-        // Validate CSRF token if present (for web form submissions)
-        if (isset($_POST['csrf_token'])) {
-            validateCsrfToken($_POST['csrf_token']);
-        }
-        
-        // Sanitize and validate all input data using appropriate types
-        $sanitized_data = [];
-        
-        // Personal information fields
-        $sanitized_data['last_name'] = sanitizeInput($data['last_name'], 'string');
-        $sanitized_data['first_name'] = sanitizeInput($data['first_name'], 'string');
-        $sanitized_data['birth_date'] = sanitizeInput($data['birth_date'], 'date');
-        $sanitized_data['laddress'] = sanitizeInput($data['laddress'], 'string');
-        $sanitized_data['sex'] = sanitizeInput($data['sex'], 'string');
-        $sanitized_data['birthplace'] = sanitizeInput($data['birthplace'], 'string');
-        
-        // Grade and enrollment information
-        $sanitized_data['grade_level'] = sanitizeInput($data['grade_level'], 'grade');
-        $sanitized_data['school_year'] = sanitizeInput($data['school_year'], 'string');
-        $sanitized_data['etype'] = sanitizeInput($data['etype'], 'string');
-        
-        // Guardian information
-        $sanitized_data['pname'] = sanitizeInput($data['pname'], 'string');
-        $sanitized_data['pcontact'] = sanitizeInput($data['pcontact'], 'phone');
-        $sanitized_data['pemail'] = !empty($data['pemail']) ? sanitizeInput($data['pemail'], 'email') : null;
-        $sanitized_data['pschool'] = sanitizeInput($data['pschool'], 'string');
-        $sanitized_data['plastgrade'] = sanitizeInput($data['plastgrade'], 'grade');
-        
-        // Add enrollment metadata
-        $sanitized_data['enrollment_period_id'] = 1; // Should be dynamic based on school_year
-        $sanitized_data['student_id'] = null; // Will be set after student record creation
-        
-        // Generate unique reference number
-        $ref = generateReferenceNumber();
-        
-        // Prepare SQL statement for enrollment application insertion
-        $sql = "INSERT INTO enrollment_applications (
-            ref, student_id, enrollment_period_id, status,
-            submitted_at, reviewed_by, reviewed_at,
-            data_json, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, NOW(), ?, NOW(), ?, NOW(), NOW())";
-        
-        // Prepare parameters for database query
-        $params = [
-            $ref,
-            $sanitized_data['student_id'],
-            $sanitized_data['enrollment_period_id'],
-            'Submitted',
-            null, // reviewed_by (null for new applications)
-            null, // reviewed_at (null for new applications)
-            json_encode($sanitized_data), // Store all sanitized data as JSON
-        ];
-        
-        // Execute database insertion
-        $result = dbQuery($sql, $params);
-        
-        // Return success response with reference and status
-        return [
-            'success' => true,
-            'ref' => $ref,
-            'status' => 'Submitted',
-            'created_at' => date('Y-m-d H:i:s'),
-            'message' => 'Enrollment application submitted successfully'
-        ];
-        
-    } catch (Exception $e) {
-        // Log the error for debugging and monitoring
-        logError($e->getMessage(), [
-            'action' => 'enrollment_submission',
-            'input_data' => $data,
-            'user_ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
-            'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown'
-        ]);
-        
-        // Return structured error response
-        return [
-            'success' => false,
-            'error' => $e->getMessage()
-        ];
     }
+
+    // Sanitize and validate all input
+    $sanitized = [];
+
+    $sanitized['last_name']       = sanitizeInput($data['last_name'], 'string');
+    $sanitized['birth_date']      = sanitizeInput($data['birth_date'], 'date');
+    $sanitized['laddress']        = sanitizeInput($data['laddress'], 'string');
+    $sanitized['sex']             = sanitizeInput($data['sex'], 'string');
+    $sanitized['birthplace']      = sanitizeInput($data['birthplace'], 'string');
+    $sanitized['grade_level']     = sanitizeInput($data['grade_level'], 'grade');
+    $sanitized['school_year']     = sanitizeInput($data['school_year'], 'school_year');
+    $sanitized['etype']           = sanitizeInput($data['etype'], 'enrollment_type');
+    $sanitized['pname']           = sanitizeInput($data['pname'], 'string');
+    $sanitized['pcontact']        = sanitizeInput($data['pcontact'], 'phone');
+    $sanitized['pschool']         = sanitizeInput($data['pschool'], 'string');
+    $sanitized['plastgrade']      = sanitizeInput($data['plastgrade'], 'grade_or_text');
+
+    // Optional fields
+    $sanitized['pemail'] = !empty($data['pemail']) ? sanitizeInput($data['pemail'], 'email') : null;
+
+    // learner_name: the form sends "last_name" labeled "Learner full name"
+    // We use the full name as entered
+    $learnerName = $sanitized['last_name'];
+
+    // Resolve enrollment period dynamically from school_year
+    $enrollmentPeriodId = resolveEnrollmentPeriod($sanitized['school_year']);
+
+    // Generate unique reference number
+    $ref = generateReferenceNumber();
+
+    // Ensure ref uniqueness (retry on collision)
+    $attempts = 0;
+    while ($attempts < 5) {
+        $exists = pg_query_params($conn,
+            "SELECT id FROM kerrfairtex.enrollment_applications WHERE ref = $1",
+            [$ref]
+        );
+        if ($exists !== false && pg_num_rows($exists) === 0) {
+            break;
+        }
+        $ref = generateReferenceNumber();
+        $attempts++;
+    }
+
+    // INSERT into enrollment_applications matching the LIVE schema
+    $sql = "INSERT INTO kerrfairtex.enrollment_applications (
+        ref, learner_name, birth_date, sex, birthplace, address,
+        grade_level, school_year, enrollment_type,
+        parent_name, parent_contact, parent_email,
+        prev_school, last_grade, enrollment_period_id,
+        status, created_at, updated_at
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'Submitted', NOW(), NOW())";
+
+    $params = [
+        $ref,
+        $learnerName,
+        $sanitized['birth_date'],
+        $sanitized['sex'],
+        $sanitized['birthplace'],
+        $sanitized['laddress'],
+        $sanitized['grade_level'],
+        $sanitized['school_year'],
+        $sanitized['etype'],
+        $sanitized['pname'],
+        $sanitized['pcontact'],
+        $sanitized['pemail'],
+        $sanitized['pschool'],
+        $sanitized['plastgrade'],
+        (string)$enrollmentPeriodId,
+    ];
+
+    $result = pg_query_params($conn, $sql, $params);
+
+    if ($result === false) {
+        throw new Exception("Failed to save application");
+    }
+
+    return [
+        'success' => true,
+        'ref' => $ref,
+        'status' => 'Submitted',
+        'message' => 'Enrollment application submitted successfully'
+    ];
 }
 
 /**
- * Retrieve current enrollment period configuration
- * Returns active enrollment periods and current period information
+ * Get current enrollment period configuration.
+ * Uses the live schema: enrollment_periods with school_year, enrollment_opens,
+ * enrollment_closes. Open status is determined by date comparison.
  */
 function getEnrollmentConfiguration() {
-    try {
-        // Query active enrollment periods
-        $sql = "SELECT * FROM enrollment_periods WHERE status = 'Open' ORDER BY school_year, enrollment_opens";
-        $result = dbQuery($sql);
-        $periods = dbFetchAll($result);
-        
+    $conn = db_conn();
+
+    $sql = "SELECT id, school_year, enrollment_opens, enrollment_closes,
+                   classes_begin, status, grade_levels
+            FROM kerrfairtex.enrollment_periods
+            ORDER BY enrollment_opens DESC
+            LIMIT 1";
+
+    $result = pg_query($conn, $sql);
+
+    if ($result === false) {
+        throw new Exception("Database error");
+    }
+
+    $row = pg_fetch_assoc($result);
+
+    if (!$row) {
         return [
             'success' => true,
-            'periods' => $periods,
-            'current_period' => $periods[0] ?? null,
-            'count' => count($periods)
-        ];
-        
-    } catch (Exception $e) {
-        logError($e->getMessage(), ['action' => 'get_enrollment_config']);
-        return [
-            'success' => false,
-            'error' => $e->getMessage()
+            'period' => null,
+            'status' => 'Closed'
         ];
     }
+
+    // Determine if enrollment is currently open via date comparison
+    $isOpen = false;
+    if (!empty($row['enrollment_opens']) && !empty($row['enrollment_closes'])) {
+        $now = date('Y-m-d');
+        $isOpen = ($row['enrollment_opens'] <= $now && $row['enrollment_closes'] >= $now);
+    }
+    if (!$isOpen && isset($row['status']) && $row['status'] === 'Open') {
+        $isOpen = true;
+    }
+
+    return [
+        'success' => true,
+        'period' => [
+            'enrollment_period_id' => (int)$row['id'],
+            'school_year' => $row['school_year'],
+            'title' => $row['school_year'] . ' Academic Year',
+            'enrollment_opens' => $row['enrollment_opens'],
+            'enrollment_closes' => $row['enrollment_closes'],
+            'classes_begin' => $row['classes_begin'],
+            'grade_levels' => $row['grade_levels'],
+        ],
+        'status' => $isOpen ? 'Open' : 'Closed',
+        'is_open' => $isOpen,
+    ];
 }
 
 /**
- * Retrieve application status by reference number
- * Supports lookup by unique reference identifier
+ * Get application status by reference number.
+ * Uses the live schema: ref is a UNIQUE column on enrollment_applications.
  */
 function getApplicationStatus($ref) {
-    try {
-        // Validate reference format (BATU-YYYY-XXXXX)
-        if (!preg_match('/^BATU-\d{4}-\w{8}$/', $ref)) {
-            throw new Exception("Invalid reference format: {$ref}. Expected format: BATU-YYYY-XXXXX");
-        }
-        
-        // Query application by reference number
-        $sql = "SELECT * FROM enrollment_applications WHERE ref = ?";
-        $result = dbQuery($sql, [$ref]);
-        $application = dbFetchRow($result);
-        
-        if (!$application) {
-            return [
-                'success' => false,
-                'found' => false,
-                'error' => "Application not found for reference: {$ref}"
-            ];
-        }
-        
-        // Parse JSON data field for human-readable learner name
-        $data_json = json_decode($application['data_json'] ?? '[]', true);
-        $learner_name = $data_json['last_name'] . ', ' . $data_json['first_name'];
-        
-        return [
-            'success' => true,
-            'found' => true,
-            'application' => $application,
-            'learner_name' => $learner_name,
-            'status' => $application['status'],
-            'submitted_at' => $application['submitted_at'] ?? null
-        ];
-        
-    } catch (Exception $e) {
-        logError($e->getMessage(), ['action' => 'get_application_status', 'ref' => $ref]);
+    $conn = db_conn();
+
+    // Validate reference format: BATU-YYYY-XXXXXX
+    if (!preg_match('/^BATU-\d{4}-\d{6}$/', $ref)) {
+        throw new Exception("Invalid reference format.");
+    }
+
+    $sql = "SELECT id, ref, learner_name, grade_level, school_year,
+                   enrollment_type, status, created_at
+            FROM kerrfairtex.enrollment_applications
+            WHERE ref = $1";
+
+    $result = pg_query_params($conn, $sql, [$ref]);
+
+    if ($result === false) {
+        throw new Exception("Database error");
+    }
+
+    $row = pg_fetch_assoc($result);
+
+    if (!$row) {
         return [
             'success' => false,
-            'error' => $e->getMessage()
+            'found' => false,
+            'error' => "Application not found."
         ];
     }
+
+    return [
+        'success' => true,
+        'found' => true,
+        'ref' => $row['ref'],
+        'learner_name' => $row['learner_name'],
+        'grade_level' => $row['grade_level'],
+        'school_year' => $row['school_year'],
+        'enrollment_type' => $row['enrollment_type'],
+        'status' => $row['status'],
+        'submitted_at' => $row['created_at'],
+    ];
 }
 
-/**
- * Main request handler - processes all API endpoints with comprehensive routing
- * Supports GET, POST, OPTIONS methods with CORS compliance
- */
+// ---------------------------------------------------------------------------
+// Rate limiting (in-memory per IP per hour)
+// ---------------------------------------------------------------------------
+
+$__submission_counts = [];
+
+function checkRateLimit($ip) {
+    global $__submission_counts;
+    $key = $ip . ':' . date('Y-m-d:H');
+    if (!isset($__submission_counts[$key])) {
+        $__submission_counts[$key] = 0;
+    }
+    if ($__submission_counts[$key] >= 10) {
+        throw new Exception("Rate limit exceeded. Please try again later.");
+    }
+    $__submission_counts[$key]++;
+}
+
+// ---------------------------------------------------------------------------
+// Error logging
+// ---------------------------------------------------------------------------
+
+function logError($message, $context = []) {
+    $entry = [
+        'timestamp' => date('Y-m-d H:i:s'),
+        'error' => $message,
+        'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
+        'ua' => substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 200),
+        'method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
+        'action' => $_GET['action'] ?? 'unknown',
+        'context' => $context
+    ];
+    error_log('[' . date('Y-m-d H:i:s') . '] Enrollment API: ' . json_encode($entry));
+}
+
+// ---------------------------------------------------------------------------
+// Request handler
+// ---------------------------------------------------------------------------
+
 function handleRequest() {
-    // Set JSON response headers for all requests
+    // Set JSON response headers
     header('Content-Type: application/json; charset=utf-8');
-    header('Access-Control-Allow-Origin: *');
+
+    // CORS: restrict to known frontend origin
+    $allowedOrigin = getenv('CORS_ORIGIN') ?: 'https://smartk-122026.vercel.app';
+    $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+    if ($origin === $allowedOrigin) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+    } else {
+        header('Access-Control-Allow-Origin: ' . $allowedOrigin);
+    }
     header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-    header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+    header('Access-Control-Allow-Headers: Content-Type');
     header('Access-Control-Max-Age: 86400');
-    
-    // Handle CORS preflight requests
+
+    // Handle CORS preflight
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
         http_response_code(200);
         exit(0);
     }
-    
-    // Parse JSON input for POST requests
-    $input_data = [];
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        // Get raw input data from request body
-        $raw_input = file_get_contents('php://input');
-        $input_data = json_decode($raw_input, true);
-        
-        // Validate JSON input format
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            http_response_code(400);
-            echo json_encode([
-                'success' => false,
-                'error' => 'Invalid JSON input: ' . json_last_error_msg()
-            ]);
-            exit(0);
-        }
-    }
-    
-    // Initialize session for CSRF protection and user tracking
+
+    // Initialize session
     if (session_status() === PHP_SESSION_NONE) {
-        // Configure secure session cookie parameters
-        session_set_cookie_params([
-            'lifetime' => 7200, // 2 hours
+        $cookieParams = [
+            'lifetime' => 7200,
             'path' => '/',
-            'domain' => $_ENV['COOKIE_DOMAIN'] ?? null,
-            'secure' => ($_SERVER['HTTPS'] ?? false),
+            'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off'),
             'httponly' => true,
             'samesite' => 'Lax'
-        ]);
-        
+        ];
+        session_set_cookie_params($cookieParams);
         session_start();
     }
-    
-    // Generate CSRF token if not exists
+
+    // Generate CSRF token
     if (empty($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
     }
-    
+
     try {
-        // Determine requested action from query parameters
         $action = $_GET['action'] ?? '';
-        
-        // Route requests based on action parameter
+
         switch ($action) {
             case 'config':
-                // Return current enrollment period configuration
                 $result = getEnrollmentConfiguration();
-                http_response_code($result['success'] ? 200 : 500);
+                http_response_code(200);
                 echo json_encode($result);
                 break;
-                
+
             case 'status':
-                // Return application status by reference number
                 if (empty($_GET['ref'])) {
                     throw new Exception("Missing required parameter: ref");
                 }
@@ -598,41 +553,77 @@ function handleRequest() {
                 http_response_code($result['success'] ? 200 : 404);
                 echo json_encode($result);
                 break;
-                
+
             case 'submit':
-                // Process enrollment submission
+                // Rate limiting for unauthenticated public endpoint
+                checkRateLimit($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+
+                // Parse JSON input
+                $raw_input = file_get_contents('php://input');
+                $input_data = json_decode($raw_input, true);
+
+                if (json_last_error() !== JSON_ERROR_NONE) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'Invalid JSON input'
+                    ]);
+                    exit(0);
+                }
+
+                if (!is_array($input_data)) {
+                    http_response_code(400);
+                    echo json_encode([
+                        'success' => false,
+                        'error' => 'Request body must be a JSON object'
+                    ]);
+                    exit(0);
+                }
+
+                // CSRF: validate token if provided in JSON body
+                if (isset($input_data['csrf_token'])) {
+                    if (empty($_SESSION['csrf_token']) ||
+                        !hash_equals($_SESSION['csrf_token'], $input_data['csrf_token'])) {
+                        throw new Exception('Invalid CSRF token');
+                    }
+                }
+
                 $result = handleEnrollmentSubmission($input_data);
                 http_response_code($result['success'] ? 201 : 400);
                 echo json_encode($result);
                 break;
-                
-            case 'draft_finalize':
-                // Legacy support for draft finalization (redirect to submit)
-                $result = handleEnrollmentSubmission($input_data);
-                http_response_code($result['success'] ? 201 : 400);
-                echo json_encode($result);
-                break;
-                
+
             default:
-                // Handle unknown or missing actions
                 http_response_code(400);
                 echo json_encode([
                     'success' => false,
-                    'error' => "Unknown action: {$action}. Supported actions: config, status, submit"
+                    'error' => "Unknown action: " . $action . ". Supported: config, status, submit"
                 ]);
                 break;
         }
-        
+
     } catch (Exception $e) {
-        // Handle any uncaught exceptions with proper error response
-        http_response_code(500);
+        logError($e->getMessage());
+
+        $code = 500;
+        $msg = $e->getMessage();
+        if (strpos($msg, 'Missing required') !== false ||
+            strpos($msg, 'Invalid') !== false ||
+            strpos($msg, 'No enrollment period') !== false ||
+            strpos($msg, 'not currently open') !== false ||
+            strpos($msg, 'Rate limit') !== false ||
+            strpos($msg, 'Invalid JSON') !== false ||
+            strpos($msg, 'JSON object') !== false) {
+            $code = 400;
+        }
+
+        http_response_code($code);
         echo json_encode([
             'success' => false,
-            'error' => $e->getMessage(),
-            'timestamp' => date('Y-m-d H:i:s')
+            'error' => $msg
         ]);
     }
 }
 
-// Execute the main request handler to process incoming requests
+// Execute the request handler
 handleRequest();

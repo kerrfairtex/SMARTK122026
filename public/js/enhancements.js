@@ -156,7 +156,7 @@
             .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
             .then(function (res) {
                 if (!result) return;
-                if (res.ok && res.j.ok && res.j.ref) {
+                if (res.ok && res.j.success && res.j.ref) {
                     result.innerHTML = '<p style="color: #4ade80;">Application received. Reference: <strong>' + res.j.ref + '</strong></p>';
                 } else {
                     result.innerHTML = '<p style="color: var(--reef-coral);">' + (res.j.error || res.j.message || 'Submission failed. Please try again.') + '</p>';

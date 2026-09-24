@@ -52,7 +52,7 @@ function db_conn() {
  *
  * @return resource|false PostgreSQL result resource
  */
-function dbQuery($sql, $params = []) {
+function enrollDbQuery($sql, $params = []) {
     $conn = db_conn();
     if ($params !== null && count($params) > 0) {
         $result = pg_query_params($conn, $sql, $params);

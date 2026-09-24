@@ -232,14 +232,11 @@ function resolveEnrollmentPeriod($schoolYear) {
     }
 
     // Determine if enrollment is currently open via date comparison
+    // Note: status column is metadata only and does NOT override the closing date
     $isOpen = false;
     if (!empty($row['enrollment_opens']) && !empty($row['enrollment_closes'])) {
         $now = date('Y-m-d');
         $isOpen = ($row['enrollment_opens'] <= $now && $row['enrollment_closes'] >= $now);
-    }
-    // Fallback: explicit 'Open' status column
-    if (!$isOpen && isset($row['status']) && $row['status'] === 'Open') {
-        $isOpen = true;
     }
 
     if (!$isOpen) {
@@ -401,13 +398,11 @@ function getEnrollmentConfiguration() {
     }
 
     // Determine if enrollment is currently open via date comparison
+    // Note: status column is metadata only and does NOT override the closing date
     $isOpen = false;
     if (!empty($row['enrollment_opens']) && !empty($row['enrollment_closes'])) {
         $now = date('Y-m-d');
         $isOpen = ($row['enrollment_opens'] <= $now && $row['enrollment_closes'] >= $now);
-    }
-    if (!$isOpen && isset($row['status']) && $row['status'] === 'Open') {
-        $isOpen = true;
     }
 
     return [

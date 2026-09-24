@@ -15,7 +15,7 @@
  *              grade_level, school_year, enrollment_type, parent_name,
  *              parent_relationship, parent_contact, parent_address, parent_email,
  *              prev_school, prev_school_address, last_grade, prev_sy,
- *              learner_ref_no, documents, status, created_at, updated_at, notes
+ *              learner_ref_no, documents, status, created_at
  *   - Accessible to admin profile only
  */
 
@@ -63,76 +63,147 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($action)) {
 
     $conn = db_conn();
 
+    if ($action === 'under_review') {
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'under_review' WHERE id = $applicationId";
+        pg_query($conn, $sql);
+        header('Location: admin_enroll.php?under_review=' . $applicationId);
+        exit;
+    }
+
     if ($action === 'approve') {
-        $notes = (string)($_POST['notes'] ?? '');
-        $notes_esc = pg_escape_string($conn, $notes);
-        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'Approved', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId";
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'approved' WHERE id = $applicationId";
         pg_query($conn, $sql);
         header('Location: admin_enroll.php?approved=' . $applicationId);
         exit;
     }
 
     if ($action === 'reject') {
-        $notes = (string)($_POST['notes'] ?? '');
-        $notes_esc = pg_escape_string($conn, $notes);
-        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'Rejected', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId";
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'rejected' WHERE id = $applicationId";
         pg_query($conn, $sql);
         header('Location: admin_enroll.php?rejected=' . $applicationId);
         exit;
     }
 
     if ($action === 'enroll') {
-        $app = db_fetch_one("SELECT * FROM kerrfairtex.enrollment_applications WHERE id = $applicationId");
+        $applicationId = (int)$applicationId;
+        if ($applicationId <= 0) {
+            die('Invalid application ID.');
+        }
+        
+        $conn = db_conn();
+        db_trans_start();
+        
+        // Lock application row for update and validate
+        $appResult = DBQuery("SELECT id, status, learner_name, first_name, middle_name, last_name, name_suffix, grade_level, student_id FROM kerrfairtex.enrollment_applications WHERE id = $applicationId FOR UPDATE");
+        $app = db_fetch_row($appResult);
+        if (is_array($app)) {
+            $app = array_change_key_case($app, CASE_LOWER);
+        }
+        
         if (!$app) {
+            db_trans_rollback();
             die('Application not found.');
         }
-
+        
+        // Validate status is approved
+        if ($app['status'] !== 'approved') {
+            db_trans_rollback();
+            die('Application must be approved before enrollment.');
+        }
+        
+        // Check if already enrolled (by status or student_id link)
+        if ($app['status'] === 'enrolled' || !empty($app['student_id'])) {
+            db_trans_rollback();
+            die('Application already enrolled.');
+        }
+        
+        // Resolve grade_id from school_gradelevels - no fallback to 0
+        $gradeId = resolveGradeId($app['grade_level'] ?? '');
+        if ($gradeId === null) {
+            db_trans_rollback();
+            die('Invalid grade level: ' . htmlspecialchars($app['grade_level'] ?? ''));
+        }
+        
+        // Read structured name columns directly from application
         $firstName = (string)($app['first_name'] ?? '');
         $lastName = (string)($app['last_name'] ?? '');
+        $middleName = (string)($app['middle_name'] ?? '');
+        $nameSuffix = (string)($app['name_suffix'] ?? '');
+        if (empty($firstName) && empty($lastName)) {
+            $learnerName = (string)($app['learner_name'] ?? '');
+            if (strpos($learnerName, ' ') !== false) {
+                $nameParts = explode(' ', $learnerName, 2);
+                $firstName = $firstName ?: ($nameParts[0] ?? '');
+                $lastName = $lastName ?: ($nameParts[1] ?? '');
+            } else {
+                $firstName = $firstName ?: $learnerName;
+            }
+        }
+        
+        if (empty($firstName) || empty($lastName)) {
+            db_trans_rollback();
+            die('Student first name and last name are required.');
+        }
+        
+        // Generate unique username
         $baseUsername = strtolower(substr($firstName, 0, 1) . $lastName);
         $username = $baseUsername;
-
-        // Ensure unique username
         $counter = 1;
-        while (db_fetch_one("SELECT STUDENT_ID FROM \"students\" WHERE USERNAME = '" . pg_escape_string($conn, $username) . "'")) {
+        while (true) {
+            $checkResult = DBQuery("SELECT student_id FROM kerrfairtex.students WHERE username = '" . pg_escape_string($conn, $username) . "'");
+            $checkRow = db_fetch_row($checkResult);
+            if (!$checkRow) break;
             $username = $baseUsername . $counter;
             $counter++;
         }
-
-        // Generate random password
+        
+        // Generate password
         $plainPassword = substr(bin2hex(random_bytes(8)), 0, 10);
         $hashedPassword = crypt($plainPassword, '$6$' . substr(sha1((string)random_int(999999999, 9999999999)), 0, 16));
-
+        
         $year = (int)explode('-', $schoolYear)[0];
-
-        db_trans_start();
-        $studentId = db_insert('students', [
-            'USERNAME' => $username,
-            'PASSWORD' => $hashedPassword,
-            'FIRST_NAME' => $firstName,
-            'LAST_NAME' => $lastName,
-            'MIDDLE_NAME' => (string)($app['middle_name'] ?? ''),
-            'BIRTH_DATE' => (string)($app['birth_date'] ?? ''),
-            'SEX' => (string)($app['sex'] ?? ''),
-            'ADDRESS' => (string)($app['address'] ?? ''),
-            'SYEAR' => $year,
-        ]);
-
-        db_insert('student_enrollment', [
-            'STUDENT_ID' => $studentId,
-            'SCHOOL_ID' => 1,
-            'SYEAR' => $year,
-            'START_DATE' => (string)($app['classes_begin'] ?? date('Y-m-d')),
-            'END_DATE' => null,
-            'GRADE_ID' => (int)($app['grade_level'] ?? 0),
-        ]);
+        
+        // Create student record using DBQuery (db_insert does not exist)
+        $sql = "INSERT INTO kerrfairtex.students (username, password, first_name, last_name, middle_name, name_suffix, created_at)
+                VALUES ('" . pg_escape_string($conn, $username) . "',
+                        '" . pg_escape_string($conn, $hashedPassword) . "',
+                        '" . pg_escape_string($conn, $firstName) . "',
+                        '" . pg_escape_string($conn, $lastName) . "',
+                        '" . pg_escape_string($conn, $middleName) . "',
+                        '" . pg_escape_string($conn, $nameSuffix) . "',
+                        NOW())";
+        $result = DBQuery($sql);
+        if ($result === false) {
+            db_trans_rollback();
+            die('Failed to create student record.');
+        }
+        $studentId = DBLastInsertID();
+        
+        // Create student_enrollment
+        $sql = "INSERT INTO kerrfairtex.student_enrollment (syear, school_id, student_id, grade_id, start_date)
+                VALUES (" . $year . ", 1, " . (int)$studentId . ", " . (int)$gradeId . ", NOW())";
+        $result = DBQuery($sql);
+        if ($result === false) {
+            db_trans_rollback();
+            die('Failed to create student enrollment.');
+        }
+        
+        // Update application status
+        $sql = "UPDATE kerrfairtex.enrollment_applications SET status = 'enrolled', student_id = " . (int)$studentId . " WHERE id = $applicationId";
+        $result = DBQuery($sql);
+        if ($result === false) {
+            db_trans_rollback();
+            die('Failed to update application status.');
+        }
+        
         db_trans_commit();
-
-        $notes_val = "Student ID: $studentId, Username: $username";
-        $notes_esc = pg_escape_string($conn, $notes_val);
-        pg_query($conn, "UPDATE kerrfairtex.enrollment_applications SET status = 'Enrolled', notes = '$notes_esc', updated_at = CURRENT_TIMESTAMP WHERE id = $applicationId");
-
+        
+        // NOTE: student_id column requires migration:
+        // ALTER TABLE kerrfairtex.enrollment_applications ADD COLUMN IF NOT EXISTS student_id INTEGER;
+        // After migration, add: student_id = " . (int)$studentId . " to the UPDATE above
+        
         header('Location: admin_enroll.php?enrolled=' . $applicationId . '&student_id=' . $studentId);
+        exit;
         exit;
     }
 }
@@ -160,8 +231,8 @@ $page = min($page, $totalPages);
 
 $applications = db_query(
     "SELECT id, ref, learner_name, birth_date, sex, address, grade_level, school_year, "
-    . "enrollment_type, parent_name, parent_contact, status, created_at, updated_at, notes "
-    . "FROM kerrfairtx.enrollment_applications "
+    . "enrollment_type, parent_name, parent_contact, status, created_at "
+    . "FROM kerrfairtex.enrollment_applications "
     . "WHERE $whereSql "
     . "ORDER BY created_at DESC "
     . "LIMIT $perPage OFFSET $offset"
@@ -173,7 +244,7 @@ if (isset($_GET['approved'])) {
 } elseif (isset($_GET['rejected'])) {
     $flash = '<div class="alert alert-warning">Application rejected.</div>';
 } elseif (isset($_GET['enrolled'])) {
-    $flash = '<div class="alert alert-success">Student enrolled successfully. Check notes for credentials.</div>';
+    $flash = '<div class="alert alert-success">Student enrolled successfully.</div>';
 }
 
 $token = csrf_token();
@@ -208,10 +279,11 @@ $token = csrf_token();
       <input type="text" name="search" placeholder="Search ref, learner, parent..." value="<?= htmlspecialchars($search) ?>">
       <select name="status">
         <option value="">All statuses</option>
-        <option value="Submitted" <?= $statusFilter === 'Submitted' ? 'selected' : '' ?>>Submitted</option>
-        <option value="Approved" <?= $statusFilter === 'Approved' ? 'selected' : '' ?>>Approved</option>
-        <option value="Rejected" <?= $statusFilter === 'Rejected' ? 'selected' : '' ?>>Rejected</option>
-        <option value="Enrolled" <?= $statusFilter === 'Enrolled' ? 'selected' : '' ?>>Enrolled</option>
+        <option value="submitted" <?= $statusFilter === 'submitted' ? 'selected' : '' ?>>Submitted</option>
+        <option value="under_review" <?= $statusFilter === 'under_review' ? 'selected' : '' ?>>Under Review</option>
+        <option value="approved" <?= $statusFilter === 'approved' ? 'selected' : '' ?>>Approved</option>
+        <option value="rejected" <?= $statusFilter === 'rejected' ? 'selected' : '' ?>>Rejected</option>
+        <option value="enrolled" <?= $statusFilter === 'enrolled' ? 'selected' : '' ?>>Enrolled</option>
       </select>
       <input type="hidden" name="school_year" value="<?= htmlspecialchars($schoolYear) ?>">
       <button type="submit">Filter</button>
@@ -246,7 +318,13 @@ $token = csrf_token();
               <td><?= htmlspecialchars((string)$app['status']) ?></td>
               <td><?= htmlspecialchars((string)($app['created_at'] ?? '')) ?></td>
               <td>
-                <?php if ((string)$app['status'] === 'Submitted'): ?>
+                <?php if ((string)$app['status'] === 'submitted'): ?>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Mark this application as under review?')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="under_review">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <button type="submit" class="btn-warning">Review</button>
+                  </form>
                   <form method="post" style="display:inline" onsubmit="return confirm('Approve this application?')">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="approve">
@@ -257,10 +335,22 @@ $token = csrf_token();
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="reject">
                     <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
-                    <textarea name="notes" placeholder="Reason" rows="2" cols="20"></textarea><br>
                     <button type="submit" class="btn-danger">Reject</button>
                   </form>
-                <?php elseif ((string)$app['status'] === 'Approved'): ?>
+                <?php elseif ((string)$app['status'] === 'under_review'): ?>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Approve this application?')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="approve">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <button type="submit" class="btn-success">Approve</button>
+                  </form>
+                  <form method="post" style="display:inline" onsubmit="return confirm('Reject this application?')">
+                    <?= csrf_field() ?>
+                    <input type="hidden" name="action" value="reject">
+                    <input type="hidden" name="application_id" value="<?= (int)$app['id'] ?>">
+                    <button type="submit" class="btn-danger">Reject</button>
+                  </form>
+                <?php elseif ((string)$app['status'] === 'approved'): ?>
                   <form method="post" style="display:inline" onsubmit="return confirm('Enroll this student? This will create a student account.')">
                     <?= csrf_field() ?>
                     <input type="hidden" name="action" value="enroll">
@@ -268,7 +358,7 @@ $token = csrf_token();
                     <button type="submit" class="btn-primary">Enroll</button>
                   </form>
                 <?php else: ?>
-                  <span class="muted"><?= htmlspecialchars((string)($app['notes'] ?? '')) ?></span>
+                  <span class="muted"></span>
                 <?php endif; ?>
               </td>
             </tr>
@@ -298,3 +388,78 @@ $token = csrf_token();
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
+
+/**
+ * Resolve grade_id from grade_level text using school_gradelevels table.
+ * Returns null if no match found (caller must handle as error).
+ */
+function resolveGradeId($gradeLevel) {
+    if (empty($gradeLevel)) {
+        return null;
+    }
+    
+    $conn = db_conn();
+    
+    // Normalize the grade level value
+    $normalized = trim($gradeLevel);
+    
+    // Try exact match on short_name or title
+    $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+            WHERE short_name = $1 OR title = $1 
+            ORDER BY id LIMIT 1";
+    $result = pg_query_params($conn, $sql, [$normalized]);
+    
+    if ($result !== false) {
+        $row = pg_fetch_assoc($result);
+        if ($row) {
+            return (int)$row['id'];
+        }
+    }
+    
+    // Try pattern matching: "Grade 7" → match "07" or "7th"
+    if (preg_match('/Grade\s+(\d+)/i', $normalized, $matches)) {
+        $gradeNum = $matches[1];
+        // Try zero-padded format: "07"
+        $padded = str_pad($gradeNum, 2, '0', STR_PAD_LEFT);
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE short_name = $1 OR title = $1 
+                ORDER BY id LIMIT 1";
+        $result = pg_query_params($conn, $sql, [$padded]);
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+        
+        // Try ordinal format: "7th"
+        $ordinal = $gradeNum . 'th';
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE title ILIKE $1 
+                ORDER BY id LIMIT 1";
+        $result = pg_query_params($conn, $sql, [$ordinal]);
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+    }
+    
+    // Try Kinder/Kindergarten
+    if (stripos($normalized, 'kinder') !== false) {
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE short_name = 'KG' OR title ILIKE '%kindergarten%' 
+                ORDER BY id LIMIT 1";
+        $result = pg_query_params($conn, $sql, [$normalized]);
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+    }
+    
+    return null; // No mapping found - caller must treat as error
+}

@@ -7,11 +7,10 @@
  * separate MySQLi layer.
  *
  * Grounded in the live kerrfairtex schema:
- *   - enrollment_applications: id, ref, learner_name, birth_date, sex, birthplace,
- *     address, grade_level, school_year, enrollment_type, parent_name,
- *     parent_relationship, parent_contact, parent_address, parent_email,
- *     prev_school, prev_school_address, last_grade, prev_sy, learner_ref_no,
- *     documents, status, notes, created_at, updated_at
+ *   - enrollment_applications: id, ref, learner_name, first_name, middle_name,
+ *     last_name, name_suffix, birth_date, sex, birthplace, address,
+ *     grade_level, school_year, enrollment_type, parent_name, parent_contact,
+ *     parent_email, prev_school, last_grade, status, created_at
  *   - enrollment_periods: id, school_year, enrollment_opens, enrollment_closes,
  *     classes_begin, grade_levels, status, updated_at
  *   - enrollment_drafts: id, token, payload, status, expires_at, created_at, updated_at
@@ -257,9 +256,14 @@ function resolveEnrollmentPeriod($schoolYear) {
 function handleEnrollmentSubmission($data) {
     $conn = db_conn();
 
+    // Honeypot: if website_url is populated, this is a bot — reject silently
+    if (!empty($data['website_url'])) {
+        throw new Exception('Submission rejected.');
+    }
+
     // Required fields (from the public form after rename)
     $required_fields = [
-        'last_name', 'birth_date', 'laddress',
+        'first_name', 'last_name', 'birth_date', 'laddress',
         'sex', 'birthplace', 'grade_level', 'school_year',
         'etype', 'pname', 'pcontact', 'pschool', 'plastgrade'
     ];
@@ -273,7 +277,10 @@ function handleEnrollmentSubmission($data) {
     // Sanitize and validate all input
     $sanitized = [];
 
+    $sanitized['first_name']      = sanitizeInput($data['first_name'], 'string');
     $sanitized['last_name']       = sanitizeInput($data['last_name'], 'string');
+    $sanitized['middle_name']     = !empty($data['middle_name']) ? sanitizeInput($data['middle_name'], 'string') : null;
+    $sanitized['name_suffix']     = !empty($data['name_suffix']) ? sanitizeInput($data['name_suffix'], 'string') : null;
     $sanitized['birth_date']      = sanitizeInput($data['birth_date'], 'date');
     $sanitized['laddress']        = sanitizeInput($data['laddress'], 'string');
     $sanitized['sex']             = sanitizeInput($data['sex'], 'string');
@@ -289,9 +296,14 @@ function handleEnrollmentSubmission($data) {
     // Optional fields
     $sanitized['pemail'] = !empty($data['pemail']) ? sanitizeInput($data['pemail'], 'email') : null;
 
-    // learner_name: the form sends "last_name" labeled "Learner full name"
-    // We use the full name as entered
-    $learnerName = $sanitized['last_name'];
+    // learner_name: construct from structured name components
+    $nameParts = array_filter([
+        $sanitized['first_name'],
+        $sanitized['middle_name'],
+        $sanitized['last_name'],
+        $sanitized['name_suffix']
+    ], function($p) { return $p !== null && $p !== ''; });
+    $learnerName = implode(' ', $nameParts);
 
     // Resolve enrollment period dynamically from school_year
     $enrollmentPeriodId = resolveEnrollmentPeriod($sanitized['school_year']);
@@ -315,16 +327,21 @@ function handleEnrollmentSubmission($data) {
 
     // INSERT into enrollment_applications matching the LIVE schema
     $sql = "INSERT INTO kerrfairtex.enrollment_applications (
-        ref, learner_name, birth_date, sex, birthplace, address,
+        ref, learner_name, first_name, middle_name, last_name, name_suffix,
+        birth_date, sex, birthplace, address,
         grade_level, school_year, enrollment_type,
         parent_name, parent_contact, parent_email,
         prev_school, last_grade,
         status, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'Submitted', NOW())";
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'Submitted', NOW())";
 
     $params = [
         $ref,
         $learnerName,
+        $sanitized['first_name'],
+        $sanitized['middle_name'],
+        $sanitized['last_name'],
+        $sanitized['name_suffix'],
         $sanitized['birth_date'],
         $sanitized['sex'],
         $sanitized['birthplace'],
@@ -421,8 +438,7 @@ function getApplicationStatus($ref) {
         throw new Exception("Invalid reference format.");
     }
 
-    $sql = "SELECT id, ref, learner_name, grade_level, school_year,
-                   enrollment_type, status, created_at
+    $sql = "SELECT ref, status, created_at
             FROM kerrfairtex.enrollment_applications
             WHERE ref = $1";
 
@@ -442,16 +458,33 @@ function getApplicationStatus($ref) {
         ];
     }
 
+    // Map internal status to display status
+    $displayStatus = '';
+    switch ($row['status']) {
+        case 'submitted':
+            $displayStatus = 'Submitted';
+            break;
+        case 'under_review':
+            $displayStatus = 'Under Review';
+            break;
+        case 'approved':
+            $displayStatus = 'Approved';
+            break;
+        case 'rejected':
+            $displayStatus = 'Rejected';
+            break;
+        case 'enrolled':
+            $displayStatus = 'Enrolled';
+            break;
+        default:
+            $displayStatus = ucfirst(str_replace('_', ' ', $row['status']));
+    }
+    
     return [
         'success' => true,
         'found' => true,
         'ref' => $row['ref'],
-        'learner_name' => $row['learner_name'],
-        'grade_level' => $row['grade_level'],
-        'school_year' => $row['school_year'],
-        'enrollment_type' => $row['enrollment_type'],
-        'status' => $row['status'],
-        'submitted_at' => $row['created_at'],
+        'status' => $displayStatus,
     ];
 }
 

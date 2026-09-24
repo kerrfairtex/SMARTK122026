@@ -44,6 +44,14 @@ switch ( $_REQUEST['modfunc'] ) {
                         };
                 </script>
                 <?php
+                // Link to BBNIHS Enrollment Applications (authoritative queue)
+                if ( basename( $_SERVER['PHP_SELF'] ) !== 'admin_enroll.php' ) {
+                        echo '<div style="padding:0.75rem 1rem;background:#f0f9ff;border-bottom:1px solid #bae6fd;font-size:0.9rem;">';
+                        echo '<strong>BBNIHS Enrollment Applications:</strong> ';
+                        echo '<a href="' . dirname( $_SERVER['PHP_SELF'] ) . '/admin_enroll.php" style="color:#1d4ed8;text-decoration:none;font-weight:600;">View Application Queue &rarr;</a>';
+                        echo '</div>';
+                }
+
                 include 'includes/EnrollmentShell.inc.php';
 
                 break;

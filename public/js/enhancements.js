@@ -145,6 +145,8 @@
         wizardForm.addEventListener('submit', function (e) {
             e.preventDefault();
             var result = document.getElementById('wizardResult');
+            var submitBtn = document.getElementById('wizardSubmit');
+            if (submitBtn) submitBtn.disabled = true;
             if (result) result.innerHTML = '<p class="form-note">Submitting&hellip;</p>';
             var data = {};
             new FormData(wizardForm).forEach(function (v, k) { data[k] = v; });

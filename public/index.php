@@ -1579,8 +1579,20 @@ img[width], img[height] {
                         <div data-wizard-step="0">
                             <h4>Learner Information</h4>
                             <div class="form-field">
-                                <label for="last_name">Learner full name *</label>
-                                <input type="text" id="last_name" name="last_name" required placeholder="e.g. Aisha S. Indal">
+                                <label for="first_name">First name *</label>
+                                <input type="text" id="first_name" name="first_name" required placeholder="e.g. Aisha">
+                            </div>
+                            <div class="form-field">
+                                <label for="middle_name">Middle name</label>
+                                <input type="text" id="middle_name" name="middle_name" placeholder="e.g. S.">
+                            </div>
+                            <div class="form-field">
+                                <label for="last_name">Last name *</label>
+                                <input type="text" id="last_name" name="last_name" required placeholder="e.g. Indal">
+                            </div>
+                            <div class="form-field">
+                                <label for="name_suffix">Suffix</label>
+                                <input type="text" id="name_suffix" name="name_suffix" placeholder="e.g. Jr.">
                             </div>
                             <div class="form-field">
                                 <label for="birth_date">Date of birth *</label>
@@ -1664,6 +1676,8 @@ img[width], img[height] {
                             <div id="wizardResult" role="status" aria-live="polite" style="margin-top: var(--space-3);"></div>
                         </div>
 
+                        <!-- Honeypot: hidden from humans, bots fill it -->
+                        <input type="text" name="website_url" value="" tabindex="-1" autocomplete="off" style="position:absolute;left:-9999px;opacity:0;height:0;width:0;" aria-hidden="true">
                         <div style="display: flex; gap: var(--space-2); margin-top: var(--space-4);">
                             <button type="button" class="btn btn--ghost" data-wizard-prev>Back</button>
                             <button type="button" class="btn btn--primary" data-wizard-next>Next</button>

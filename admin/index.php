@@ -214,6 +214,13 @@ footer { color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; text-align: center
 <h2>Enrollment applications</h2>
 <div class="card">
     <p><strong>Total submitted:</strong> <?php echo $apps_total; ?></p>
+    <p>
+        <strong>Submitted:</strong> <?php echo (int)($apps_by_status['submitted'] ?? 0); ?> &middot;
+        <strong>Under Review:</strong> <?php echo (int)($apps_by_status['under_review'] ?? 0); ?> &middot;
+        <strong>Approved:</strong> <?php echo (int)($apps_by_status['approved'] ?? 0); ?> &middot;
+        <strong>Rejected:</strong> <?php echo (int)($apps_by_status['rejected'] ?? 0); ?> &middot;
+        <strong>Enrolled:</strong> <?php echo (int)($apps_by_status['enrolled'] ?? 0); ?>
+    </p>
     <p><strong>Last submission:</strong>
         <?php if ($last_app): ?>
             <?php echo h($last_app['ref']); ?> &mdash; <?php echo h($last_app['learner_name'] ?: '(no name)'); ?>
@@ -239,6 +246,7 @@ footer { color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; text-align: center
             <?php endforeach; ?>
         </table>
     <?php endif; ?>
+    <p style="margin-top:0.75rem;"><a href="admin_enroll.php" style="color:#1d4ed8;text-decoration:none;font-weight:600;">View Enrollment Applications &rarr;</a></p>
 </div>
 
 <h2>Direct links</h2>

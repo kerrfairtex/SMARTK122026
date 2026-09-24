@@ -318,9 +318,9 @@ function handleEnrollmentSubmission($data) {
         ref, learner_name, birth_date, sex, birthplace, address,
         grade_level, school_year, enrollment_type,
         parent_name, parent_contact, parent_email,
-        prev_school, last_grade, enrollment_period_id,
+        prev_school, last_grade,
         status, created_at, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, 'Submitted', NOW(), NOW())";
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'Submitted', NOW(), NOW())";
 
     $params = [
         $ref,
@@ -337,7 +337,6 @@ function handleEnrollmentSubmission($data) {
         $sanitized['pemail'],
         $sanitized['pschool'],
         $sanitized['plastgrade'],
-        (string)$enrollmentPeriodId,
     ];
 
     $result = pg_query_params($conn, $sql, $params);

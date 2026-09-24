@@ -319,8 +319,8 @@ function handleEnrollmentSubmission($data) {
         grade_level, school_year, enrollment_type,
         parent_name, parent_contact, parent_email,
         prev_school, last_grade,
-        status, created_at, updated_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'Submitted', NOW(), NOW())";
+        status, created_at
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'Submitted', NOW())";
 
     $params = [
         $ref,

@@ -146,8 +146,12 @@
             e.preventDefault();
             var result = document.getElementById('wizardResult');
             var submitBtn = document.getElementById('wizardSubmit');
-            if (submitBtn) submitBtn.disabled = true;
-            if (result) result.innerHTML = '<p class="form-note">Submitting&hellip;</p>';
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.classList.add('btn--loading');
+                submitBtn.textContent = 'Submitting...';
+            }
+            if (result) result.innerHTML = '<p class="form-note" role="status">Submitting your application&hellip;</p>';
             var data = {};
             new FormData(wizardForm).forEach(function (v, k) { data[k] = v; });
             fetch('enroll_api.php?action=submit', {
@@ -159,13 +163,51 @@
             .then(function (res) {
                 if (!result) return;
                 if (res.ok && res.j.success && res.j.ref) {
-                    result.innerHTML = '<p style="color: #4ade80;">Application received. Reference: <strong>' + res.j.ref + '</strong></p>';
+                    // Build success state with reference and status-check link
+                    var statusUrl = 'enroll_status.php?ref=' + encodeURIComponent(res.j.ref);
+                    result.innerHTML = '<div class="submission-success" role="alert">' +
+                        '<div class="submission-success__icon" aria-hidden="true">&#10003;</div>' +
+                        '<h3 class="submission-success__title">Application Submitted Successfully</h3>' +
+                        '<p class="submission-success__ref">Application Reference: <strong>' + res.j.ref + '</strong></p>' +
+                        '<p class="submission-success__status">Status: Submitted</p>' +
+                        '<p class="submission-success__help">Please save your application reference. You can use it to check your enrollment status.</p>' +
+                        '<a href="' + statusUrl + '" class="btn btn--primary submission-success__link">Check Application Status</a>' +
+                        '</div>';
+                    // Re-enable submit for another application
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('btn--loading');
+                        submitBtn.textContent = 'Submit Application';
+                    }
                 } else {
-                    result.innerHTML = '<p style="color: var(--reef-coral);">' + (res.j.error || res.j.message || 'Submission failed. Please try again.') + '</p>';
+                    // Build error state with actionable message
+                    var errorMsg = res.j.error || res.j.message || 'Submission failed. Please try again.';
+                    var errorDetail = '';
+                    if (res.j.error && res.j.error.includes('Missing required field')) {
+                        errorDetail = '<p class="submission-error__detail">Please review the highlighted information and try again.</p>';
+                    } else if (res.j.error && (res.j.error.includes('not currently open') || res.j.error.includes('closed'))) {
+                        errorDetail = '<p class="submission-error__detail">Enrollment is currently closed. Please contact the school for assistance.</p>';
+                    } else if (res.j.error && res.j.error.includes('rate limit')) {
+                        errorDetail = '<p class="submission-error__detail">Too many attempts. Please wait a moment and try again.</p>';
+                    }
+                    result.innerHTML = '<div class="submission-error" role="alert">' +
+                        '<div class="submission-error__icon" aria-hidden="true">&#10007;</div>' +
+                        '<h3 class="submission-error__title">We could not submit your application</h3>' +
+                        '<p class="submission-error__message">' + errorMsg + '</p>' +
+                        errorDetail +
+                        '<p class="submission-error__help">Your information has been preserved. Please correct the highlighted fields and try again.</p>' +
+                        '</div>';
                 }
             })
             .catch(function () {
-                if (result) result.innerHTML = '<p style="color: var(--reef-coral);">Network error. Please try again or submit at the school.</p>';
+                if (result) result.innerHTML = '<div class="submission-error" role="alert">' +
+                    '<div class="submission-error__icon" aria-hidden="true">&#10007;</div>' +
+                    '<h3 class="submission-error__title">Service Temporarily Unavailable</h3>' +
+                    '<p class="submission-error__message">Your application could not be submitted because the service is temporarily unavailable.</p>' +
+                    '<p class="submission-error__help">Please try again. If the problem persists, you may submit physically at the school.</p>' +
+                    '</div>';
+                // Re-enable submit button on network error so user can retry
+                if (submitBtn) submitBtn.disabled = false;
             });
         });
 

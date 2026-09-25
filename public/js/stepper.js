@@ -58,7 +58,45 @@
 
     var nextBtn = wizard.querySelector('[data-wizard-next]');
     var prevBtn = wizard.querySelector('[data-wizard-prev]');
-    if (nextBtn) nextBtn.addEventListener('click', function () { show(current + 1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () {
+            // Validate required fields in current step before advancing
+            var panel = steps[current];
+            if (panel) {
+                var required = panel.querySelectorAll('[required]');
+                var missing = [];
+                required.forEach(function (r) {
+                    if (!r.value || r.value.trim() === '') {
+                        missing.push(r);
+                        r.classList.add('field-error');
+                        // Remove error class on input
+                        r.addEventListener('input', function handler() {
+                            r.classList.remove('field-error');
+                            r.removeEventListener('input', handler);
+                        });
+                    }
+                });
+                if (missing.length > 0) {
+                    // Show inline error and don't advance
+                    var errEl = panel.querySelector('.step-error');
+                    if (!errEl) {
+                        errEl = document.createElement('p');
+                        errEl.className = 'step-error';
+                        errEl.style.color = 'var(--reef-coral, #e05252)';
+                        errEl.style.fontSize = '0.875rem';
+                        errEl.style.marginTop = '0.5rem';
+                        panel.appendChild(errEl);
+                    }
+                    errEl.textContent = missing.length === 1
+                        ? 'Please fill in the required field before continuing.'
+                        : 'Please fill in all required fields before continuing.';
+                    // Scroll to first missing field
+                    missing[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    missing[0].focus();
+                    return;
+                }
+            }
+            show(current + 1);
+        });
     if (prevBtn) prevBtn.addEventListener('click', function () { show(current - 1); });
 
     // Mark a step done when its required fields are filled (lightweight validation)

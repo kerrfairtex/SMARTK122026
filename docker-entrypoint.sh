@@ -18,7 +18,7 @@ fi
 
 # Dynamically generate config.inc.php from runtime environment variables
 echo "[INFO] Generating config.inc.php..."
-cat << 'EOF' > /var/www/html/config.inc.php
+cat << 'EOFCONFIG' > /var/www/html/config.inc.php
 <?php
 $DatabaseServer = getenv('DB_SERVER') ?: (getenv('DATABASE_SERVER') ?: 'db.ebyepweqwihdvjecrufk.supabase.co');
 $DatabaseUsername = getenv('DB_USER') ?: (getenv('DATABASE_USER') ?: 'postgres');
@@ -33,7 +33,7 @@ $RosarioErrorsAddress = '';
 $DefaultSyear = getenv('DEFAULT_SYEAR') ?: '2026';
 $Theme = getenv('THEME') ?: 'FlatSIS';
 $SupabaseSSLMode = getenv('SUPABASE_SSL_MODE') ?: 'require';
-EOF
+EOFCONFIG
 
 chown www-data:www-data /var/www/html/config.inc.php
 chmod 640 /var/www/html/config.inc.php
@@ -51,7 +51,11 @@ echo "Listen ${LISTEN_PORT}" > /etc/apache2/ports.conf
 # Enable mod_expires (needed for ExpiresActive / ExpiresDefault directives)
 a2enmod expires 2>/dev/null || true
 
-cat << EOF > /etc/apache2/sites-available/000-default.conf
+# Enable mod_rewrite for routing
+a2enmod rewrite 2>/dev/null || true
+
+# Create Apache virtual host with proper routing
+cat << 'EOFVHOST' > /etc/apache2/sites-available/000-default.conf
 <VirtualHost *:${LISTEN_PORT}>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
@@ -61,17 +65,19 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
         Require all granted
     </Directory>
 
+    # --- Routing Rules ---
+    # /login.php -> index.php (login processor)
+    RewriteEngine On
+    RewriteRule ^login\.php$ index.php [L]
+    
+    # Protect internal files
+    RewriteRule ^vendor/ - [F,L]
+    RewriteRule (^|/)locale/.*\.(po|pot)$ - [F,L]
+    RewriteRule ^(?!assets/FileUploads/).*\.(md|sql)$ - [F,L]
+    RewriteRule (^|/)\.(?!well-known) - [F,L]
+    RewriteRule (^|/)(LICENSE|COPYRIGHT|composer\.lock|composer\.json|package\.json)$ - [F,L]
+
     # --- Cache lifetimes for static assets ---
-    # PageSpeed flagged 1,158 KiB of re-downloaded static assets. These
-    # directives set Cache-Control + Expires so browsers cache for repeat
-    # visits. Service worker (pwabuilder-sw.js) handles cache invalidation
-    # via version-bumped CACHE_NAME on every deploy.
-    #
-    # TTL chosen as 1 day (86400s) rather than 1 year because the HTML
-    # references assets by bare path (no ?v=... query string). 1 day means
-    # unserviced visitors (no SW) get fresh content within 24h of deploy.
-    # 1 year would be wrong: stale forever for visitors without SW.
-    # To upgrade to 1 year, version every asset URL in public/index.php.
     <LocationMatch "\.(jpg|jpeg|png|webp|gif|ico|svg)$">
         Header set Cache-Control "public, max-age=86400"
         ExpiresActive On
@@ -82,37 +88,17 @@ cat << EOF > /etc/apache2/sites-available/000-default.conf
         ExpiresActive On
         ExpiresDefault "access plus 1 day"
     </LocationMatch>
-    # Service worker itself: never cache, so updates take effect immediately
+    # Service worker itself: never cache
     <LocationMatch "pwabuilder-sw\.js$">
         Header set Cache-Control "no-cache, no-store, must-revalidate"
         Header set Pragma "no-cache"
         Header set Expires "0"
     </LocationMatch>
 
-    ErrorLog \${APACHE_LOG_DIR}/error.log
-    CustomLog \${APACHE_LOG_DIR}/access.log combined
+    ErrorLog ${APACHE_LOG_DIR}/error.log
+    CustomLog ${APACHE_LOG_DIR}/access.log combined
 </VirtualHost>
-EOF
-
-# --- Swap landing page in as the docroot (idempotent, at container start) ---
-# Render build-time `mv` silently failed on the deployed instance, so the login
-# screen kept serving as `/`. This runs every start but only once thanks to the guard.
-echo "[SWAP] checking entry-point swap (index.php <-> login.php)..."
-if [ ! -f /var/www/html/login.php ]; then
-    if [ -f /var/www/html/index.php ] && [ -f /var/www/html/public/index.php ]; then
-        mv /var/www/html/index.php /var/www/html/login.php
-        mv /var/www/html/public/index.php /var/www/html/index.php
-        echo "[SWAP] done: / is now the landing page, /login.php is the RosarioSIS login."
-    else
-        echo "[SWAP] SKIPPED: source files missing (index.php=$([ -f /var/www/html/index.php ] && echo yes || echo no), public/index.php=$([ -f /var/www/html/public/index.php ] && echo yes || echo no))"
-    fi
-else
-    echo "[SWAP] already applied (login.php exists)."
-    if [ -f /var/www/html/public/index.php ]; then
-        cp /var/www/html/public/index.php /var/www/html/index.php
-        echo "[SWAP] synced public/index.php -> index.php ($(wc -c < /var/www/html/index.php) bytes)"
-    fi
-fi
+EOFVHOST
 
 # --- Expose landing-page photos at /assets/images (survives the Render disk
 # mount at /var/www/html/assets, which would otherwise shadow the image tree) ---
@@ -121,16 +107,13 @@ chmod 755 /var/www/html/public /var/www/html/public/assets 2>/dev/null || true
 # create it from the source tree or skip the symlink to avoid dangling target.
 if [ -d /var/www/html/public/assets/images ]; then
     ln -sfn /var/www/html/public/assets/images /var/www/html/assets/images
-    echo "[SWAP] landing images symlinked to /assets/images."
+    echo "[INFO] landing images symlinked to /assets/images."
 else
-    echo "[SWAP] WARN: /var/www/html/public/assets/images missing; landing images NOT symlinked."
+    echo "[WARN] /var/www/html/public/assets/images missing; landing images NOT symlinked."
 fi
 
-# --- Expose landing-page CSS/JS bundles at /css and /js (the landing page
-# references /css/components.css and /js/{main,reveal,enhancements,stepper}.js
-# at the docroot; without these symlinks every CSS/JS asset 404s and the page
-# renders unstyled with no JS. Mirror the image-symlink pattern above.
-echo "[SWAP] symlinking landing CSS/JS bundles from public/ -> docroot..."
+# --- Expose landing-page CSS/JS bundles at /css and /js ---
+echo "[INFO] symlinking landing CSS/JS bundles from public/ -> docroot..."
 mkdir -p /var/www/html/css /var/www/html/js
 ln -sfn /var/www/html/public/css/components.css /var/www/html/css/components.css
 ln -sfn /var/www/html/public/css/base.css       /var/www/html/css/base.css
@@ -139,19 +122,9 @@ ln -sfn /var/www/html/public/js/main.js         /var/www/html/js/main.js
 ln -sfn /var/www/html/public/js/reveal.js       /var/www/html/js/reveal.js
 ln -sfn /var/www/html/public/js/enhancements.js /var/www/html/js/enhancements.js
 ln -sfn /var/www/html/public/js/stepper.js      /var/www/html/js/stepper.js
-echo "[SWAP] CSS/JS bundles symlinked."
+echo "[INFO] CSS/JS bundles symlinked."
 
 # --- Inject build version into cache-busting markers ---
-# Render exposes $RENDER_GIT_COMMIT (full SHA) at runtime. Use the short SHA
-# so every deploy automatically gets a unique CACHE_NAME and a matching
-# <!-- build: ... --> marker in the landing HTML. This way PWA users get
-# the new asset bundle on next visit (activate handler purges old cache)
-# and the rendered HTML source proves which commit is live.
-#
-# Note: the SWAP above mv's public/index.php → index.php on first start, then
-# cp's it on subsequent restarts. We edit BOTH paths so the build marker is
-# updated regardless of which one the SWAP left in place. Editing the source
-# also ensures the next cold-start SWAP picks up our marker.
 BUILD_SHA="${RENDER_GIT_COMMIT:-local-dev}"
 BUILD_SHORT="$(printf '%s' "$BUILD_SHA" | cut -c1-8)"
 CACHE_NAME="smartcamp-k12-${BUILD_SHORT}"

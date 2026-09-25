@@ -908,3 +908,25 @@ function SQLLimitForList( $sql_count, $limit = 1000 )
 		// Page > 1: add OFFSET.
 		( $LO_page > 1 ? " OFFSET " . ( $LO_page -1 ) * $limit : '' );
 }
+
+/**
+ * Fetch a single value from a query result
+ *
+ * @since 12.9.2
+ *
+ * @param string $sql SQL query
+ * @return mixed Single value or false
+ */
+function db_fetch_one($sql)
+{
+    $result = DBQuery($sql);
+    if ($result === false) {
+        return false;
+    }
+    $row = db_fetch_row($result);
+    if ($row) {
+        // Return the first column value
+        return array_values($row)[0];
+    }
+    return false;
+}

@@ -330,7 +330,7 @@ function handleEnrollmentSubmission($data) {
         parent_name, parent_contact, parent_email,
         prev_school, last_grade,
         status, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'Submitted', NOW())";
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'submitted', NOW())";
 
     $params = [
         $ref,
@@ -362,7 +362,7 @@ function handleEnrollmentSubmission($data) {
     return [
         'success' => true,
         'ref' => $ref,
-        'status' => 'Submitted',
+        'status' => 'submitted',
         'message' => 'Enrollment application submitted successfully'
     ];
 }

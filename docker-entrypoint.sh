@@ -66,9 +66,18 @@ cat << 'EOFVHOST' > /etc/apache2/sites-available/000-default.conf
     </Directory>
 
     # --- Routing Rules ---
-    # /login.php -> index.php (login processor)
     RewriteEngine On
+    
+    # / -> public/index.php (landing page)
+    RewriteRule ^$ public/index.php [L]
+    
+    # /login.php -> index.php (login processor)
     RewriteRule ^login\.php$ index.php [L]
+    
+    # /admin_enroll.php -> admin_enroll.php (no change)
+    # /enroll_api.php -> enroll_api.php (no change)
+    # /enroll_status.php -> enroll_status.php (no change)
+    # /public/... -> public/... (static assets)
     
     # Protect internal files
     RewriteRule ^vendor/ - [F,L]

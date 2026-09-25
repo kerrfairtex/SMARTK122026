@@ -198,9 +198,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($action)) {
         
         db_trans_commit();
         
-        // NOTE: student_id column requires migration:
-        // ALTER TABLE kerrfairtex.enrollment_applications ADD COLUMN IF NOT EXISTS student_id INTEGER;
-        // After migration, add: student_id = " . (int)$studentId . " to the UPDATE above
         
         header('Location: admin_enroll.php?enrolled=' . $applicationId . '&student_id=' . $studentId);
         exit;
@@ -248,6 +245,88 @@ if (isset($_GET['approved'])) {
 }
 
 $token = csrf_token();
+
+/**
+ * Resolve grade_id from grade_level text using school_gradelevels table.
+ * Returns null if no match found (caller must handle as error).
+ */
+function resolveGradeId($gradeLevel) {
+    if (empty($gradeLevel)) {
+        return null;
+    }
+    
+    $conn = db_conn();
+    
+    // Normalize the grade level value
+    $normalized = trim($gradeLevel);
+    
+    // Try exact match on short_name or title
+    $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+            WHERE short_name = $1 OR title = $1 
+            ORDER BY id LIMIT 1";
+    $result = pg_query_params($conn, $sql, [$normalized]);
+    
+    if ($result !== false) {
+        $row = pg_fetch_assoc($result);
+        if ($row) {
+            return (int)$row['id'];
+        }
+    }
+    
+    // Try pattern matching: "Grade 7" → match "07" or "7th"
+    if (preg_match('/Grade\s+(\d+)/i', $normalized, $matches)) {
+        $gradeNum = $matches[1];
+        // Try zero-padded format: "07"
+        $padded = str_pad($gradeNum, 2, '0', STR_PAD_LEFT);
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE short_name = $1 OR title = $1 
+                ORDER BY id LIMIT 1";
+        $result = pg_query_params($conn, $sql, [$padded]);
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+        
+        // Try ordinal format with CORRECT suffixes: 1st, 2nd, 3rd, 4th, 5th, 6th, 7th, 8th, 9th, 10th, 11th, 12th
+        $suffixes = [
+            '1' => 'st', '2' => 'nd', '3' => 'rd',
+            '4' => 'th', '5' => 'th', '6' => 'th',
+            '7' => 'th', '8' => 'th', '9' => 'th',
+            '10' => 'th', '11' => 'th', '12' => 'th'
+        ];
+        $suffix = $suffixes[$gradeNum] ?? 'th';
+        $ordinal = $gradeNum . $suffix;
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE title ILIKE $1 
+                ORDER BY id LIMIT 1";
+        $result = pg_query_params($conn, $sql, [$ordinal]);
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+    }
+    
+    // Try Kinder/Kindergarten - FIXED: no parameter needed since SQL has no placeholder
+    if (stripos($normalized, 'kinder') !== false) {
+        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
+                WHERE short_name = 'KG' OR title ILIKE '%kindergarten%' 
+                ORDER BY id LIMIT 1";
+        $result = pg_query($conn, $sql);  // No params needed
+        if ($result !== false) {
+            $row = pg_fetch_assoc($result);
+            if ($row) {
+                return (int)$row['id'];
+            }
+        }
+    }
+    
+    return null; // No mapping found - caller must treat as error
+}
+
 
 ?><!doctype html>
 <html lang="en">
@@ -388,78 +467,3 @@ $token = csrf_token();
   <script src="assets/js/main.js"></script>
 </body>
 </html>
-
-
-/**
- * Resolve grade_id from grade_level text using school_gradelevels table.
- * Returns null if no match found (caller must handle as error).
- */
-function resolveGradeId($gradeLevel) {
-    if (empty($gradeLevel)) {
-        return null;
-    }
-    
-    $conn = db_conn();
-    
-    // Normalize the grade level value
-    $normalized = trim($gradeLevel);
-    
-    // Try exact match on short_name or title
-    $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
-            WHERE short_name = $1 OR title = $1 
-            ORDER BY id LIMIT 1";
-    $result = pg_query_params($conn, $sql, [$normalized]);
-    
-    if ($result !== false) {
-        $row = pg_fetch_assoc($result);
-        if ($row) {
-            return (int)$row['id'];
-        }
-    }
-    
-    // Try pattern matching: "Grade 7" → match "07" or "7th"
-    if (preg_match('/Grade\s+(\d+)/i', $normalized, $matches)) {
-        $gradeNum = $matches[1];
-        // Try zero-padded format: "07"
-        $padded = str_pad($gradeNum, 2, '0', STR_PAD_LEFT);
-        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
-                WHERE short_name = $1 OR title = $1 
-                ORDER BY id LIMIT 1";
-        $result = pg_query_params($conn, $sql, [$padded]);
-        if ($result !== false) {
-            $row = pg_fetch_assoc($result);
-            if ($row) {
-                return (int)$row['id'];
-            }
-        }
-        
-        // Try ordinal format: "7th"
-        $ordinal = $gradeNum . 'th';
-        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
-                WHERE title ILIKE $1 
-                ORDER BY id LIMIT 1";
-        $result = pg_query_params($conn, $sql, [$ordinal]);
-        if ($result !== false) {
-            $row = pg_fetch_assoc($result);
-            if ($row) {
-                return (int)$row['id'];
-            }
-        }
-    }
-    
-    // Try Kinder/Kindergarten
-    if (stripos($normalized, 'kinder') !== false) {
-        $sql = "SELECT id FROM kerrfairtex.school_gradelevels 
-                WHERE short_name = 'KG' OR title ILIKE '%kindergarten%' 
-                ORDER BY id LIMIT 1";
-        $result = pg_query_params($conn, $sql, [$normalized]);
-        if ($result !== false) {
-            $row = pg_fetch_assoc($result);
-            if ($row) {
-                return (int)$row['id'];
-            }
-        }
-    }
-    
-    return null; // No mapping found - caller must treat as error
-}

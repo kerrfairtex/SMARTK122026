@@ -205,6 +205,7 @@ elseif ( isset( $_POST['USERNAME'] )
 	{
 		$_SESSION['STAFF_ID'] = $login_RET[1]['STAFF_ID'];
 
+        $_SESSION['PROFILE'] = $login_RET[1]['PROFILE'];
 		// Invalidate any active Student session.
 		unset( $_SESSION['STUDENT_ID'] );
 

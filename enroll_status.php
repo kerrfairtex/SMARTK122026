@@ -20,6 +20,18 @@ header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
 
+// Database connection helper (uses existing database.inc.php bootstrap)
+function db_conn() {
+    static $c = null;
+    if ($c === null) {
+        $c = db_start(false);
+        if ($c === false) {
+            throw new Exception('Database unavailable');
+        }
+    }
+    return $c;
+}
+
 // Handle API-style JSON request
 if (isset($_GET['ref']) && !empty($_GET['ref'])) {
     header('Content-Type: application/json; charset=utf-8');

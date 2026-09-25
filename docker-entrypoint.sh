@@ -69,7 +69,7 @@ cat << 'EOFVHOST' > /etc/apache2/sites-available/000-default.conf
     RewriteEngine On
     
     # / -> public/index.php (landing page)
-    RewriteRule ^$ public/index.php [L]
+    RewriteRule ^/?$ public/index.php [L]
     
     # /login.php -> index.php (login processor)
     RewriteRule ^login\.php$ index.php [L]

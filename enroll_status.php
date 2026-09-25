@@ -6,6 +6,7 @@
  * Only exposes status — never reveals learner name, birth date, parent info, etc.
  * 
  * Route: /enroll_status.php?ref=BATU-2026-XXXXXX
+ * JSON API: /enroll_api.php?action=status&ref=BATU-2026-XXXXXX
  */
 
 declare(strict_types=1);
@@ -30,73 +31,6 @@ function db_conn() {
         }
     }
     return $c;
-}
-
-// Handle API-style JSON request
-if (isset($_GET['ref']) && !empty($_GET['ref'])) {
-    header('Content-Type: application/json; charset=utf-8');
-    
-    $ref = trim((string)$_GET['ref']);
-    
-    if (!preg_match('/^BATU-\d{4}-\d{6}$/', $ref)) {
-        http_response_code(404);
-        echo json_encode(['success' => false, 'error' => 'Invalid reference format.']);
-        exit(0);
-    }
-    
-    try {
-        $conn = db_conn();
-        $sql = "SELECT ref, status, created_at FROM kerrfairtex.enrollment_applications WHERE ref = $1";
-        $result = pg_query_params($conn, $sql, [$ref]);
-        
-        if ($result === false) {
-            throw new Exception('Database error');
-        }
-        
-        $row = pg_fetch_assoc($result);
-        
-        if (!$row) {
-            http_response_code(404);
-            echo json_encode(['success' => false, 'error' => 'Application not found.']);
-            exit(0);
-        }
-        
-        // Map internal status to display status
-        $displayStatus = '';
-        switch ($row['status']) {
-            case 'submitted':
-                $displayStatus = 'Submitted';
-                break;
-            case 'under_review':
-                $displayStatus = 'Under Review';
-                break;
-            case 'approved':
-                $displayStatus = 'Approved';
-                break;
-            case 'rejected':
-                $displayStatus = 'Rejected';
-                break;
-            case 'enrolled':
-                $displayStatus = 'Enrolled';
-                break;
-            default:
-                $displayStatus = ucfirst(str_replace('_', ' ', $row['status']));
-        }
-        
-        http_response_code(200);
-        echo json_encode([
-            'success' => true,
-            'ref' => $row['ref'],
-            'status' => $displayStatus,
-            'submitted_at' => $row['created_at'],
-        ]);
-        exit(0);
-        
-    } catch (Exception $e) {
-        http_response_code(500);
-        echo json_encode(['success' => false, 'error' => 'Unable to check status. Please try again.']);
-        exit(0);
-    }
 }
 
 // HTML page for browser access

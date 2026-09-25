@@ -262,7 +262,7 @@ function handleEnrollmentSubmission($data) {
     $required_fields = [
         'first_name', 'last_name', 'birth_date', 'laddress',
         'sex', 'birthplace', 'grade_level', 'school_year',
-        'etype', 'pname', 'pcontact', 'pschool', 'plastgrade'
+        'etype', 'pname', 'pcontact', 'plastgrade'
     ];
 
     foreach ($required_fields as $field) {

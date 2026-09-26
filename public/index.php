@@ -59,12 +59,13 @@ header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
     <meta name="description" content="Batu-Batu National High School, a public K-12 school in Panglima Sugala, Tawi-Tawi, BARMM. Serving Batu-Batu since its conversion to a national high school in 1982.">
     <!-- PWA -->
     <link rel="manifest" href="/public/manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#0A1420">
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="SMARTCAMP-K12">
     <style>
+@import url('base.css');
 /* ============================================================
  * CRITICAL CSS — inlined for first paint
  * tokens + base + above-the-fold components
@@ -246,7 +247,6 @@ html.a11y-large { font-size: 115%; }
  * BEM-ish naming. CSS custom properties come from tokens.css.
  * ===================================================================== */
 
-@import url('base.css');
 
 /* ---------- Buttons ---------- */
 .btn {
@@ -580,7 +580,7 @@ html.a11y-large { font-size: 115%; }
 /* ---------- Hero ---------- */
 .hero {
     position: relative;
-    min-height: 90vh;
+    min-height:  60vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1163,6 +1163,39 @@ img[width], img[height] {
 .form-field textarea {
     max-width: 100%;
 }
+
+/* Enhanced responsive & content rules */
+.gallery-extended { transition: opacity var(--dur-base) var(--ease-standard); }
+.gallery-extended.open { display: block; opacity: 1; }
+.gallery-subheading, .timeline-subheading, .about-subheading {
+    margin-top: var(--space-4);
+    color: var(--sand);
+    font-family: var(--font-display);
+    font-weight: 600;
+}
+/* Responsive design section rhythm */
+#responsive-design .about-card { margin-top: var(--space-3); }
+#responsive-design ul li { margin-bottom: var(--space-1); color: var(--foam); }
+#responsive-design strong { color: var(--sun-gold); }
+#responsive-design code { font-family: var(--font-utility); color: var(--sun-gold); background: rgba(244,180,0,0.1); padding: 0 0.25rem; border-radius: var(--radius-1); }
+
+/* Smooth gallery toggle transition support */
+#extended-gallery { display: none; }
+#extended-gallery.open { display: block; }
+
+/* Cleaned inline-style replacements */
+.hero__seal-wrap { position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0 auto 1.5rem; }
+.hero__seal { position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2; }
+.nav-logo { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
+.gallery-toggle-wrapper { text-align: center; margin: var(--space-4) 0; }
+.gallery-subheading, .timeline-subheading, .about-subheading { margin-top: var(--space-4); color: var(--sand); font-family: var(--font-display); font-weight: 600; }
+.contact-subheading { margin-top: var(--space-5); font-family: var(--font-display); font-weight: 600; color: var(--sand); }
+.contact-note { margin-top: var(--space-3); }
+.wizard-result { margin-top: var(--space-3); }
+.status-open { color: #4ade80; }
+
+.gallery-note { margin-top: var(--space-2); font-size: 0.9rem; color: var(--foam); opacity: 0.9; line-height: 1.6; }
+.gallery-badge { display: inline-block; font-family: var(--font-utility); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sun-gold); background: rgba(244,180,0,0.12); padding: 0.15rem 0.4rem; border-radius: var(--radius-1); margin-right: 0.25rem; border: 1px solid rgba(244,180,0,0.25); }
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
@@ -1182,7 +1215,7 @@ img[width], img[height] {
          checkbox-toggled. -->
     <nav class="top-nav" aria-label="Primary">
         <a href="#home" class="top-nav__brand">
-            <img src="assets/images/logo_small.png" alt="BBNIHS Logo" style="height:32px;width:32px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:8px;">
+            <img src="assets/images/BATUBATULOGO20261111111.jpg" class="nav-logo" alt="BBNIHS Logo" style="vertical-align:middle;margin-right:8px;">
             BBNIHS
         </a>
 
@@ -1221,11 +1254,11 @@ img[width], img[height] {
             <div class="hero__canvas-wrap" aria-hidden="true"></div>
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
-                <div style="margin-bottom: 1.5rem; position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin-left: auto; margin-right: auto;">
-                    <img src="assets/images/batubatulogo.jpg" alt="Batu-Batu National High School Official Seal" style="position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
+                <div class="hero__seal-wrap">
+                    <img src="assets/images/BATUBATULOGO20261111111.jpg" class="hero__seal" alt="Batu-Batu National High School Official Seal" style="position: relative; z-index: 2;">
                 </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
-                <h1 class="hero__title">BATU-BATU</h1>
+                <h1 class="hero__title">Batu-Batu National High School</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>
                 <p class="hero__location">Barangay Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi</p>
                 <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290).</p>
@@ -1302,7 +1335,7 @@ img[width], img[height] {
                 <p class="section-lead">
                     Tawi-Tawi is the Philippines&rsquo; southernmost province &mdash; a region of islands, maritime culture, and diverse communities including the Sama, Jama Mapun, Badjao, and Tausug peoples.
                 </p>
-                <p class="form-note" style="margin-top: var(--space-4); margin-bottom: var(--space-3);">Real photos from the Tawi-Tawi archipelago. The first is vision-verified; the others are region-tagged but pending verification.</p>
+                <p class="form-note">Real photos from the Tawi-Tawi archipelago. The first is vision-verified; the others are region-tagged but pending verification.</p>
                 <div class="photo-strip">
                     <figure><img src="assets/images/tawi-bongao.jpg" alt="Bongao, Tawi-Tawi &mdash; stilt houses over water with mountains in the distance (vision-verified)" loading="lazy" width="1600" height="1201" ></figure>
                     <figure><img src="assets/images/Batu-batu2_full.jpeg" alt="Aerial view of a Tawi-Tawi stilt-house coastal village (vision-verified)" loading="lazy" width="479" height="640" ></figure>
@@ -1340,7 +1373,7 @@ img[width], img[height] {
                     <p class="about-card__body">Maka-Diyos (God-loving) &middot; Maka-tao (People-oriented) &middot; Makakalikasan (Nature-loving) &middot; Makabansa (Nation-loving)</p>
                 </div>
 
-                <h3 style="margin-top: var(--space-5);">School History</h3>
+                <h3 class="about-subheading">School History</h3>
                 <p class="section-spacer-bottom">
                     Batu-Batu National High School traces its roots to a barangay high school serving the Batu-Batu community, and was formally converted into a national high school on <strong>14 November 1982</strong> by Batas Pambansa Blg. 290. The full history is captured in the timeline below. The photos below are the visual record of the school and its community. Where a photo is shown without a caption, it is presented as provided to the SmartCampus team; the school registrar will confirm each subject so it can be captioned properly.
                 </p>
@@ -1352,7 +1385,7 @@ img[width], img[height] {
                      filename; the school registrar will confirm each so the
                      captions can be tightened.
                      ============================================================ -->
-                <h4 style="margin-top: var(--space-4); color: var(--sand);">Campus &amp; community photos</h4>
+                <h4 class="gallery-subheading">Campus &amp; community photos</h4>
                 <div class="photo-strip">
                     <figure>
                         <img src="assets/images/Batu-batu1_full.jpeg" alt="Batu-Batu National High School campus building, two-story concrete with cream and blue trim, trellised grounds in front." loading="lazy" width="738" height="415" >
@@ -1371,25 +1404,30 @@ img[width], img[height] {
                         <figcaption>A BBNIHS learner group photo, taken on campus.</figcaption>
                     </figure>
                 </div>
+<div class="gallery-toggle-wrapper">
+  <button id="toggle-gallery" class="btn btn--ghost">View More Photos</button>
+</div>
+<div id="extended-gallery" class="gallery-extended" style="display: none;">
 
-                <h4 style="margin-top: var(--space-4); color: var(--sand);">More photos &mdash; subject to school confirmation</h4>
+
+                <h4 class="gallery-subheading">More photos &mdash; subject to school confirmation</h4>
                 <p class="form-note" style="margin-bottom: var(--space-3);">Each photo is captioned with the likely subject based on its filename. The school registrar will confirm the actual subject and date of each; until then, captions are provisional.</p>
                 <div class="photo-strip">
                     <figure>
                         <img src="assets/images/bbnihs-baccalaureate.jpeg" alt="School event photo," loading="lazy" width="640" height="480" >
-                                                <p>Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Filename suggests a Baccalaureate Mass / moving-up ceremony. <em>To confirm: which graduating batch and academic year?</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/bbnihs-graduation.jpeg" alt="School event photo," loading="lazy" width="640" height="480" >
-                                                <p>Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Filename suggests a graduation ceremony. <em>To confirm: which batch and date, and is the venue the BBNIHS gym or another location?</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/bbnihs-legacy.jpg" alt="School event photo," loading="lazy" width="554" height="554" >
-                                                <p>Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Filename suggests a legacy / alumni event. <em>To confirm: which alumni batch, and is the photo BBNIHS-specific?</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/bbnihs-scholarship.jpeg" alt="School event photo," loading="lazy" width="738" height="415" >
-                                                <p>Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Filename suggests a scholarship / awards event. <em>To confirm: which scholarship program and school year?</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/bbnihs-staff.jpeg" alt="BBNIHS faculty and staff group photo." loading="lazy" width="720" height="405" >
@@ -1405,35 +1443,35 @@ img[width], img[height] {
                     </figure>
                     <figure>
                         <img src="assets/images/img-01.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-02.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="601" height="510" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-03.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-04.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-05.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="678" height="452" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-06.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-08.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="465" height="659" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-09.jpeg" alt="School photo, awaiting confirmation." loading="lazy" width="554" height="554" >
-                                                <p>Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
+                                                <p class="gallery-note"><span class="gallery-badge">Pending verification</span> Generic filename. <em>To confirm: subject, date, and source of this image.</em></p>
                     </figure>
                     <figure>
                         <img src="assets/images/img-campus.jpg" alt="Campus photo, awaiting confirmation." loading="lazy" width="1600" height="1200" >
@@ -1460,8 +1498,10 @@ img[width], img[height] {
                                                 <p>Filename suggests a campus shot. <em>To confirm: is this BBNIHS or another school, and is the date recent? (Awaiting vision verification before final caption.)</em></p>
                     </figure>
                 </div>
+</div>
 
-                <h4 style="margin-top: var(--space-4); color: var(--sand);">Timeline</h4>
+
+                <h4 class="timeline-subheading">Timeline</h4>
                 <ol class="history-timeline">
                     <li class="history-timeline__item reveal">
                         <p class="history-timeline__year">1966 (candidate)</p>
@@ -1486,7 +1526,7 @@ img[width], img[height] {
                     </li>
                 </ol>
 
-                <div class="empty-state" style="margin-top: var(--space-4);">
+                <div class="empty-state">
                     Faculty directory &mdash; coming soon, pending confirmation from the school registrar.
                 </div>
                 <div class="empty-state">
@@ -1532,10 +1572,10 @@ img[width], img[height] {
                 <p class="section-subtitle">For SY 2026&ndash;2027 &middot; Application status, requirements, and the enrollment wizard</p>
 
                 <!-- Status overview -->
-                <div class="tile-grid" style="margin-bottom: var(--space-4);">
+                <div class="tile-grid">
                     <div class="tile">
                         <p class="tile__label">Status</p>
-                        <p class="tile__value" style="color: #4ade80;">OPEN</p>
+                        <p class="tile__value status-open">OPEN</p>
                     </div>
                     <div class="tile">
                         <p class="tile__label">School Year</p>
@@ -1575,7 +1615,7 @@ img[width], img[height] {
                         <div class="wizard__step">5</div>
                     </div>
 
-                    <form id="wizardForm" style="margin-top: var(--space-4);">
+                    <form id="wizardForm">
                         <div data-wizard-step="0">
                             <h4>Learner Information</h4>
                             <div class="form-field">
@@ -1673,7 +1713,7 @@ img[width], img[height] {
                         <div data-wizard-step="4" hidden>
                             <h4>Review &amp; Submit</h4>
                             <p>No payment is collected here. The school will contact you to complete enrollment.</p>
-                            <div id="wizardResult" role="status" aria-live="polite" style="margin-top: var(--space-3);"></div>
+                            <div id="wizardResult" class="wizard-result" role="status" aria-live="polite"></div>
                         </div>
 
                         <!-- Honeypot: hidden from humans, bots fill it -->
@@ -1739,9 +1779,9 @@ img[width], img[height] {
                 </table>
                 </div>
 
-                <h3 style="margin-top: var(--space-5);">Where We Are</h3>
+                <h3 class="contact-subheading">Where We Are</h3>
                 <p>Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi &middot; BARMM, Philippines</p>
-                <p style="margin-top: var(--space-3);">
+                <p class="contact-note">
                     <a href="https://www.openstreetmap.org/?mlat=4.7&amp;mlon=119.9#map=14/4.7/119.9" target="_blank" rel="noopener" class="btn btn--ghost">Open in OpenStreetMap &rarr;</a>
                 </p>
 
@@ -1750,6 +1790,33 @@ img[width], img[height] {
                 </p>
             </div>
         </section>
+    <!-- Responsive Design & Architecture Note -->
+    <section id="responsive-design" class="reveal surface-tide">
+        <div class="container">
+            <h2 class="section-title">Responsive Design</h2>
+            <p class="section-subtitle">This landing page uses fluid grids, relative units, and media queries to adapt to any screen size or device.</p>
+
+            <div class="about-card">
+                <p class="about-card__heading">Related Terms</p>
+                <p class="about-card__body">
+                    <strong>Adaptive design</strong> uses fixed breakpoints (distinct layouts for phone/tablet/desktop) rather than continuous fluid scaling.<br>
+                    <strong>Mobile-first design</strong> builds the mobile layout first, then progressively enhances for larger screens.<br>
+                    <strong>Fluid/liquid layout</strong> uses percentage, <code>fr</code>, or <code>vw</code> units instead of fixed pixels.<br>
+                    In practice, <strong>responsive</strong> is the umbrella term — implemented here with CSS Grid / Flexbox, <code>clamp()</code> for fluid typography, and container queries where applicable.
+                </p>
+            </div>
+
+            <div class="about-card">
+                <p class="about-card__heading">How This Page Responds</p>
+                <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
+                    <li>• <strong>Desktop (&gt;1024px):</strong> full navigation bar, multi-column photo strips, expanded hero with full seal.</li>
+                    <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
+                    <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
     </main>
 
     <footer class="site-footer">
@@ -1806,5 +1873,26 @@ img[width], img[height] {
     <script src="/js/reveal.js" defer></script>
     <script src="/js/stepper.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
+<script>
+    // Photo gallery toggle
+    const toggleBtn = document.getElementById('toggle-gallery');
+    const gallery = document.getElementById('extended-gallery');
+    if (toggleBtn && gallery) {
+        toggleBtn.addEventListener('click', () => {
+            const isHidden = gallery.style.display === 'none';
+            if (isHidden) {
+                gallery.style.display = 'block';
+                gallery.classList.add('open');
+            } else {
+                gallery.style.display = 'none';
+                gallery.classList.remove('open');
+            }
+            toggleBtn.textContent = isHidden ? 'Show Less' : 'View More Photos';
+            if (!isHidden) {
+                document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    }
+</script>
 </body>
 </html>

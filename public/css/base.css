@@ -138,7 +138,7 @@ html.a11y-large { font-size: 115%; }
 .submission-success {
     background: rgba(74, 222, 128, 0.08);
     border: 1px solid rgba(74, 222, 128, 0.3);
-    border-radius: var(--radius-md, 12px);
+    border-radius: var(--radius-2, 12px);
     padding: var(--space-4, 1rem);
     text-align: center;
 }
@@ -162,7 +162,7 @@ html.a11y-large { font-size: 115%; }
 }
 
 .submission-success__ref strong {
-    font-family: var(--font-mono, monospace);
+    font-family: var(--font-utility, monospace);
     font-weight: 700;
     color: var(--reef-coral, #e05252);
     background: rgba(224, 82, 82, 0.1);
@@ -173,13 +173,13 @@ html.a11y-large { font-size: 115%; }
 .submission-success__status {
     font-size: 0.9375rem;
     font-weight: 500;
-    color: var(--text-secondary);
+    color: var(--foam);
     margin-bottom: var(--space-2, 0.5rem);
 }
 
 .submission-success__help {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: var(--foam);
     margin-bottom: var(--space-3, 0.75rem);
 }
 
@@ -192,7 +192,7 @@ html.a11y-large { font-size: 115%; }
 .submission-error {
     background: rgba(224, 82, 82, 0.08);
     border: 1px solid rgba(224, 82, 82, 0.3);
-    border-radius: var(--radius-md, 12px);
+    border-radius: var(--radius-2, 12px);
     padding: var(--space-4, 1rem);
     text-align: center;
 }
@@ -212,18 +212,18 @@ html.a11y-large { font-size: 115%; }
 
 .submission-error__message {
     font-size: 0.9375rem;
-    color: var(--text-primary);
+    color: var(--sand);
     margin-bottom: var(--space-1, 0.25rem);
 }
 
 .submission-error__detail {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: var(--foam);
     margin-bottom: var(--space-1, 0.25rem);
 }
 
 .submission-error__help {
     font-size: 0.875rem;
-    color: var(--text-secondary);
+    color: var(--foam);
     margin-top: var(--space-2, 0.5rem);
 }

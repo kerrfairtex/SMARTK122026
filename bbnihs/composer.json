@@ -18,12 +18,12 @@
     },
     "autoload": {
         "psr-4": {
-            "BBNIHS\\": "bbnihs/"
+            "BBNIHS\\": "./"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "BBNIHS\\Tests\\": "tests/"
+            "BBNIHS\\Tests\\": "./tests/"
         }
     },
     "config": {

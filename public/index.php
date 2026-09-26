@@ -313,12 +313,17 @@ html.a11y-large { font-size: 115%; }
     gap: var(--space-3);
 }
 .counter {
-    background: var(--ink-overlay-40);
-    border: 1px solid var(--foam-overlay-16);
-    border-radius: var(--radius-3);
+    background: linear-gradient(180deg, var(--tide-teal) 0%, var(--ink-deep) 100%);
+    border: 1.5px solid rgba(207,232,228,0.25);
+    border-top: 3px solid var(--reef-coral);
+    border-radius: var(--radius-4);
     padding: var(--space-4);
     text-align: center;
+    box-shadow: var(--elev-2);
+    position: relative;
+    overflow: hidden;
 }
+.counter::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--sun-gold), var(--reef-coral)); opacity: 0.6; }
 .counter__number { font-family: var(--font-utility); font-size: 2.5rem; font-weight: 500; color: var(--sun-gold); }
 .counter__label { color: var(--sand); margin-top: var(--space-2); }
 .counter__context { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-1); }
@@ -427,13 +432,17 @@ html.a11y-large { font-size: 115%; }
 
 /* ---------- About / mission / vision / history ---------- */
 .about-card {
-    background: var(--ink-overlay-40);
-    border: 1px solid var(--foam-overlay-16);
-    border-left: 4px solid var(--sun-gold);
-    border-radius: var(--radius-2);
+    background: linear-gradient(135deg, var(--ink-overlay-40) 0%, var(--tide-teal) 100%);
+    border: 1.5px solid rgba(244,180,0,0.35);
+    border-left: 5px solid var(--sun-gold);
+    border-radius: var(--radius-3);
     padding: var(--space-4);
     margin: var(--space-3) 0;
+    box-shadow: var(--elev-2);
+    position: relative;
+    overflow: hidden;
 }
+.about-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--sun-gold) 0%, var(--reef-coral) 100%); opacity: 0.7; }
 .about-card__heading { color: var(--sun-gold); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-2); }
 .about-card__body { color: var(--sand); }
 .about-card__cite { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-top: var(--space-2); font-style: italic; }
@@ -659,13 +668,17 @@ html.a11y-large { font-size: 115%; }
     gap: var(--space-3);
 }
 .module {
-    background: var(--ink-overlay-40);
-    border: 1px solid var(--foam-overlay-16);
-    border-radius: var(--radius-2);
+    background: linear-gradient(135deg, rgba(244,180,0,0.06) 0%, var(--ink-overlay-40) 100%);
+    border: 1.5px solid rgba(244,180,0,0.3);
+    border-radius: var(--radius-3);
     padding: var(--space-3);
     text-align: center;
-    transition: border-color var(--dur-hover) var(--ease-standard);
+    transition: transform var(--dur-hover) var(--ease-standard), border-color var(--dur-hover) var(--ease-standard), box-shadow var(--dur-hover) var(--ease-standard);
+    box-shadow: var(--elev-1);
+    position: relative;
+    overflow: hidden;
 }
+.module:hover { transform: translateY(-4px); border-color: var(--sun-gold); box-shadow: var(--elev-3); }
 .module:hover { border-color: var(--reef-coral); }
 .module__icon { font-size: 2rem; margin-bottom: var(--space-1); }
 .module__name { color: var(--sand); font-size: 0.9rem; }

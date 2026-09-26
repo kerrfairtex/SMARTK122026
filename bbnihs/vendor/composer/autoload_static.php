@@ -42,7 +42,7 @@ class ComposerStaticInitc891180edab07012bbcafd07c3096b37
         ),
         'BBNIHS\\' =>
         array (
-            0 => __DIR__ . '/../..' . '/bbnihs',
+            0 => __DIR__ . '/../..' . '/',
         ),
     );
 

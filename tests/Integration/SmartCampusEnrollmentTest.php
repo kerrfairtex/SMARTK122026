@@ -12,7 +12,7 @@ use PHPUnit\Framework\TestCase;
 class SmartCampusEnrollmentTest extends TestCase
 {
     private static $conn = null;
-    private static $dbPassword = '4n=AgYHXO?%ESEKv';
+    private static $dbPassword = getenv('TEST_DB_PASSWORD') ?: '';
     private static $dbHost = 'aws-0-ap-northeast-1.pooler.supabase.com';
     private static $dbPort = '6543';
     private static $dbUser = 'postgres.ebyepweqwihdvjecrufk';

@@ -38,6 +38,11 @@ EOFCONFIG
 chown www-data:www-data /var/www/html/config.inc.php
 chmod 640 /var/www/html/config.inc.php
 
+# --- Run database migrations (idempotent) ---
+echo "[INFO] Running database migrations..."
+php /var/www/html/migrate.php 2>&1 || echo "[WARN] Migration step completed with warnings"
+echo "[INFO] Database migrations applied."
+
 # Writable directories
 mkdir -p /var/www/html/assets/FileUploads /var/www/html/assets/StudentPhotos /var/www/html/assets/UserPhotos /var/www/html/public/assets/images
 chown -R www-data:www-data /var/www/html/assets/FileUploads /var/www/html/assets/StudentPhotos /var/www/html/assets/UserPhotos /var/www/html/public/assets/images

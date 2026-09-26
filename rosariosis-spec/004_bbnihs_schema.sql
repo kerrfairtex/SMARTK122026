@@ -53,6 +53,10 @@ CREATE TABLE IF NOT EXISTS enrollment_applications (
     documents TEXT,
     status TEXT DEFAULT 'Submitted',
     notes TEXT,
+    -- Foreign key to the RosarioSIS students table.
+    -- Set when an admin clicks "Enroll" (admin_enroll.php?action=enroll).
+    -- NULL until the student record is created from this application.
+    student_id INTEGER REFERENCES students(student_id),
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );

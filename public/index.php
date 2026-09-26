@@ -1815,27 +1815,28 @@ img[width], img[height] {
     <!-- Responsive Design & Architecture Note -->
     <section id="responsive-design" class="reveal surface-tide">
         <div class="container">
-            <h2 class="section-title">Responsive Design</h2>
-            <p class="section-subtitle">This landing page uses fluid grids, relative units, and media queries to adapt to any screen size or device.</p>
+            <h2 class="section-title">Batu-Batu National High School — School Information</h2>
+            <p class="section-subtitle">Batu-Batu National High School is listed in Batu-Batu, Panglima Sugala, Tawi-Tawi, and official DepEd records identify the school with School ID 305053.</p>
 
-            <div class="about-card">
-                <p class="about-card__heading">Related Terms</p>
-                <p class="about-card__body">
-                    <strong>Adaptive design</strong> uses fixed breakpoints (distinct layouts for phone/tablet/desktop) rather than continuous fluid scaling.<br>
-                    <strong>Mobile-first design</strong> builds the mobile layout first, then progressively enhances for larger screens.<br>
-                    <strong>Fluid/liquid layout</strong> uses percentage, <code>fr</code>, or <code>vw</code> units instead of fixed pixels.<br>
-                    In practice, <strong>responsive</strong> is the umbrella term — implemented here with CSS Grid / Flexbox, <code>clamp()</code> for fluid typography, and container queries where applicable.
-                </p>
+            <h3 class="section-subtitle">What the news system could contain</h3>
+            <div class="tile-grid">
+                <div class="tile"><p class="tile__label">School Announcements</p><p class="tile__value">New policies, schedules, principal announcements</p></div>
+                <div class="tile"><p class="tile__label">Enrollment</p><p class="tile__value">Dates, requirements, registration, status</p></div>
+                <div class="tile"><p class="tile__label">Uniform &amp; Dress Code</p><p class="tile__value">New design, PE uniform, prescribed attire</p></div>
+                <div class="tile"><p class="tile__label">Academic</p><p class="tile__value">Exams, grading, schedules, recognition</p></div>
+                <div class="tile"><p class="tile__label">Sports</p><p class="tile__value">Intramurals, Palaro, team selections</p></div>
+                <div class="tile"><p class="tile__label">Student Activities</p><p class="tile__value">Clubs, organizations, contests</p></div>
+                <div class="tile"><p class="tile__label">DepEd / BARMM Updates</p><p class="tile__value">Orders, calendar, education programs</p></div>
+                <div class="tile"><p class="tile__label">Events</p><p class="tile__value">Foundation Day, Buwan ng Wika, graduation</p></div>
+                <div class="tile"><p class="tile__label">Community</p><p class="tile__value">Barangay activities, disaster advisories</p></div>
+                <div class="tile"><p class="tile__label">Facilities</p><p class="tile__value">New buildings, labs, equipment, repairs</p></div>
+                <div class="tile"><p class="tile__label">Achievements</p><p class="tile__value">Awards, competition results, certifications</p></div>
+                <div class="tile"><p class="tile__label">Important Notices</p><p class="tile__value">Class suspensions, weather, emergencies</p></div>
             </div>
 
-            <div class="about-card">
-                <p class="about-card__heading">How This Page Responds</p>
-                <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
-                    <li>• <strong>Desktop (&gt;1024px):</strong> full navigation bar, multi-column photo strips, expanded hero with full seal.</li>
-                    <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
-                    <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
-                </ul>
-            </div>
+            <p class="form-note" style="margin-top: var(--space-4);">
+                School ID verified: <strong>305053</strong> · Municipality: <strong>Panglima Sugala</strong> · Province: <strong>Tawi-Tawi, BARMM</strong> · Source: DepEd public records.
+            </p>
         </div>
     </section>
 

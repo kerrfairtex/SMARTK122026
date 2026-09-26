@@ -16,4 +16,32 @@ RewriteRule (^|/)(LICENSE|COPYRIGHT|composer\.lock|composer\.json|package\.json)
 #
 ## End - Security
 
+## Begin - SmartCampus Routing
+
+# Disable mod_dir's automatic index file resolution so mod_rewrite
+# serves the SmartCampus landing page at / instead of index.php
+# (the RosarioSIS login processor). The PHP Docker image sets
+# DirectoryIndex index.php by default, which intercepts / before
+# the rewrite rule fires.
+DirectoryIndex __disabled__
+
+# Serve public landing page at root
+RewriteRule ^$ public/index.php [L]
+
+# Serve login processor at /login.php
+RewriteRule ^login\.php$ index.php [L]
+
+# Ensure assets/images resolves (symlinked in entrypoint)
+RewriteRule ^assets/images/(.*)$ public/assets/images/$1 [L]
+
+# Ensure CSS/JS bundles resolve (symlinked in entrypoint)
+RewriteRule ^css/(.*)$ public/css/$1 [L]
+RewriteRule ^js/(.*)$ public/js/$1 [L]
+
+# PWA assets
+RewriteRule ^manifest\.json$ public/manifest.json [L]
+RewriteRule ^pwabuilder-sw\.js$ pwabuilder-sw.js [L]
+
+## End - SmartCampus Routing
+
 </IfModule>

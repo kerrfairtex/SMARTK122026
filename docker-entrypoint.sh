@@ -55,13 +55,16 @@ a2enmod expires 2>/dev/null || true
 a2enmod rewrite 2>/dev/null || true
 
 # Create Apache virtual host with proper routing
-cat << 'EOFVHOST' > /etc/apache2/sites-available/000-default.conf
+cat << EOFVHOST > /etc/apache2/sites-available/000-default.conf
 <VirtualHost *:${LISTEN_PORT}>
     ServerAdmin webmaster@localhost
     DocumentRoot /var/www/html
     <Directory /var/www/html>
         Options Indexes FollowSymLinks
         AllowOverride All
+        # Prevent mod_dir (DirectoryIndex index.php) from intercepting /
+        # before mod_rewrite can serve the SmartCampus landing page.
+        DirectoryIndex __disabled__
         Require all granted
     </Directory>
 
@@ -150,7 +153,7 @@ for sw in /var/www/html/pwabuilder-sw.js /var/www/html/phone/download/pwabuilder
 done
 
 # Edit the HTML build marker in BOTH possible locations.
-for html in /var/www/html/index.php /var/www/html/public/index.php; do
+for html in /var/www/html/public/index.php; do
     if [ -f "$html" ]; then
         sed -i "s|<!-- build: [a-zA-Z0-9]* [0-9TZ:.-]* -->|<!-- build: ${BUILD_SHORT} ${BUILD_TS} -->|" "$html"
         echo "[BUILD] injected build marker into ${html#/var/www/html/}"

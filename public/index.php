@@ -1197,8 +1197,8 @@ img[width], img[height] {
 #extended-gallery.open { display: block; }
 
 /* Cleaned inline-style replacements */
-.hero__seal-wrap { position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0 auto 1.5rem; }
-.hero__seal { position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2; }
+.hero__seal-wrap { position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0 auto 1.5rem; perspective: 1200px; perspective-origin: center; }
+.hero__seal { position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: 0 20px 60px rgba(244,180,0,0.35), var(--elev-3); z-index: 2; transform: rotate(3deg) rotateY(-6deg) rotateX(2deg); transition: transform var(--dur-hover) var(--ease-out); }
 .nav-logo { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
 .gallery-toggle-wrapper { text-align: center; margin: var(--space-4) 0; }
 .gallery-subheading, .timeline-subheading, .about-subheading { margin-top: var(--space-4); color: var(--sand); font-family: var(--font-display); font-weight: 600; }

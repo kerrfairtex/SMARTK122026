@@ -1831,25 +1831,26 @@ img[width], img[height] {
             <h2 class="section-title">Responsive Design</h2>
             <p class="section-subtitle">Batu-Batu National High School (BBNHS) is a public secondary educational institution located in the municipality of Panglima Sugala (formerly known as Balimbing), within the island province of Tawi-Tawi, Philippines.</p>
 
+
+
+
+            </div>
             <div class="about-card">
-                <p class="about-card__heading">Related Terms</p>
-                <p class="about-card__body">
-                    <strong>Adaptive design</strong> uses fixed breakpoints (distinct layouts for phone/tablet/desktop) rather than continuous fluid scaling.<br>
-                    <strong>Mobile-first design</strong> builds the mobile layout first, then progressively enhances for larger screens.<br>
-                    <strong>Fluid/liquid layout</strong> uses percentage, <code>fr</code>, or <code>vw</code> units instead of fixed pixels.<br>
-                    In practice, <strong>responsive</strong> is the umbrella term — implemented here with CSS Grid / Flexbox, <code>clamp()</code> for fluid typography, and container queries where applicable.
-                </p>
+                <p class="about-card__heading">Origin and History</p>
+                <p class="about-card__body">Establishment: Based on the school's official community presence, its history dates back to 1966. It was built to serve the youth of the local coastal and agricultural communities of Panglima Sugala, eliminating the need for students to travel to farther municipalities like Bongao for secondary education.</p>
+                <p class="about-card__body">Transition to National Status: Like many public high schools in the Philippines, it originally transitioned through local funding structures before officially becoming a national high school under the Department of Education (DepEd). This transition guaranteed national government funding.</p>
+            </div>
+            <div class="about-card">
+                <p class="about-card__heading">Institution Details</p>
+                <p class="about-card__body">School ID: 305053 · Municipality: Panglima Sugala · Province: Tawi-Tawi, BARMM · Source: DepEd public records.</p>
             </div>
 
-            <div class="about-card">
-                <p class="about-card__heading">How This Page Responds</p>
-                <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
-                    <li>• <strong>Desktop (&gt;1024px):</strong> full navigation bar, multi-column photo strips, expanded hero with full seal.</li>
-                    <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
-                    <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
-                </ul>
-
-            <div class="slide-carousel" aria-label="School news and updates">
+                        <div class="about-card">
+                <p class="about-card__heading">Background and Present-Day Operations</p>
+                <p class="about-card__body"><strong>Academic and Technical Programs:</strong> Beyond the standard DepEd curriculum for Junior and Senior High School, the institution plays a critical vocational role in the province. It serves as an accredited TESDA training center, offering specialized technical-vocational courses to improve local livelihood skills.</p>
+                <p class="about-card__body"><strong>Cultural and Regional Identity:</strong> Batu-Batu National High School is culturally embedded in the unique traditions of the Muslim Filipino communities in Tawi-Tawi. Its students frequently participate in municipal and provincial events, showcasing traditional dances and customs like the dulang (a royal-style feast).</p>
+            </div>
+<div class="slide-carousel" aria-label="School news and updates">
                 <div class="slide-track" id="slideTrack">
                     <div class="slide-card"><h4>School Announcements</h4><p>New policies, schedules, principal announcements.</p></div>
                     <div class="slide-card"><h4>Enrollment</h4><p>Dates, requirements, registration, status updates.</p></div>
@@ -1871,7 +1872,6 @@ img[width], img[height] {
                 </div>
             </div>
 
-            </div>
         </div>
     </section>
 

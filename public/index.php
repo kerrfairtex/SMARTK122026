@@ -1222,7 +1222,7 @@ img[width], img[height] {
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
             <div class="hero__content">
                 <div style="margin-bottom: 1.5rem; position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin-left: auto; margin-right: auto;">
-                    <img src="assets/images/logo.png" alt="Batu-Batu National High School Official Seal" style="position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
+                    <img src="assets/images/batubatulogo.jpg" alt="Batu-Batu National High School Official Seal" style="position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: var(--elev-3); z-index: 2;">
                 </div>
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">BATU-BATU</h1>

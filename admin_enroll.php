@@ -222,7 +222,7 @@ if ($statusFilter !== '') {
 
 $whereSql = implode(' AND ', $where);
 
-$total = (int)db_fetch_one("SELECT COUNT(*) AS cnt FROM kerrfairtex.enrollment_applications WHERE $whereSql")['cnt'];
+$total = (int)db_fetch_one("SELECT COUNT(*) AS cnt FROM kerrfairtex.enrollment_applications WHERE $whereSql");
 $totalPages = max(1, (int)ceil($total / $perPage));
 $page = min($page, $totalPages);
 

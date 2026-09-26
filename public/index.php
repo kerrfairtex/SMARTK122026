@@ -1218,6 +1218,19 @@ img[width], img[height] {
 
 .gallery-note { margin-top: var(--space-2); font-size: 0.9rem; color: var(--foam); opacity: 0.9; line-height: 1.6; }
 .gallery-badge { display: inline-block; font-family: var(--font-utility); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sun-gold); background: rgba(244,180,0,0.12); padding: 0.15rem 0.4rem; border-radius: var(--radius-1); margin-right: 0.25rem; border: 1px solid rgba(244,180,0,0.25); }
+
+/* Sliding info cards: text/news (not images), minimal, small letters, horizontal motion */
+.slide-carousel { overflow: hidden; position: relative; border-radius: var(--radius-3); margin-top: var(--space-4); }
+.slide-track { display: flex; gap: var(--space-2); transition: transform var(--dur-base) var(--ease-standard); will-change: transform; }
+.slide-card { flex: 0 0 calc(33.333% - var(--space-2)); min-width: 240px; background: linear-gradient(135deg, #3a4150 0%, #5a6a80 60%, #2a3340 100%); border: 1px solid rgba(192,200,210,0.2); border-radius: var(--radius-2); padding: var(--space-3); text-align: left; box-shadow: var(--elev-1); position: relative; overflow: hidden; }
+.slide-card h4 { color: var(--sand); font-family: var(--font-display); font-size: 0.85rem; margin-bottom: var(--space-2); letter-spacing: 0.06em; text-transform: uppercase; text-shadow: inset 0 1px 0 rgba(255,255,255,0.1); }
+.slide-card p { color: rgba(220,225,230,0.85); font-size: 0.7rem; line-height: 1.45; text-shadow: inset 0 1px 0 rgba(255,255,255,0.08); }
+.slide-nav { display: flex; justify-content: center; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.slide-prev, .slide-next { background: rgba(10,20,32,0.6); border: 1px solid rgba(192,200,210,0.2); border-radius: 50%; width: 32px; height: 32px; color: var(--foam); font-size: 1rem; line-height: 1; cursor: pointer; transition: background var(--dur-hover), border-color var(--dur-hover); }
+.slide-prev:hover, .slide-next:hover { background: rgba(244,180,0,0.9); border-color: var(--sun-gold); color: var(--ink-deep); }
+.slide-indicator { font-family: var(--font-utility); font-size: 0.65rem; color: rgba(200,205,215,0.5); letter-spacing: 0.05em; text-transform: uppercase; }
+@media (max-width: 860px) { .slide-card { flex: 0 0 calc(50% - var(--space-2)); min-width: 200px; } }
+@media (max-width: 480px) { .slide-card { flex: 0 0 100%; min-width: 100%; } }
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
@@ -1835,6 +1848,29 @@ img[width], img[height] {
                     <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
                     <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
                 </ul>
+
+            <div class="slide-carousel" aria-label="School news and updates">
+                <div class="slide-track" id="slideTrack">
+                    <div class="slide-card"><h4>School Announcements</h4><p>New policies, schedules, principal announcements.</p></div>
+                    <div class="slide-card"><h4>Enrollment</h4><p>Dates, requirements, registration, status updates.</p></div>
+                    <div class="slide-card"><h4>Uniform & Dress</h4><p>New design, PE uniform, prescribed attire rules.</p></div>
+                    <div class="slide-card"><h4>Academic</h4><p>Exams, grading, class schedules, recognition.</p></div>
+                    <div class="slide-card"><h4>Sports</h4><p>Intramurals, Palaro, basketball, athletics.</p></div>
+                    <div class="slide-card"><h4>Student Activities</h4><p>Clubs, organizations, school contests.</p></div>
+                    <div class="slide-card"><h4>DepEd / BARMM</h4><p>Orders, calendar, education programs.</p></div>
+                    <div class="slide-card"><h4>Events</h4><p>Foundation Day, Buwan ng Wika, graduation.</p></div>
+                    <div class="slide-card"><h4>Community</h4><p>Barangay activities, disaster notices.</p></div>
+                    <div class="slide-card"><h4>Facilities</h4><p>New buildings, labs, equipment, repairs.</p></div>
+                    <div class="slide-card"><h4>Achievements</h4><p>Awards, competition results, certifications.</p></div>
+                    <div class="slide-card"><h4>Notices</h4><p>Suspensions, weather, emergency updates.</p></div>
+                </div>
+                <div class="slide-nav">
+                    <button class="slide-prev" aria-label="Previous">‹</button>
+                    <span class="slide-indicator">1 / 3 groups</span>
+                    <button class="slide-next" aria-label="Next">›</button>
+                </div>
+            </div>
+
             </div>
         </div>
     </section>
@@ -1915,6 +1951,30 @@ img[width], img[height] {
             }
         });
     }
+</script>
+
+<script>
+(function(){
+  var track = document.querySelector('.slide-track');
+  var cards = document.querySelectorAll('.slide-card');
+  var prevBtn = document.querySelector('.slide-prev');
+  var nextBtn = document.querySelector('.slide-next');
+  var indicator = document.querySelector('.slide-indicator');
+  var current = 0;
+  var visible = window.innerWidth > 860 ? 3 : (window.innerWidth > 480 ? 2 : 1);
+  function update() {
+    var max = Math.max(0, Math.ceil(cards.length / visible) - 1);
+    current = Math.min(Math.max(current, 0), max);
+    track.style.transform = 'translateX(-' + (current * 100 / Math.ceil(cards.length / Math.max(1, visible))) + '%)';
+    if (indicator) indicator.textContent = (current + 1) + ' / ' + (max + 1) + ' groups';
+  }
+  if (prevBtn && nextBtn) {
+    prevBtn.addEventListener('click', function(){ current -= 1; if (current < 0) current = 0; update(); });
+    nextBtn.addEventListener('click', function(){ current += 1; var max = Math.ceil(cards.length / visible) - 1; if (current > max) current = max; update(); });
+  }
+  window.addEventListener('resize', function(){ visible = window.innerWidth > 860 ? 3 : (window.innerWidth > 480 ? 2 : 1); update(); });
+  update();
+})();
 </script>
 </body>
 </html>

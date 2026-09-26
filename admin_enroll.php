@@ -25,10 +25,16 @@ require_once 'Warehouse.php';
 header('Content-Type: text/html; charset=utf-8');
 
 // Require admin login via existing RosarioSIS session
-if (!isset($_SESSION['STAFF_ID']) || ($_SESSION['PROFILE'] ?? '') !== 'admin') {
-    header('Location: index.php');
-    exit;
-}
+	// Allow admin and teacher to view applications (read-only)
+	// Teachers can view status but cannot modify applications
+	$is_admin = ( $_SESSION['PROFILE'] ?? '' ) === 'admin';
+	$is_teacher = ( $_SESSION['PROFILE'] ?? '' ) === 'teacher';
+	
+	if (!isset($_SESSION['STAFF_ID']) || (!$is_admin && !$is_teacher)) {
+		header('Location: index.php');
+		exit;
+	}
+
 
 $schoolYear = (string)($_GET['school_year'] ?? date('Y') . '-' . ((int)date('Y') + 1));
 
@@ -49,9 +55,15 @@ function verify_csrf(): bool {
     return hash_equals((string)($_SESSION['token'] ?? ''), $token);
 }
 
-// Handle admin actions
+// Handle admin actions (read-only for teachers)
 $action = (string)($_POST['action'] ?? $_GET['action'] ?? '');
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($action)) {
+    // Only admin can modify applications
+    if (!isset($is_admin) || !$is_admin) {
+        header('Location: admin_enroll.php?error=permission_denied');
+        exit;
+    }
+
     if (!verify_csrf()) {
         die('CSRF token invalid. Please reload and try again.');
     }

@@ -1218,6 +1218,21 @@ img[width], img[height] {
 
 .gallery-note { margin-top: var(--space-2); font-size: 0.9rem; color: var(--foam); opacity: 0.9; line-height: 1.6; }
 .gallery-badge { display: inline-block; font-family: var(--font-utility); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--sun-gold); background: rgba(244,180,0,0.12); padding: 0.15rem 0.4rem; border-radius: var(--radius-1); margin-right: 0.25rem; border: 1px solid rgba(244,180,0,0.25); }
+
+/* Carousel: 6 cards, draggable/swipe, minimalist */
+.card-carousel { overflow: hidden; position: relative; border-radius: var(--radius-3); }
+.carousel-track { display: flex; gap: var(--space-2); transition: transform var(--dur-base) var(--ease-standard); }
+.carousel-card { flex: 0 0 calc(33.333% - var(--space-2)); min-width: 260px; background: linear-gradient(135deg, #6a7a8a 0%, #a8b0bc 100%); border: 1px solid rgba(192,200,210,0.3); border-radius: var(--radius-2); padding: var(--space-4); text-align: center; box-shadow: var(--elev-1); position: relative; overflow: hidden; }
+.carousel-card h4 { color: var(--sand); font-family: var(--font-display); font-size: 1.05rem; margin-bottom: var(--space-2); letter-spacing: 0.02em; text-shadow: inset 1px 1px 0 rgba(255,255,255,0.2); }
+.carousel-card p { color: rgba(220,225,230,0.9); font-size: 0.85rem; line-height: 1.55; text-shadow: inset 0 1px 0 rgba(255,255,255,0.15); }
+.carousel-nav { display: flex; justify-content: center; align-items: center; gap: var(--space-3); margin-top: var(--space-3); }
+.carousel-prev, .carousel-next { background: rgba(10,20,32,0.5); border: 1px solid rgba(192,200,210,0.25); border-radius: 50%; width: 36px; height: 36px; color: var(--foam); font-size: 1.2rem; line-height: 1; cursor: pointer; transition: background var(--dur-hover), border-color var(--dur-hover); }
+.carousel-prev:hover, .carousel-next:hover { background: var(--sun-gold); border-color: var(--sun-gold); color: var(--ink-deep); }
+.carousel-dots { display: flex; gap: var(--space-2); }
+.carousel-dots .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(192,200,210,0.3); border: 1px solid rgba(244,180,0,0.3); transition: background var(--dur-hover); cursor: pointer; }
+.carousel-dots .dot.active { background: var(--sun-gold); border-color: var(--sun-gold); }
+@media (max-width: 860px) { .carousel-card { flex: 0 0 calc(50% - var(--space-2)); min-width: 200px; } }
+@media (max-width: 480px) { .carousel-card { flex: 0 0 100%; min-width: 100%; } }
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
@@ -1835,6 +1850,24 @@ img[width], img[height] {
                     <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
                     <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
                 </ul>
+
+            <!-- Slide carousel: 6 additional cards (minimal, draggable/swipe) -->
+            <div class="card-carousel" aria-label="Additional school information cards">
+                <div class="carousel-track">
+                    <div class="carousel-card"><h4>Enrollment Calendar</h4><p>Open: 1 Jun – 15 Aug 2026. Classes begin 17 Aug 2026. School Year 2026–2027.</p></div>
+                    <div class="carousel-card"><h4>School Facilities</h4><p>Two-story campus, library, science lab (pending upgrade), multi-purpose hall.</p></div>
+                    <div class="carousel-card"><h4>Faculty</h4><p>Directory and leadership roster pending confirmation from school registrar.</p></div>
+                    <div class="carousel-card"><h4>Student Services</h4><p>Library access, guidance counseling, health services, parent communication portal.</p></div>
+                    <div class="carousel-card"><h4>Community Partners</h4><p>Barangay Batu-Batu, Panglima Sugala LGU, Tawi-Tawi Schools Division, DepEd BARMM.</p></div>
+                    <div class="carousel-card"><h4>Contact Hours</h4><p>Mon–Fri 7:30 AM – 4:30 PM. Phone: (062) 992-4151. Email: smartcampus@bbnihs.edu.ph.</p></div>
+                </div>
+                <div class="carousel-nav">
+                    <button class="carousel-prev" aria-label="Previous cards">‹</button>
+                    <span class="carousel-dots"><span class="dot active" data-index="0"></span><span class="dot" data-index="1"></span><span class="dot" data-index="2"></span></span>
+                    <button class="carousel-next" aria-label="Next cards">›</button>
+                </div>
+            </div>
+
             </div>
         </div>
     </section>
@@ -1915,6 +1948,31 @@ img[width], img[height] {
             }
         });
     }
+</script>
+
+<script>
+  (function(){
+    var track = document.querySelector('.carousel-track');
+    var cards = document.querySelectorAll('.carousel-card');
+    var prev = document.querySelector('.carousel-prev');
+    var next = document.querySelector('.carousel-next');
+    var dots = document.querySelectorAll('.carousel-dots .dot');
+    var current = 0;
+    var visible = window.innerWidth > 860 ? 3 : (window.innerWidth > 480 ? 2 : 1);
+    function update() {
+      var max = Math.max(0, cards.length - visible);
+      current = Math.min(Math.max(current, 0), max);
+      track.style.transform = 'translateX(-' + (current * (100 / visible)) + '%)';
+      dots.forEach(function(d, i){ d.classList.toggle('active', i === Math.floor(current / (cards.length / Math.max(1, Math.ceil(cards.length / visible)))); });
+    }
+    if (prev && next) {
+      prev.addEventListener('click', function(){ current -= 1; update(); });
+      next.addEventListener('click', function(){ current += 1; update(); });
+    }
+    dots.forEach(function(d, i){ d.addEventListener('click', function(){ current = i; update(); }); });
+    window.addEventListener('resize', function(){ visible = window.innerWidth > 860 ? 3 : (window.innerWidth > 480 ? 2 : 1); update(); });
+    update();
+  })();
 </script>
 </body>
 </html>

@@ -17,20 +17,18 @@ require_once 'ProgramFunctions/FirstLogin.fnc.php';
 if ( isset( $_REQUEST['modfunc'] )
 	&& $_REQUEST['modfunc'] === 'logout' )
 {
-	// After logout, send the user to the PUBLIC landing page (index.php is the
-	// swapped-in landing page at the docroot). Preserve locale; drop login-only
-	// reason/redirect_to so we don't loop back to the login screen.
-	header( 'Location: ' . URLEscape( 'index.php?locale=' . $_SESSION['locale'] ) );
-
-	exit;
-
+	// Validate token before destroying session
 	if ( ! empty( $_REQUEST['token'] )
 		&& $_SESSION['token'] === $_REQUEST['token'] )
 	{
 		session_unset();
-
 		session_destroy();
 	}
+
+	// After logout, send the user to the PUBLIC landing page (index.php is the
+	// swapped-in landing page at the docroot). Preserve locale; drop login-only
+	// reason/redirect_to so we don't loop back to the login screen.
+	header( 'Location: ' . URLEscape( 'index.php?locale=' . ( $_SESSION['locale'] ?? 'en_US' ) ) );
 
 	exit;
 }

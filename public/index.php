@@ -1834,7 +1834,6 @@ img[width], img[height] {
 
 
 
-            </div>
             <div class="about-card">
                 <p class="about-card__heading">Origin and History</p>
                 <p class="about-card__body">Establishment: Based on the school's official community presence, its history dates back to 1966. It was built to serve the youth of the local coastal and agricultural communities of Panglima Sugala, eliminating the need for students to travel to farther municipalities like Bongao for secondary education.</p>

@@ -275,6 +275,16 @@ html.a11y-large { font-size: 115%; }
     box-shadow: var(--elev-2);
 }
 .btn--primary:active { transform: translateY(0); box-shadow: var(--elev-1); }
+.btn--secondary {
+    background: var(--ink-overlay-40);
+    color: var(--sand);
+    border: 1px solid var(--foam-overlay-16);
+}
+.btn--secondary:hover, .btn--secondary:focus-visible {
+    background: var(--foam-overlay-08);
+    transform: translateY(-2px);
+}
+.btn--secondary:active { transform: translateY(0); }
 .btn--ghost {
     background: transparent;
     color: var(--foam);
@@ -1786,6 +1796,7 @@ img[width], img[height] {
                 <p style="text-align: center; margin-top: var(--space-4);">
                     <a href="login.php" class="btn btn--primary">Login Smart Campus</a>
                     <a href="enroll_status.php" class="btn btn--secondary">View Submitted Application</a>
+                    <a href="admin_enroll.php" class="btn btn--secondary">View Students Application</a>
                 </p>
             </div>
         </section>

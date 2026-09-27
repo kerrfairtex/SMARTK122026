@@ -483,6 +483,90 @@ function getApplicationStatus($ref) {
     ];
 }
 
+/**
+ * List enrollment applications with search and filter support.
+ * Requires authenticated teacher or admin session.
+ */
+function listApplications($search, $status, $page, $perPage) {
+    // Auth check - teacher or admin only
+    if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
+        throw new Exception("Unauthorized. Teacher or admin access required.");
+    }
+
+    $conn = db_conn();
+
+    // Clamp pagination params
+    $page = max(1, $page);
+    $perPage = min(50, max(1, $perPage));
+    $offset = ($page - 1) * $perPage;
+
+    $where = '';
+    $params = [];
+    $paramIndex = 1;
+
+    // Search across ref, learner name, guardian name
+    if ($search !== '') {
+        $where .= ($where !== '' ? ' AND ' : 'WHERE ') .
+            '(LOWER(ref) LIKE LOWER($' . $paramIndex . ') OR LOWER(learner_name) LIKE LOWER($' . $paramIndex . ') OR LOWER(parent_name) LIKE LOWER($' . $paramIndex . '))';
+        $params[] = '%' . $search . '%';
+        $paramIndex++;
+    }
+
+    // Status filter
+    if ($status !== 'all') {
+        $where .= ($where !== '' ? ' AND ' : 'WHERE ') . 'status = $' . $paramIndex;
+        $params[] = $status;
+        $paramIndex++;
+    }
+
+    // Add LIMIT and OFFSET params
+    $params[] = $perPage;
+    $params[] = $offset;
+
+    $sql = "SELECT id, ref, learner_name, grade_level, parent_name, parent_contact, status, created_at
+            FROM kerrfairtex.enrollment_applications
+            " . $where . "
+            ORDER BY created_at DESC
+            LIMIT $" . $paramIndex . " OFFSET $" . ($paramIndex + 1) . "";
+
+    $result = pg_query_params($conn, $sql, $params);
+
+    if ($result === false) {
+        throw new Exception("Database error: " . pg_last_error($conn));
+    }
+
+    $applications = [];
+    while ($row = pg_fetch_assoc($result)) {
+        $applications[] = [
+            'id' => (int)$row['id'],
+            'ref' => $row['ref'],
+            'name' => $row['learner_name'],
+            'grade' => $row['grade_level'],
+            'guardian' => $row['parent_name'],
+            'contact' => $row['parent_contact'],
+            'status' => $row['status'],
+            'date' => $row['created_at'],
+        ];
+    }
+
+    // Count total for pagination
+    $countSql = "SELECT COUNT(*) FROM kerrfairtex.enrollment_applications " . $where;
+    $countResult = pg_query_params($conn, $countSql, array_slice($params, 0, -2));
+    $totalCount = $countResult ? (int)pg_fetch_result($countResult, 0, 0) : 0;
+
+    $totalPages = max(1, (int)ceil($totalCount / $perPage));
+
+    return [
+        'success' => true,
+        'applications' => $applications,
+        'total_count' => $totalCount,
+        'total_pages' => $totalPages,
+        'page' => $page,
+        'per_page' => $perPage,
+    ];
+}
+
+
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory per IP per hour)
 // ---------------------------------------------------------------------------
@@ -572,7 +656,19 @@ function handleRequest() {
                 echo json_encode($result);
                 break;
 
-            case 'status':
+            case 'list':
+            $listParams = [
+                'search' => $_GET['search'] ?? '',
+                'status' => $_GET['status'] ?? 'all',
+                'page' => (int)($_GET['page'] ?? 1),
+                'per_page' => (int)($_GET['per_page'] ?? 8),
+            ];
+            $result = listApplications($listParams['search'], $listParams['status'], $listParams['page'], $listParams['per_page']);
+            http_response_code(200);
+            echo json_encode($result);
+            break;
+
+        case 'status':
                 if (empty($_GET['ref'])) {
                     throw new Exception("Missing required parameter: ref");
                 }

@@ -1784,7 +1784,7 @@ img[width], img[height] {
                     <div class="module"><div class="module__dot"></div><div class="module__icon">&#128106;</div><p class="module__name">Parent Communication</p></div>
                 </div>
                 <p style="text-align: center; margin-top: var(--space-4);">
-                    <a href="login.php" class="btn btn--primary">Enter Smart Campus</a>
+                    <a href="login.php" class="btn btn--primary">Login Smart Campus</a>
                 </p>
             </div>
         </section>

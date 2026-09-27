@@ -1796,7 +1796,7 @@ img[width], img[height] {
                 <p style="text-align: center; margin-top: var(--space-4);">
                     <a href="login.php" class="btn btn--primary">Login Smart Campus</a>
                     <a href="enroll_status.php" class="btn btn--secondary">View Submitted Application</a>
-                    <a href="admin_enroll.php" class="btn btn--secondary">View Students Application</a>
+                    <a href="view_students_application.php" class="btn btn--secondary">View Students Application</a>
                 </p>
             </div>
         </section>

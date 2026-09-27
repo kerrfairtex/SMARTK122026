@@ -205,11 +205,6 @@ elseif ( isset( $_POST['USERNAME'] )
 
         $_SESSION['PROFILE'] = $login_RET[1]['PROFILE'];
 
-		if ($login_RET[1]['PROFILE'] === 'admin') {
-			session_write_close();
-			header('Location: admin_enroll.php');
-			exit;
-		}
 		// Invalidate any active Student session.
 		unset( $_SESSION['STUDENT_ID'] );
 

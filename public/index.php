@@ -1289,7 +1289,7 @@ img[width], img[height] {
 }
 /* Secondary: cool silver steel */
 .btn--secondary {
-    background: linear-gradient(135deg, #CFE8E4 0%, #A8BCC8 50%, #889AA8 100%);
+    background: linear-gradient(135deg, #F4B400 0%, #D4932A 50%, #8A6D2F 100%);
     border: 1px solid rgba(207,232,228,0.5);
     border-top: 2px solid rgba(255,255,255,0.5);
     border-bottom: 2px solid rgba(100,120,140,0.5);

@@ -1,4 +1,5 @@
-<?php
+<@keyframes logoRotation { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+?php
 // Public landing page security headers.
 header('Content-Security-Policy: default-src \'self\'; script-src \'self\' \'unsafe-inline\' https://accounts.google.com https://apis.google.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://cdn.ampproject.org; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; connect-src \'self\' https://smartcampk12.onrender.com https://smartk-122026.vercel.app; frame-ancestors \'none\'; form-action \'self\'; base-uri \'self\'; object-src \'none\';');
 header('X-Frame-Options: DENY');
@@ -1347,6 +1348,27 @@ img[width], img[height] {
     transform: translateY(1px);
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
 }
+
+/* ===== Educational Orbital System ===== */
+.logo-system { position: absolute; top: 50%; left: 50%; width: 480px; height: 480px; transform: translate(-50%, -50%); pointer-events: none; z-index: 1; animation: logoRotation 24s linear infinite; }
+.orbit { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border-radius: 50%; border: 1.5px dashed rgba(244,180,0,0.12); animation: orbitSpin linear infinite; pointer-events: auto; }
+.orbit-1 { animation-duration: 18s; animation-delay: 0s; }
+.orbit-2 { animation-duration: 25s; animation-delay: -6s; width: 75%; height: 75%; border-style: dotted; border-color: rgba(244,180,0,0.1); }
+.orbit-3 { animation-duration: 32s; animation-delay: -12s; width: 55%; height: 55%; border-style: solid; border-color: rgba(207,232,228,0.15); border-width: 1px; }
+.orbit-1-delayed { animation-duration: 22s; animation-delay: -3s; width: 85%; height: 85%; border-style: dashed; border-color: rgba(207,232,228,0.1); border-width: 1px; }
+.orbit-2-delayed { animation-duration: 28s; animation-delay: -9s; width: 65%; height: 65%; border-style: solid; border-color: rgba(207,232,228,0.08); border-width: 1px; }
+.satellite { position: absolute; width: 28px; height: 28px; pointer-events: auto; animation: counterSpin linear infinite; transition: filter var(--dur-hover) var(--ease-standard); }
+.satellite:hover { filter: drop-shadow(0 0 8px var(--sun-gold)) brightness(1.15); }
+.satellite-1 { animation-duration: 18s; animation-delay: 0s; top: 0; left: 50%; transform: translate(-50%, 0) rotate(0deg); }
+.satellite-2 { animation-duration: 25s; animation-delay: -6s; top: 50%; left: 100%; transform: translate(-50%, -50%) rotate(270deg); }
+.satellite-3 { animation-duration: 32s; animation-delay: -12s; top: 80%; left: 30%; transform: translate(-50%, -50%) rotate(200deg); }
+.satellite-4 { animation-duration: 22s; animation-delay: -3s; top: 30%; left: 10%; transform: translate(-50%, -50%) rotate(45deg); }
+.satellite-5 { animation-duration: 28s; animation-delay: -9s; top: 70%; left: 80%; transform: translate(-50%, -50%) rotate(310deg); }
+@keyframes logoRotation { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes orbitSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+@keyframes counterSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(-360deg); } }
+@media (max-width: 860px) { .logo-system { width: 320px; height: 320px; } .satellite { width: 22px; height: 22px; } .orbit-1 { animation-duration: 22s; } .orbit-2 { animation-duration: 28s; } .orbit-3 { animation-duration: 35s; } }
+@media (prefers-reduced-motion: reduce) { .logo-system { animation: none; border: 1.5px solid rgba(244,180,0,0.25); border-radius: 50%; } .orbit { animation: none; border-style: solid; border-color: rgba(244,180,0,0.2); } .satellite { animation: none; } }
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
@@ -1408,6 +1430,35 @@ img[width], img[height] {
                 <div class="hero__seal-wrap">
                     <img src="assets/images/BATUBATULOGO20261111111.jpg" class="hero__seal" alt="Batu-Batu National High School Official Seal" style="position: relative; z-index: 2;">
                 </div>
+
+        <div class="logo-system" aria-label="Educational satellites orbiting the school seal">
+            <div class="orbit orbit-1">
+                <a href="#glance" class="satellite satellite-1" aria-label="Schedule / Calendar" title="School Calendar">
+                    <img src="assets/themes/FlatSIS/btn/calendar.png" alt="Calendar" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(30deg);" loading="lazy">
+                </a>
+            </div>
+            <div class="orbit orbit-2">
+                <a href="#academics" class="satellite satellite-2" aria-label="Grades / Data" title="Academic Programs">
+                    <img src="assets/themes/FlatSIS/btn/chart_icon.png" alt="Grades" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(45deg);" loading="lazy">
+                </a>
+            </div>
+            <div class="orbit orbit-3">
+                <a href="#features" class="satellite satellite-3" aria-label="Library / Reading" title="Library Services">
+                    <img src="assets/themes/FlatSIS/btn/help.png" alt="Library" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(60deg);" loading="lazy">
+                </a>
+            </div>
+            <div class="orbit orbit-1-delayed">
+                <a href="#admissions" class="satellite satellite-4" aria-label="Enrollment / Forms" title="Enrollment Status">
+                    <img src="assets/themes/FlatSIS/btn/info.png" alt="Enrollment" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(75deg);" loading="lazy">
+                </a>
+            </div>
+            <div class="orbit orbit-2-delayed">
+                <a href="#contact" class="satellite satellite-5" aria-label="Contact / Communication" title="Contact School">
+                    <img src="assets/themes/FlatSIS/btn/back.png" alt="Contact" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(10deg);" loading="lazy">
+                </a>
+            </div>
+        </div>
+
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">Batu-Batu National High School</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>

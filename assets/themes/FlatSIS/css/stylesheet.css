@@ -1183,6 +1183,7 @@ td > .legend-gray:first-child {
 .logo {
 	max-width: 64px;
 	max-height: 64px;
+	aspect-ratio: 1 / 1;
 	border-radius: 50%;
 	object-fit: cover;
 	display: block;

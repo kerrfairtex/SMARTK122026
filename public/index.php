@@ -23,7 +23,7 @@ header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
       "description": "A public K-12 national high school in Panglima Sugala, Tawi-Tawi, BARMM, serving the Batu-Batu community since 1982.",
       "url": "https://smartcampk12.onrender.com/",
       "telephone": "(062) 992-4151",
-      "email": "smartcampus@bbnihs.edu.ph",
+      "email": "batubatucampus@gmail.com",
       "address": {
         "@type": "PostalAddress",
         "streetAddress": "Barangay Batu-Batu, Poblacion",
@@ -1818,8 +1818,8 @@ img[width], img[height] {
                     <thead><tr><th>Your concern</th><th>Contact</th></tr></thead>
                     <tbody>
                         <tr><td>Enrollment, status, learner records</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
-                        <tr><td>Application status, online form issues</td><td>SmartCampus project team &middot; <a href="mailto:smartcampus@bbnihs.edu.ph">smartcampus@bbnihs.edu.ph</a></td></tr>
-                        <tr><td>Website, technical support</td><td>SmartCampus project team &middot; <a href="mailto:smartcampus@bbnihs.edu.ph">smartcampus@bbnihs.edu.ph</a></td></tr>
+                        <tr><td>Application status, online form issues</td><td>SmartCampus project team &middot; <a href="mailto:batubatucampus@gmail.com">batubatucampus@gmail.com</a></td></tr>
+                        <tr><td>Website, technical support</td><td>SmartCampus project team &middot; <a href="mailto:batubatucampus@gmail.com">batubatucampus@gmail.com</a></td></tr>
                         <tr><td>School policies, complaints, learner protection</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
                         <tr><td>Other / general</td><td>Batu-Batu NHS &middot; (062) 992-4151 (DepEd Tawi-Tawi Schools Division Office)</td></tr>
                     </tbody>

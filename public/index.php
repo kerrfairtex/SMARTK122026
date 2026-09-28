@@ -1943,10 +1943,10 @@ img[width], img[height] {
                 </p>
             </div>
         </section>
-    <!-- Responsive Design & Architecture Note -->
-    <section id="responsive-design" class="reveal surface-tide">
+    <!-- Batu-Batu Section Note -->
+    <section id="batu-batu" class="reveal surface-tide">
         <div class="container">
-            <h2 class="section-title">Responsive Design</h2>
+            <h2 class="section-title">Batu-Batu</h2>
             <p class="section-subtitle">Batu-Batu National High School (BBNHS) is a public secondary educational institution located in the municipality of Panglima Sugala (formerly known as Balimbing), within the island province of Tawi-Tawi, Philippines.</p>
 
 

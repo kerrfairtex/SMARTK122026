@@ -1241,6 +1241,112 @@ img[width], img[height] {
 .slide-indicator { font-family: var(--font-utility); font-size: 0.65rem; color: rgba(200,205,215,0.5); letter-spacing: 0.05em; text-transform: uppercase; }
 @media (max-width: 860px) { .slide-card { flex: 0 0 calc(50% - var(--space-2)); min-width: 200px; } }
 @media (max-width: 480px) { .slide-card { flex: 0 0 100%; min-width: 100%; } }
+
+/* Realistic buttons — 3D metallic silver + engraved text + gold accent */
+.btn--primary,
+.btn--secondary,
+.btn--ghost,
+.btn--primary:hover,
+.btn--secondary:hover,
+.btn--ghost:hover {
+    position: relative;
+    overflow: hidden;
+    transition: all var(--dur-hover) var(--ease-standard);
+}
+/* Primary: metallic gold/silver blend with deep navy */
+.btn--primary {
+    background: linear-gradient(135deg, #F4B400 0%, #D4932A 50%, #8A6D2F 100%);
+    border: 1px solid rgba(244,180,0,0.5);
+    border-top: 2px solid rgba(255,230,150,0.6);
+    border-bottom: 2px solid rgba(140,100,30,0.6);
+    color: var(--ink-deep);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.9rem;
+    letter-spacing: 0.06em;
+    padding: 0.6rem 1.4rem;
+    border-radius: var(--radius-2);
+    box-shadow:
+        0 4px 0 rgba(140,100,30,0.4),
+        0 6px 12px rgba(244,180,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.25);
+    text-shadow: inset 0 -1px 0 rgba(60,30,10,0.3), 0 1px 2px rgba(255,255,255,0.15);
+}
+.btn--primary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 0 rgba(140,100,30,0.5),
+        0 10px 20px rgba(244,180,0,0.4),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    filter: brightness(1.08);
+}
+.btn--primary:active {
+    transform: translateY(2px);
+    box-shadow:
+        0 1px 0 rgba(140,100,30,0.6),
+        0 2px 4px rgba(244,180,0,0.2),
+        inset 0 2px 0 rgba(60,30,10,0.4);
+}
+/* Secondary: cool silver steel */
+.btn--secondary {
+    background: linear-gradient(135deg, #CFE8E4 0%, #A8BCC8 50%, #889AA8 100%);
+    border: 1px solid rgba(207,232,228,0.5);
+    border-top: 2px solid rgba(255,255,255,0.5);
+    border-bottom: 2px solid rgba(100,120,140,0.5);
+    color: var(--ink-deep);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    padding: 0.55rem 1.3rem;
+    border-radius: var(--radius-2);
+    box-shadow:
+        0 4px 0 rgba(100,120,140,0.25),
+        0 6px 12px rgba(140,160,170,0.15),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+    text-shadow: inset 0 -1px 0 rgba(60,80,100,0.15), 0 1px 1px rgba(255,255,255,0.2);
+}
+.btn--secondary:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 6px 0 rgba(100,120,140,0.35),
+        0 10px 18px rgba(140,160,170,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    filter: brightness(1.05);
+}
+.btn--secondary:active {
+    transform: translateY(2px);
+    box-shadow:
+        0 1px 0 rgba(100,120,140,0.45),
+        0 2px 4px rgba(140,160,170,0.15),
+        inset 0 2px 0 rgba(60,80,100,0.3);
+}
+/* Ghost: minimal outline with engraved look */
+.btn--ghost {
+    background: transparent;
+    border: 1.5px solid rgba(244,180,0,0.35);
+    color: var(--foam);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    padding: 0.55rem 1.2rem;
+    border-radius: var(--radius-2);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+    text-shadow: inset 0 -1px 0 rgba(0,0,0,0.2);
+    transition: all var(--dur-hover) var(--ease-standard);
+}
+.btn--ghost:hover {
+    background: rgba(244,180,0,0.08);
+    border-color: var(--sun-gold);
+    color: var(--sun-gold);
+    transform: translateY(-2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.12), 0 4px 12px rgba(244,180,0,0.15);
+}
+.btn--ghost:active {
+    transform: translateY(1px);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
+}
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>

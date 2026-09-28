@@ -1962,6 +1962,58 @@ img[width], img[height] {
 
         <!-- ============================================================
              CONTACT (Part 3 §8)
+        <!-- ============================================================
+             RESPONSIVE DESIGN (Part 3 — info + cards + carousel)
+             ============================================================ -->
+        <section id="responsive-design" class="reveal surface-tide">
+            <div class="container">
+                <h2 class="section-title">Responsive Design</h2>
+                <p class="section-subtitle">This landing page uses fluid grids, relative units, and media queries to adapt to any screen size or device.</p>
+
+                <div class="about-card">
+                    <p class="about-card__heading">Related Terms</p>
+                    <p class="about-card__body">
+                        <strong>Adaptive design</strong> uses fixed breakpoints (distinct layouts for phone/tablet/desktop) rather than continuous fluid scaling.<br>
+                        <strong>Mobile-first design</strong> builds the mobile layout first, then progressively enhances for larger screens.<br>
+                        <strong>Fluid/liquid layout</strong> uses percentage, <code>fr</code>, or <code>vw</code> units instead of fixed pixels.<br>
+                        In practice, <strong>responsive</strong> is the umbrella term — implemented here with CSS Grid / Flexbox, <code>clamp()</code> for fluid typography, and container queries where applicable.
+                    </p>
+                </div>
+
+                <div class="about-card">
+                    <p class="about-card__heading">How This Page Responds</p>
+                    <ul style="list-style: none; padding-left: 0; line-height: 1.8;">
+                        <li>• <strong>Desktop (&gt;1024px):</strong> full navigation bar, multi-column photo strips, expanded hero with full seal.</li>
+                        <li>• <strong>Tablet (720px–1024px):</strong> compressed hero height (<code>max-height: 800px</code>), single-column grids begin stacking.</li>
+                        <li>• <strong>Mobile (&lt;720px):</strong> hamburger toggle for nav, hero seal scales via <code>clamp()</code>, form fields constrain to 245px width, no horizontal overflow.</li>
+                    </ul>
+                </div>
+
+                <div class="slide-carousel" aria-label="School news and updates">
+                    <div class="slide-track" id="slideTrack">
+                        <div class="slide-card"><h4>School Announcements</h4><p>New policies, schedules, principal announcements.</p></div>
+                        <div class="slide-card"><h4>Enrollment</h4><p>Dates, requirements, registration, status updates.</p></div>
+                        <div class="slide-card"><h4>Uniform & Dress</h4><p>New design, PE uniform, prescribed attire rules.</p></div>
+                        <div class="slide-card"><h4>Academic</h4><p>Exams, grading, class schedules, recognition.</p></div>
+                        <div class="slide-card"><h4>Sports</h4><p>Intramurals, Palaro, basketball, athletics.</p></div>
+                        <div class="slide-card"><h4>Student Activities</h4><p>Clubs, organizations, school contests.</p></div>
+                        <div class="slide-card"><h4>DepEd / BARMM</h4><p>Orders, calendar, education programs.</p></div>
+                        <div class="slide-card"><h4>Events</h4><p>Foundation Day, Buwan ng Wika, graduation.</p></div>
+                        <div class="slide-card"><h4>Community</h4><p>Barangay activities, disaster notices.</p></div>
+                        <div class="slide-card"><h4>Facilities</h4><p>New buildings, labs, equipment, repairs.</p></div>
+                        <div class="slide-card"><h4>Achievements</h4><p>Awards, competition results, certifications.</p></div>
+                        <div class="slide-card"><h4>Notices</h4><p>Suspensions, weather, emergency updates.</p></div>
+                    </div>
+                    <div class="slide-nav">
+                        <button class="slide-prev" aria-label="Previous">‹</button>
+                        <span class="slide-indicator">1 / 3 groups</span>
+                        <button class="slide-next" aria-label="Next">›</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
              Routing table preserved as-is per spec (no decoration).
              ============================================================ -->
         <section id="contact" class="reveal">

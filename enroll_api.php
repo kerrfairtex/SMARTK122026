@@ -777,8 +777,8 @@ function handleRequest() {
                 break;
 
             case 'delete':
-                // Admin action: delete an application
-                if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
+                // Admin action: delete an application - admin ONLY
+                if (!isset($_SESSION['STAFF_ID']) || ($_SESSION['PROFILE'] ?? '') !== 'admin') {
                     throw new Exception("Unauthorized. Admin access required.");
                 }
 

@@ -62,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                     : (crypt($password, $pwd) === $pwd);
                 if ($verified) {
                     // Success - set session
-                    $_SESSION['STAFF_ID'] = (int)$staff['STAFF_ID'] ?? $staff['staff_id'] ?? 0;
+                    $staffId = $staff['STAFF_ID'] ?? $staff['staff_id'] ?? $staff['STAFFID'] ?? null;
+                    $_SESSION['STAFF_ID'] = $staffId ? (int)$staffId : 0;
                     $_SESSION['USERNAME'] = $staff['USERNAME'] ?? $staff['username'] ?? '';
                     $_SESSION['PROFILE'] = $staff['PROFILE'] ?? $staff['profile'] ?? '';
                     $_SESSION['LAST_LOGIN'] = date('Y-m-d H:i:s');

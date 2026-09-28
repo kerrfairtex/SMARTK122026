@@ -83,7 +83,7 @@ input,select{font:inherit}
 .role-badge b{color:var(--text)}
 .icon-btn{width:36px;height:36px;border:none;background:none;color:var(--muted);display:flex;align-items:center;justify-content:center;border-radius:8px}
 .icon-btn:hover{background:#1E2126;color:var(--text)}
-.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:40}
+.scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:55}
 main{flex-grow:1;min-width:0;padding:26px 30px 40px}
 .ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;font-weight:500}

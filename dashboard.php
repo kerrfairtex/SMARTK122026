@@ -146,7 +146,7 @@ tr:last-child td{border-bottom:none}
 @media (max-width:860px){
   .topbar{display:flex}
   .sidebar{position:fixed;top:0;left:0;height:100%;width:240px;transform:translateX(-100%);transition:transform .2s ease;z-index:50}
-  #navcb:checked ~ .shell .sidebar{transform:translateX(0)}
+  #navcb:checked ~ #dashboard .sidebar{transform:translateX(0)}
   #navcb:checked ~ .scrim{display:block}
   .shell{flex-direction:column}
   main{padding:18px 16px 32px}

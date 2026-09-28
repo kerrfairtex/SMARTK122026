@@ -716,6 +716,66 @@ function handleRequest() {
                 echo json_encode($result);
                 break;
 
+            case 'approve':
+            case 'reject':
+            case 'enroll':
+                // Admin action: update application status
+                // The action name IS the target status (approve->approved, reject->rejected, enroll->enrolled)
+                if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
+                    throw new Exception("Unauthorized. Teacher or admin access required.");
+                }
+
+                // Map action to status
+                $actionToStatus = [
+                    'approve' => 'approved',
+                    'reject' => 'rejected',
+                    'enroll' => 'enrolled',
+                ];
+                $newStatus = $actionToStatus[$action] ?? $action;
+
+                // Read application_id from POST (form-encoded) or JSON body
+                $appId = 0;
+                if (isset($_POST['application_id'])) {
+                    $appId = (int)$_POST['application_id'];
+                } elseif (isset($_GET['application_id'])) {
+                    $appId = (int)$_GET['application_id'];
+                } else {
+                    // Try JSON body
+                    $input = file_get_contents('php://input');
+                    $jsonData = json_decode($input, true);
+                    if (is_array($jsonData) && isset($jsonData['application_id'])) {
+                        $appId = (int)$jsonData['application_id'];
+                    }
+                }
+
+                if (!$appId) {
+                    throw new Exception("Missing required parameter: application_id");
+                }
+
+                // Validate status
+                $validStatuses = ['submitted', 'under_review', 'approved', 'rejected', 'enrolled'];
+                if (!in_array($newStatus, $validStatuses)) {
+                    throw new Exception("Invalid status: " . $newStatus);
+                }
+
+                $conn = db_conn();
+                $sql = "UPDATE kerrfairtex.enrollment_applications SET status = $1 WHERE id = $2 RETURNING id, status";
+                $result = pg_query_params($conn, $sql, [$newStatus, $appId]);
+
+                if ($result === false) {
+                    throw new Exception("Database error: " . pg_last_error($conn));
+                }
+
+                $row = pg_fetch_assoc($result);
+                if ($row) {
+                    http_response_code(200);
+                    echo json_encode(['success' => true, 'id' => (int)$row['id'], 'status' => $row['status']]);
+                } else {
+                    http_response_code(404);
+                    echo json_encode(['success' => false, 'error' => 'Application not found.']);
+                }
+                break;
+
             default:
                 http_response_code(400);
                 echo json_encode([

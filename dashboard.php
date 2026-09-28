@@ -417,7 +417,8 @@ function closeModal() { document.getElementById('modal').classList.remove('open'
 async function setStatus(id, status) {
   try {
     const formData = new URLSearchParams();
-    formData.append('action', status);
+    const actionMap = { 'approved': 'approve', 'rejected': 'reject', 'enrolled': 'enroll' };
+    formData.append('action', actionMap[status] || status);
     formData.append('application_id', id);
     formData.append('token', TOKEN);
 
@@ -428,7 +429,7 @@ async function setStatus(id, status) {
     const data = await res.json();
     if (data.success) {
       const a = findApp(id);
-      if (a) a.status = status;
+      if (a) a.status = data.status || status;
       renderStats();
       renderTable();
       if (document.getElementById('modal').classList.contains('open')) openModal(id);
@@ -443,9 +444,9 @@ document.addEventListener('click', e => {
   if (!btn) return;
   const id = btn.dataset.id, act = btn.dataset.act;
   if (act === 'view') openModal(id);
-  if (act === 'approve') setStatus(id, 'approve');
-  if (act === 'reject') setStatus(id, 'reject');
-  if (act === 'enroll') setStatus(id, 'enroll');
+  if (act === 'approve') setStatus(id, 'approved');
+  if (act === 'reject') setStatus(id, 'rejected');
+  if (act === 'enroll') setStatus(id, 'enrolled');
 });
 
 document.getElementById('modalClose').addEventListener('click', closeModal);

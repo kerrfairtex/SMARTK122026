@@ -20,11 +20,11 @@ header('X-Content-Type-Options: nosniff');
 header('Referrer-Policy: ' . 'strict-origin-when-cross-origin');
 header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
 
-// Handle logout
+// Handle logout - redirect to public landing page after session destruction
 if (isset($_GET['logout'])) {
     session_unset();
     session_destroy();
-    header('Location: index.php');
+    header('Location: /');
     exit;
 }
 
@@ -178,7 +178,7 @@ tr:last-child td{border-bottom:none}
       </nav>
       <div class="side-foot">
         <div class="role-badge"><b id="roleBadge">Admin</b> &middot; BBNHS</div>
-        <a href="index.php?modfunc=logout&token=<?php echo $_SESSION['token'] ?? ''; ?>" id="logoutBtn" aria-label="Log out" class="icon-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path><line x1="21" y1="12" x2="10" y2="12"></line><path d="M16 7l5 5-5 5"></path></svg></a>
+        <a href="dashboard.php?logout=1" id="logoutBtn" aria-label="Log out" class="icon-btn"><svg class="ic" viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h4"></path><line x1="21" y1="12" x2="10" y2="12"></line><path d="M16 7l5 5-5 5"></path></svg></a>
       </div>
     </aside>
     <main>

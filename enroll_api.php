@@ -776,6 +776,63 @@ function handleRequest() {
                 }
                 break;
 
+            case 'delete':
+                // Admin action: delete an application
+                if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
+                    throw new Exception("Unauthorized. Admin access required.");
+                }
+
+                $appId = 0;
+                if (isset($_POST['application_id'])) {
+                    $appId = (int)$_POST['application_id'];
+                } elseif (isset($_GET['application_id'])) {
+                    $appId = (int)$_GET['application_id'];
+                } else {
+                    $input = file_get_contents('php://input');
+                    $jsonData = json_decode($input, true);
+                    if (is_array($jsonData) && isset($jsonData['application_id'])) {
+                        $appId = (int)$jsonData['application_id'];
+                    }
+                }
+
+                if (!$appId) {
+                    throw new Exception("Missing required parameter: application_id");
+                }
+
+                $conn = db_conn();
+                // First get the application to include in response
+                $selectSql = "SELECT ref, status FROM kerrfairtex.enrollment_applications WHERE id = $1";
+                $selectResult = pg_query_params($conn, $selectSql, [$appId]);
+                $row = pg_fetch_assoc($selectResult);
+
+                if (!$row) {
+                    http_response_code(404);
+                    echo json_encode(['success' => false, 'error' => 'Application not found.']);
+                    break;
+                }
+
+                // Only allow delete of applications that are already processed
+                // (approved, rejected, or enrolled) - don't allow deleting submitted/pending
+                if (!in_array($row['status'], ['approved', 'rejected', 'enrolled'])) {
+                    throw new Exception("Cannot delete application with status: " . $row['status'] . ". Only processed applications can be deleted.");
+                }
+
+                // Delete the application
+                $deleteSql = "DELETE FROM kerrfairtex.enrollment_applications WHERE id = $1";
+                $deleteResult = pg_query_params($conn, $deleteSql, [$appId]);
+
+                if ($deleteResult === false) {
+                    throw new Exception("Database error: " . pg_last_error($conn));
+                }
+
+                http_response_code(200);
+                echo json_encode([
+                    'success' => true,
+                    'message' => 'Application ' . $row['ref'] . ' deleted successfully.',
+                    'deleted_ref' => $row['ref']
+                ]);
+                break;
+
             default:
                 http_response_code(400);
                 echo json_encode([

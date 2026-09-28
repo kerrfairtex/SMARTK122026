@@ -113,6 +113,7 @@ tr:last-child td{border-bottom:none}
 .act{width:30px;height:30px;border:none;background:none;color:var(--muted);border-radius:6px;display:flex;align-items:center;justify-content:center}
 .act:hover{background:#1E2126;color:var(--text)}
 .act.reject:hover{color:var(--terra)}
+.act.delete:hover{color:var(--reef-coral)}
 .act.approve:hover{color:var(--teal)}
 .pager{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .pager span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
@@ -141,6 +142,7 @@ tr:last-child td{border-bottom:none}
 .modal-actions .m-approve{background:var(--teal);color:#08221f;border:none}
 .modal-actions .m-reject{background:none;color:var(--terra);border:1px solid var(--terra)}
 .modal-actions .m-enroll{background:var(--green);color:#08221a;border:none}
+.modal-actions .m-delete{background:none;color:var(--reef-coral);border:1px solid var(--reef-coral)}
 @media (max-width:860px){
   .topbar{display:flex}
   .sidebar{position:fixed;top:0;left:0;height:100%;width:240px;transform:translateX(-100%);transition:transform .2s ease;z-index:50}
@@ -326,7 +328,12 @@ function actionsFor(a) {
     }
     return html;
   }
-  return '<button class="act" data-act="view" data-id="' + a.id + '" aria-label="View application"><svg class="ic" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>';
+  let html = '<button class="act" data-act="view" data-id="' + a.id + '" aria-label="View application"><svg class="ic" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="3"></circle></svg></button>';
+  // Add delete button for processed applications (admin only)
+  if (isAdmin && ['approved', 'rejected', 'enrolled'].includes(a.status)) {
+    html += '<button class="act delete admin-only" data-act="delete" data-id="' + a.id + '" aria-label="Delete application"><svg class="ic" viewBox="0 0 24 24" style="width:15px;height:15px"><path d="M3 6h18"></path><path d="M8 6V4a4 4 0 0 1 8 0v2"></path><line x1="5" y1="10" x2="19" y2="10"></line><path d="M10 14h4"></path><path d="M14" y1="14" x1="10v6a2 2 0 0 0 4 0v-6"></path></svg></button>';
+  }
+  return html;
 }
 
 function renderStats() {
@@ -414,6 +421,32 @@ function modalActions(a) {
 
 function closeModal() { document.getElementById('modal').classList.remove('open'); }
 
+function deleteApplication(id) {
+  if (!confirm('Are you sure you want to delete this application? This action cannot be undone.')) return;
+  const formData = new URLSearchParams();
+  formData.append('action', 'delete');
+  formData.append('application_id', id);
+  formData.append('token', TOKEN);
+  fetch('enroll_api.php', { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(data => {
+      if (data.success) {
+        alert(data.message || 'Application deleted.');
+        // Remove from list
+        apps = apps.filter(a => a.id !== Number(id));
+        renderStats();
+        renderTable();
+        closeModal();
+      } else {
+        alert(data.error || 'Failed to delete application.');
+      }
+    })
+    .catch(e => {
+      console.error('Delete failed:', e);
+      alert('Failed to delete application.');
+    });
+}
+
 async function setStatus(id, status) {
   try {
     const formData = new URLSearchParams();
@@ -447,6 +480,7 @@ document.addEventListener('click', e => {
   if (act === 'approve') setStatus(id, 'approved');
   if (act === 'reject') setStatus(id, 'rejected');
   if (act === 'enroll') setStatus(id, 'enrolled');
+  if (act === 'delete') deleteApplication(id);
 });
 
 document.getElementById('modalClose').addEventListener('click', closeModal);

@@ -259,7 +259,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       <button type="submit" class="btn-login">Login</button>
     </form>
 
-    <a href="/index.php?logout=1" class="back-link">&larr; Back to Login</a>
+    <a href="index.php" class="back-link">&larr; Back to Home</a>
   </div>
 </body>
 </html>

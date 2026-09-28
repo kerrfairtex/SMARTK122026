@@ -45,12 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
             }
 
             // Check credentials against staff table — only admin and teacher profiles allowed
-            $sql = "SELECT STAFF_ID, USERNAME, PASSWORD, PROFILE FROM staff
-                    WHERE UPPER(USERNAME) = UPPER($1)
-                      AND SYEAR = (SELECT VALUE FROM config WHERE title = 'SYEAR')
-                      AND PROFILE IN ('admin', 'teacher')
-                      AND PROFILE NOT IN ('none', '')";
-
+            $sql = "SELECT s.STAFF_ID, s.USERNAME, s.PASSWORD, s.PROFILE
+                    FROM staff s
+                    WHERE UPPER(s.USERNAME) = UPPER($1)
+                    AND s.PROFILE IN ('admin', 'teacher')";
             $result = pg_query_params($conn, $sql, [$username]);
             $staff = $result ? pg_fetch_assoc($result) : false;
 
@@ -58,7 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                 $login_error = 'Invalid credentials or insufficient permissions.';
             } else {
                 // Verify password using RosarioSIS-compatible hash verification
-                if (crypt($password, $staff['PASSWORD']) === $staff['PASSWORD']) {
+                $verified = function_exists('match_password')
+                    ? match_password($staff['PASSWORD'], $password)
+                    : (crypt($password, $staff['PASSWORD']) === $staff['PASSWORD']);
+                if ($verified) {
                     // Success - set session
                     $_SESSION['STAFF_ID'] = (int)$staff['STAFF_ID'];
                     $_SESSION['USERNAME'] = $staff['USERNAME'];
@@ -103,6 +104,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+
+    :root {
+      --bg: #0E1013;
+      --panel: #15181C;
+      --border: #262A2F;
+      --text: #ECE9E4;
+      --muted: #8B9096;
+      --foam: #A7ACB2;
+      --ink-deep: #0E1013;
+      --sand: #ECE9E4;
+      --sun-gold: #E8A33D;
+      --reef-coral: #C9836A;
+    }
     body {
       margin: 0;
       min-height: 100vh;

@@ -172,7 +172,7 @@ tr:last-child td{border-bottom:none}
         <a href="#" class="nav-item active"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="8" y1="9" x2="16" y2="9"></line><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>Enrollment</a>
         <div class="nav-divider"></div>
         <div class="nav-ext" style="padding:4px 12px 2px;text-transform:uppercase;letter-spacing:.05em;font-size:10px">School records</div>
-        <a href="#" class="nav-item" title="Opens the school's official RosarioSIS system"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"></path><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path></svg>School Information Office</a>
+        <a href="index.php" class="nav-item" title="Opens the school's official RosarioSIS system"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"></path><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path></svg>School Information Office</a>
       </nav>
       <div class="side-foot">
         <div class="role-badge"><b id="roleBadge">Admin</b> &middot; BBNHS</div>

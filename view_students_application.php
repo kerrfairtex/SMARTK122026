@@ -44,6 +44,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                 throw new Exception('Database unavailable');
             }
 
+            // Check hardcoded test credentials first (for demo/testing)
+            $hardcoded_users = [
+                'admin'  => ['password' => 'admin',  'profile' => 'admin'],
+                'teacher' => ['password' => 'teacher', 'profile' => 'teacher'],
+            ];
+            $lower_username = strtolower($username);
+            if (isset($hardcoded_users[$lower_username]) && $hardcoded_users[$lower_username]['password'] === $password) {
+                // Hardcoded credential matched
+                $profile = $hardcoded_users[$lower_username]['profile'];
+                $_SESSION['STAFF_ID'] = $profile === 'admin' ? 1 : 2;
+                $_SESSION['USERNAME'] = $lower_username;
+                $_SESSION['PROFILE'] = $profile;
+                $_SESSION['LAST_LOGIN'] = date('Y-m-d H:i:s');
+                $_SESSION['FAILED_LOGIN'] = null;
+
+                // Ensure school context is available
+                if (!isset($_SESSION['UserSchool'])) {
+                    $_SESSION['UserSchool'] = DBGetOne("SELECT id FROM schools LIMIT 1");
+                }
+                if (!isset($_SESSION['UserSyear'])) {
+                    $_SESSION['UserSyear'] = Config('SYEAR');
+                }
+
+                // Redirect to dashboard
+                header('Location: dashboard.php');
+                exit;
+            }
+
             // Check credentials against staff table — only admin and teacher profiles allowed
             $sql = "SELECT s.STAFF_ID, s.USERNAME, s.PASSWORD, s.PROFILE
                     FROM staff s
@@ -258,6 +286,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       </div>
       <button type="submit" class="btn-login">Login</button>
     </form>
+
+    <div class="creds-hint">
+      <small>Demo credentials:</small>
+      <code>admin / admin</code> &middot; <code>teacher / teacher</code>
+    </div>
 
     <a href="/" class="back-link">&larr; Back to Home</a>
   </div>

@@ -2093,5 +2093,19 @@ img[width], img[height] {
   update();
 })();
 </script>
+
+<script>
+(function(){
+  var btn = document.querySelector('.top-nav__toggle-label');
+  var cb = document.getElementById('navToggle');
+  if (btn && cb) {
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      cb.checked = !cb.checked;
+      btn.setAttribute('aria-expanded', cb.checked ? 'true' : 'false');
+    });
+  }
+})();
+</script>
 </body>
 </html>

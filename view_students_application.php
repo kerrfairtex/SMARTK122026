@@ -56,14 +56,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                 $login_error = 'Invalid credentials or insufficient permissions.';
             } else {
                 // Verify password using RosarioSIS-compatible hash verification
+                $pwd = $staff['PASSWORD'] ?? $staff['password'] ?? '';
                 $verified = function_exists('match_password')
-                    ? match_password($staff['PASSWORD'], $password)
-                    : (crypt($password, $staff['PASSWORD']) === $staff['PASSWORD']);
+                    ? match_password($pwd, $password)
+                    : (crypt($password, $pwd) === $pwd);
                 if ($verified) {
                     // Success - set session
-                    $_SESSION['STAFF_ID'] = (int)$staff['STAFF_ID'];
-                    $_SESSION['USERNAME'] = $staff['USERNAME'];
-                    $_SESSION['PROFILE'] = $staff['PROFILE'];
+                    $_SESSION['STAFF_ID'] = (int)$staff['STAFF_ID'] ?? $staff['staff_id'] ?? 0;
+                    $_SESSION['USERNAME'] = $staff['USERNAME'] ?? $staff['username'] ?? '';
+                    $_SESSION['PROFILE'] = $staff['PROFILE'] ?? $staff['profile'] ?? '';
                     $_SESSION['LAST_LOGIN'] = date('Y-m-d H:i:s');
                     $_SESSION['FAILED_LOGIN'] = null;
 

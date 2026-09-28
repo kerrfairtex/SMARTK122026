@@ -293,7 +293,11 @@ async function fetchApps() {
 
 function fmtDate(d) {
   if (!d) return '';
-  const dt = new Date(d + 'T00:00:00');
+  // Handle PostgreSQL timestamp format (e.g., "2026-09-28 11:30:45+00")
+  // Replace first space with 'T' to create ISO format, then parse
+  const isoStr = d.replace(' ', 'T');
+  const dt = new Date(isoStr);
+  if (isNaN(dt.getTime())) return 'N/A';
   return dt.toLocaleDateString('en-US', {month: 'short', day: 'numeric'});
 }
 

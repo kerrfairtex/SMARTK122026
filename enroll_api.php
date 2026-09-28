@@ -596,7 +596,7 @@ function logError($message, $context = []) {
         'ip' => $_SERVER['REMOTE_ADDR'] ?? 'unknown',
         'ua' => substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 200),
         'method' => $_SERVER['REQUEST_METHOD'] ?? 'unknown',
-        'action' => $_GET['action'] ?? 'unknown',
+        'action' => $_GET['action'] ?? $_POST['action'] ?? 'unknown',
         'context' => $context
     ];
     error_log('[' . date('Y-m-d H:i:s') . '] Enrollment API: ' . json_encode($entry));
@@ -647,7 +647,7 @@ function handleRequest() {
     }
 
     try {
-        $action = $_GET['action'] ?? '';
+        $action = $_GET['action'] ?? $_POST['action'] ?? '';
 
         switch ($action) {
             case 'config':

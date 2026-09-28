@@ -225,8 +225,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       <div class="brand-mark"><span>SK</span></div>
       <div class="brand-name">SmartCampus K12</div>
     </div>
-    <h1>Staff Login</h1>
-    <p>Enter your credentials to access the Enrollment Dashboard</p>
+    <h1>Admin and Teachers only!</h1>
 
     <?php if (!empty($login_error)): ?>
       <div class="error-msg"><?= htmlspecialchars($login_error) ?></div>

@@ -181,6 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       border: 1px solid var(--border, #262A2F);
       border-radius: 8px;
       padding: 0.75rem 1rem;
+      color: #ECE9E4;
       color: var(--text);
       font-size: 0.95rem;
       transition: border-color 0.2s;

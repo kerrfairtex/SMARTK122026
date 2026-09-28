@@ -287,10 +287,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       <button type="submit" class="btn-login">Login</button>
     </form>
 
-    <div class="creds-hint">
-      <small>Demo credentials:</small>
-      <code>admin / admin</code> &middot; <code>teacher / teacher</code>
-    </div>
+
 
     <a href="/" class="back-link">&larr; Back to Home</a>
   </div>

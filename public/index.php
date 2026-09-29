@@ -1,5 +1,4 @@
-<@keyframes logoRotation { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-?php
+<?php
 // Public landing page security headers.
 header('Content-Security-Policy: default-src \'self\'; script-src \'self\' \'unsafe-inline\' https://accounts.google.com https://apis.google.com https://www.googletagmanager.com https://www.google-analytics.com https://ssl.google-analytics.com https://cdn.ampproject.org; style-src \'self\' \'unsafe-inline\' https://fonts.googleapis.com; font-src \'self\' https://fonts.gstatic.com; img-src \'self\' data: https:; connect-src \'self\' https://smartcampk12.onrender.com https://smartk-122026.vercel.app; frame-ancestors \'none\'; form-action \'self\'; base-uri \'self\'; object-src \'none\';');
 header('X-Frame-Options: DENY');
@@ -1217,7 +1216,7 @@ img[width], img[height] {
 #extended-gallery.open { display: block; }
 
 /* Cleaned inline-style replacements */
-.hero__seal-wrap { position: relative; display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0 auto 1.5rem; perspective: 1200px; perspective-origin: center; }
+.hero__seal-wrap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0; perspective: 1200px; perspective-origin: center; }
 .hero__seal { position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: 0 20px 60px rgba(244,180,0,0.35), var(--elev-3); z-index: 2; transform: rotate(3deg) rotateY(-6deg) rotateX(2deg); transition: transform var(--dur-hover) var(--ease-out); }
 .nav-logo { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
 .gallery-toggle-wrapper { text-align: center; margin: var(--space-4) 0; }

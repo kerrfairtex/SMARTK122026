@@ -608,12 +608,17 @@ html.a11y-large { font-size: 115%; }
 /* ---------- Hero ---------- */
 .hero {
     position: relative;
-    min-height:  60vh;
+    background: var(--ink-deep);
+    overflow: hidden;
+    /* Simple vertical flex column: seal stage first, then text below */
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    background: var(--ink-deep);
+    gap: clamp(40px, 8vw, 80px);
+    padding: clamp(48px, 8vw, 80px) var(--space-3);
+    min-height: 60vh;
+    text-align: center;
 }
 .hero__canvas-wrap {
     position: absolute;
@@ -638,12 +643,130 @@ html.a11y-large { font-size: 115%; }
         radial-gradient(ellipse 60% 40% at 30% 80%, rgba(14,79,79,0.6), transparent),
         radial-gradient(ellipse 50% 30% at 70% 90%, rgba(14,79,79,0.5), transparent);
 }
+.hero__clock {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    color: var(--foam);
+    opacity: 0.7;
+    font-family: var(--font-utility);
+    font-size: 0.85rem;
+    z-index: 3;
+}
+
+/* Hero seal stage: one self-contained visual unit in normal flow */
+.hero-seal-stage {
+    position: relative;
+    z-index: 1;
+    /* Real space in flow — no absolute, no negative margins */
+    width: clamp(220px, 62vw, 340px);
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+    flex-shrink: 0;
+}
+.hero__seal-wrap {
+    position: absolute;
+    inset: 50%;
+    transform: translate(-50%, -50%);
+    width: 55%;
+    height: 55%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    perspective: 1200px;
+    perspective-origin: center;
+    z-index: 2;
+}
+.hero__seal {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+    border: 3px solid var(--sun-gold);
+    box-shadow: 0 20px 60px rgba(244,180,0,0.35), var(--elev-3);
+    z-index: 2;
+    transform: rotate(3deg) rotateY(-6deg) rotateX(2deg);
+    transition: transform var(--dur-hover) var(--ease-out);
+}
+/* Orbital system: positioned entirely within the seal stage */
+.logo-system {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    animation: logoRotation 24s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+}
+.orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(244,180,0,0.12);
+    animation: orbitSpin linear infinite;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+}
+.orbit-1 { animation-duration: 18s; animation-delay: 0s; }
+.orbit-2 { animation-duration: 25s; animation-delay: -6s; width: 75%; height: 75%; border-style: dotted; border-color: rgba(244,180,0,0.1); }
+.orbit-3 { animation-duration: 32s; animation-delay: -12s; width: 55%; height: 55%; border-style: solid; border-color: rgba(207,232,228,0.15); border-width: 1px; }
+.orbit-1-delayed { animation-duration: 22s; animation-delay: -3s; width: 85%; height: 85%; border-style: dashed; border-color: rgba(207,232,228,0.1); border-width: 1px; }
+.orbit-2-delayed { animation-duration: 28s; animation-delay: -9s; width: 65%; height: 65%; border-style: solid; border-color: rgba(207,232,228,0.08); border-width: 1px; }
+.orbit-ring {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(92%, 92%);
+    height: min(92%, 92%);
+    border-radius: 50%;
+    border: 2px solid rgba(244,180,0,0.08);
+    transform: translate(-50%, -50%);
+    animation: orbitSpin 30s linear infinite;
+    pointer-events: none;
+}
+.satellite {
+    --sat-size: 28px;
+    position: absolute;
+    width: var(--sat-size);
+    height: var(--sat-size);
+    transform: translate(-50%, -50%);
+    pointer-events: auto;
+    z-index: 3;
+    animation: counterSpin linear infinite;
+}
+.satellite img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    filter: invert(1) sepia(1) saturate(3) hue-rotate(30deg);
+}
+.satellite-1 { animation-duration: 18s; animation-delay: 0s; top: 50%; left: 93%; transform: translate(-50%, -50%) rotate(0deg); }
+.satellite-2 { animation-duration: 25s; animation-delay: -6s; top: 12.5%; left: 50%; transform: translate(-50%, -50%) rotate(270deg); }
+.satellite-3 { animation-duration: 32s; animation-delay: -12s; top: 41%; left: 24%; transform: translate(-50%, -50%) rotate(200deg); }
+.satellite-4 { animation-duration: 22s; animation-delay: -3s; top: 80%; left: 80%; transform: translate(-50%, -50%) rotate(45deg); }
+.satellite-5 { animation-duration: 28s; animation-delay: -9s; top: 25%; left: 71%; transform: translate(-50%, -50%) rotate(310deg); }
+
+/* Typography for hero text */
 .hero__content {
     position: relative;
     z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
-    max-width: 900px;
-    padding: var(--space-5) var(--space-3);
+    max-width: 60ch;
+    margin-inline: auto;
+    padding: 0;
+    /* Subtle backdrop prevents orbit glow from bleeding through text */
+    background: linear-gradient(180deg, rgba(10,20,32,0.8) 0%, transparent 30%);
+    padding: clamp(12px, 3vw, 24px) var(--space-3);
 }
 .hero__eyebrow {
     color: var(--sun-gold);
@@ -652,13 +775,63 @@ html.a11y-large { font-size: 115%; }
     text-transform: uppercase;
     letter-spacing: 0.12em;
     margin-bottom: var(--space-2);
+    text-wrap: balance;
 }
-.hero__title { color: var(--sand); margin-bottom: var(--space-3); text-shadow: 0 2px 12px rgba(0,0,0,0.4); }
-.hero__sub { color: var(--foam); font-size: 1.2rem; margin-bottom: var(--space-3); }
-.hero__location { color: var(--foam); opacity: 0.7; font-size: 0.9rem; margin-bottom: var(--space-4); font-family: var(--font-utility); }
-.hero__credibility { color: var(--foam); opacity: 0.6; font-size: 0.8rem; margin-bottom: var(--space-4); font-style: italic; }
-.hero__actions { display: flex; gap: var(--space-2); justify-content: center; flex-wrap: wrap; }
-.hero__clock { position: absolute; top: 1rem; right: 1rem; color: var(--foam); opacity: 0.7; font-family: var(--font-utility); font-size: 0.85rem; z-index: 3; }
+.hero__title {
+    font-size: clamp(2rem, 7vw, 3.5rem);
+    color: var(--sand);
+    margin-bottom: var(--space-3);
+    text-wrap: balance;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+.hero__sub {
+    color: var(--foam);
+    font-size: 1.2rem;
+    margin-bottom: var(--space-3);
+    text-wrap: balance;
+}
+.hero__location {
+    color: var(--foam);
+    opacity: 0.7;
+    font-size: 0.9rem;
+    margin-bottom: var(--space-4);
+    font-family: var(--font-utility);
+    text-wrap: balance;
+}
+.hero__credibility {
+    color: var(--foam);
+    opacity: 0.6;
+    font-size: 0.8rem;
+    margin-bottom: var(--space-4);
+    font-style: italic;
+    text-wrap: balance;
+}
+.hero__actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2);
+    width: 100%;
+    margin-top: var(--space-3);
+}
+.hero__actions .btn { min-height: 48px; }
+@media (min-width: 768px) {
+    .hero__actions {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+/* ===== Orbital System Animations ===== */
+@keyframes logoRotation {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+@keyframes orbitSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+@keyframes counterSpin {
+    from { transform: translate(-50%, -50%) rotate(0deg); }
+    to { transform: translate(-50%, -50%) rotate(-360deg); }
+}
 
 /* ---------- Signature horizon line ---------- */
 .horizon-line {
@@ -918,10 +1091,8 @@ html.tier-static .reveal { opacity: 1; transform: none; transition: none; }
 }
 
 @media (max-width: 720px) {
-    /* Shrink the hero on small screens so the fallback gradient doesn't
-       read as a giant block of near-empty color before content appears */
-    .hero { min-height: 60vh; }
-    .hero__content { padding: var(--space-4) var(--space-3); }
+    /* Hero shrinks via flex column + clamp padding in .hero rule above */
+    .hero { padding: clamp(32px, 6vw, 48px) var(--space-2); }
 }
 
 /* ---------- Accessibility bar: wrap instead of overflow ---------- */
@@ -1177,11 +1348,6 @@ img[width], img[height] {
     max-width: min(1100px, 100% - 1rem);
 }
 
-/* Hero content: ensure text doesn't overflow on tiny screens */
-.hero__content {
-    padding: var(--space-4) var(--space-2);
-}
-
 /* Photo strip: ensure figures don't force overflow */
 .photo-strip figure {
     width: 100%;
@@ -1216,8 +1382,6 @@ img[width], img[height] {
 #extended-gallery.open { display: block; }
 
 /* Cleaned inline-style replacements */
-.hero__seal-wrap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); display: flex; justify-content: center; align-items: center; width: min(92vw, 480px); height: min(92vw, 480px); margin: 0; perspective: 1200px; perspective-origin: center; }
-.hero__seal { position: relative; width: clamp(140px, 28vw, 210px); height: clamp(140px, 28vw, 210px); border-radius: 50%; object-fit: cover; border: 3px solid var(--sun-gold); box-shadow: 0 20px 60px rgba(244,180,0,0.35), var(--elev-3); z-index: 2; transform: rotate(3deg) rotateY(-6deg) rotateX(2deg); transition: transform var(--dur-hover) var(--ease-out); }
 .nav-logo { height: 32px; width: 32px; border-radius: 50%; object-fit: cover; vertical-align: middle; margin-right: 8px; }
 .gallery-toggle-wrapper { text-align: center; margin: var(--space-4) 0; }
 .gallery-subheading, .timeline-subheading, .about-subheading { margin-top: var(--space-4); color: var(--sand); font-family: var(--font-display); font-weight: 600; }
@@ -1348,26 +1512,6 @@ img[width], img[height] {
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.15);
 }
 
-/* ===== Educational Orbital System ===== */
-.logo-system { position: absolute; top: 50%; left: 50%; width: 480px; height: 480px; transform: translate(-50%, -50%); pointer-events: none; z-index: 1; animation: logoRotation 24s linear infinite; }
-.orbit { position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; border-radius: 50%; border: 1.5px dashed rgba(244,180,0,0.12); animation: orbitSpin linear infinite; pointer-events: auto; }
-.orbit-1 { animation-duration: 18s; animation-delay: 0s; }
-.orbit-2 { animation-duration: 25s; animation-delay: -6s; width: 75%; height: 75%; border-style: dotted; border-color: rgba(244,180,0,0.1); }
-.orbit-3 { animation-duration: 32s; animation-delay: -12s; width: 55%; height: 55%; border-style: solid; border-color: rgba(207,232,228,0.15); border-width: 1px; }
-.orbit-1-delayed { animation-duration: 22s; animation-delay: -3s; width: 85%; height: 85%; border-style: dashed; border-color: rgba(207,232,228,0.1); border-width: 1px; }
-.orbit-2-delayed { animation-duration: 28s; animation-delay: -9s; width: 65%; height: 65%; border-style: solid; border-color: rgba(207,232,228,0.08); border-width: 1px; }
-.satellite { position: absolute; width: 28px; height: 28px; pointer-events: auto; animation: counterSpin linear infinite; transition: filter var(--dur-hover) var(--ease-standard); }
-.satellite:hover { filter: drop-shadow(0 0 8px var(--sun-gold)) brightness(1.15); }
-.satellite-1 { animation-duration: 18s; animation-delay: 0s; top: 0; left: 50%; transform: translate(-50%, 0) rotate(0deg); }
-.satellite-2 { animation-duration: 25s; animation-delay: -6s; top: 50%; left: 100%; transform: translate(-50%, -50%) rotate(270deg); }
-.satellite-3 { animation-duration: 32s; animation-delay: -12s; top: 80%; left: 30%; transform: translate(-50%, -50%) rotate(200deg); }
-.satellite-4 { animation-duration: 22s; animation-delay: -3s; top: 30%; left: 10%; transform: translate(-50%, -50%) rotate(45deg); }
-.satellite-5 { animation-duration: 28s; animation-delay: -9s; top: 70%; left: 80%; transform: translate(-50%, -50%) rotate(310deg); }
-@keyframes logoRotation { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-@keyframes orbitSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
-@keyframes counterSpin { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(-360deg); } }
-@media (max-width: 860px) { .logo-system { width: 320px; height: 320px; } .satellite { width: 22px; height: 22px; } .orbit-1 { animation-duration: 22s; } .orbit-2 { animation-duration: 28s; } .orbit-3 { animation-duration: 35s; } }
-@media (prefers-reduced-motion: reduce) { .logo-system { animation: none; border: 1.5px solid rgba(244,180,0,0.25); border-radius: 50%; } .orbit { animation: none; border-style: solid; border-color: rgba(244,180,0,0.2); } .satellite { animation: none; } }
 </style>
     <link rel="stylesheet" href="/css/components.css" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="/css/components.css"></noscript>
@@ -1425,44 +1569,40 @@ img[width], img[height] {
             <div class="hero__fallback" aria-hidden="true"></div>
             <div class="hero__canvas-wrap" aria-hidden="true"></div>
             <time class="hero__clock" id="heroClock" datetime="">Tawi-Tawi <span id="clockTime">--:--:--</span></time>
-            <div class="hero__content">
+            <div class="hero-seal-stage" aria-label="Batu-Batu National High School seal with educational orbital system">
                 <div class="hero__seal-wrap">
-                    <img src="assets/images/BATUBATULOGO20261111111.jpg" class="hero__seal" alt="Batu-Batu National High School Official Seal" style="position: relative; z-index: 2;">
+                    <img src="assets/images/BATUBATULOGO20261111111.jpg" class="hero__seal" alt="Batu-Batu National High School Official Seal">
                 </div>
-
-        <div class="logo-system" aria-label="Educational satellites orbiting the school seal">
-            <div class="orbit orbit-1">
-                <a href="#glance" class="satellite satellite-1" aria-label="Schedule / Calendar" title="School Calendar">
-                    <img src="assets/themes/FlatSIS/btn/calendar.png" alt="Calendar" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(30deg);" loading="lazy">
-                </a>
+                <div class="logo-system" aria-hidden="true">
+                    <div class="orbit orbit-1"></div>
+                    <div class="orbit orbit-2"></div>
+                    <div class="orbit orbit-3"></div>
+                    <div class="orbit orbit-1-delayed"></div>
+                    <div class="orbit orbit-2-delayed"></div>
+                    <div class="orbit-ring" aria-hidden="true"></div>
+                    <a href="#glance" class="satellite satellite-1" aria-label="Schedule / Calendar" title="School Calendar">
+                        <img src="assets/themes/FlatSIS/btn/calendar.png" alt="Calendar" loading="lazy">
+                    </a>
+                    <a href="#academics" class="satellite satellite-2" aria-label="Grades / Data" title="Academic Programs">
+                        <img src="assets/themes/FlatSIS/btn/chart_icon.png" alt="Grades" loading="lazy">
+                    </a>
+                    <a href="#features" class="satellite satellite-3" aria-label="Library / Reading" title="Library Services">
+                        <img src="assets/themes/FlatSIS/btn/help.png" alt="Library" loading="lazy">
+                    </a>
+                    <a href="#admissions" class="satellite satellite-4" aria-label="Enrollment / Forms" title="Enrollment Status">
+                        <img src="assets/themes/FlatSIS/btn/info.png" alt="Enrollment" loading="lazy">
+                    </a>
+                    <a href="#contact" class="satellite satellite-5" aria-label="Contact / Communication" title="Contact School">
+                        <img src="assets/themes/FlatSIS/btn/back.png" alt="Contact" loading="lazy">
+                    </a>
+                </div>
             </div>
-            <div class="orbit orbit-2">
-                <a href="#academics" class="satellite satellite-2" aria-label="Grades / Data" title="Academic Programs">
-                    <img src="assets/themes/FlatSIS/btn/chart_icon.png" alt="Grades" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(45deg);" loading="lazy">
-                </a>
-            </div>
-            <div class="orbit orbit-3">
-                <a href="#features" class="satellite satellite-3" aria-label="Library / Reading" title="Library Services">
-                    <img src="assets/themes/FlatSIS/btn/help.png" alt="Library" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(60deg);" loading="lazy">
-                </a>
-            </div>
-            <div class="orbit orbit-1-delayed">
-                <a href="#admissions" class="satellite satellite-4" aria-label="Enrollment / Forms" title="Enrollment Status">
-                    <img src="assets/themes/FlatSIS/btn/info.png" alt="Enrollment" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(75deg);" loading="lazy">
-                </a>
-            </div>
-            <div class="orbit orbit-2-delayed">
-                <a href="#contact" class="satellite satellite-5" aria-label="Contact / Communication" title="Contact School">
-                    <img src="assets/themes/FlatSIS/btn/back.png" alt="Contact" style="width:28px;height:28px;object-fit:contain;filter:invert(1) sepia(1) saturate(3) hue-rotate(10deg);" loading="lazy">
-                </a>
-            </div>
-        </div>
-
+            <div class="hero__content reveal">
                 <p class="hero__eyebrow">Batu-Batu · Panglima Sugala · Tawi-Tawi · BARMM</p>
                 <h1 class="hero__title">Batu-Batu National High School</h1>
                 <p class="hero__sub">Learning, growing, and building the future of Tawi-Tawi</p>
                 <p class="hero__location">Barangay Batu-Batu, Poblacion &middot; Panglima Sugala &middot; Tawi-Tawi</p>
-                <p class="hero__credibility reveal">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290).</p>
+                <p class="hero__credibility">A public K-12 school serving the Batu-Batu community since its conversion to a national high school in 1982 (Batas Pambansa Blg. 290).</p>
                 <div class="hero__actions">
                     <a href="#about" class="btn btn--primary">Discover Our School</a>
                     <a href="#enroll-form" class="btn btn--ghost">Start Enrollment</a>

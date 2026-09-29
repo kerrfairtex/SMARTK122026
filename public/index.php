@@ -2153,7 +2153,7 @@ img[width], img[height] {
         </section>
 
 
-             Routing table preserved as-is per spec (no decoration).
+             <!-- Routing table preserved as-is per spec (no decoration).
              ============================================================ -->
         <section id="contact" class="reveal">
             <div class="container">

@@ -100,14 +100,6 @@ try {
 } catch (Throwable $t) {}
 
 try {
-    $r = @pg_query($conn, "SELECT count(*) AS n, max(created_at) AS last FROM kerrfairtex.access_log WHERE status LIKE 'contact_click:%' AND created_at > now() - interval '7 days'");
-    if ($r) {
-        $row = pg_fetch_assoc($r);
-        $contact_viber = 0; $contact_whatsapp = 0;
-    }
-} catch (Throwable $t) {}
-
-try {
     $r = @pg_query($conn, "SELECT status, count(*) AS n FROM kerrfairtex.access_log
                              WHERE status LIKE 'contact_click:%' AND created_at > now() - interval '7 days'
                              GROUP BY status");
@@ -246,17 +238,17 @@ footer { color: #94a3b8; font-size: 0.8rem; margin-top: 2rem; text-align: center
             <?php endforeach; ?>
         </table>
     <?php endif; ?>
-    <p style="margin-top:0.75rem;"><a href="admin_enroll.php" style="color:#1d4ed8;text-decoration:none;font-weight:600;">View Enrollment Applications &rarr;</a></p>
+    <p style="margin-top:0.75rem;"><a href="../dashboard.php" style="color:#1d4ed8;text-decoration:none;font-weight:600;">Open staff dashboard (applications &amp; students) &rarr;</a></p>
 </div>
 
 <h2>Direct links</h2>
 <div class="links">
-    <a href="about_edit.php?token=<?php echo h($_GET['token']); ?>">Edit mission / vision</a>
-    <a href="enroll_api.php?action=config" target="_blank">Enrollment config (JSON)</a>
-    <a href="contact_api.php" target="_blank">Contact endpoint (info)</a>
-    <a href="engagement.php" target="_blank">Engagement endpoint (info)</a>
+    <a href="../about_edit.php?token=<?php echo h($_GET['token']); ?>">Edit mission / vision</a>
+    <a href="../enroll_api.php?action=config" target="_blank">Enrollment config (JSON)</a>
+    <a href="../contact_api.php" target="_blank">Contact endpoint (info)</a>
+    <a href="../engagement.php" target="_blank">Engagement endpoint (info)</a>
 </div>
 
-<footer>Read-only snapshot &middot; No writes from this page &middot; 50 lines of PHP, zero JS</footer>
+<footer>Read-only snapshot &middot; No writes from this page</footer>
 </body>
 </html>

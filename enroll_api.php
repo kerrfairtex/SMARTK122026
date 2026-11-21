@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/database.inc.php';
 require_once __DIR__ . '/Warehouse.php';
+require_once __DIR__ . '/ProgramFunctions/SmartCampusEnrollment.fnc.php';
 
 // Error handling — never display errors to applicants
 error_reporting(E_ALL);
@@ -484,14 +485,48 @@ function getApplicationStatus($ref) {
 }
 
 /**
+ * Require a logged-in staff session with one of the given profiles.
+ * Exception code is used as the HTTP status.
+ */
+function requireStaff(array $profiles) {
+    if (empty($_SESSION['STAFF_ID'])) {
+        throw new Exception('Your session has expired. Please log in again.', 401);
+    }
+    if (!in_array($_SESSION['PROFILE'] ?? '', $profiles, true)) {
+        throw new Exception('You do not have permission to do this.', 403);
+    }
+}
+
+/**
+ * Staff state changes must be POST with the session CSRF token.
+ */
+function requireCsrfPost() {
+    if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
+        throw new Exception('This action requires POST.', 405);
+    }
+    $sent = (string)($_POST['token'] ?? '');
+    if ($sent === '' || empty($_SESSION['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $sent)) {
+        throw new Exception('Security token expired. Please reload the page.', 403);
+    }
+}
+
+/**
+ * Application id from the POST body.
+ */
+function postedApplicationId(): int {
+    $appId = (int)($_POST['application_id'] ?? 0);
+    if ($appId <= 0) {
+        throw new Exception('Missing required parameter: application_id', 400);
+    }
+    return $appId;
+}
+
+/**
  * List enrollment applications with search and filter support.
  * Requires authenticated teacher or admin session.
  */
 function listApplications($search, $status, $page, $perPage) {
-    // Auth check - teacher or admin only
-    if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
-        throw new Exception("Unauthorized. Teacher or admin access required.");
-    }
+    requireStaff(['admin', 'teacher']);
 
     $conn = db_conn();
 
@@ -532,7 +567,8 @@ function listApplications($search, $status, $page, $perPage) {
     $result = pg_query_params($conn, $sql, $params);
 
     if ($result === false) {
-        throw new Exception("Database error: " . pg_last_error($conn));
+        logError('listApplications failed', ['pg' => pg_last_error($conn)]);
+        throw new Exception('Could not load applications.', 500);
     }
 
     $applications = [];
@@ -556,8 +592,19 @@ function listApplications($search, $status, $page, $perPage) {
 
     $totalPages = max(1, (int)ceil($totalCount / $perPage));
 
+    // Overall counts per status for the dashboard stat cards (not filtered).
+    $stats = ['total' => 0, 'submitted' => 0, 'under_review' => 0, 'approved' => 0, 'enrolled' => 0, 'rejected' => 0];
+    $statsResult = pg_query($conn, "SELECT status, COUNT(*) AS n FROM kerrfairtex.enrollment_applications GROUP BY status");
+    while ($statsResult && ($row = pg_fetch_assoc($statsResult))) {
+        $stats['total'] += (int)$row['n'];
+        if (isset($stats[$row['status']])) {
+            $stats[$row['status']] = (int)$row['n'];
+        }
+    }
+
     return [
         'success' => true,
+        'stats' => $stats,
         'applications' => $applications,
         'total_count' => $totalCount,
         'total_pages' => $totalPages,
@@ -718,118 +765,96 @@ function handleRequest() {
 
             case 'approve':
             case 'reject':
-            case 'enroll':
-                // Admin action: update application status
-                // The action name IS the target status (approve->approved, reject->rejected, enroll->enrolled)
-                if (!isset($_SESSION['STAFF_ID']) || !in_array($_SESSION['PROFILE'] ?? '', ['admin', 'teacher'])) {
-                    throw new Exception("Unauthorized. Teacher or admin access required.");
-                }
+                requireStaff(['admin']);
+                requireCsrfPost();
+                $appId = postedApplicationId();
+                $newStatus = $action === 'approve' ? 'approved' : 'rejected';
 
-                // Map action to status
-                $actionToStatus = [
-                    'approve' => 'approved',
-                    'reject' => 'rejected',
-                    'enroll' => 'enrolled',
-                ];
-                $newStatus = $actionToStatus[$action] ?? $action;
-
-                // Read application_id from POST (form-encoded) or JSON body
-                $appId = 0;
-                if (isset($_POST['application_id'])) {
-                    $appId = (int)$_POST['application_id'];
-                } elseif (isset($_GET['application_id'])) {
-                    $appId = (int)$_GET['application_id'];
-                } else {
-                    // Try JSON body
-                    $input = file_get_contents('php://input');
-                    $jsonData = json_decode($input, true);
-                    if (is_array($jsonData) && isset($jsonData['application_id'])) {
-                        $appId = (int)$jsonData['application_id'];
-                    }
-                }
-
-                if (!$appId) {
-                    throw new Exception("Missing required parameter: application_id");
-                }
-
-                // Validate status
-                $validStatuses = ['submitted', 'under_review', 'approved', 'rejected', 'enrolled'];
-                if (!in_array($newStatus, $validStatuses)) {
-                    throw new Exception("Invalid status: " . $newStatus);
-                }
-
+                // Only pending applications can be approved or rejected.
                 $conn = db_conn();
-                $sql = "UPDATE kerrfairtex.enrollment_applications SET status = $1 WHERE id = $2 RETURNING id, status";
-                $result = pg_query_params($conn, $sql, [$newStatus, $appId]);
-
+                $result = pg_query_params(
+                    $conn,
+                    "UPDATE kerrfairtex.enrollment_applications SET status = $1
+                     WHERE id = $2 AND status IN ('submitted', 'under_review')
+                     RETURNING id, status",
+                    [$newStatus, $appId]
+                );
                 if ($result === false) {
-                    throw new Exception("Database error: " . pg_last_error($conn));
+                    logError('status update failed', ['pg' => pg_last_error($conn)]);
+                    throw new Exception('Could not update the application.', 500);
                 }
-
                 $row = pg_fetch_assoc($result);
-                if ($row) {
-                    http_response_code(200);
-                    echo json_encode(['success' => true, 'id' => (int)$row['id'], 'status' => $row['status']]);
-                } else {
-                    http_response_code(404);
-                    echo json_encode(['success' => false, 'error' => 'Application not found.']);
+                if (!$row) {
+                    $exists = pg_query_params($conn, 'SELECT status FROM kerrfairtex.enrollment_applications WHERE id = $1', [$appId]);
+                    $current = $exists ? pg_fetch_assoc($exists) : false;
+                    throw $current
+                        ? new Exception('This application is already ' . str_replace('_', ' ', $current['status']) . '.', 409)
+                        : new Exception('Application not found.', 404);
                 }
+                http_response_code(200);
+                echo json_encode(['success' => true, 'id' => (int)$row['id'], 'status' => $row['status']]);
+                break;
+
+            case 'enroll':
+                // Creates the RosarioSIS student + enrollment, then links the application.
+                requireStaff(['admin']);
+                requireCsrfPost();
+                try {
+                    $student = SmartCampusEnrollApplication(db_conn(), postedApplicationId());
+                } catch (RuntimeException $e) {
+                    if ($e->getPrevious()) {
+                        logError('enroll failed', ['error' => $e->getPrevious()->getMessage()]);
+                    }
+                    throw new Exception($e->getMessage(), $e->getCode() ?: 500);
+                }
+                http_response_code(200);
+                echo json_encode(['success' => true, 'status' => 'enrolled', 'student' => $student]);
+                break;
+
+            case 'students':
+                requireStaff(['admin', 'teacher']);
+                try {
+                    $result = SmartCampusListStudents(
+                        db_conn(),
+                        trim((string)($_GET['search'] ?? '')),
+                        (int)($_GET['grade_id'] ?? 0),
+                        (int)($_GET['page'] ?? 1),
+                        (int)($_GET['per_page'] ?? 10)
+                    );
+                } catch (RuntimeException $e) {
+                    throw new Exception($e->getMessage(), $e->getCode() ?: 500);
+                }
+                http_response_code(200);
+                echo json_encode($result);
                 break;
 
             case 'delete':
-                // Admin action: delete an application - admin ONLY
-                if (!isset($_SESSION['STAFF_ID']) || ($_SESSION['PROFILE'] ?? '') !== 'admin') {
-                    throw new Exception("Unauthorized. Admin access required.");
-                }
-
-                $appId = 0;
-                if (isset($_POST['application_id'])) {
-                    $appId = (int)$_POST['application_id'];
-                } elseif (isset($_GET['application_id'])) {
-                    $appId = (int)$_GET['application_id'];
-                } else {
-                    $input = file_get_contents('php://input');
-                    $jsonData = json_decode($input, true);
-                    if (is_array($jsonData) && isset($jsonData['application_id'])) {
-                        $appId = (int)$jsonData['application_id'];
-                    }
-                }
-
-                if (!$appId) {
-                    throw new Exception("Missing required parameter: application_id");
-                }
-
+                requireStaff(['admin']);
+                requireCsrfPost();
+                $appId = postedApplicationId();
                 $conn = db_conn();
-                // First get the application to include in response
-                $selectSql = "SELECT ref, status FROM kerrfairtex.enrollment_applications WHERE id = $1";
-                $selectResult = pg_query_params($conn, $selectSql, [$appId]);
-                $row = pg_fetch_assoc($selectResult);
 
+                // Enrolled applications are the student's admission record: keep them.
+                $result = pg_query_params(
+                    $conn,
+                    "DELETE FROM kerrfairtex.enrollment_applications
+                     WHERE id = $1 AND status IN ('approved', 'rejected')
+                     RETURNING ref",
+                    [$appId]
+                );
+                if ($result === false) {
+                    logError('delete failed', ['pg' => pg_last_error($conn)]);
+                    throw new Exception('Could not delete the application.', 500);
+                }
+                $row = pg_fetch_assoc($result);
                 if (!$row) {
-                    http_response_code(404);
-                    echo json_encode(['success' => false, 'error' => 'Application not found.']);
-                    break;
+                    throw new Exception('Only approved or rejected applications can be deleted.', 409);
                 }
-
-                // Only allow delete of applications that are already processed
-                // (approved, rejected, or enrolled) - don't allow deleting submitted/pending
-                if (!in_array($row['status'], ['approved', 'rejected', 'enrolled'])) {
-                    throw new Exception("Cannot delete application with status: " . $row['status'] . ". Only processed applications can be deleted.");
-                }
-
-                // Delete the application
-                $deleteSql = "DELETE FROM kerrfairtex.enrollment_applications WHERE id = $1";
-                $deleteResult = pg_query_params($conn, $deleteSql, [$appId]);
-
-                if ($deleteResult === false) {
-                    throw new Exception("Database error: " . pg_last_error($conn));
-                }
-
                 http_response_code(200);
                 echo json_encode([
                     'success' => true,
-                    'message' => 'Application ' . $row['ref'] . ' deleted successfully.',
-                    'deleted_ref' => $row['ref']
+                    'message' => 'Application ' . $row['ref'] . ' deleted.',
+                    'deleted_ref' => $row['ref'],
                 ]);
                 break;
 
@@ -837,7 +862,7 @@ function handleRequest() {
                 http_response_code(400);
                 echo json_encode([
                     'success' => false,
-                    'error' => "Unknown action: " . $action . ". Supported: config, status, submit"
+                    'error' => "Unknown action. Supported: config, status, submit, list, students, approve, reject, enroll, delete"
                 ]);
                 break;
         }
@@ -847,7 +872,9 @@ function handleRequest() {
 
         $code = 500;
         $msg = $e->getMessage();
-        if (strpos($msg, 'Missing required') !== false ||
+        if ($e->getCode() >= 400 && $e->getCode() < 600) {
+            $code = (int)$e->getCode();
+        } elseif (strpos($msg, 'Missing required') !== false ||
             strpos($msg, 'Invalid') !== false ||
             strpos($msg, 'No enrollment period') !== false ||
             strpos($msg, 'not currently open') !== false ||

@@ -524,6 +524,17 @@ function closeModal() {
   if (lastFocus) lastFocus.focus();
 }
 
+// What happened to the guardian's text message.
+function smsNote(status) {
+  const notes = {
+    sent: 'Guardian notified by SMS.',
+    dry_run: 'SMS test mode: message logged, not sent (no SMS API key configured).',
+    skipped: 'No SMS sent: the guardian contact is not a mobile number.',
+    failed: 'The SMS to the guardian could not be sent.'
+  };
+  return notes[status] ? ' <span style="color:var(--muted)">' + notes[status] + '</span>' : '';
+}
+
 async function runAction(act, id, btn) {
   const a = findApp(id);
   const name = a ? a.name : 'this learner';
@@ -545,9 +556,9 @@ async function runAction(act, id, btn) {
         (s.section ? ' in section ' + esc(s.section) : '') +
         '. Login: <code>' + esc(s.username) + '</code> · temporary password: <code>' + esc(s.password) + '</code>' +
         '<br><span style="color:var(--muted)">Give these to the guardian now — the password is not shown again.</span> ' +
-        '<a href="dashboard.php?view=students" style="color:var(--accent);text-decoration:underline">View students</a></div>');
+        '<a href="dashboard.php?view=students" style="color:var(--accent);text-decoration:underline">View students</a>' + smsNote(data.sms) + '</div>');
     } else {
-      showNotice(esc(data.message || ('Application ' + (a ? a.ref : '') + ' ' + (act === 'approve' ? 'approved' : 'rejected') + '.')));
+      showNotice(esc(data.message || ('Application ' + (a ? a.ref : '') + ' ' + (act === 'approve' ? 'approved' : 'rejected') + '.')) + smsNote(data.sms));
     }
     await loadApps();
   } catch (e) {

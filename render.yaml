@@ -30,6 +30,12 @@ services:
       # CORS origin — Vercel frontend domain receives API responses from Render
       - key: CORS_ORIGIN
         value: https://smartk-122026.vercel.app
+      # SMS to guardians (Semaphore). Leave empty for test mode: messages are
+      # only logged in sms_log. Set the values in the Render dashboard.
+      - key: SEMAPHORE_API_KEY
+        sync: false
+      - key: SMS_SENDER_NAME
+        sync: false
     disk:
       name: smartcampus-data
       # Mount ONLY the uploads subdir. Mounting at all of /var/www/html/assets would

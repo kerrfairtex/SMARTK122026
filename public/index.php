@@ -2090,9 +2090,9 @@ img[width], img[height] {
                     <div class="module"><div class="module__dot"></div><div class="module__icon">&#128106;</div><p class="module__name">Parent Communication</p></div>
                 </div>
                 <p style="text-align: center; margin-top: var(--space-4);">
-                    <a href="login.php" class="btn btn--primary">Login Smart Campus</a>
-                    <a href="enroll_status.php" class="btn btn--secondary">Check Your Status</a>
-                    <a href="view_students_application.php" class="btn btn--secondary">View Students Application</a>
+                    <a href="login.php" class="btn btn--primary">Smart Campus Login</a>
+                    <a href="enroll_status.php" class="btn btn--secondary">Check Application Status</a>
+                    <a href="view_students_application.php" class="btn btn--secondary">Staff Dashboard</a>
                 </p>
             </div>
         </section>

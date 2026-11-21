@@ -13,6 +13,11 @@ RewriteRule ^(?!assets/FileUploads/).*\.(md|sql)$ - [F]
 RewriteRule (^|/)\.(?!well-known) - [F]
 # Block direct access to specific files
 RewriteRule (^|/)(LICENSE|COPYRIGHT|composer\.lock|composer\.json|package\.json)$ - [F]
+# Internal folders and build/deploy/test files are not part of the website.
+RewriteRule ^(root_scatter|tests|migrations|bbnihs)(/|$) - [F]
+RewriteRule (^|/)(Dockerfile|docker-entrypoint\.sh|render\.yaml|vercel\.json|phpunit\.xml|Gruntfile\.js)$ - [F]
+RewriteCond %{REQUEST_URI} !^/robots\.txt$
+RewriteRule \.(txt|yml|yaml|sh|lock|log|bak|orig|swp)$ - [F]
 #
 ## End - Security
 
@@ -45,3 +50,8 @@ RewriteRule ^pwabuilder-sw\.js$ pwabuilder-sw.js [L]
 ## End - SmartCampus Routing
 
 </IfModule>
+
+# Branded error pages (status read from REDIRECT_STATUS in error.php).
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 500 /error.php

@@ -126,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
   <!-- build: 220019fc2 2026-08-29T08:46:36.167Z -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login — SmartCampus K12</title>
+  <title>Staff sign in — SmartCampus K12</title>
   <link rel="icon" href="favicon.ico" sizes="32x32">
   <link rel="icon" href="apple-touch-icon.png" sizes="128x128">
   <link rel="canonical" href="https://smartcampk12.onrender.com/view_students_application.php">
@@ -137,17 +137,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
 
+    /* Colors and fonts come from /css/tokens.css; only panel shades are local. */
     :root {
-      --bg: #0E1013;
-      --panel: #15181C;
-      --border: #262A2F;
-      --text: #ECE9E4;
-      --muted: #8B9096;
-      --foam: #A7ACB2;
-      --ink-deep: #0E1013;
-      --sand: #ECE9E4;
-      --sun-gold: #E8A33D;
-      --reef-coral: #C9836A;
+      --panel: #0F1D2C;
+      --border: #1F3247;
+      --text: var(--sand);
+      --muted: #9DB0B4;
     }
     body {
       margin: 0;
@@ -163,8 +158,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
     .login-card {
       width: 100%;
       max-width: 380px;
-      background: var(--panel, #15181C);
-      border: 1px solid var(--border, #262A2F);
+      background: var(--panel);
+      border: 1px solid var(--border);
       border-radius: 14px;
       padding: 2.5rem 2rem;
       box-shadow: var(--elev-3);
@@ -223,18 +218,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
     }
     .field input {
       width: 100%;
-      background: var(--bg, #0E1013);
-      border: 1px solid var(--border, #262A2F);
+      background: var(--ink-deep);
+      border: 1px solid var(--border);
       border-radius: 8px;
       padding: 0.75rem 1rem;
-      color: #ECE9E4;
       color: var(--text);
       font-size: 0.95rem;
       transition: border-color 0.2s;
     }
     .field input:focus {
       outline: none;
-      border-color: var(--accent, #E8A33D);
+      border-color: var(--sun-gold);
     }
     .btn-login {
       width: 100%;
@@ -250,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
     }
     .btn-login:hover { opacity: 0.9; }
     .error-msg {
-      color: var(--reef-coral, #C9836A);
+      color: var(--reef-coral);
       font-size: 0.8rem;
       margin-bottom: 1rem;
       text-align: center;
@@ -271,7 +265,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
       <div class="brand-mark"><span>SK</span></div>
       <div class="brand-name">SmartCampus K12</div>
     </div>
-    <h1>Admin and Teachers only!</h1>
+    <h1>Staff sign in</h1>
+    <p>For school administrators and teachers.</p>
 
     <?php if (!empty($login_error)): ?>
       <div class="error-msg"><?= htmlspecialchars($login_error) ?></div>

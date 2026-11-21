@@ -59,19 +59,20 @@ $syear_label = $syear . '&ndash;' . ($syear + 1);
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SmartCampus K12 --- Dashboard</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="/css/tokens.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#0E1013;--panel:#15181C;--panel2:#1A1D22;--border:#262A2F;--border2:#1D2025;
---text:#ECE9E4;--muted:#8B9096;--accent:#E8A33D;--blue:#8FB4D4;--teal:#4FD1C5;--green:#7CC9A0;--terra:#C9836A}
+--bg:var(--ink-deep);--panel:#0F1D2C;--panel2:#14263A;--border:#1F3247;--border2:#172839;
+--text:var(--sand);--muted:#9DB0B4;--accent:var(--sun-gold);--blue:#8FB4D4;--teal:#4FD1C5;--green:#7CC9A0;--terra:var(--reef-coral)}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *,*::before,*::after{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:'IBM Plex Sans',sans-serif;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-body);-webkit-font-smoothing:antialiased}
 a{color:inherit;text-decoration:none}
 button{font:inherit;cursor:pointer}
 input,select{font:inherit}
-.mono{font-family:'IBM Plex Mono',monospace}
-.disp{font-family:'Space Grotesk',sans-serif}
+.mono{font-family:var(--font-utility)}
+.disp{font-family:var(--font-display)}
 #navcb{display:none}
 .hidden{display:none!important}
 
@@ -81,27 +82,27 @@ input,select{font:inherit}
 .sidebar{width:240px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border);padding:24px 16px;display:flex;flex-direction:column}
 .side-brand{display:flex;align-items:center;gap:10px;margin-bottom:26px;padding:0 6px}
 .brand-mark{width:36px;height:36px;border-radius:10px;background:var(--accent);display:flex;align-items:center;justify-content:center}
-.brand-mark span{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:13px;color:var(--bg)}
+.brand-mark span{font-family:var(--font-utility);font-weight:600;font-size:13px;color:var(--bg)}
 .brand-name{font-weight:600;font-size:14px}
 .brand-sub{font-size:11px;color:var(--muted)}
-.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:#A7ACB2;min-height:44px}
-.nav-item:hover{background:#1C2025;color:var(--text)}
-.nav-item.active{background:rgba(232,163,61,.14);color:var(--text)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--foam);min-height:44px}
+.nav-item:hover{background:var(--panel2);color:var(--text)}
+.nav-item.active{background:rgba(244,180,0,.14);color:var(--text)}
 .nav-divider{height:1px;background:var(--border);margin:12px 6px}
 .nav-ext{color:var(--muted);font-size:12px}
 .side-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .role-badge{font-size:12.5px}
 .role-badge b{color:var(--text)}
 .icon-btn{width:36px;height:36px;border:none;background:none;color:var(--muted);display:flex;align-items:center;justify-content:center;border-radius:8px}
-.icon-btn:hover{background:#1E2126;color:var(--text)}
+.icon-btn:hover{background:var(--panel2);color:var(--text)}
 .scrim{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:55}
 main{flex-grow:1;min-width:0;padding:26px 30px 40px}
 .ic{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;font-weight:500}
-h1.page-title{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:25px;margin:6px 0 20px;letter-spacing:-.01em}
+.eyebrow{font-family:var(--font-utility);font-size:11px;letter-spacing:.08em;color:var(--accent);text-transform:uppercase;font-weight:500}
+h1.page-title{font-family:var(--font-display);font-weight:700;font-size:25px;margin:6px 0 20px;letter-spacing:-.01em}
 .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
 .stat{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:14px 16px}
-.stat b{font-family:'IBM Plex Mono',monospace;font-weight:600;font-size:23px;display:block}
+.stat b{font-family:var(--font-utility);font-weight:600;font-size:23px;display:block}
 .stat span{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
 .toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
 .search-wrap{position:relative;flex:1 1 220px;max-width:300px}
@@ -119,15 +120,15 @@ td{padding:11px 16px;border-bottom:1px solid var(--border2);vertical-align:middl
 tr:last-child td{border-bottom:none}
 .learner-name{font-weight:600;font-size:13.5px}
 .learner-grade{font-size:11.5px;color:var(--muted)}
-.pill{display:inline-block;padding:4px 10px;border-radius:999px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
+.pill{display:inline-block;padding:4px 10px;border-radius:999px;font-family:var(--font-utility);font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;white-space:nowrap}
 .row-actions{display:flex;gap:4px}
 .act{width:30px;height:30px;border:none;background:none;color:var(--muted);border-radius:6px;display:flex;align-items:center;justify-content:center}
-.act:hover{background:#1E2126;color:var(--text)}
+.act:hover{background:var(--panel2);color:var(--text)}
 .act.reject:hover{color:var(--terra)}
 .act.delete:hover{color:var(--terra)}
 .act.approve:hover{color:var(--teal)}
 .pager{padding:12px 16px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
-.pager span{font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--muted)}
+.pager span{font-family:var(--font-utility);font-size:11.5px;color:var(--muted)}
 .pager-btns{display:flex;gap:6px}
 .pg-btn{width:30px;height:30px;border:1px solid var(--border);background:none;border-radius:6px;color:var(--muted);display:flex;align-items:center;justify-content:center}
 .pg-btn:disabled{opacity:.35;cursor:default}
@@ -138,7 +139,7 @@ tr:last-child td{border-bottom:none}
 .modal-card{width:100%;max-width:420px;max-height:90vh;overflow-y:auto;background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:26px}
 .modal-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
 .modal-close{width:32px;height:32px;border:none;background:none;color:var(--muted);border-radius:8px;display:flex;align-items:center;justify-content:center}
-.modal-close:hover{background:#1E2126;color:var(--text)}
+.modal-close:hover{background:var(--panel2);color:var(--text)}
 .mrow{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--border2);font-size:13px}
 .mrow span:first-child{color:var(--muted)}
 .timeline{display:flex;flex-direction:column;gap:8px;margin:16px 0}
@@ -153,9 +154,11 @@ tr:last-child td{border-bottom:none}
 .modal-actions .m-approve{background:var(--teal);color:#08221f;border:none}
 .modal-actions .m-reject{background:none;color:var(--terra);border:1px solid var(--terra)}
 .modal-actions .m-enroll{background:var(--green);color:#08221a;border:none}
+.title-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
+.btn-link{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--border);border-left:3px solid var(--green);background:var(--panel);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px}
 .notice.error{border-left-color:var(--terra)}
-.notice code{font-family:'IBM Plex Mono',monospace;background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--accent)}
+.notice code{font-family:var(--font-utility);background:var(--bg);padding:1px 6px;border-radius:4px;color:var(--accent)}
 #grade-filter{background:var(--panel);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);min-height:44px}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 @media (max-width:860px){
@@ -201,7 +204,10 @@ tr:last-child td{border-bottom:none}
       <div id="notice" class="notice hidden" role="status" aria-live="polite"><div id="noticeText"></div><button class="icon-btn" id="noticeClose" type="button" aria-label="Dismiss"><svg class="ic" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg></button></div>
 <?php if ($view === 'students'): ?>
       <div class="eyebrow">Students &middot; <?php echo $syear_label; ?></div>
-      <h1 class="page-title disp"><?php echo $role === 'admin' ? 'Enrolled Students' : 'My Students'; ?></h1>
+      <div class="title-row">
+        <h1 class="page-title disp"><?php echo $role === 'admin' ? 'Enrolled Students' : 'My Students'; ?></h1>
+        <a class="btn-link" href="Modules.php?modname=Students/Student.php&amp;search_modfunc=list">Full student records in RosarioSIS &rarr;</a>
+      </div>
 
       <div class="stats" id="stats"></div>
 
@@ -402,7 +408,7 @@ async function loadStudents() {
 /* ---------------- Applications view ---------------- */
 const STATUS_META = {
   submitted: {label: 'Submitted', c: 'var(--blue)', bg: 'rgba(143,180,212,.16)'},
-  under_review: {label: 'Under Review', c: 'var(--accent)', bg: 'rgba(232,163,61,.16)'},
+  under_review: {label: 'Under Review', c: 'var(--accent)', bg: 'rgba(244,180,0,.16)'},
   approved: {label: 'Approved', c: 'var(--teal)', bg: 'rgba(79,209,197,.16)'},
   enrolled: {label: 'Enrolled', c: 'var(--green)', bg: 'rgba(124,201,160,.18)'},
   rejected: {label: 'Rejected', c: 'var(--terra)', bg: 'rgba(201,131,110,.18)'}

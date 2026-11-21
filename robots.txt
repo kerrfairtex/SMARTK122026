@@ -4,6 +4,8 @@ Disallow: /admin/
 Disallow: /admin_enroll.php
 Disallow: /dashboard.php
 Disallow: /sf1.php
+Disallow: /sf2.php
+Disallow: /school_setup.php
 Disallow: /view_students_application.php
 Disallow: /Modules.php
 Disallow: /login.php

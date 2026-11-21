@@ -13,6 +13,8 @@
  * @package SmartCampus
  */
 
+require_once __DIR__ . '/SmartCampusSchoolSetup.fnc.php';
+
 /**
  * Current school and school year for the logged-in staff session.
  *
@@ -481,6 +483,9 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 		SmartCampusCopyContacts( $conn, $student_id, $app );
 		SmartCampusCopyStudentFields( $conn, $student_id, $app );
 
+		// Into the smallest section of the grade, if sections are set up.
+		$section = SmartCampusAssignToSection( $conn, $context, $student_id, $grade_id, date( 'Y-m-d' ) );
+
 		$result = pg_query_params(
 			$conn,
 			"UPDATE enrollment_applications SET status = 'enrolled', student_id = $1 WHERE id = $2",
@@ -511,6 +516,7 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 		'username' => $username,
 		'password' => $password,
 		'name' => trim( $names['first_name'] . ' ' . $names['last_name'] ),
+		'section' => $section,
 	];
 }
 

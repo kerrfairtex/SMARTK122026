@@ -69,6 +69,12 @@ while ($result && ($row = pg_fetch_assoc($result))) {
 }
 
 $grade_id = (int)($_GET['grade_id'] ?? 0);
+$sections = isset($grades[$grade_id]) ? SmartCampusGradeSections($conn, $context, $grade_id) : [];
+$section_id = (int)($_GET['section_id'] ?? 0);
+$section_name = $sections[$section_id]['name'] ?? '';
+if ($section_name === '') {
+    $section_id = 0;
+}
 $learners = [];
 
 if (isset($grades[$grade_id])) {
@@ -85,6 +91,12 @@ if (isset($grades[$grade_id])) {
             WHERE sch.student_id = s.student_id AND sch.syear = $1
             AND (cp.teacher_id = $4 OR cp.secondary_teacher_id = $4)
             AND (sch.end_date IS NULL OR sch.end_date >= CURRENT_DATE))';
+    }
+    if ($section_id) {
+        $params[] = $section_id;
+        $teacher_filter .= ' AND EXISTS (SELECT 1 FROM schedule sec WHERE sec.student_id = s.student_id
+            AND sec.course_period_id = $' . count($params) . '
+            AND (sec.end_date IS NULL OR sec.end_date >= CURRENT_DATE))';
     }
 
     // Student fields first, falling back to the application they came from.
@@ -154,10 +166,10 @@ $headers = ['LRN', 'Name (Last, First, Middle)', 'Sex', 'Birth Date (mm/dd/yyyy)
 
 if (($_GET['format'] ?? '') === 'csv' && $grade_title !== '') {
     header('Content-Type: text/csv; charset=utf-8');
-    header('Content-Disposition: attachment; filename="SF1_' . preg_replace('/[^A-Za-z0-9]+/', '_', $grade_title) . '_' . $school_year . '.csv"');
+    header('Content-Disposition: attachment; filename="SF1_' . preg_replace('/[^A-Za-z0-9]+/', '_', trim($grade_title . ' ' . $section_name)) . '_' . $school_year . '.csv"');
     $out = fopen('php://output', 'w');
     fwrite($out, "\xEF\xBB\xBF"); // UTF-8 BOM so Excel shows ñ and accents correctly
-    fputcsv($out, ['School Form 1 (SF1) School Register', SF1_SCHOOL_NAME, 'School ID ' . SF1_SCHOOL_ID, 'SY ' . $school_year, $grade_title], ',', '"', '');
+    fputcsv($out, ['School Form 1 (SF1) School Register', SF1_SCHOOL_NAME, 'School ID ' . SF1_SCHOOL_ID, 'SY ' . $school_year, $grade_title, $section_name !== '' ? 'Section ' . $section_name : ''], ',', '"', '');
     fputcsv($out, $headers, ',', '"', '');
     foreach ($learners as $l) {
         // Leading apostrophe keeps Excel from turning the 12-digit LRN into 1.2E+11.
@@ -178,40 +190,7 @@ header('Content-Type: text/html; charset=utf-8');
 <title>SF1 School Register<?php echo $grade_title !== '' ? ' — ' . sf1_h($grade_title) : ''; ?> | SmartCampus K12</title>
 <link rel="stylesheet" href="/css/tokens.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>
-:root { --paper: #FFFFFF; --ink: #111827; --rule: #9CA3AF; }
-* { box-sizing: border-box; }
-body { margin: 0; background: var(--ink-deep); color: var(--sand); font-family: var(--font-body); }
-.toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; padding: 14px 16px; background: #0F1D2C; border-bottom: 1px solid #1F3247; }
-.toolbar a, .toolbar button, .toolbar select { min-height: 44px; font: inherit; font-size: 14px; border-radius: var(--radius-2); }
-.toolbar select { background: var(--ink-deep); color: var(--sand); border: 1px solid #1F3247; padding: 0 12px; }
-.toolbar label { font-size: 13px; color: #9DB0B4; }
-.btn { display: inline-flex; align-items: center; padding: 0 16px; border: 1px solid #1F3247; background: none; color: var(--sand); text-decoration: none; cursor: pointer; }
-.btn.primary { background: var(--sun-gold); color: var(--ink-deep); border: none; font-weight: 600; }
-.spacer { flex: 1; }
-.empty { max-width: 560px; margin: 48px auto; padding: 0 16px; text-align: center; color: #9DB0B4; }
-.sheet { background: var(--paper); color: var(--ink); margin: 16px; padding: 20px; border-radius: var(--radius-2); overflow-x: auto; }
-.sheet h1 { font-size: 16px; margin: 0 0 2px; text-align: center; }
-.sheet .sub { text-align: center; font-size: 12px; margin: 0 0 12px; }
-.meta { display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 12px; margin-bottom: 10px; }
-.meta b { font-weight: 700; }
-table { border-collapse: collapse; width: 100%; min-width: 1200px; font-size: 11px; }
-th, td { border: 1px solid var(--rule); padding: 4px 5px; text-align: left; vertical-align: top; }
-th { background: #F3F4F6; font-weight: 600; }
-td.mono { font-family: var(--font-utility); white-space: nowrap; }
-td.c { text-align: center; }
-tr.group th { background: #E5E7EB; text-align: left; }
-.totals { margin-top: 10px; font-size: 12px; display: flex; gap: 24px; }
-.flag { color: #B45309; font-weight: 600; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
-@media print {
-  @page { size: legal landscape; margin: 10mm; }
-  body { background: #fff; }
-  .toolbar { display: none; }
-  .sheet { margin: 0; padding: 0; border-radius: 0; overflow: visible; }
-  table { min-width: 0; font-size: 9px; }
-}
-</style>
+<link rel="stylesheet" href="/css/reports.css">
 </head>
 <body>
 <form class="toolbar" method="get">
@@ -223,10 +202,19 @@ tr.group th { background: #E5E7EB; text-align: left; }
       <option value="<?php echo $id; ?>"<?php echo $id === $grade_id ? ' selected' : ''; ?>><?php echo sf1_h($title); ?></option>
     <?php endforeach; ?>
   </select>
+  <?php if ($sections): ?>
+    <label for="section_id">Section</label>
+    <select id="section_id" name="section_id" onchange="this.form.submit()">
+      <option value="0">All sections</option>
+      <?php foreach ($sections as $id => $sec): ?>
+        <option value="<?php echo $id; ?>"<?php echo $id === $section_id ? ' selected' : ''; ?>><?php echo sf1_h($sec['name']); ?></option>
+      <?php endforeach; ?>
+    </select>
+  <?php endif; ?>
   <noscript><button class="btn" type="submit">Show</button></noscript>
   <span class="spacer"></span>
   <?php if ($grade_title !== ''): ?>
-    <a class="btn" href="sf1.php?grade_id=<?php echo $grade_id; ?>&amp;format=csv">Download CSV (Excel)</a>
+    <a class="btn" href="sf1.php?grade_id=<?php echo $grade_id; ?>&amp;section_id=<?php echo $section_id; ?>&amp;format=csv">Download CSV (Excel)</a>
     <button class="btn primary" type="button" onclick="window.print()">Print / Save as PDF</button>
   <?php endif; ?>
 </form>
@@ -242,7 +230,7 @@ tr.group th { background: #E5E7EB; text-align: left; }
       <span><b>School ID:</b> <?php echo sf1_h(SF1_SCHOOL_ID); ?></span>
       <span><b>School Year:</b> <?php echo sf1_h($school_year); ?></span>
       <span><b>Grade Level:</b> <?php echo sf1_h($grade_title); ?></span>
-      <span><b>Section:</b> ____________</span>
+      <span><b>Section:</b> <?php echo $section_name !== '' ? sf1_h($section_name) : '____________'; ?></span>
     </div>
     <table>
       <caption class="sr-only">SF1 learners for <?php echo sf1_h($grade_title); ?></caption>

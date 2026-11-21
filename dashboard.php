@@ -193,6 +193,10 @@ tr:last-child td{border-bottom:none}
         <a href="dashboard.php" class="nav-item<?php echo $view === 'applications' ? ' active" aria-current="page' : ''; ?>"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="8" y1="9" x2="16" y2="9"></line><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>Enrollment</a>
         <a href="dashboard.php?view=students" class="nav-item<?php echo $view === 'students' ? ' active" aria-current="page' : ''; ?>"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7"></path><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg>Students</a>
         <a href="sf1.php" class="nav-item"><svg class="ic" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>SF1 School Register</a>
+        <a href="sf2.php" class="nav-item"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"></rect><line x1="4" y1="10" x2="20" y2="10"></line><line x1="9" y1="3" x2="9" y2="7"></line><line x1="15" y1="3" x2="15" y2="7"></line><path d="M9 15l2 2 4-4"></path></svg>SF2 Attendance</a>
+<?php if ($role === 'admin'): ?>
+        <a href="school_setup.php" class="nav-item"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"></path></svg>School Year Setup</a>
+<?php endif; ?>
         <div class="nav-divider"></div>
         <div class="nav-ext" style="padding:4px 12px 2px;text-transform:uppercase;letter-spacing:.05em;font-size:10px">School records</div>
         <a href="index.php" class="nav-item" title="Opens the school's official RosarioSIS system"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"></path><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path></svg>School Information Office</a>
@@ -538,6 +542,7 @@ async function runAction(act, id, btn) {
     if (act === 'enroll') {
       const s = data.student;
       showNotice('<div><strong>' + esc(s.name) + '</strong> is now enrolled as student #' + esc(s.student_id) +
+        (s.section ? ' in section ' + esc(s.section) : '') +
         '. Login: <code>' + esc(s.username) + '</code> · temporary password: <code>' + esc(s.password) + '</code>' +
         '<br><span style="color:var(--muted)">Give these to the guardian now — the password is not shown again.</span> ' +
         '<a href="dashboard.php?view=students" style="color:var(--accent);text-decoration:underline">View students</a></div>');

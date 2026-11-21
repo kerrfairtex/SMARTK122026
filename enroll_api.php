@@ -819,7 +819,9 @@ function handleRequest() {
                         trim((string)($_GET['search'] ?? '')),
                         (int)($_GET['grade_id'] ?? 0),
                         (int)($_GET['page'] ?? 1),
-                        (int)($_GET['per_page'] ?? 10)
+                        (int)($_GET['per_page'] ?? 10),
+                        // Teachers see only students in their own classes.
+                        ($_SESSION['PROFILE'] ?? '') === 'teacher' ? (int)$_SESSION['STAFF_ID'] : 0
                     );
                 } catch (RuntimeException $e) {
                     throw new Exception($e->getMessage(), $e->getCode() ?: 500);

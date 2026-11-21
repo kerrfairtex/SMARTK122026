@@ -201,7 +201,7 @@ tr:last-child td{border-bottom:none}
       <div id="notice" class="notice hidden" role="status" aria-live="polite"><div id="noticeText"></div><button class="icon-btn" id="noticeClose" type="button" aria-label="Dismiss"><svg class="ic" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg></button></div>
 <?php if ($view === 'students'): ?>
       <div class="eyebrow">Students &middot; <?php echo $syear_label; ?></div>
-      <h1 class="page-title disp">Enrolled Students</h1>
+      <h1 class="page-title disp"><?php echo $role === 'admin' ? 'Enrolled Students' : 'My Students'; ?></h1>
 
       <div class="stats" id="stats"></div>
 
@@ -380,7 +380,9 @@ async function loadStudents() {
     $('stats').innerHTML = stat(data.total_count, gradeId !== '0' || search ? 'Matching students' : 'Enrolled students', 'var(--green)') +
       stat(data.grades.length, 'Grade levels');
     if (!data.students.length) {
-      messageRow(search || gradeId !== '0' ? 'No students match your search or filter.' : 'No students enrolled yet. Approve an application and choose “Enroll” to add one.');
+      messageRow(search || gradeId !== '0' ? 'No students match your search or filter.' :
+        IS_ADMIN ? 'No students enrolled yet. Approve an application and choose “Enroll” to add one.' :
+        'No students are scheduled in your classes yet.');
     } else {
       tbody.innerHTML = data.students.map(s => '<tr>' +
         '<td class="mono">' + esc(s.id) + '</td>' +

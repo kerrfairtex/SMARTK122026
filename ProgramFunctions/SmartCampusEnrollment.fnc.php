@@ -153,6 +153,126 @@ function SmartCampusApplicationNames( array $app ): array
 }
 
 /**
+ * Insert one address row; returns its id, or 0 when the text is empty.
+ */
+function SmartCampusInsertAddress( $conn, string $address, string $phone = '' ): int
+{
+	$address = trim( $address );
+
+	if ( $address === '' )
+	{
+		return 0;
+	}
+
+	$result = pg_query_params(
+		$conn,
+		'INSERT INTO address (address, phone) VALUES ($1, NULLIF($2, \'\')) RETURNING address_id',
+		[ $address, mb_substr( trim( $phone ), 0, 30 ) ]
+	);
+
+	if ( ! $result )
+	{
+		throw new RuntimeException( 'Could not save the address.', 500 );
+	}
+
+	return (int) pg_fetch_result( $result, 0, 0 );
+}
+
+/**
+ * Copy the learner's address and the guardian from the application into
+ * RosarioSIS Addresses & Contacts, so staff see them on the student record.
+ */
+function SmartCampusCopyContacts( $conn, int $student_id, array $app ): void
+{
+	$phone = (string) ( $app['parent_contact'] ?? '' );
+	$home_id = SmartCampusInsertAddress( $conn, (string) ( $app['address'] ?? '' ), $phone );
+
+	if ( $home_id )
+	{
+		$ok = pg_query_params(
+			$conn,
+			"INSERT INTO students_join_address
+				(student_id, address_id, residence, mailing, primary_residence, legal_residence)
+			VALUES ($1, $2, 'Y', 'Y', 'Y', 'Y')",
+			[ $student_id, $home_id ]
+		);
+
+		if ( ! $ok )
+		{
+			throw new RuntimeException( 'Could not link the address.', 500 );
+		}
+	}
+
+	$guardian = trim( preg_replace( '/\s+/', ' ', (string) ( $app['parent_name'] ?? '' ) ) );
+
+	if ( $guardian === '' )
+	{
+		return;
+	}
+
+	// Guardian lives at their own address if given, else with the learner.
+	$parent_address = trim( (string) ( $app['parent_address'] ?? '' ) );
+	$guardian_address_id = $parent_address !== '' && $parent_address !== trim( (string) ( $app['address'] ?? '' ) ) ?
+		SmartCampusInsertAddress( $conn, $parent_address, $phone ) :
+		$home_id;
+
+	$parts = explode( ' ', $guardian, 2 );
+
+	$result = pg_query_params(
+		$conn,
+		'INSERT INTO people (first_name, last_name) VALUES ($1, $2) RETURNING person_id',
+		[ mb_substr( $parts[0], 0, 50 ), mb_substr( $parts[1] ?? '', 0, 50 ) ]
+	);
+	$person_id = $result ? (int) pg_fetch_result( $result, 0, 0 ) : 0;
+
+	if ( ! $person_id )
+	{
+		throw new RuntimeException( 'Could not save the guardian.', 500 );
+	}
+
+	$relation = trim( (string) ( $app['parent_relationship'] ?? '' ) );
+
+	$ok = pg_query_params(
+		$conn,
+		"INSERT INTO students_join_people
+			(student_id, person_id, address_id, custody, emergency, student_relation)
+		VALUES ($1, $2, NULLIF($3, 0), 'Y', 'Y', $4)",
+		[ $student_id, $person_id, $guardian_address_id, mb_substr( $relation !== '' ? $relation : 'Guardian', 0, 100 ) ]
+	);
+
+	if ( ! $ok )
+	{
+		throw new RuntimeException( 'Could not link the guardian.', 500 );
+	}
+
+	$details = [
+		'Phone' => (string) ( $app['parent_contact'] ?? '' ),
+		'Email' => (string) ( $app['parent_email'] ?? '' ),
+	];
+
+	foreach ( $details as $title => $value )
+	{
+		$value = trim( $value );
+
+		if ( $value === '' )
+		{
+			continue;
+		}
+
+		$ok = pg_query_params(
+			$conn,
+			'INSERT INTO people_join_contacts (person_id, title, value) VALUES ($1, $2, $3)',
+			[ $person_id, $title, mb_substr( $value, 0, 100 ) ]
+		);
+
+		if ( ! $ok )
+		{
+			throw new RuntimeException( 'Could not save the guardian contact details.', 500 );
+		}
+	}
+}
+
+/**
  * Enroll an approved application as a RosarioSIS student, atomically.
  *
  * @return array{student_id:int, username:string, password:string, name:string}
@@ -169,7 +289,8 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 		$result = pg_query_params(
 			$conn,
 			'SELECT id, status, student_id, learner_name, first_name, middle_name,
-				last_name, name_suffix, grade_level
+				last_name, name_suffix, grade_level, address, parent_name,
+				parent_relationship, parent_contact, parent_address, parent_email
 			FROM enrollment_applications WHERE id = $1 FOR UPDATE',
 			[ $application_id ]
 		);
@@ -255,6 +376,8 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 			throw new RuntimeException( 'Could not create the enrollment record.', 500 );
 		}
 
+		SmartCampusCopyContacts( $conn, $student_id, $app );
+
 		$result = pg_query_params(
 			$conn,
 			"UPDATE enrollment_applications SET status = 'enrolled', student_id = $1 WHERE id = $2",
@@ -293,7 +416,7 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
  *
  * @return array Rows, totals and the grade levels for the filter.
  */
-function SmartCampusListStudents( $conn, string $search, int $grade_id, int $page, int $per_page ): array
+function SmartCampusListStudents( $conn, string $search, int $grade_id, int $page, int $per_page, int $teacher_id = 0 ): array
 {
 	$context = SmartCampusSchoolContext( $conn );
 	$per_page = min( 50, max( 1, $per_page ) );
@@ -315,6 +438,20 @@ function SmartCampusListStudents( $conn, string $search, int $grade_id, int $pag
 	{
 		$params[] = $grade_id;
 		$where .= ' AND se.grade_id = $' . count( $params );
+	}
+
+	// Teachers only see students currently scheduled in one of their classes.
+	if ( $teacher_id > 0 )
+	{
+		$params[] = $teacher_id;
+		$n = count( $params );
+		$where .= " AND EXISTS (
+			SELECT 1 FROM schedule sch
+			JOIN course_periods cp ON cp.course_period_id = sch.course_period_id
+			WHERE sch.student_id = s.student_id AND sch.syear = $1
+			AND (cp.teacher_id = \$$n OR cp.secondary_teacher_id = \$$n)
+			AND (sch.end_date IS NULL OR sch.end_date >= CURRENT_DATE)
+		)";
 	}
 
 	// One row per student: their latest active enrollment this year.

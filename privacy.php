@@ -53,13 +53,28 @@ $project_facebook = 'https://www.facebook.com/SMARTCAMPK12';
 
     <h2>Enrollment applications</h2>
     <div class="card">
-        <p>When you submit an enrollment application through this site, the information you provide (learner name, grade level, contact details, and the reference number) is stored in the SmartCampus database. Application <strong>status</strong> is the only detail shown when you look up your own reference number. Documents, parent contact numbers, and full records are not returned by the public status check.</p>
-        <p>You can check an application only with the exact reference number you received. School personnel can update an application's status through the authenticated system.</p>
+        <p>When you submit an enrollment application through this site, the information you provide is stored in the SmartCampus database: the learner's name, birth date, sex, birthplace, address, grade level, school year and enrollment type; the parent or guardian's name, phone number and email; and the learner's previous school and last grade completed. Application <strong>status</strong> is the only detail shown when you look up your own reference number. Documents, parent contact numbers, and full records are not returned by the public status check.</p>
+        <p>You can check an application only with the exact reference number you received. Authorized school administrators review applications through the authenticated system. When an application is accepted and the learner is enrolled, these details become part of the learner's school record, including the guardian as an emergency contact.</p>
     </div>
 
     <h2>Contact messages</h2>
     <div class="card">
         <p>Messages sent through the "Contact the SmartCampus Team" form reach the SmartCampus project team (technology and website support). They are <strong>not</strong> a substitute for official school or DepEd channels. For enrollment decisions, learner records, and school administrative matters, contact the school or the appropriate DepEd office.</p>
+    </div>
+
+    <h2 id="data-privacy">Your rights under the Data Privacy Act</h2>
+    <div class="card">
+        <p>Personal information collected through this site is processed in line with the Data Privacy Act of 2012 (Republic Act No. 10173). As a data subject, you have the right to:</p>
+        <ul>
+            <li>be informed about how your personal information is collected and used;</li>
+            <li>access the personal information held about you or your child;</li>
+            <li>correct information that is inaccurate or incomplete;</li>
+            <li>object to processing, or ask for information to be blocked or erased when it is no longer needed or was processed unlawfully;</li>
+            <li>obtain a copy of your information in a commonly used electronic format (data portability);</li>
+            <li>file a complaint with the National Privacy Commission, and claim damages where applicable.</li>
+        </ul>
+        <p>To exercise any of these rights, contact the school using the details below. A parent or guardian may make the request on behalf of a learner who is a minor.</p>
+        <p><strong>Where information is stored.</strong> The SmartCampus database is hosted with Supabase on Amazon Web Services in the Tokyo, Japan region, and the website runs on Render. Access to stored records requires a school staff account.</p>
     </div>
 
     <h2 id="accessibility">Accessibility</h2>

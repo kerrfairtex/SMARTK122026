@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [mobile]
+
+permissions:
+  contents: read
+
+jobs:
+  php:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Same PHP version as the Dockerfile (php:8.2-apache).
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: pgsql, mbstring, intl, gettext
+          coverage: none
+
+      - name: Lint all PHP files
+        run: |
+          status=0
+          while IFS= read -r -d '' f; do
+            out=$(php -l "$f" 2>&1) || { echo "$out"; echo "::error file=$f::PHP syntax error"; status=1; }
+          done < <(git ls-files -z '*.php' ':!bbnihs/vendor/**')
+          exit $status
+
+      - name: Unit tests
+        run: php bbnihs/vendor/bin/phpunit

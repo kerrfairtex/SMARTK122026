@@ -26,7 +26,7 @@ require_once __DIR__ . '/ProgramFunctions/SmartCampusEnrollment.fnc.php';
 error_reporting(E_ALL);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
-ini_set('error_log', '/var/log/enroll_api_errors.log');
+// error_log goes to stderr (Docker php.ini), which Render shows in its logs.
 
 // ---------------------------------------------------------------------------
 // Database helpers (wrap the existing PostgreSQL connection)

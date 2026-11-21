@@ -6,6 +6,8 @@ Disallow: /dashboard.php
 Disallow: /sf1.php
 Disallow: /sf2.php
 Disallow: /school_setup.php
+Disallow: /announcements.php
+Disallow: /news_api.php
 Disallow: /view_students_application.php
 Disallow: /Modules.php
 Disallow: /login.php

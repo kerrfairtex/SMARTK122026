@@ -274,6 +274,7 @@ function SmartCampusCopyContacts( $conn, int $student_id, array $app ): void
 
 /**
  * Enroll an approved application as a RosarioSIS student, atomically.
+ * Also repairs applications marked 'enrolled' that have no student yet.
  *
  * @return array{student_id:int, username:string, password:string, name:string}
  *         The plain temporary password is returned once so staff can hand it over.
@@ -301,12 +302,14 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 			throw new RuntimeException( 'Application not found.', 404 );
 		}
 
-		if ( $app['status'] === 'enrolled' || ! empty( $app['student_id'] ) )
+		if ( ! empty( $app['student_id'] ) )
 		{
 			throw new RuntimeException( 'This application is already enrolled.', 409 );
 		}
 
-		if ( $app['status'] !== 'approved' )
+		// 'enrolled' without a student_id comes from the old "Mark Enrolled"
+		// button, which never created the student: allow repairing it.
+		if ( $app['status'] !== 'approved' && $app['status'] !== 'enrolled' )
 		{
 			throw new RuntimeException( 'Approve the application before enrolling.', 409 );
 		}

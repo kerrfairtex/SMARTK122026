@@ -558,7 +558,7 @@ function listApplications($search, $status, $page, $perPage) {
     $params[] = $perPage;
     $params[] = $offset;
 
-    $sql = "SELECT id, ref, learner_name, grade_level, parent_name, parent_contact, status, created_at
+    $sql = "SELECT id, ref, learner_name, grade_level, parent_name, parent_contact, status, student_id, created_at
             FROM kerrfairtex.enrollment_applications
             " . $where . "
             ORDER BY created_at DESC
@@ -581,6 +581,7 @@ function listApplications($search, $status, $page, $perPage) {
             'guardian' => $row['parent_name'],
             'contact' => $row['parent_contact'],
             'status' => $row['status'],
+            'student_id' => $row['student_id'] !== null ? (int)$row['student_id'] : null,
             'date' => $row['created_at'],
         ];
     }

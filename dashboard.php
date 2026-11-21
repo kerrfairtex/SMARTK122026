@@ -424,6 +424,9 @@ function iconBtn(act, a, labelText, cls) {
   return '<button type="button" class="act ' + (cls || '') + '" data-act="' + act + '" data-id="' + a.id + '" aria-label="' + labelText + ' ' + esc(a.ref) + '" title="' + labelText + '"><svg class="ic" viewBox="0 0 24 24" style="width:15px;height:15px">' + ICON[act] + '</svg></button>';
 }
 
+// Marked "enrolled" by the old button, which never created the student.
+function needsStudentRecord(a) { return a.status === 'enrolled' && !a.student_id; }
+
 function actionsFor(a) {
   let html = iconBtn('view', a, 'View');
   if (!IS_ADMIN) return html;
@@ -431,6 +434,8 @@ function actionsFor(a) {
     html += iconBtn('approve', a, 'Approve', 'approve') + iconBtn('reject', a, 'Reject', 'reject');
   } else if (a.status === 'approved') {
     html += '<button type="button" class="act" data-act="enroll" data-id="' + a.id + '" style="width:auto;padding:0 10px;font-size:11px;font-weight:600;color:var(--green)">Enroll</button>';
+  } else if (needsStudentRecord(a)) {
+    html += '<button type="button" class="act" data-act="enroll" data-id="' + a.id + '" style="width:auto;padding:0 10px;font-size:11px;font-weight:600;color:var(--accent)">Create student record</button>';
   }
   if (a.status === 'approved' || a.status === 'rejected') html += iconBtn('delete', a, 'Delete', 'delete');
   return html;
@@ -487,8 +492,9 @@ function openModal(id) {
   let actions = '';
   if (IS_ADMIN && (a.status === 'submitted' || a.status === 'under_review')) {
     actions = '<button type="button" class="m-approve" data-act="approve" data-id="' + a.id + '">Approve</button><button type="button" class="m-reject" data-act="reject" data-id="' + a.id + '">Reject</button>';
-  } else if (IS_ADMIN && a.status === 'approved') {
-    actions = '<button type="button" class="m-enroll" data-act="enroll" data-id="' + a.id + '" style="flex:none;width:100%">Enroll as student</button>';
+  } else if (IS_ADMIN && (a.status === 'approved' || needsStudentRecord(a))) {
+    actions = '<button type="button" class="m-enroll" data-act="enroll" data-id="' + a.id + '" style="flex:none;width:100%">' +
+      (a.status === 'approved' ? 'Enroll as student' : 'Create student record') + '</button>';
   }
   $('mActions').innerHTML = actions;
   lastFocus = document.activeElement;
@@ -508,7 +514,8 @@ async function runAction(act, id, btn) {
   const confirmText = {
     approve: 'Approve the application for ' + name + '?',
     reject: 'Reject the application for ' + name + '?',
-    enroll: 'Enroll ' + name + ' as a student? This creates their student record and login.',
+    enroll: (a && needsStudentRecord(a) ? 'Create the missing student record for ' + name + '?' :
+      'Enroll ' + name + ' as a student?') + ' This creates their student record and login.',
     delete: 'Delete this application permanently? This cannot be undone.'
   }[act];
   if (!confirm(confirmText)) return;

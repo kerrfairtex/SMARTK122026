@@ -44,21 +44,12 @@ BEGIN
     END IF;
 END $$;
 
--- 4. Backfill: link existing approved/enrolled applications to student records
---    Matching rule: the student's username was generated from the application's
---    first_name + last_name (see admin_enroll.php enroll action). We can match
---    by checking if the student's first_name/last_name match the application's.
---    This is best-effort: only backfills rows where student_id IS NULL and
---    a matching student record can be found.
-UPDATE kerrfairtex.enrollment_applications ea
-SET student_id = s.student_id
-FROM kerrfairtex.students s
-WHERE ea.student_id IS NULL
-  AND ea.status IN ('approved', 'enrolled')
-  AND s.first_name = ea.first_name
-  AND s.last_name = ea.last_name
-  AND s.username = LOWER(SUBSTRING(ea.first_name, 1, 1) || ea.last_name)
-  AND s.created_at > ea.created_at;  -- student was created AFTER the application (causality)
+-- 4. (Removed) Name-based backfill of student_id.
+--    It referenced first_name/last_name columns that 004 did not define, which
+--    made this whole file roll back on every boot. It also linked 'approved'
+--    applications by name alone, which could block their real enrollment.
+--    migrate.php re-runs this file on every container start, so automatic
+--    data rewrites do not belong here. Link legacy rows manually if needed.
 
 -- 5. Add index for query performance
 CREATE INDEX IF NOT EXISTS idx_enrollment_applications_student_id

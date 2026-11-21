@@ -29,7 +29,8 @@ function db_start( $show_error = true )
 		$DatabasePassword,
 		$DatabaseName,
 		$DatabasePort,
-		$DatabaseType;
+		$DatabaseType,
+		$SupabaseSSLMode;
 
 	if ( $DatabaseType === 'mysql' )
 	{

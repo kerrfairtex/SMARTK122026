@@ -21,6 +21,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/database.inc.php';
 require_once __DIR__ . '/Warehouse.php';
 require_once __DIR__ . '/ProgramFunctions/SmartCampusEnrollment.fnc.php';
+require_once __DIR__ . '/ProgramFunctions/SmartCampusSms.fnc.php';
 
 // Error handling — never display errors to applicants
 error_reporting(E_ALL);
@@ -351,7 +352,8 @@ function handleEnrollmentSubmission($data) {
         parent_name, parent_contact, parent_email,
         prev_school, last_grade, learner_ref_no,
         status, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, 'submitted', NOW())";
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, 'submitted', NOW())
+    RETURNING id";
 
     $params = [
         $ref,
@@ -380,6 +382,9 @@ function handleEnrollmentSubmission($data) {
     if ($result === false) {
         throw new Exception("Failed to save application");
     }
+
+    // Confirmation text with the reference number (never blocks the submission).
+    SmartCampusNotifyGuardian($conn, (int)pg_fetch_result($result, 0, 0), 'submitted');
 
     return [
         'success' => true,
@@ -814,8 +819,9 @@ function handleRequest() {
                         ? new Exception('This application is already ' . str_replace('_', ' ', $current['status']) . '.', 409)
                         : new Exception('Application not found.', 404);
                 }
+                $sms = SmartCampusNotifyGuardian($conn, $appId, $newStatus);
                 http_response_code(200);
-                echo json_encode(['success' => true, 'id' => (int)$row['id'], 'status' => $row['status']]);
+                echo json_encode(['success' => true, 'id' => (int)$row['id'], 'status' => $row['status'], 'sms' => $sms]);
                 break;
 
             case 'enroll':
@@ -830,8 +836,9 @@ function handleRequest() {
                     }
                     throw new Exception($e->getMessage(), $e->getCode() ?: 500);
                 }
+                $sms = SmartCampusNotifyGuardian(db_conn(), postedApplicationId(), 'enrolled', ['section' => $student['section'] ?? '']);
                 http_response_code(200);
-                echo json_encode(['success' => true, 'status' => 'enrolled', 'student' => $student]);
+                echo json_encode(['success' => true, 'status' => 'enrolled', 'student' => $student, 'sms' => $sms]);
                 break;
 
             case 'students':

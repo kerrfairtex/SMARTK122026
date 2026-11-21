@@ -28,6 +28,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         xml \
         curl \
     && a2enmod rewrite headers expires \
+    # The base image ships no php.ini, so PHP defaults to printing errors into
+    # pages (leaking DB host/user). Log to stderr (Render logs) instead.
+    && printf 'display_errors=Off\ndisplay_startup_errors=Off\nlog_errors=On\nerror_log=/dev/stderr\n' \
+        > /usr/local/etc/php/conf.d/zz-production-errors.ini \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 

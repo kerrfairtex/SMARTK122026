@@ -20,6 +20,18 @@ if (!$conn) {
     exit(0);
 }
 
+// The Supabase database is shared with other projects. Migrations use
+// search_path = kerrfairtex,public, so if the school schema were missing,
+// CREATE TABLE would silently land in the shared public schema. Refuse to run.
+$schema_check = pg_query(
+    $conn,
+    "SELECT 1 FROM information_schema.schemata WHERE schema_name = 'kerrfairtex'"
+);
+if ($schema_check === false || pg_num_rows($schema_check) === 0) {
+    fwrite(STDERR, "[MIGRATION] ERROR: schema kerrfairtex not found; refusing to migrate\n");
+    exit(1);
+}
+
 $migration_dir = __DIR__ . '/rosariosis-spec';
 $migrations = glob($migration_dir . '/[0-9][0-9][0-9]_*.sql');
 sort($migrations);

@@ -288,11 +288,19 @@ function handleEnrollmentSubmission($data) {
     $sanitized['etype']           = sanitizeInput($data['etype'], 'enrollment_type');
     $sanitized['pname']           = sanitizeInput($data['pname'], 'string');
     $sanitized['pcontact']        = sanitizeInput($data['pcontact'], 'phone');
-    $sanitized['pschool']         = sanitizeInput($data['pschool'], 'string');
+    $sanitized['pschool']         = sanitizeInput($data['pschool'] ?? '', 'string');
     $sanitized['plastgrade']      = sanitizeInput($data['plastgrade'], 'grade_or_text');
 
     // Optional fields
     $sanitized['pemail'] = !empty($data['pemail']) ? sanitizeInput($data['pemail'], 'email') : null;
+
+    // LRN (DepEd Learner Reference Number): optional, because first-time
+    // learners may not have one yet; when given it must be 12 digits.
+    $lrn = preg_replace('/[\s-]/', '', (string)($data['lrn'] ?? ''));
+    if ($lrn !== '' && !preg_match('/^\d{12}$/', $lrn)) {
+        throw new Exception('Invalid LRN: it must be exactly 12 digits.', 400);
+    }
+    $sanitized['lrn'] = $lrn !== '' ? $lrn : null;
 
     // learner_name: construct from structured name components
     $nameParts = array_filter([
@@ -305,6 +313,18 @@ function handleEnrollmentSubmission($data) {
 
     // Resolve enrollment period dynamically from school_year
     $enrollmentPeriodId = resolveEnrollmentPeriod($sanitized['school_year']);
+
+    // One active application per learner.
+    if ($sanitized['lrn'] !== null) {
+        $dup = pg_query_params($conn,
+            "SELECT 1 FROM kerrfairtex.enrollment_applications
+             WHERE learner_ref_no = $1 AND status <> 'rejected' LIMIT 1",
+            [$sanitized['lrn']]
+        );
+        if ($dup !== false && pg_num_rows($dup) > 0) {
+            throw new Exception('An application with this LRN already exists. Check its status with your reference number, or contact the school.', 409);
+        }
+    }
 
     // Generate unique reference number
     $ref = generateReferenceNumber();
@@ -329,9 +349,9 @@ function handleEnrollmentSubmission($data) {
         birth_date, sex, birthplace, address,
         grade_level, school_year, enrollment_type,
         parent_name, parent_contact, parent_email,
-        prev_school, last_grade,
+        prev_school, last_grade, learner_ref_no,
         status, created_at
-    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, 'submitted', NOW())";
+    ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, 'submitted', NOW())";
 
     $params = [
         $ref,
@@ -352,6 +372,7 @@ function handleEnrollmentSubmission($data) {
         $sanitized['pemail'],
         $sanitized['pschool'],
         $sanitized['plastgrade'],
+        $sanitized['lrn'],
     ];
 
     $result = pg_query_params($conn, $sql, $params);
@@ -542,7 +563,7 @@ function listApplications($search, $status, $page, $perPage) {
     // Search across ref, learner name, guardian name
     if ($search !== '') {
         $where .= ($where !== '' ? ' AND ' : 'WHERE ') .
-            '(LOWER(ref) LIKE LOWER($' . $paramIndex . ') OR LOWER(learner_name) LIKE LOWER($' . $paramIndex . ') OR LOWER(parent_name) LIKE LOWER($' . $paramIndex . '))';
+            '(LOWER(ref) LIKE LOWER($' . $paramIndex . ') OR LOWER(learner_name) LIKE LOWER($' . $paramIndex . ') OR LOWER(parent_name) LIKE LOWER($' . $paramIndex . ') OR learner_ref_no LIKE $' . $paramIndex . ')';
         $params[] = '%' . $search . '%';
         $paramIndex++;
     }
@@ -558,7 +579,7 @@ function listApplications($search, $status, $page, $perPage) {
     $params[] = $perPage;
     $params[] = $offset;
 
-    $sql = "SELECT id, ref, learner_name, grade_level, parent_name, parent_contact, status, student_id, created_at
+    $sql = "SELECT id, ref, learner_name, grade_level, parent_name, parent_contact, status, student_id, learner_ref_no, created_at
             FROM kerrfairtex.enrollment_applications
             " . $where . "
             ORDER BY created_at DESC
@@ -582,6 +603,7 @@ function listApplications($search, $status, $page, $perPage) {
             'contact' => $row['parent_contact'],
             'status' => $row['status'],
             'student_id' => $row['student_id'] !== null ? (int)$row['student_id'] : null,
+            'lrn' => $row['learner_ref_no'],
             'date' => $row['created_at'],
         ];
     }

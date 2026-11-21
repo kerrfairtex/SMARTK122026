@@ -153,6 +153,104 @@ function SmartCampusApplicationNames( array $app ): array
 }
 
 /**
+ * Student table columns for LRN, Gender and Birthdate in this install.
+ *
+ * LRN is the "LRN" General Info field (migration 007); Gender and Birthdate
+ * are RosarioSIS default fields. A key is null when the column is missing.
+ *
+ * @return array{lrn: ?string, gender: ?string, birthdate: ?string}
+ */
+function SmartCampusStudentFieldColumns( $conn ): array
+{
+	static $columns = null;
+
+	if ( $columns !== null )
+	{
+		return $columns;
+	}
+
+	$columns = [ 'lrn' => null, 'gender' => null, 'birthdate' => null ];
+
+	$result = pg_query(
+		$conn,
+		"SELECT 'custom_' || id AS col FROM custom_fields
+		WHERE title = 'LRN' AND category_id = 1 ORDER BY id LIMIT 1"
+	);
+	$lrn = $result ? pg_fetch_result( $result, 0, 0 ) : false;
+
+	$wanted = array_filter( [ $lrn ?: null, 'custom_200000000', 'custom_200000004' ] );
+
+	$result = pg_query_params(
+		$conn,
+		"SELECT column_name FROM information_schema.columns
+		WHERE table_schema = current_schema() AND table_name = 'students'
+		AND column_name = ANY ($1::text[])",
+		[ '{' . implode( ',', $wanted ) . '}' ]
+	);
+
+	$existing = $result ? pg_fetch_all_columns( $result, 0 ) : [];
+
+	if ( $lrn && in_array( $lrn, $existing, true ) )
+	{
+		$columns['lrn'] = $lrn;
+	}
+
+	if ( in_array( 'custom_200000000', $existing, true ) )
+	{
+		$columns['gender'] = 'custom_200000000';
+	}
+
+	if ( in_array( 'custom_200000004', $existing, true ) )
+	{
+		$columns['birthdate'] = 'custom_200000004';
+	}
+
+	return $columns;
+}
+
+/**
+ * Copy LRN, sex and birth date from the application onto the student.
+ * Column names come from SmartCampusStudentFieldColumns(), never from input.
+ */
+function SmartCampusCopyStudentFields( $conn, int $student_id, array $app ): void
+{
+	$columns = SmartCampusStudentFieldColumns( $conn );
+	$values = [
+		'lrn' => preg_match( '/^\d{12}$/', (string) ( $app['learner_ref_no'] ?? '' ) ) ? $app['learner_ref_no'] : null,
+		'gender' => in_array( $app['sex'] ?? '', [ 'Male', 'Female' ], true ) ? $app['sex'] : null,
+		'birthdate' => ! empty( $app['birth_date'] ) ? $app['birth_date'] : null,
+	];
+
+	$sets = [];
+	$params = [ $student_id ];
+
+	foreach ( $values as $key => $value )
+	{
+		if ( $columns[ $key ] && $value !== null )
+		{
+			$params[] = $value;
+			$sets[] = pg_escape_identifier( $conn, $columns[ $key ] ) . ' = $' . count( $params );
+		}
+	}
+
+	if ( ! $sets )
+	{
+		return;
+	}
+
+	$ok = pg_query_params(
+		$conn,
+		'UPDATE students SET ' . implode( ', ', $sets ) . ' WHERE student_id = $1',
+		$params
+	);
+
+	if ( ! $ok )
+	{
+		throw new RuntimeException( 'Could not save the learner details.', 500 );
+	}
+}
+
+/**
  * Insert one address row; returns its id, or 0 when the text is empty.
  */
 function SmartCampusInsertAddress( $conn, string $address, string $phone = '' ): int
@@ -291,7 +389,8 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 			$conn,
 			'SELECT id, status, student_id, learner_name, first_name, middle_name,
 				last_name, name_suffix, grade_level, address, parent_name,
-				parent_relationship, parent_contact, parent_address, parent_email
+				parent_relationship, parent_contact, parent_address, parent_email,
+				learner_ref_no, sex, birth_date
 			FROM enrollment_applications WHERE id = $1 FOR UPDATE',
 			[ $application_id ]
 		);
@@ -380,6 +479,7 @@ function SmartCampusEnrollApplication( $conn, int $application_id ): array
 		}
 
 		SmartCampusCopyContacts( $conn, $student_id, $app );
+		SmartCampusCopyStudentFields( $conn, $student_id, $app );
 
 		$result = pg_query_params(
 			$conn,
@@ -423,6 +523,7 @@ function SmartCampusListStudents( $conn, string $search, int $grade_id, int $pag
 {
 	$context = SmartCampusSchoolContext( $conn );
 	$per_page = min( 50, max( 1, $per_page ) );
+	$lrn_column = SmartCampusStudentFieldColumns( $conn )['lrn'];
 
 	$params = [ $context['syear'], $context['school_id'] ];
 	$where = '';
@@ -433,7 +534,8 @@ function SmartCampusListStudents( $conn, string $search, int $grade_id, int $pag
 		$n = count( $params );
 		$where .= " AND (s.first_name ILIKE \$$n OR s.last_name ILIKE \$$n
 			OR (s.first_name || ' ' || s.last_name) ILIKE \$$n
-			OR s.username ILIKE \$$n OR s.student_id::text = \$" . ( $n + 1 ) . ')';
+			OR s.username ILIKE \$$n OR s.student_id::text = \$" . ( $n + 1 )
+			. ( $lrn_column ? ' OR s.' . pg_escape_identifier( $conn, $lrn_column ) . ' = $' . ( $n + 1 ) : '' ) . ')';
 		$params[] = $search;
 	}
 
@@ -476,9 +578,12 @@ function SmartCampusListStudents( $conn, string $search, int $grade_id, int $pag
 	$list_params = array_merge( $params, [ $per_page, ( $page - 1 ) * $per_page ] );
 	$n = count( $params );
 
+	$lrn_select = $lrn_column ? 's.' . pg_escape_identifier( $conn, $lrn_column ) : 'NULL';
+
 	$result = pg_query_params(
 		$conn,
 		"SELECT s.student_id, s.first_name, s.middle_name, s.last_name, s.username,
+			" . $lrn_select . " AS lrn,
 			gl.title AS grade, se.start_date,
 			(SELECT ref FROM enrollment_applications ea
 				WHERE ea.student_id = s.student_id ORDER BY ea.id DESC LIMIT 1) AS application_ref
@@ -501,6 +606,7 @@ function SmartCampusListStudents( $conn, string $search, int $grade_id, int $pag
 			'id' => (int) $row['student_id'],
 			'name' => trim( $row['last_name'] . ', ' . $row['first_name'] . ' ' . (string) $row['middle_name'] ),
 			'username' => (string) $row['username'],
+			'lrn' => (string) $row['lrn'],
 			'grade' => (string) $row['grade'],
 			'enrolled_on' => (string) $row['start_date'],
 			'application_ref' => (string) $row['application_ref'],

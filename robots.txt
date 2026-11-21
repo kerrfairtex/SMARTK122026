@@ -1,0 +1,16 @@
+# Public pages may be indexed; staff tools, APIs and the school records system may not.
+User-agent: *
+Disallow: /admin/
+Disallow: /admin_enroll.php
+Disallow: /dashboard.php
+Disallow: /view_students_application.php
+Disallow: /Modules.php
+Disallow: /login.php
+Disallow: /index.php
+Disallow: /enroll_api.php
+Disallow: /modules_api.php
+Disallow: /about_edit.php
+Disallow: /about_content_api.php
+Disallow: /contact_api.php
+Disallow: /engagement.php
+Disallow: /healthz.php

@@ -12,25 +12,36 @@ use PHPUnit\Framework\TestCase;
 class SmartCampusEnrollmentTest extends TestCase
 {
     private static $conn = null;
-    private static $dbPassword = getenv('TEST_DB_PASSWORD') ?: '';
-    private static $dbHost = 'aws-0-ap-northeast-1.pooler.supabase.com';
-    private static $dbPort = '6543';
-    private static $dbUser = 'postgres.ebyepweqwihdvjecrufk';
-    private static $dbName = 'postgres';
+    private static $dbPassword;
+    private static $dbHost;
+    private static $dbPort;
+    private static $dbUser;
+    private static $dbName;
 
     public static function setUpBeforeClass(): void
     {
+        // Point these at a disposable test database, never production.
+        // Without TEST_DB_HOST the suite is skipped.
+        self::$dbHost = getenv('TEST_DB_HOST') ?: '';
+        self::$dbPort = getenv('TEST_DB_PORT') ?: '5432';
+        self::$dbUser = getenv('TEST_DB_USER') ?: 'postgres';
+        self::$dbName = getenv('TEST_DB_NAME') ?: 'postgres';
+        self::$dbPassword = getenv('TEST_DB_PASSWORD') ?: '';
+        if (self::$dbHost === '') {
+            self::markTestSkipped('Set TEST_DB_HOST (and TEST_DB_*) to run integration tests against a test database.');
+        }
         $connStr = sprintf(
-            'host=%s port=%s dbname=%s user=%s password=%s options=\'--search_path=kerrfairtex,public\' sslmode=require',
+            'host=%s port=%s dbname=%s user=%s password=%s options=\'-c search_path=kerrfairtex,public\' sslmode=%s',
             self::$dbHost,
             self::$dbPort,
             self::$dbName,
             self::$dbUser,
-            self::$dbPassword
+            self::$dbPassword,
+            getenv('TEST_DB_SSLMODE') ?: 'prefer'
         );
-        self::$conn = pg_connect($connStr);
+        self::$conn = @pg_connect($connStr);
         if (!self::$conn) {
-            self::markTestSkipped('Cannot connect to database: ' . pg_last_error());
+            self::markTestSkipped('Cannot connect to the test database at ' . self::$dbHost . '.');
         }
     }
 

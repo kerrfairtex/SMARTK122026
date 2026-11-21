@@ -1,7 +1,7 @@
 <?php
 /**
  * Idempotent database migration runner.
- * Runs all SQL migrations in rosariosis-spec/0*.sql in order.
+ * Runs all SQL migrations in migrations/NNN_*.sql in order.
  * Safe to run on every container start.
  */
 
@@ -32,7 +32,7 @@ if ($schema_check === false || pg_num_rows($schema_check) === 0) {
     exit(1);
 }
 
-$migration_dir = __DIR__ . '/rosariosis-spec';
+$migration_dir = __DIR__ . '/migrations';
 $migrations = glob($migration_dir . '/[0-9][0-9][0-9]_*.sql');
 sort($migrations);
 

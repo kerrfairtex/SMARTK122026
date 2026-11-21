@@ -53,6 +53,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
             if (isset($hardcoded_users[$lower_username]) && $hardcoded_users[$lower_username]['password'] === $password) {
                 // Hardcoded credential matched
                 $profile = $hardcoded_users[$lower_username]['profile'];
+                // New session id on login prevents session fixation.
+                session_regenerate_id(true);
                 $_SESSION['STAFF_ID'] = $profile === 'admin' ? 1 : 2;
                 $_SESSION['USERNAME'] = $lower_username;
                 $_SESSION['PROFILE'] = $profile;
@@ -89,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username'], $_POST['p
                     ? match_password($pwd, $password)
                     : (crypt($password, $pwd) === $pwd);
                 if ($verified) {
-                    // Success - set session
+                    session_regenerate_id(true);
                     $staffId = $staff['STAFF_ID'] ?? $staff['staff_id'] ?? $staff['STAFFID'] ?? null;
                     $_SESSION['STAFF_ID'] = $staffId ? (int)$staffId : 0;
                     $_SESSION['USERNAME'] = $staff['USERNAME'] ?? $staff['username'] ?? '';

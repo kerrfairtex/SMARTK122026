@@ -10,7 +10,9 @@
 
 declare(strict_types=1);
 
-require_once __DIR__ . '/../vendor/autoload.php';
+// Root `composer install` is optional; the BBNIHS package ships its own vendor/.
+$autoload = __DIR__ . '/../vendor/autoload.php';
+require_once file_exists($autoload) ? $autoload : __DIR__ . '/../bbnihs/vendor/autoload.php';
 
 use BBNIHS\Config\Config;
 use BBNIHS\ServiceLocator;

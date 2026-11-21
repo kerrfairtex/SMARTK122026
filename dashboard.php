@@ -154,6 +154,7 @@ tr:last-child td{border-bottom:none}
 .modal-actions .m-approve{background:var(--teal);color:#08221f;border:none}
 .modal-actions .m-reject{background:none;color:var(--terra);border:1px solid var(--terra)}
 .modal-actions .m-enroll{background:var(--green);color:#08221a;border:none}
+.no-lrn{color:var(--accent);font-weight:600}
 .title-row{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:8px 16px}
 .btn-link{display:inline-flex;align-items:center;min-height:44px;color:var(--accent);font-size:13px;font-weight:600;text-decoration:underline;text-underline-offset:3px}
 .notice{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border:1px solid var(--border);border-left:3px solid var(--green);background:var(--panel);border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px}
@@ -191,6 +192,7 @@ tr:last-child td{border-bottom:none}
       <nav>
         <a href="dashboard.php" class="nav-item<?php echo $view === 'applications' ? ' active" aria-current="page' : ''; ?>"><svg class="ic" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"></rect><line x1="8" y1="9" x2="16" y2="9"></line><line x1="8" y1="13" x2="16" y2="13"></line><line x1="8" y1="17" x2="13" y2="17"></line></svg>Enrollment</a>
         <a href="dashboard.php?view=students" class="nav-item<?php echo $view === 'students' ? ' active" aria-current="page' : ''; ?>"><svg class="ic" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path><path d="M16 4.5a3.5 3.5 0 0 1 0 7"></path><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"></path></svg>Students</a>
+        <a href="sf1.php" class="nav-item"><svg class="ic" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><line x1="9" y1="13" x2="15" y2="13"></line><line x1="9" y1="17" x2="15" y2="17"></line></svg>SF1 School Register</a>
         <div class="nav-divider"></div>
         <div class="nav-ext" style="padding:4px 12px 2px;text-transform:uppercase;letter-spacing:.05em;font-size:10px">School records</div>
         <a href="index.php" class="nav-item" title="Opens the school's official RosarioSIS system"><svg class="ic" viewBox="0 0 24 24"><path d="M9 5H6a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-3"></path><path d="M14 4h6v6"></path><path d="M20 4l-9 9"></path></svg>School Information Office</a>
@@ -215,7 +217,7 @@ tr:last-child td{border-bottom:none}
         <div class="search-wrap">
           <label class="sr-only" for="q">Search students</label>
           <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
-          <input id="q" type="search" placeholder="Search name, username, ID&hellip;" autocomplete="off">
+          <input id="q" type="search" placeholder="Search name, LRN, username, ID&hellip;" autocomplete="off">
         </div>
         <div>
           <label class="sr-only" for="grade-filter">Filter by grade</label>
@@ -230,7 +232,7 @@ tr:last-child td{border-bottom:none}
           <table>
             <caption class="sr-only">Enrolled students</caption>
             <thead><tr>
-              <th scope="col">Student ID</th><th scope="col">Name</th><th scope="col">Grade</th><th scope="col">Username</th><th scope="col">Enrolled on</th><th scope="col">Application</th>
+              <th scope="col">Student ID</th><th scope="col">LRN</th><th scope="col">Name</th><th scope="col">Grade</th><th scope="col">Username</th><th scope="col">Enrolled on</th><th scope="col">Application</th>
             </tr></thead>
             <tbody id="tbody"></tbody>
           </table>
@@ -245,7 +247,7 @@ tr:last-child td{border-bottom:none}
         <div class="search-wrap">
           <label class="sr-only" for="q">Search applications</label>
           <svg class="ic" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
-          <input id="q" type="search" placeholder="Search ref, learner, guardian&hellip;" autocomplete="off">
+          <input id="q" type="search" placeholder="Search ref, LRN, learner, guardian&hellip;" autocomplete="off">
         </div>
         <div>
           <label class="sr-only" for="status-filter">Filter by status</label>
@@ -292,6 +294,7 @@ tr:last-child td{border-bottom:none}
         <button class="modal-close" id="modalClose" aria-label="Close"><svg class="ic" viewBox="0 0 24 24"><line x1="6" y1="6" x2="18" y2="18"></line><line x1="18" y1="6" x2="6" y2="18"></line></svg></button>
       </div>
       <div class="mrow"><span>Reference</span><span class="mono" id="mRef"></span></div>
+      <div class="mrow"><span>LRN</span><span class="mono" id="mLrn"></span></div>
       <div class="mrow"><span>Guardian</span><span id="mGuardian"></span></div>
       <div class="mrow"><span>Contact</span><span class="mono" id="mContact"></span></div>
       <div class="mrow"><span>Submitted</span><span class="mono" id="mDate"></span></div>
@@ -312,7 +315,7 @@ document.getElementById('roleBadgeTop').textContent = label;
 
 const $ = id => document.getElementById(id);
 const tbody = $('tbody');
-const COLS = VIEW === 'students' ? 6 : 7;
+const COLS = 7;
 
 // Applicant-supplied text must never be injected as HTML.
 function esc(v) {
@@ -392,6 +395,7 @@ async function loadStudents() {
     } else {
       tbody.innerHTML = data.students.map(s => '<tr>' +
         '<td class="mono">' + esc(s.id) + '</td>' +
+        '<td class="mono">' + (s.lrn ? esc(s.lrn) : '<span class="no-lrn">None</span>') + '</td>' +
         '<td><div class="learner-name">' + esc(s.name) + '</div></td>' +
         '<td>' + esc(s.grade || '—') + '</td>' +
         '<td class="mono">' + esc(s.username || '—') + '</td>' +
@@ -460,7 +464,8 @@ async function loadApps() {
     } else {
       tbody.innerHTML = apps.map(a => '<tr>' +
         '<td class="mono">' + esc(a.ref) + '</td>' +
-        '<td><div class="learner-name">' + esc(a.name) + '</div><div class="learner-grade">' + esc(a.grade) + '</div></td>' +
+        '<td><div class="learner-name">' + esc(a.name) + '</div><div class="learner-grade">' + esc(a.grade) + ' · ' +
+          (a.lrn ? 'LRN ' + esc(a.lrn) : '<span class="no-lrn">No LRN</span>') + '</div></td>' +
         '<td>' + esc(a.guardian) + '</td>' +
         '<td class="mono" style="color:var(--muted);font-size:11.5px">' + esc(a.contact) + '</td>' +
         '<td>' + pill(a.status) + '</td>' +
@@ -483,6 +488,7 @@ function openModal(id) {
   $('mName').textContent = a.name || '';
   $('mGrade').textContent = a.grade || '';
   $('mRef').textContent = a.ref || '';
+  $('mLrn').textContent = a.lrn || 'None given';
   $('mGuardian').textContent = a.guardian || '';
   $('mContact').textContent = a.contact || '';
   $('mDate').textContent = fmtDate(a.date);

@@ -1976,6 +1976,11 @@ img[width], img[height] {
                                 <input type="text" id="name_suffix" name="name_suffix" placeholder="e.g. Jr.">
                             </div>
                             <div class="form-field">
+                                <label for="lrn">Learner Reference Number (LRN)</label>
+                                <input type="text" id="lrn" name="lrn" inputmode="numeric" pattern="[0-9]{12}" maxlength="12" autocomplete="off" placeholder="12 digits" aria-describedby="lrn-hint">
+                                <p class="form-note" id="lrn-hint">Found on the learner's report card (SF9). Leave blank if the learner has never been enrolled in a Philippine school.</p>
+                            </div>
+                            <div class="form-field">
                                 <label for="birth_date">Date of birth *</label>
                                 <input type="date" id="birth_date" name="birth_date" required>
                             </div>

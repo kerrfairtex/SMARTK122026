@@ -923,3 +923,22 @@ img[width], img[height] {
 .form-field textarea {
     max-width: 100%;
 }
+
+/* News & Events (homepage) */
+.news-layout { display: grid; grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); gap: var(--space-4); }
+@media (max-width: 760px) { .news-layout { grid-template-columns: 1fr; } }
+.news-heading { color: var(--sun-gold); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.08em; margin: 0 0 var(--space-3); }
+.news-list { display: grid; gap: var(--space-3); }
+.news-item { background: var(--ink-overlay-40); border: 1px solid var(--foam-overlay-16); border-left: 4px solid var(--sun-gold); border-radius: var(--radius-2); padding: var(--space-3) var(--space-4); }
+.news-item--advisory { border-left-color: var(--reef-coral); }
+.news-item__meta { font-family: var(--font-utility); font-size: 0.75rem; color: var(--foam); letter-spacing: 0.04em; }
+.news-item__title { font-family: var(--font-display); font-size: 1.15rem; margin: var(--space-1) 0 var(--space-2); color: var(--sand); }
+.news-item__body { color: var(--sand); white-space: pre-line; margin: 0; line-height: 1.6; }
+.event-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-2); }
+.event-item { display: grid; grid-template-columns: 56px 1fr; gap: var(--space-3); align-items: start; background: var(--ink-overlay-40); border: 1px solid var(--foam-overlay-16); border-radius: var(--radius-2); padding: var(--space-3); }
+.event-item__date { text-align: center; border-radius: var(--radius-2); background: var(--sun-gold-overlay-12); padding: var(--space-1) 0; font-family: var(--font-utility); }
+.event-item__day { display: block; font-size: 1.35rem; font-weight: 600; color: var(--sun-gold); line-height: 1.1; }
+.event-item__month { display: block; font-size: 0.7rem; text-transform: uppercase; color: var(--foam); }
+.event-item__title { font-weight: 600; color: var(--sand); margin: 0; }
+.event-item__body { color: var(--foam); font-size: 0.85rem; margin: var(--space-1) 0 0; }
+.news-empty { color: var(--foam); opacity: 0.75; margin: 0; list-style: none; }

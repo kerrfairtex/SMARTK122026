@@ -1548,6 +1548,7 @@ img[width], img[height] {
             <a class="top-nav__link" href="#about">About</a>
             <a class="top-nav__link" href="#academics">Academics</a>
             <a class="top-nav__link" href="#admissions">Admissions</a>
+            <a class="top-nav__link" href="#news">News</a>
             <a class="top-nav__link" href="#features">Features</a>
             <a class="top-nav__link" href="#contact">Contact</a>
 
@@ -2160,6 +2161,23 @@ img[width], img[height] {
 
              <!-- Routing table preserved as-is per spec (no decoration).
              ============================================================ -->
+        <section id="news" class="reveal surface-tide" aria-labelledby="news-title">
+            <div class="container">
+                <h2 class="section-title" id="news-title">News &amp; Events</h2>
+                <p class="section-subtitle">Announcements and upcoming activities from the school</p>
+                <div class="news-layout">
+                    <div>
+                        <h3 class="news-heading">Latest news</h3>
+                        <div id="newsList" class="news-list" aria-live="polite"><p class="news-empty">Loading announcements&hellip;</p></div>
+                    </div>
+                    <div>
+                        <h3 class="news-heading">Upcoming events</h3>
+                        <ul id="eventList" class="event-list" aria-live="polite"><li class="news-empty">Loading events&hellip;</li></ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="contact" class="reveal">
             <div class="container">
                 <h2 class="section-title">Contact</h2>
@@ -2273,6 +2291,7 @@ img[width], img[height] {
             </div>
             <p class="footer-credit">
                 &copy; 2026 Batu-Batu National High School &middot; SmartCampus K-12 public landing &middot; Built for low-bandwidth island connectivity.
+                <br><a href="/citizens_charter.php">Citizen&rsquo;s Charter</a> &middot; <a href="/privacy.php">Privacy &amp; Accessibility</a> &middot; <a href="/enroll_status.php">Check Application Status</a>
             </p>
         </div>
     </footer>
@@ -2295,6 +2314,7 @@ img[width], img[height] {
     <script src="/js/reveal.js" defer></script>
     <script src="/js/stepper.js" defer></script>
     <script src="/js/enhancements.js" defer></script>
+    <script src="/js/news.js" defer></script>
 <script>
     // Photo gallery toggle
     const toggleBtn = document.getElementById('toggle-gallery');
